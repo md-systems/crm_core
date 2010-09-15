@@ -1,0 +1,94 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Install, update and uninstall functions for the contact module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function crm_schema() {
+  $schema['crm_contacts'] = array(
+    'description' => 'Stores contact data.',
+    'fields' => array(
+      'cid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique contact ID.',
+        'default' => 0,
+      ),
+      'type' => array(
+        'description' => 'The type of contact.',
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'mail' => array(
+        'type' => 'varchar',
+        'length' => 254,
+        'not null' => FALSE,
+        'default' => '',
+        'description' => "Contact's e-mail address.",
+      ),
+      'created' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Timestamp for when contact was created.',
+      ),
+    ),
+    'indexes' => array(
+      'created' => array('created'),
+      'mail' => array('mail'),
+    ),   
+    'primary key' => array('cid'),
+  );
+
+  $schema['crm_contact_type'] = array(
+    'description' => 'Stores information about all defined contact types.',
+    'fields' => array(
+      'type' => array(
+        'description' => 'The machine-readable name of this type.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+      ),
+      'name' => array(
+        'description' => 'The human-readable name of this type.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'translatable' => TRUE,
+      ),
+      'description' => array(
+        'description' => 'A brief description of this type.',
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'medium',
+        'translatable' => TRUE,
+      ),
+      'custom' => array(
+        'description' => 'A boolean indicating whether this type is defined by a module (FALSE) or by a user via Add content type (TRUE).',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+      ),
+    ),
+    'primary key' => array('type'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+// function crm_install() {
+//   
+// }

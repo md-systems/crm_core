@@ -1,11 +1,9 @@
 ; $Id$
-name = CRM
-description = A native Drupal CRM system.
-core = 7.x
+name = DropCRM
+description = Manages contacts.
 package = CRM
-
-dependencies[] = entity
-dependencies[] = views	
-
+version = VERSION
+core = 7.x
+files[] = crm.module
 files[] = crm.install
-files[] = crm.module	
+configure = admin/config/crm

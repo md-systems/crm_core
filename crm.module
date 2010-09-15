@@ -1,0 +1,229 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Provides contact entitles and basic CRM functionality.
+ */
+
+
+/**
+ * Implements hook_entity_info().
+ */
+function crm_entity_info() {
+  $return = array(
+    'contact' => array(
+      'label' => t('Contact'),
+      'controller class' => 'ContactController',
+      'base table' => 'crm_contacts',
+      'uri callback' => 'crm_contact_uri',
+      'fieldable' => TRUE,
+      'entity keys' => array(
+        'id' => 'cid',
+        'bundle' => 'type',
+      ),
+//       'bundle keys' => array(
+//         'bundle' => 'type',
+//       ),
+      'bundles' => array(
+        'individual' => array(
+          'label' => t('Individual'),
+          'admin' => array(
+            'path' => 'admin/crm/individuals',
+            'access arguments' => array('administer users'),
+          ),
+        ),
+        'organization' => array(
+          'label' => t('Organization'),
+          'admin' => array(
+            'path' => 'admin/crm/organizations',
+            'access arguments' => array('administer users'),
+          ),
+        ),
+      ),
+      'view modes' => array(
+        'full' => array(
+          'label' => t('Contact'),
+          'custom settings' => FALSE,
+        ),
+      ),
+    ),
+  );
+
+  foreach (crm_contact_type_get_names() as $type => $name) {
+    $return['contact']['bundles'][$type] = array(
+      'label' => $name,
+      'admin' => array(
+        'path' => 'admin/crm/contact-types/manage/%crm_contact_type',
+        'real path' => 'admin/crm/contact-types/manage/' . str_replace('_', '-', $type),
+        'bundle argument' => 4,
+        'access arguments' => array('administer content types'),
+      ),
+    );
+  }
+
+  return $return;
+}
+
+/**
+ * Entity uri callback.
+ */
+function crm_contact_uri($contact) {
+  return array(
+    'path' => 'crm/contact/' . $contact->cid,
+  );
+}
+
+/**
+ * Implements hook_field_extra_fields().
+ */
+// function user_field_extra_fields() {
+//   $return['user']['user'] = array(
+//     'form' => array(
+//       'account' => array(
+//         'label' => 'User name and password',
+//         'description' => t('User module account form elements'),
+//         'weight' => -10,
+//       ),
+//       'timezone' => array(
+//         'label' => 'Timezone',
+//         'description' => t('User module timezone form element.'),
+//         'weight' => 6,
+//       ),
+//     ),
+//     'display' => array(
+//       'summary' => array(
+//         'label' => 'History',
+//         'description' => t('User module history view element.'),
+//         'weight' => 5,
+//       ),
+//     ),
+//   );
+// 
+//   return $return;
+// }
+
+/**
+ * Controller class for contacts.
+ *
+ * This extends the DrupalDefaultEntityController class, adding required
+ * special handling for contact objects.
+ */
+class ContactController extends DrupalDefaultEntityController {
+  
+}
+
+
+/**
+ * Implements hook_menu().
+ */
+function crm_menu() {
+  
+  $items = array();
+  
+  // Administration pages.
+  $items['admin/crm/contact-types/manage'] = array(
+    'title' => 'Manage contact types',
+    'page callback' => 'crm_contact_types_manage',
+    'access arguments' => array('administer contact types'),
+    'file' => 'contact_types.inc',
+  );
+  $items['admin/crm/contact-types/manage/%crm_contact_type'] = array(
+    'title' => 'Edit contact type',
+    'title callback' => 'crm_contact_type_title',
+    'title arguments' => array(4),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_contact_type_form', 4),
+    'access arguments' => array('administer contact types'),
+    'file' => 'contact_types.inc',
+  );
+  $items['admin/crm/contact-types/manage/%crm_contact_type/edit'] = array(
+    'title' => 'Edit',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['admin/crm/contact-types/manage/%crm_contact_type/delete'] = array(
+    'title' => 'Delete',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_contact_type_delete_confirm', 4),
+    'access arguments' => array('administer contact types'),
+    'type' => MENU_CALLBACK,
+    'file' => 'contact_types.inc',
+  );
+
+ 
+/*  
+  $items['crm/%contact/%crm_contact'] = array(
+    'title' => 'Edit',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('user_profile_form', 1),
+    'access callback' => 'user_edit_access',
+    'access arguments' => array(1),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'user.pages.inc',
+  );*/
+
+  return $items;
+}
+
+function _crm_contact_types_build() {
+  $_contact_types = &drupal_static(__FUNCTION__);
+  if (is_object($_contact_types)) {
+    return $_contact_types;
+  }
+  $_contact_types = (object) array('types' => array(), 'names' => array());
+
+  $type_result = db_select('crm_contact_type', 'ct')
+    ->addTag('translatable')
+    ->fields('ct')
+    ->orderBy('ct.type', 'ASC')
+    ->execute();
+  foreach ($type_result as $type_object) {
+    $_contact_types->types[$type_object->type] = $type_object;
+    $_contact_types->names[$type_object->type] = $type_object->name;  
+  }
+
+  asort($_contact_types->names);
+
+  return $_contact_types;
+}
+
+function crm_contact_type_get_names() {
+  return _crm_contact_types_build()->names;
+}
+
+/**
+ * Implements hook_admin_paths().
+ */
+// function crm_admin_paths() {
+//   $paths = array(
+//     'user/*/cancel' => TRUE,
+//     'user/*/edit' => TRUE,
+//     'user/*/edit/*' => TRUE,
+//   );
+//   return $paths;
+// }
+// 
+
+
+function crm_contact_type_set_defaults($info = array()) {
+  $type = &drupal_static(__FUNCTION__);
+
+  if (!isset($type)) {
+    $type = new stdClass();
+    $type->type = '';
+    $type->name = '';
+    $type->description = '';
+    $type->custom = 0;
+    $type->modified = 0;
+    $type->is_new = 1;
+  }
+
+  $new_type = clone $type;
+  $info = (array) $info;
+  foreach ($info as $key => $data) {
+    $new_type->$key = $data;
+  }
+  $new_type->orig_type = isset($info['type']) ? $info['type'] : '';
+
+  return $new_type;
+}
