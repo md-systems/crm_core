@@ -7,6 +7,35 @@
  */
 
 /**
+ * Implements hook_install().
+ */
+function crm_install() {
+  // Add default contact type for an Individual person
+  $individual = crm_contact_type_new();
+  $individual->type = 'individual';
+  $individual->name = t('Individual');
+  $individual->description = t('A single individual.');
+  $individual->is_new = TRUE;
+  crm_contact_type_save($individual);
+
+  // Add default contact type for an organization
+  $organization = crm_contact_type_new();
+  $organization->type = 'organization';
+  $organization->name = t('Organization');
+  $organization->description = t('A collection of individual or other organizations that has additional contact data.');
+  $organization->is_new = TRUE;
+  crm_contact_type_save($organization);
+}
+
+
+/**
+ * Implements hook_uninstall().
+ */
+function crm_uninstall() {
+  
+}
+
+/**
  * Implements hook_schema().
  */
 function crm_schema() {

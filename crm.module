@@ -202,7 +202,7 @@ function crm_contact_types() {
  *  If $type isn't specified an array containing all human
  *  readable names keyed on the machine type.
  */
-function crm_contact_get_name($type = NULL) {
+function crm_contact_type_get_name($type = NULL) {
   $contact_types = crm_contact_types();
 
   // If type is set return the name if it exists
@@ -221,7 +221,43 @@ function crm_contact_get_name($type = NULL) {
   return $contact_types;
 }
 
+/**
+ * Return a new contact type with initialize fields.
+ */
+function crm_contact_type_new() {
+  return (object) array(
+    'type' => '',
+    'name' => '',
+    'description' => '',
+    'help' => '',
+  );
+}
 
+/**
+ * Saves a contact type.
+ */
+function crm_contact_type_save($contact_type) {
+  $op = drupal_write_record('crm_contact_type', $contact_type, empty($contact_type->is_new) ? 'type' : array());
+  menu_rebuild();
+
+  // If this is a new contact type and the insert did not fail...
+  if (!empty($contact_type->is_new) && $op !== FALSE) {
+    // Notify the field API that a new bundle has been created.
+    field_attach_create_bundle('crm_contact', $contact_type->type);
+
+    // Add base fields to the contact
+    // crm_initiailze_contact_type($contact_type->type);
+
+    // Notify other modules that a new contact type has been created.
+    module_invoke_all('crm_contact_type_insert', $contact_type);
+  }
+  else {
+    // Notify other modules that an existing contact type has been updated.
+    module_invoke_all('crm_contact_type_update', $contact_type);
+  }
+
+  return $op;
+}
 
 
 function crm_contact_type_set_defaults($info = array()) {
