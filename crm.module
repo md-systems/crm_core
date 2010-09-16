@@ -12,7 +12,7 @@
  */
 function crm_entity_info() {
   $return = array(
-    'contact' => array(
+    'crm_contact' => array(
       'label' => t('Contact'),
       'controller class' => 'CRMContactController',
       'base table' => 'crm_contact',
@@ -281,4 +281,20 @@ function crm_contact_type_set_defaults($info = array()) {
   $new_type->orig_type = isset($info['type']) ? $info['type'] : '';
 
   return $new_type;
+}
+
+
+function crm_contact_save($contact) {
+  return entity_get_controller('crm_contact')->save($contact);
+}
+
+
+function crm_contact_load($contact_id) {
+  $contacts = crm_contact_load_multiple(array($contact_id));
+  return $contacts ? reset($contacts) : FALSE;
+}
+
+
+function crm_contact_load_multiple($contact_ids = array(), $conditions = array(), $reset = FALSE) {
+  return entity_load('crm_contact', $contact_ids, $conditions, $reset);
 }
