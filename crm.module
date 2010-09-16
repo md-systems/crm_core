@@ -120,13 +120,13 @@ function crm_menu() {
   $items = array();
   
   // Administration pages.
-  $items['admin/crm/contact-types/manage'] = array(
+  $items['crm/admin/contact-types/manage'] = array(
     'title' => 'Manage contact types',
     'page callback' => 'crm_contact_types_manage',
     'access arguments' => array('administer contact types'),
     'file' => 'contact_types.inc',
   );
-  $items['admin/crm/contact-types/manage/%crm_contact_type'] = array(
+  $items['crm/admin/contact-types/manage/%crm_contact_type'] = array(
     'title' => 'Edit contact type',
     'title callback' => 'crm_contact_type_title',
     'title arguments' => array(4),
@@ -135,11 +135,11 @@ function crm_menu() {
     'access arguments' => array('administer contact types'),
     'file' => 'contact_types.inc',
   );
-  $items['admin/crm/contact-types/manage/%crm_contact_type/edit'] = array(
+  $items['crm/admin/contact-types/manage/%crm_contact_type/edit'] = array(
     'title' => 'Edit',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['admin/crm/contact-types/manage/%crm_contact_type/delete'] = array(
+  $items['crm/admin/contact-types/manage/%crm_contact_type/delete'] = array(
     'title' => 'Delete',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('crm_contact_type_delete_confirm', 4),
@@ -161,6 +161,17 @@ function crm_menu() {
   );*/
 
   return $items;
+}
+
+
+/**
+ * Implements hook_admin_paths().
+ */
+function crm_admin_paths() {
+  $paths = array(
+    'crm/admin/*' => TRUE,
+  );
+  return $paths;
 }
 
 
@@ -210,18 +221,7 @@ function crm_contact_get_name($type = NULL) {
   return $contact_types;
 }
 
-/**
- * Implements hook_admin_paths().
- */
-// function crm_admin_paths() {
-//   $paths = array(
-//     'user/*/cancel' => TRUE,
-//     'user/*/edit' => TRUE,
-//     'user/*/edit/*' => TRUE,
-//   );
-//   return $paths;
-// }
-// 
+
 
 
 function crm_contact_type_set_defaults($info = array()) {
