@@ -4,6 +4,16 @@ description = Manages contacts.
 package = CRM
 version = VERSION
 core = 7.x
+configure = admin/config/crm
+
+; Base Files
 files[] = crm.module
 files[] = crm.install
-configure = admin/config/crm
+
+; Module includes
+files[] = includes/crm_contact.controller.inc
+
+; Views includes
+files[] = includes/views/crm.views.
+
+

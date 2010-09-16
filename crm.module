@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Provides contact entitles and basic CRM functionality.
+ * Provides contact entities and basic CRM functionality.
  */
 
 
@@ -14,32 +14,16 @@ function crm_entity_info() {
   $return = array(
     'contact' => array(
       'label' => t('Contact'),
-      'controller class' => 'ContactController',
-      'base table' => 'crm_contacts',
+      'controller class' => 'CRMContactController',
+      'base table' => 'crm_contact',
       'uri callback' => 'crm_contact_uri',
       'fieldable' => TRUE,
       'entity keys' => array(
-        'id' => 'cid',
+        'id' => 'contact_id',
         'bundle' => 'type',
       ),
-//       'bundle keys' => array(
-//         'bundle' => 'type',
-//       ),
-      'bundles' => array(
-        'individual' => array(
-          'label' => t('Individual'),
-          'admin' => array(
-            'path' => 'admin/crm/individuals',
-            'access arguments' => array('administer users'),
-          ),
-        ),
-        'organization' => array(
-          'label' => t('Organization'),
-          'admin' => array(
-            'path' => 'admin/crm/organizations',
-            'access arguments' => array('administer users'),
-          ),
-        ),
+      'bundle keys' => array(
+        'bundle' => 'type',
       ),
       'view modes' => array(
         'full' => array(
@@ -50,14 +34,14 @@ function crm_entity_info() {
     ),
   );
 
-  foreach (crm_contact_type_get_names() as $type => $name) {
+  foreach (crm_contact_type_get_name() as $type => $name) {
     $return['contact']['bundles'][$type] = array(
       'label' => $name,
       'admin' => array(
         'path' => 'admin/crm/contact-types/manage/%crm_contact_type',
         'real path' => 'admin/crm/contact-types/manage/' . str_replace('_', '-', $type),
         'bundle argument' => 4,
-        'access arguments' => array('administer content types'),
+        'access arguments' => array('administer contact types'),
       ),
     );
   }
@@ -71,6 +55,28 @@ function crm_entity_info() {
 function crm_contact_uri($contact) {
   return array(
     'path' => 'crm/contact/' . $contact->cid,
+  );
+}
+
+/**
+ * Implements hook_permission().
+ */
+function crm_permission() {
+  return array(
+    'administer contact types' => array(
+        'title' => t('Administer Contact Types'),
+        'description' => t('Allows the user to edit the types of contact such as Individual, Organization, etc.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function crm_views_api() {
+  return array(
+    'api' => 2,
+    'path' => drupal_get_path('module', 'crm') . '/includes/views',
   );
 }
 
@@ -103,15 +109,7 @@ function crm_contact_uri($contact) {
 //   return $return;
 // }
 
-/**
- * Controller class for contacts.
- *
- * This extends the DrupalDefaultEntityController class, adding required
- * special handling for contact objects.
- */
-class ContactController extends DrupalDefaultEntityController {
-  
-}
+
 
 
 /**
@@ -165,30 +163,51 @@ function crm_menu() {
   return $items;
 }
 
-function _crm_contact_types_build() {
-  $_contact_types = &drupal_static(__FUNCTION__);
-  if (is_object($_contact_types)) {
-    return $_contact_types;
-  }
-  $_contact_types = (object) array('types' => array(), 'names' => array());
 
-  $type_result = db_select('crm_contact_type', 'ct')
-    ->addTag('translatable')
-    ->fields('ct')
-    ->orderBy('ct.type', 'ASC')
-    ->execute();
-  foreach ($type_result as $type_object) {
-    $_contact_types->types[$type_object->type] = $type_object;
-    $_contact_types->names[$type_object->type] = $type_object->name;  
+/**
+ * Returns an array of contact type objects keyed by type.
+ */
+function crm_contact_types() {
+  // First check the static cache for a contact types array.
+  $contact_types = &drupal_static(__FUNCTION__);
+
+  // If it did not exist, fetch the types now.
+  if (!isset($contact_types)) {
+    $contact_types = db_query('SELECT * FROM {crm_contact_type}')->fetchAllAssoc('type');
   }
 
-  asort($_contact_types->names);
-
-  return $_contact_types;
+  return $contact_types;
 }
 
-function crm_contact_type_get_names() {
-  return _crm_contact_types_build()->names;
+
+/**
+ * Returns the human readable name of any or all contact types.
+ *
+ * @param $type
+ *  [optional] - Specify the type whose name to return.
+ * @return
+ *  If $type is specified, a string containing the human
+ *  readable name of the type.
+ *  If $type isn't specified an array containing all human
+ *  readable names keyed on the machine type.
+ */
+function crm_contact_get_name($type = NULL) {
+  $contact_types = crm_contact_types();
+
+  // If type is set return the name if it exists
+  if ($type !== NULL && isset($contact_types[$type])) {
+    return $contact_types[$type]->name;
+  }
+  else {
+    return FALSE;
+  }
+
+  // Otherwise return a mapping of type => name
+  foreach ($contact_types as $key => $value) {
+    $contact_types[$key] = $value->name;
+  }
+
+  return $contact_types;
 }
 
 /**
