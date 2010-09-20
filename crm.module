@@ -25,6 +25,7 @@ function crm_entity_info() {
       'bundle keys' => array(
         'bundle' => 'type',
       ),
+      'bundles' => array(),
       'view modes' => array(
         'full' => array(
           'label' => t('Contact'),
@@ -35,11 +36,11 @@ function crm_entity_info() {
   );
 
   foreach (crm_contact_type_get_name() as $type => $name) {
-    $return['contact']['bundles'][$type] = array(
+    $return['crm_contact']['bundles'][$type] = array(
       'label' => $name,
       'admin' => array(
-        'path' => 'admin/crm/contact-types/manage/%crm_contact_type',
-        'real path' => 'admin/crm/contact-types/manage/' . str_replace('_', '-', $type),
+        'path' => 'crm/admin/contact/types/%crm_contact_type',
+        'real path' => 'crm/admin/contact/types/' . str_replace('_', '-', $type),
         'bundle argument' => 4,
         'access arguments' => array('administer contact types'),
       ),
@@ -194,6 +195,16 @@ function crm_menu() {
 
 
 /**
+ * Implements hook_menu_alter().
+ */
+function crm_menu_alter(&$items) {
+  // Transform the field UI tabs into contextual links.
+  $items['crm/admin/contact/types/%crm_contact_type/fields']['context'] = MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE;
+  $items['crm/admin/contact/types/%crm_contact_type/display']['context'] = MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE;
+}
+
+
+/**
  * Implements hook_admin_paths().
  */
 function crm_admin_paths() {
@@ -237,15 +248,17 @@ function crm_contact_types() {
  */
 function crm_contact_type_get_name($type = NULL) {
   $contact_types = crm_contact_types();
-
+ 
   // If type is set return the name if it exists
-  if ($type !== NULL && isset($contact_types[$type])) {
-    return $contact_types[$type]->name;
+  if (!empty($type)) {
+    if (isset($contact_types[$type])) {
+      return $contact_types[$type]->name;
+    }
+    else {
+      return FALSE;
+    }
   }
-  else {
-    return FALSE;
-  }
-
+  
   // Otherwise return a mapping of type => name
   foreach ($contact_types as $key => $value) {
     $contact_types[$key] = $value->name;
