@@ -67,8 +67,12 @@ function crm_contact_uri($contact) {
 function crm_permission() {
   return array(
     'administer contact types' => array(
-        'title' => t('Administer Contact Types'),
-        'description' => t('Allows the user to edit the types of contact such as Individual, Organization, etc.'),
+      'title' => t('Administer Contact Types'),
+      'description' => t('Allows the user to edit the types of contact such as Individual, Organization, etc.'),
+    ),
+    'add contacts' => array(
+      'title' => t('Add Contacts'),
+      'description' => t('Allows the user to add contact to the CRM.'),
     ),
   );
 }
@@ -136,6 +140,62 @@ function crm_theme() {
 function crm_menu() {
   $items = array();
   
+  /*
+   * Contacts
+   */
+  $items['crm/contact/%crm_contact'] = array(
+    'title' => 'Contact',
+    'page callback' => 'crm_contact_view',
+    'page arguments' => array(2),
+    'access arguments' => array('view contacts'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'pages/contact.pages.inc',
+  );
+  $items['crm/contact/add'] = array(
+    'title' => 'Add a contact',
+    'description' => 'Add a new contact to the CRM.',
+    'page callback' => 'crm_contact_add_page',
+    'access arguments' => array('add contacts'),
+    'type' => MENU_LOCAL_ACTION,
+    'weight' => 10,
+    'file' => 'pages/contact.pages.inc',
+  );
+  foreach (crm_contact_types() as $type => $contact_type) {
+    $items['crm/contact/add/' . $type] = array(
+      'title' => 'Add @type',
+      'title arguments' => array('@type' => $contact_type->name),
+      'description' => $contact_type->description,
+      'page callback' => 'crm_contact_form_wrapper',
+      'page arguments' => array(crm_contact_type_new($type)),
+      'access arguments' => array('add contacts'),
+      'file' => 'pages/contact.pages.inc',
+    );
+  }
+
+/*
+  $items['admin/commerce/products/add'] = array(
+    'title' => 'Add a product',
+    'description' => 'Add a new product for sale.',
+    'page callback' => 'commerce_product_ui_add_page',
+    'access callback' => 'commerce_product_ui_product_add_any_access',
+    'type' => MENU_LOCAL_ACTION,
+    'weight' => 10,
+    'file' => 'includes/commerce_product_ui.products.inc',
+  );
+  foreach (commerce_product_types() as $type => $product_type) {
+    $items['admin/commerce/products/add/' . $type] = array(
+      'title' => 'Create @name',
+      'title arguments' => array('@name' => $product_type->name),
+      'description' => $product_type->description,
+      'page callback' => 'commerce_product_ui_product_form_wrapper',
+      'page arguments' => array(commerce_product_new($type)),
+      'access callback' => 'commerce_product_access',
+      'access arguments' => array('create', $type),
+      'file' => 'includes/commerce_product_ui.products.inc',
+    );
+  }
+ */
+
   /*
    * Contact types
    */
@@ -271,9 +331,9 @@ function crm_contact_type_get_name($type = NULL) {
 /**
  * Return a new contact type with initialize fields.
  */
-function crm_contact_type_new() {
+function crm_contact_type_new($type = '') {
   return (object) array(
-    'type' => '',
+    'type' => $type,
     'name' => '',
     'description' => '',
     'help' => '',
