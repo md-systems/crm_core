@@ -49,6 +49,7 @@ function crm_entity_info() {
   return $return;
 }
 
+
 /**
  * Entity uri callback.
  */
@@ -57,6 +58,7 @@ function crm_contact_uri($contact) {
     'path' => 'crm/contact/' . $contact->cid,
   );
 }
+
 
 /**
  * Implements hook_permission().
@@ -70,6 +72,7 @@ function crm_permission() {
   );
 }
 
+
 /**
  * Implements hook_views_api().
  */
@@ -78,6 +81,21 @@ function crm_views_api() {
     'api' => 2,
     'path' => drupal_get_path('module', 'crm') . '/includes/views',
   );
+}
+
+
+/**
+ * Implemenets hook_theme().
+ */
+function crm_theme() {
+  $theme = array(
+    'crm_contact_type_overview' => array(
+      'arguments' => array('contact_type' => NULL),
+      'file' => 'theme/crm_contact_type.theme.inc',
+    ),
+  );
+
+  return $theme;
 }
 
 /**
@@ -111,41 +129,52 @@ function crm_views_api() {
 
 
 
-
 /**
  * Implements hook_menu().
  */
 function crm_menu() {
-  
   $items = array();
   
-  // Administration pages.
-  $items['crm/admin/contact-types/manage'] = array(
+  /*
+   * Contact types
+   */
+  $items['crm/admin/contact/types'] = array(
     'title' => 'Manage contact types',
-    'page callback' => 'crm_contact_types_manage',
+    'page callback' => 'crm_contact_types_overview',
     'access arguments' => array('administer contact types'),
-    'file' => 'contact_types.inc',
+    'file' => 'pages/contact_types.pages.inc',
   );
-  $items['crm/admin/contact-types/manage/%crm_contact_type'] = array(
+  $items['crm/admin/contact/types/add'] = array(
+    'title' => 'Add contact type',
+    'page callback' => 'crm_contact_type_form_wrapper',
+    'page arguments' => array(crm_contact_type_new()),
+    'access arguments' => array('administer contact types'),
+    'type' => MENU_LOCAL_ACTION | MENU_VISIBLE_IN_BREADCRUMB,
+    'file' => 'pages/contact_types.pages.inc',
+  );
+  $items['crm/admin/contact/types/%crm_contact_type'] = array(
     'title' => 'Edit contact type',
     'title callback' => 'crm_contact_type_title',
     'title arguments' => array(4),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('crm_contact_type_form', 4),
     'access arguments' => array('administer contact types'),
-    'file' => 'contact_types.inc',
+    'file' => 'pages/contact_types.pages.inc',
   );
-  $items['crm/admin/contact-types/manage/%crm_contact_type/edit'] = array(
+  $items['crm/admin/contact/types/%crm_contact_type/edit'] = array(
     'title' => 'Edit',
     'type' => MENU_DEFAULT_LOCAL_TASK,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
   );
-  $items['crm/admin/contact-types/manage/%crm_contact_type/delete'] = array(
+  $items['crm/admin/contact/types/%crm_contact_type/delete'] = array(
     'title' => 'Delete',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('crm_contact_type_delete_confirm', 4),
     'access arguments' => array('administer contact types'),
-    'type' => MENU_CALLBACK,
-    'file' => 'contact_types.inc',
+    'type' => MENU_LOCAL_TASK,
+    'context' => MENU_CONTEXT_INLINE,
+    'file' => 'pages/contact_types.pages.inc',
+    'weight' => 10,
   );
 
  
@@ -169,8 +198,12 @@ function crm_menu() {
  */
 function crm_admin_paths() {
   $paths = array(
+    'crm/admin' => TRUE,
     'crm/admin/*' => TRUE,
+    'crm/admin/contact/types' => TRUE,
+    'crm/admin/contact/types/*' => TRUE,
   );
+
   return $paths;
 }
 
@@ -221,6 +254,7 @@ function crm_contact_type_get_name($type = NULL) {
   return $contact_types;
 }
 
+
 /**
  * Return a new contact type with initialize fields.
  */
@@ -232,6 +266,18 @@ function crm_contact_type_new() {
     'help' => '',
   );
 }
+
+
+/**
+ * Loads a contact type.
+ * 
+ * @param $type
+ *   The machine-readable name of the contact type.
+ */
+function crm_contact_type_load($type) {
+  return db_query("SELECT * FROM {crm_contact_type} WHERE type = :type", array(':type' => $type))->fetchObject();
+}
+
 
 /**
  * Saves a contact type.
@@ -281,6 +327,22 @@ function crm_contact_type_set_defaults($info = array()) {
   $new_type->orig_type = isset($info['type']) ? $info['type'] : '';
 
   return $new_type;
+}
+
+
+/**
+* Checks to see if a given contact type already exists.
+*
+* @param $type
+* The string to match against existing types.
+*
+* @return
+* TRUE or FALSE indicating whether or not the contact type exists.
+*/
+function crm_contact_type_validate_unique($type) {
+  // Look for a match of the type.
+  $match_id = db_query('SELECT type FROM {crm_contact_type} WHERE type = :type', array(':type' => $type))->fetchField();
+  return !$match_id;
 }
 
 
