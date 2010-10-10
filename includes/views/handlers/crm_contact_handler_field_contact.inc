@@ -3,7 +3,7 @@
 /**
  * Field handler to provide simple renderer that allows linking to a contact.
  */
-class crm_contact_handler_field_contact extends views_field_handler {
+class crm_contact_handler_field_contact extends views_handler_field {
   function init(&$view, $options) {
     parent::init($view, $options);
 
@@ -50,7 +50,7 @@ class crm_contact_handler_field_contact extends views_field_handler {
   }
 
 
-  function render() {
+  function render($values) {
     return $this->render_link(check_plain($values->{$this->field_alias}), $values);
   }
 }
