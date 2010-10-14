@@ -37,13 +37,6 @@ function crm_install() {
 
 
 /**
- * Implements hook_uninstall().
- */
-function crm_uninstall() {
-  
-}
-
-/**
  * Implements hook_schema().
  */
 function crm_schema() {
