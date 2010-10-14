@@ -56,7 +56,7 @@ function crm_entity_info() {
  */
 function crm_contact_uri($contact) {
   return array(
-    'path' => 'crm/contact/' . $contact->cid,
+    'path' => 'crm/contact/' . $contact->contact_id,
   );
 }
 
