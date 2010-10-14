@@ -85,15 +85,15 @@ function crm_contact_form_submit($form, &$form_state) {
   $contact = &$form_state['crm_contact'];
 
 
-  // Set the product's uid if it's being created at this time.
+  // Set the contact's uid if it's being created at this time.
   if (empty($contact->contact_id)) {
-    $product->uid = $user->uid;
+    $contact->uid = $user->uid;
   }
 
   // Notify field widgets.
   field_attach_submit('crm_contact', $contact, $form, $form_state);
 
-  // Save the product.
+  // Save the contact
   crm_contact_save($contact);
 
   // Redirect based on the button clicked.
