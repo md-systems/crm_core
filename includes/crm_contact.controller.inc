@@ -60,6 +60,31 @@ class CRMContactController extends DrupalDefaultEntityController {
   }
 
   public function delete($contact_ids) {
-    
+    if (!empty($contact_ids)) {
+      $contacts = $this->load($contact_ids, array());
+
+      // @TODO Will need to look at this again when relationships have been implemented.
+
+      $transaction = db_transaction();
+
+      try {
+        db_delete('crm_contact')->condition('contact_id', $contact_ids, 'IN')->execute();
+
+        foreach ($contacts as $contact) {
+          module_invoke_all('crm_contact_delete', $contact);
+          field_attach_delete('crm_contact', $contact);
+        }
+      }
+      catch (Exception $e) {
+        $transaction->rollback();
+        watchdog_exception('crm_contact', $e);
+        throw $e;
+      }
+
+      cache_clear_all();
+      $this->resetCache();
+    }
+
+    return TRUE;
   }
 }

@@ -74,6 +74,10 @@ function crm_permission() {
       'title' => t('Add Contacts'),
       'description' => t('Allows the user to add contact to the CRM.'),
     ),
+    'edit contacts' => array(
+      'title' => t('Edit Contacts'),
+      'description' => t('Allows the user to edit contacts that have already been added to the CRM.'),
+    ),
   );
 }
 
@@ -155,6 +159,34 @@ function crm_menu() {
     'type' => MENU_NORMAL_ITEM,
     'file' => 'pages/contact.pages.inc',
   );
+
+  $items['crm/contact/%crm_contact/view'] = array(
+    'title' => 'View',
+    'weight' => -10,
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+  );
+
+  $items['crm/contact/%crm_contact/edit'] = array(
+    'title' => 'Edit',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_contact_form', 2),
+    'access arguments' => array('add contacts'),
+    'type' => MENU_LOCAL_TASK,
+    'context' => MENU_CONTEXT_PAGE,
+    'file' => 'pages/contact.pages.inc',
+  );
+
+  $items['crm/contact/%crm_contact/delete'] = array(
+    'title' => 'Delete',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_contact_delete_form', 2),
+    'access arguments' => array('add contacts'),
+    'type' => MENU_LOCAL_ACTION,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+    'file' => 'pages/contact.pages.inc',
+  );
+
   $items['crm/contact/add'] = array(
     'title' => 'Add a contact',
     'description' => 'Add a new contact to the CRM.',
