@@ -415,7 +415,7 @@ function crm_initialize_contact_type($type) {
 
   // Name field
   $fields[] = array(
-    'name' => 'contact_name',
+    'field_name' => 'contact_name',
     'type' => 'text',
     'entity_types' => array('crm_contact'),
     'translatable' => FALSE,
@@ -424,7 +424,7 @@ function crm_initialize_contact_type($type) {
 
   // Image field
   $fields[] = array(
-    'name' => 'contact_image',
+    'field_name' => 'contact_image',
     'type' => 'image',
     'entity_types' => array('crm_contact'),
     'translatable' => FALSE,
@@ -433,7 +433,7 @@ function crm_initialize_contact_type($type) {
 
   // Address field
   $fields[] = array(
-    'name' => 'contact_address',
+    'field_name' => 'contact_address',
     'type' => 'addressfield',
     'entity_types' => array('crm_contact'),
     'translatable' => FALSE,
@@ -443,7 +443,7 @@ function crm_initialize_contact_type($type) {
   // Email and phone fields
   // @TODO consider switching these over to e-mail and phone fields once the modules are installed
   $fields[] = array(
-    'name' => 'contact_email',
+    'field_name' => 'contact_email',
     'type' => 'text',
     'cardinality' => FIELD_CARDINALITY_UNLIMITED,
     'entity_types' => array('crm_contact'),
@@ -452,7 +452,7 @@ function crm_initialize_contact_type($type) {
   );
 
   $fields[] = array(
-    'name' => 'contact_phone',
+    'field_name' => 'contact_phone',
     'type' => 'text',
     'cardinality' => FIELD_CARDINALITY_UNLIMITED,
     'entity_types' => array('crm_contact'),
@@ -462,7 +462,7 @@ function crm_initialize_contact_type($type) {
 
   // Create the fields if they don't exist
   foreach ($fields as $field) {
-    $info = field_info_field($field['name']);
+    $info = field_info_field($field['field_name']);
     if (empty($info)) {
       field_create_field($field);
     }
