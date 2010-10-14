@@ -95,8 +95,12 @@ function crm_views_api() {
 function crm_theme() {
   $theme = array(
     'crm_contact_type_overview' => array(
-      'arguments' => array('contact_type' => NULL),
+      'variables' => array('contact_type' => NULL),
       'file' => 'theme/crm_contact_type.theme.inc',
+    ),
+    'crm_contact_add_list' => array(
+      'variables' => array('content' => array()),
+      'file' => 'theme/crm_contact.theme.inc',
     ),
   );
 
@@ -365,7 +369,7 @@ function crm_contact_type_save($contact_type) {
     field_attach_create_bundle('crm_contact', $contact_type->type);
 
     // Add base fields to the contact
-    // crm_initiailze_contact_type($contact_type->type);
+    crm_initialize_contact_type($contact_type->type);
 
     // Notify other modules that a new contact type has been created.
     module_invoke_all('crm_contact_type_insert', $contact_type);
@@ -400,6 +404,145 @@ function crm_contact_type_set_defaults($info = array()) {
   $new_type->orig_type = isset($info['type']) ? $info['type'] : '';
 
   return $new_type;
+}
+
+
+/**
+ * Initialize new contact type with basic fields.
+ */
+function crm_initialize_contact_type($type) {
+  $fields = array();
+
+  // Name field
+  $fields[] = array(
+    'name' => 'contact_name',
+    'type' => 'text',
+    'entity_types' => array('crm_contact'),
+    'translatable' => FALSE,
+    'locked' => TRUE,
+  );
+
+  // Image field
+  $fields[] = array(
+    'name' => 'contact_image',
+    'type' => 'image',
+    'entity_types' => array('crm_contact'),
+    'translatable' => FALSE,
+    'locked' => TRUE,
+  );
+
+  // Address field
+  $fields[] = array(
+    'name' => 'contact_address',
+    'type' => 'addressfield',
+    'entity_types' => array('crm_contact'),
+    'translatable' => FALSE,
+    'locked' => TRUE,
+  );
+
+  // Email and phone fields
+  // @TODO consider switching these over to e-mail and phone fields once the modules are installed
+  $fields[] = array(
+    'name' => 'contact_email',
+    'type' => 'text',
+    'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+    'entity_types' => array('crm_contact'),
+    'translatable' => FALSE,
+    'locked' => TRUE,
+  );
+
+  $fields[] = array(
+    'name' => 'contact_phone',
+    'type' => 'text',
+    'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+    'entity_types' => array('crm_contact'),
+    'translatable' => FALSE,
+    'locked' => TRUE,
+  );
+
+  // Create the fields if they don't exist
+  foreach ($fields as $field) {
+    $info = field_info_field($field['name']);
+    if (empty($info)) {
+      field_create_field($field);
+    }
+  }
+
+  // Create field instances for the type if they don't exist
+  $instances = array();
+
+  $instances[] = array(
+    'field_name' => 'contact_name',
+    'entity_type' => 'crm_contact',
+    'bundle' => $type,
+    'label' => t('Name'),
+    'required' => TRUE,
+    'settings' => array(),
+    'widget' => array(
+      'type' => 'text_textfield',
+    ),
+    'display' => array(),
+  );
+
+  $instances[] = array(
+    'field_name' => 'contact_image',
+    'entity_type' => 'crm_contact',
+    'bundle' => $type,
+    'label' => t('Image'),
+    'required' => FALSE,
+    'settings' => array(),
+    'widget' => array(
+      'type' => 'image_image',
+    ),
+    'display' => array(),
+  );
+
+  $instances[] = array(
+    'field_name' => 'contact_address',
+    'entity_type' => 'crm_contact',
+    'bundle' => $type,
+    'label' => t('Address'),
+    'required' => FALSE,
+    'settings' => array(),
+    'widget' => array(
+      'type' => 'addressfield_standard',
+    ),
+    'display' => array(),
+  );
+
+  $instances[] = array(
+    'field_name' => 'contact_email',
+    'entity_type' => 'crm_contact',
+    'bundle' => $type,
+    'label' => t('E-Mail Address'),
+    'required' => FALSE,
+    'settings' => array(),
+    'widget' => array(
+      'type' => 'text_textfield',
+    ),
+    'display' => array(),
+  );
+
+  $instances[] = array(
+    'field_name' => 'contact_phone',
+    'entity_type' => 'crm_contact',
+    'bundle' => $type,
+    'label' => t('Phone Number'),
+    'required' => FALSE,
+    'settings' => array(),
+    'widget' => array(
+      'type' => 'text_textfield',
+    ),
+    'display' => array(),
+  );
+
+  // Create field instances if they don't exist
+  foreach ($instances as $instance) {
+    $info_instance = field_info_instance('crm_contact', $instance['field_name'], $type);
+    if (empty($info_instance)) {
+      field_create_instance($instance);
+    }
+  }
 }
 
 

@@ -10,7 +10,16 @@ function crm_contact_form_wrapper($contact) {
 
 
 function crm_contact_add_page() {
-  
+  $item = menu_get_item();
+  //var_dump($item);
+  $content = system_admin_menu_block($item);
+
+  if (count($content) == 1) {
+    $item = array_shift($content);
+    drupal_goto($item['href']);
+  }
+
+  return theme('crm_contact_add_list', array('content' => $content));
 }
 
 
