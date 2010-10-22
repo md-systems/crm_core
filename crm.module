@@ -179,13 +179,13 @@ function crm_menu() {
     'file' => 'pages/contact.pages.inc',
   );
 
-  $item['crm/contact/%crm_contact/revisions'] = array(
+  $items['crm/contact/%crm_contact/revisions'] = array(
     'title' => 'Revisions',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('crm_contact_revision_form', 2),
     'access arguments' => array('add contacts'),
     'type' => MENU_LOCAL_TASK,
-    'context' => MENU_CONTEXT_PAGE,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'file' => 'pages/contact.pages.inc',
   );
 
@@ -213,8 +213,8 @@ function crm_menu() {
       'title' => 'Add @type',
       'title arguments' => array('@type' => $contact_type->name),
       'description' => $contact_type->description,
-      'page callback' => 'crm_contact_form_wrapper',
-      'page arguments' => array(crm_contact_type_new($type)),
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('crm_contact_form', crm_contact_type_new($type)),
       'access arguments' => array('add contacts'),
       'file' => 'pages/contact.pages.inc',
     );
