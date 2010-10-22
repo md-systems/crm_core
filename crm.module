@@ -16,10 +16,12 @@ function crm_entity_info() {
       'label' => t('Contact'),
       'controller class' => 'CRMContactController',
       'base table' => 'crm_contact',
+      'revision table' => 'crm_contact_revision',
       'uri callback' => 'crm_contact_uri',
       'fieldable' => TRUE,
       'entity keys' => array(
         'id' => 'contact_id',
+        'revision' => 'vid',
         'bundle' => 'type',
       ),
       'bundle keys' => array(
@@ -171,6 +173,16 @@ function crm_menu() {
     'title' => 'Edit',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('crm_contact_form', 2),
+    'access arguments' => array('add contacts'),
+    'type' => MENU_LOCAL_TASK,
+    'context' => MENU_CONTEXT_PAGE,
+    'file' => 'pages/contact.pages.inc',
+  );
+
+  $item['crm/contact/%crm_contact/revisions'] = array(
+    'title' => 'Revisions',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_contact_revision_form', 2),
     'access arguments' => array('add contacts'),
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE,
