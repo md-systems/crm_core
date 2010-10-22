@@ -4,6 +4,7 @@
  * View a single contact record.
  */
 function crm_contact_view($contact) {
+  field_attach_prepare_view('crm_contact', array($contact->contact_id => $contact), 'full');
   return field_attach_view('crm_contact', $contact, 'full');
 }
 
@@ -42,7 +43,6 @@ function crm_contact_add_page() {
 function crm_contact_form($form, &$form_state, $contact) {
   // Ensure this include file is loaded when the form is rebuilt from the cache.
   $form_state['build_info']['file'] = drupal_get_path('module', 'crm_contact') . '/pages/contact.pages.inc';
-
   
   // Add the field related form elements.
   $form_state['crm_contact'] = $contact;
@@ -124,6 +124,10 @@ function crm_contact_delete_form($contact) {
  * Form for comparing different versions of a contact.
  */
 function crm_contact_revision_form($contact) {
+
+  $revisions = crm_contact_revision_list($contact);
+  var_dump($revisions);
+
   $form['placeholder'] = array(
     '#markup' => 'This is a placeholder for now.',
   );
