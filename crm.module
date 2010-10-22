@@ -113,36 +113,6 @@ function crm_theme() {
   return $theme;
 }
 
-/**
- * Implements hook_field_extra_fields().
- */
-// function user_field_extra_fields() {
-//   $return['user']['user'] = array(
-//     'form' => array(
-//       'account' => array(
-//         'label' => 'User name and password',
-//         'description' => t('User module account form elements'),
-//         'weight' => -10,
-//       ),
-//       'timezone' => array(
-//         'label' => 'Timezone',
-//         'description' => t('User module timezone form element.'),
-//         'weight' => 6,
-//       ),
-//     ),
-//     'display' => array(
-//       'summary' => array(
-//         'label' => 'History',
-//         'description' => t('User module history view element.'),
-//         'weight' => 5,
-//       ),
-//     ),
-//   );
-// 
-//   return $return;
-// }
-
-
 
 /**
  * Implements hook_menu().
@@ -220,30 +190,6 @@ function crm_menu() {
     );
   }
 
-/*
-  $items['admin/commerce/products/add'] = array(
-    'title' => 'Add a product',
-    'description' => 'Add a new product for sale.',
-    'page callback' => 'commerce_product_ui_add_page',
-    'access callback' => 'commerce_product_ui_product_add_any_access',
-    'type' => MENU_LOCAL_ACTION,
-    'weight' => 10,
-    'file' => 'includes/commerce_product_ui.products.inc',
-  );
-  foreach (commerce_product_types() as $type => $product_type) {
-    $items['admin/commerce/products/add/' . $type] = array(
-      'title' => 'Create @name',
-      'title arguments' => array('@name' => $product_type->name),
-      'description' => $product_type->description,
-      'page callback' => 'commerce_product_ui_product_form_wrapper',
-      'page arguments' => array(commerce_product_new($type)),
-      'access callback' => 'commerce_product_access',
-      'access arguments' => array('create', $type),
-      'file' => 'includes/commerce_product_ui.products.inc',
-    );
-  }
- */
-
   /*
    * Contact types
    */
@@ -285,18 +231,6 @@ function crm_menu() {
     'file' => 'pages/contact_types.pages.inc',
     'weight' => 10,
   );
-
- 
-/*  
-  $items['crm/%contact/%crm_contact'] = array(
-    'title' => 'Edit',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('user_profile_form', 1),
-    'access callback' => 'user_edit_access',
-    'access arguments' => array(1),
-    'type' => MENU_LOCAL_TASK,
-    'file' => 'user.pages.inc',
-  );*/
 
   return $items;
 }
