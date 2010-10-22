@@ -108,11 +108,15 @@ function crm_theme() {
       'variables' => array('content' => array()),
       'file' => 'theme/crm_contact.theme.inc',
     ),
+    'crm_contact_revsions' => array(
+      'variables' => array('contact_revisions' => array()),
+      'file' => 'theme/crm_contact.theme.inc',
+    ),
   );
 
   return $theme;
 }
-
+ 
 
 /**
  * Implements hook_menu().
@@ -553,4 +557,13 @@ function crm_contact_load($contact_id) {
 
 function crm_contact_load_multiple($contact_ids = array(), $conditions = array(), $reset = FALSE) {
   return entity_load('crm_contact', $contact_ids, $conditions, $reset);
+}
+
+
+function crm_contact_revision_list($contact) {
+  return db_select('crm_contact_revision', 'rev')->
+           fields('rev', array('vid', 'log', 'created', 'changed', 'uid'))->
+           condition('contact_id', $contact->contact_id)->
+           execute()->
+           fetchAllAssoc('vid', $fetch);
 }
