@@ -126,6 +126,12 @@ function crm_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
+      'changed' => array(
+        'description' => 'The unix timestamp for when this revision was last changed.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
       'uid' => array(
         'description' => 'The {users}.uid that created this version.',
         'type' => 'int',
