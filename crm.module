@@ -193,6 +193,35 @@ function crm_menu() {
       'file' => 'pages/contact.pages.inc',
     );
   }
+  
+  
+  /*
+   * Contact Debug
+   */
+  if (module_exists('devel')) {
+    $items['crm/contact/%crm_contact/devel'] = array(
+      'title' => 'Devel',
+      'page_callback' => 'crm_contact_devel_load_object',
+      'page arguments' => array(2),
+      'access arguments' => array('access devel information'),
+      'type' => MENU_LOCAL_TASK,
+      'weight' => 100,
+    );
+    
+    $items['crm/contact/%crm_contact/devel/load'] = array(
+      'title' => 'Load',
+      'type' => MENU_DEFAULT_LOCAL_TASK,
+    );
+    
+    $items['crm/contact/%crm_contact/devel/render'] = array(
+      'title' => 'Render',
+      'page callback' => 'crm_contact_devel_render_object',
+      'page arguments' => array(2),
+      'access arguments' => array('access devel information'),
+      'type' => MENU_LOCAL_TASK,
+      'weight' => 100,
+    );
+  }
 
   /*
    * Contact types
@@ -423,7 +452,6 @@ function crm_initialize_contact_type($type) {
   );
 
   // Email and phone fields
-  // @TODO consider switching these over to e-mail and phone fields once the modules are installed
   $fields[] = array(
     'field_name' => 'contact_email',
     'type' => 'email',
@@ -562,10 +590,30 @@ function crm_contact_load_multiple($contact_ids = array(), $conditions = array()
 }
 
 
+/**
+ * View a single contact record.
+ */
+function crm_contact_view($contact) {
+  field_attach_prepare_view('crm_contact', array($contact->contact_id => $contact), 'full');
+  return field_attach_view('crm_contact', $contact, 'full');
+}
+
+
 function crm_contact_revision_list($contact) {
   return db_select('crm_contact_revision', 'rev')->
            fields('rev', array('vid', 'log', 'created', 'changed', 'uid'))->
            condition('contact_id', $contact->contact_id)->
            execute()->
            fetchAllAssoc('vid', $fetch);
+}
+
+
+function crm_contact_devel_load_object($contact) {
+  module_load_include('inc', 'devel', 'devel.pages');
+  return devel_load_object('crm_contact', $contact);
+}
+
+function crm_contact_devel_render_object($contact) {
+  module_load_include('inc', 'devel', 'devel.pages');
+  return devel_render_object('crm_contact', $contact);
 }

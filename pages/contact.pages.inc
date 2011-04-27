@@ -1,13 +1,5 @@
 <?php
 
-/**
- * View a single contact record.
- */
-function crm_contact_view($contact) {
-  field_attach_prepare_view('crm_contact', array($contact->contact_id => $contact), 'full');
-  return field_attach_view('crm_contact', $contact, 'full');
-}
-
 /*
  *
  */
