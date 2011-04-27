@@ -426,7 +426,7 @@ function crm_initialize_contact_type($type) {
   // @TODO consider switching these over to e-mail and phone fields once the modules are installed
   $fields[] = array(
     'field_name' => 'contact_email',
-    'type' => 'text',
+    'type' => 'email',
     'cardinality' => FIELD_CARDINALITY_UNLIMITED,
     'entity_types' => array('crm_contact'),
     'translatable' => FALSE,
@@ -435,7 +435,7 @@ function crm_initialize_contact_type($type) {
 
   $fields[] = array(
     'field_name' => 'contact_phone',
-    'type' => 'text',
+    'type' => 'phone_number',
     'cardinality' => FIELD_CARDINALITY_UNLIMITED,
     'entity_types' => array('crm_contact'),
     'translatable' => FALSE,
@@ -476,7 +476,9 @@ function crm_initialize_contact_type($type) {
     'widget' => array(
       'type' => 'image_image',
     ),
-    'display' => array(),
+    'display' => array(
+      'label' => 'hidden',
+    ),
   );
 
   $instances[] = array(
@@ -513,7 +515,7 @@ function crm_initialize_contact_type($type) {
     'required' => FALSE,
     'settings' => array(),
     'widget' => array(
-      'type' => 'text_textfield',
+      'type' => 'phone_number',
     ),
     'display' => array(),
   );
