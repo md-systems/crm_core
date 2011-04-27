@@ -63,12 +63,6 @@ function crm_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'uid' => array(
-        'description' => 'The {users}.uid that created this contact.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
       'created' => array(
         'type' => 'int',
         'not null' => TRUE,
@@ -90,10 +84,6 @@ function crm_schema() {
       'contact_revision' => array(
         'table' => 'crm_contact_revision',
         'columns' => array('vid' => 'vid'),
-      ),
-      'contact_creator' => array(
-        'table' => 'user',
-        'columns' => array('uid' => 'uid'),
       ),
     ),
     'primary key' => array('contact_id'),
