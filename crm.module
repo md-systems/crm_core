@@ -504,9 +504,7 @@ function crm_initialize_contact_type($type) {
     'widget' => array(
       'type' => 'image_image',
     ),
-    'display' => array(
-      'label' => 'hidden',
-    ),
+    'display' => array(),
   );
 
   $instances[] = array(
