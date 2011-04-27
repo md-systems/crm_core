@@ -21,9 +21,15 @@ function crm_contact_form_wrapper($contact) {
  */
 function crm_contact_add_page() {
   $item = menu_get_item();
-  //var_dump($item);
-  $content = system_admin_menu_block($item);
+  
+  $types = crm_contact_types();
+  $content = array();
+  foreach ($types as $type) {
+    $content[] = menu_get_item($item['href'] . '/' . $type->type);
+  }
 
+
+  // If there is only one contact type addition page we go straight to it
   if (count($content) == 1) {
     $item = array_shift($content);
     drupal_goto($item['href']);
