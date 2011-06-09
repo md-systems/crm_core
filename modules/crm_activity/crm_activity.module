@@ -1,1 +1,122 @@
 <?php
+
+/**
+ * Implements hook_entity_info().
+ */
+function crm_activity_entity_info() {
+//  $return = array(
+//    'crm_activity' => array(
+//      'label' => t('Actvity'),
+//      'entity class' => 'Entity',
+//      'controller class' => 'EntityAPIController',
+//      'base table' => 'crm_activity',
+//      'revision table' => 'crm_activity_revision',
+//      'fieldable' => TRUE,
+//      'entity keys' => array(
+//        'id' => 'activity_id',
+//        'bundle' => 'type',
+//        'revision' => 'revision_id',
+//      ),
+//      'bundle keys' => array(
+//        'bundle' => 'type',
+//      ),
+//      'bundles' => array(),
+//      'load hook' => 'crm_activity_load',
+//      'view modes' => array(
+//        'full' => array(
+//          'label' => t('Contact'),
+//          'custom settings' => FALSE,
+//        ),
+//      ),
+//      'label callback' => 'entity_class_label',
+//      'uri callback' => 'entity_class_uri',
+////      'uri callback' => 'crm_activity_uri',
+////      'creation callback' => '_crm_activity_create',
+////      'save callback' => 'crm_activity_save',
+////      'deletion callback' => 'crm_activity_delete',
+////      'access callback' => 'crm_activity_access',
+//    ),
+//  );
+
+//  foreach (crm_activity_type_get_name() as $type => $name) {
+//    $return['crm_activity']['bundles'][$type] = array(
+//      'label' => $name,
+//      'admin' => array(
+//        'path' => 'crm/admin/activity/types/%crm_activity_type',
+//        'real path' => 'crm/admin/activity/types/' . str_replace('_', '-', $type),
+//        'bundle argument' => 4,
+//        'access arguments' => array('administer activity types'),
+//      ),
+//    );
+//  }
+
+  $return['crm_activity_type'] = array(
+    'label' => t('Activity type'),
+    'entity class' => 'CRMActivityType',
+    'controller class' => 'EntityAPIController',
+    'base table' => 'crm_activity_type',
+    'fieldable' => FALSE,
+//    'bundle of' => 'crm_activity',
+    'exportable' => TRUE,
+    'entity keys' => array(
+      'id' => 'id',
+      'name' => 'type',
+      'label' => 'label',
+    ),
+    'access callback' => 'crm_activity_type_access',
+    'module' => 'crm_activity',
+    // Enable the entity API's admin UI.
+    'admin ui' => array(
+      'path' => 'admin/structure/crm_activity_types',
+      'file' => 'crm_activity.admin.inc',
+      // OPTIONAL- See "Customize the User Interface" below if you set.
+//      'controller class' => 'Profile2TypeUIController',
+    ),
+  );
+
+  return $return;
+}
+
+function crm_activity_type_access($op, $type = NULL, $account = NULL) {
+  return user_access('administer activity types', $account);
+}
+
+function cms_activity_get_types($type_name = NULL) {
+  $types = entity_load('crm_activity_type', isset($type_name) ? array($type_name) : FALSE);
+  return isset($type_name) ? reset($types) : $types;
+}
+
+/**
+ * Use a separate class for profile types so we can specify some defaults
+ * modules may alter.
+ */
+class CRMActivityType extends Entity {
+
+  /**
+   * Whether the profile type appears in the user categories.
+   */
+  public $userCategory = FALSE;
+
+  /**
+   * Whether the profile is displayed on the user account page.
+   */
+  public $userView = FALSE;
+
+  public $type;
+  public $label;
+  public $weight = 0;
+
+  public function __construct($values = array()) {
+    parent::__construct($values, 'crm_activity_type');
+  }
+
+  /**
+   * Returns whether the profile type is locked, thus may not be deleted or renamed.
+   *
+   * Profile types provided in code are automatically treated as locked, as well
+   * as any fixed profile type.
+   */
+  public function isLocked() {
+    return isset($this->status) && empty($this->is_new) && (($this->status & ENTITY_IN_CODE) || ($this->status & ENTITY_FIXED));
+  }
+}

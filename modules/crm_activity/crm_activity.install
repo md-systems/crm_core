@@ -134,19 +134,23 @@ function crm_activity_schema() {
   $schema['crm_activity_type'] = array(
     'description' => 'Stores information about all defined activity types.',
     'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique activity type ID.',
+      ),
       'type' => array(
         'description' => 'The machine-readable name of this type.',
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
       ),
-      'name' => array(
+      'label' => array(
         'description' => 'The human-readable name of this type.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-        'translatable' => TRUE,
       ),
       'description' => array(
         'description' => 'A brief description of this type.',
@@ -155,15 +159,11 @@ function crm_activity_schema() {
         'size' => 'medium',
         'translatable' => TRUE,
       ),
-      'custom' => array(
-        'description' => 'A boolean indicating whether this type is defined by a module (FALSE) or by a user via Add content type (TRUE).',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-      ),
+    ) + entity_exportable_schema_fields(),
+    'primary key' => array('id'),
+    'unique keys' => array(
+      'type' => array('type'),
     ),
-    'primary key' => array('type'),
   );
 
   return $schema;
