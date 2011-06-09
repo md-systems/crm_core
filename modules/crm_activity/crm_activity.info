@@ -1,0 +1,31 @@
+; $Id$
+name = Activity
+description = Provide activity entity.
+package = CRM
+version = VERSION
+core = 7.x
+;configure = admin/config/crm
+
+; Dependencies
+dependencies[] = field_ui
+dependencies[] = entity
+
+; Field Dependencies
+;dependencies[] = field_group
+
+; =======================
+; Module Files
+; =======================
+
+; Base Files
+files[] = crm_activity.module
+files[] = crm_activity.install
+
+; Module includes
+;files[] = includes/crm_contact.controller.inc
+
+; Views include
+;files[] = includes/views/crm.views.inc
+
+; Views handlers
+;files[] = includes/views/handlers/crm_contact_handler_field_contact.inc
