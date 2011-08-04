@@ -123,7 +123,18 @@ function crm_theme() {
  */
 function crm_menu() {
   $items = array();
-  
+ 
+  /**
+   * Base CRM menu
+   */
+  $items['crm'] = array(
+    'title' => 'CRM',
+    'page callback' => 'crm_dashboard',
+    'access arguments' => array('view crm dashboard'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'pages/crm.pages.inc',
+  );
+
   /*
    * Contacts
    */
@@ -278,6 +289,33 @@ function crm_menu_alter(&$items) {
   $items['crm/admin/contact/types/%crm_contact_type/display']['context'] = MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE;
 }
 
+
+/**
+ * Implements hook_block_info().
+ */
+function crm_block_info() {
+  $blocks['navigation'] = array(
+    'info' => t('CRM Navigaiton'),
+    'cache' => DRUPAL_CACHE_PER_ROLE,
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function crm_block_view($delta) {
+  module_load_include('inc', 'crm', 'includes/crm.blocks');
+
+  $sub_func = 'crm_block_' . $delta . '_subject';
+  $con_func = 'crm_block_' . $delta . '_content';
+
+  return array(
+    'subject' => $sub_func(),
+    'content' => $con_func(),
+  );
+}
 
 /**
  * Implements hook_admin_paths().
