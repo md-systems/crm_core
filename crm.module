@@ -477,35 +477,7 @@ function crm_initialize_contact_type($type) {
     'type' => 'image',
     'entity_types' => array('crm_contact'),
     'translatable' => FALSE,
-    'locked' => TRUE,
-  );
-
-  // Address field
-  $fields[] = array(
-    'field_name' => 'contact_address',
-    'type' => 'addressfield',
-    'entity_types' => array('crm_contact'),
-    'translatable' => FALSE,
-    'locked' => TRUE,
-  );
-
-  // Email and phone fields
-  $fields[] = array(
-    'field_name' => 'contact_email',
-    'type' => 'email',
-    'cardinality' => FIELD_CARDINALITY_UNLIMITED,
-    'entity_types' => array('crm_contact'),
-    'translatable' => FALSE,
-    'locked' => TRUE,
-  );
-
-  $fields[] = array(
-    'field_name' => 'contact_phone',
-    'type' => 'phone_number',
-    'cardinality' => FIELD_CARDINALITY_UNLIMITED,
-    'entity_types' => array('crm_contact'),
-    'translatable' => FALSE,
-    'locked' => TRUE,
+    'locked' => FALSE,
   );
 
   // Create the fields if they don't exist
@@ -541,45 +513,6 @@ function crm_initialize_contact_type($type) {
     'settings' => array(),
     'widget' => array(
       'type' => 'image_image',
-    ),
-    'display' => array(),
-  );
-
-  $instances[] = array(
-    'field_name' => 'contact_address',
-    'entity_type' => 'crm_contact',
-    'bundle' => $type,
-    'label' => t('Address'),
-    'required' => FALSE,
-    'settings' => array(),
-    'widget' => array(
-      'type' => 'addressfield_standard',
-    ),
-    'display' => array(),
-  );
-
-  $instances[] = array(
-    'field_name' => 'contact_email',
-    'entity_type' => 'crm_contact',
-    'bundle' => $type,
-    'label' => t('E-Mail Address'),
-    'required' => FALSE,
-    'settings' => array(),
-    'widget' => array(
-      'type' => 'text_textfield',
-    ),
-    'display' => array(),
-  );
-
-  $instances[] = array(
-    'field_name' => 'contact_phone',
-    'entity_type' => 'crm_contact',
-    'bundle' => $type,
-    'label' => t('Phone Number'),
-    'required' => FALSE,
-    'settings' => array(),
-    'widget' => array(
-      'type' => 'phone_number',
     ),
     'display' => array(),
   );
