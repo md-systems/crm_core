@@ -235,6 +235,41 @@ function crm_menu() {
   }
 
   /*
+   * Contact Activities
+   */
+  $items['crm/contact/%crm_contact/activity'] = array(
+    'title' => 'Activity',
+    'description' => 'View contact activity',
+    'page callback' => 'crm_contact_activity',
+    'page arguments' => array(2),
+    'access arguments' => array('view contacts'),
+    'type' => MENU_LOCAL_TASK,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+    'file' => 'pages/contact_activity.pages.inc',
+  );
+
+  $items['crm/contact/%crm_contact/activity/add'] = array(
+    'title' => 'Add Activity',
+    'description' => 'Add an activity to this contact',
+    'page callback' => 'entity_ui_get_form',
+    'page arguments' => array('crm_activity', NULL, 'add'),
+    'access arguments' => array('add activities'),
+    'type' => MENU_LOCAL_ACTION,
+    'file' => 'pages/contact_activity.pages.inc',
+  );
+
+
+  $items['crm/activity/%crm_activity'] = array(
+  );
+
+  $items['crm/activity/%crm_activity/edit'] = array(
+  );
+
+  $items['crm/activity/%crm_activity/delete'] = array(
+  );
+
+
+  /*
    * Contact types
    */
   $items['crm/admin/contact/types'] = array(
@@ -275,6 +310,8 @@ function crm_menu() {
     'file' => 'pages/contact_types.pages.inc',
     'weight' => 10,
   );
+
+  
 
   return $items;
 }
@@ -585,4 +622,12 @@ function crm_contact_devel_load_object($contact) {
 function crm_contact_devel_render_object($contact) {
   module_load_include('inc', 'devel', 'devel.pages');
   return devel_render_object('crm_contact', $contact);
+}
+
+function crm_activity_form($form, &$form_state, $activity) {
+ 
+  var_dump($activity);
+ field_attach_form('crm_activity', $activity, $form, $form_state);
+  $form['#validate'][] = 'crm_activity_form_validate';
+  $form['#submit'][] = 'crm_activity_form_submit';
 }
