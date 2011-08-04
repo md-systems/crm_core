@@ -9,15 +9,13 @@
  * Implements hook_views_default_views().
  */
 function crm_views_default_views() {
-  $view = array();
-
   $view = new view;
   $view->name = 'crm_contacts';
   $view->description = 'A list of all contacts in the system';
   $view->tag = '';
-  $view->view_php = '';
   $view->base_table = 'crm_contact';
-  $view->is_cacheable = FALSE;
+  $view->human_name = '';
+  $view->core = 0;
   $view->api_version = '3.0-alpha1';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
@@ -26,6 +24,7 @@ function crm_views_default_views() {
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['query_comment'] = FALSE;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['style_plugin'] = 'table';
@@ -62,27 +61,26 @@ function crm_views_default_views() {
   $handler->display->display_options['fields']['contact_id']['alter']['alter_text'] = 0;
   $handler->display->display_options['fields']['contact_id']['alter']['make_link'] = 0;
   $handler->display->display_options['fields']['contact_id']['alter']['absolute'] = 0;
-  $handler->display->display_options['fields']['contact_id']['alter']['trim'] = 0;
   $handler->display->display_options['fields']['contact_id']['alter']['word_boundary'] = 1;
   $handler->display->display_options['fields']['contact_id']['alter']['ellipsis'] = 1;
   $handler->display->display_options['fields']['contact_id']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['contact_id']['alter']['trim'] = 0;
   $handler->display->display_options['fields']['contact_id']['alter']['html'] = 0;
   $handler->display->display_options['fields']['contact_id']['hide_empty'] = 0;
   $handler->display->display_options['fields']['contact_id']['empty_zero'] = 0;
   $handler->display->display_options['fields']['contact_id']['link_to_contact'] = 0;
-  /* Field: Fields: contact_name */
+  /* Field: Contact: Name */
   $handler->display->display_options['fields']['entity_id']['id'] = 'entity_id';
   $handler->display->display_options['fields']['entity_id']['table'] = 'field_data_contact_name';
-  $handler->display->display_options['fields']['entity_id']['field'] = 'entity_id';
-  $handler->display->display_options['fields']['entity_id']['label'] = 'Name';
+  $handler->display->display_options['fields']['entity_id']['field'] = 'contact_name';
   $handler->display->display_options['fields']['entity_id']['alter']['alter_text'] = 0;
   $handler->display->display_options['fields']['entity_id']['alter']['make_link'] = 1;
   $handler->display->display_options['fields']['entity_id']['alter']['path'] = 'crm/contact/[contact_id]';
   $handler->display->display_options['fields']['entity_id']['alter']['absolute'] = 0;
-  $handler->display->display_options['fields']['entity_id']['alter']['trim'] = 0;
   $handler->display->display_options['fields']['entity_id']['alter']['word_boundary'] = 1;
   $handler->display->display_options['fields']['entity_id']['alter']['ellipsis'] = 1;
   $handler->display->display_options['fields']['entity_id']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['entity_id']['alter']['trim'] = 0;
   $handler->display->display_options['fields']['entity_id']['alter']['html'] = 0;
   $handler->display->display_options['fields']['entity_id']['hide_empty'] = 0;
   $handler->display->display_options['fields']['entity_id']['empty_zero'] = 0;
@@ -94,18 +92,20 @@ function crm_views_default_views() {
   $handler->display->display_options['fields']['created']['alter']['alter_text'] = 0;
   $handler->display->display_options['fields']['created']['alter']['make_link'] = 0;
   $handler->display->display_options['fields']['created']['alter']['absolute'] = 0;
-  $handler->display->display_options['fields']['created']['alter']['trim'] = 0;
   $handler->display->display_options['fields']['created']['alter']['word_boundary'] = 1;
   $handler->display->display_options['fields']['created']['alter']['ellipsis'] = 1;
   $handler->display->display_options['fields']['created']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['created']['alter']['trim'] = 0;
   $handler->display->display_options['fields']['created']['alter']['html'] = 0;
   $handler->display->display_options['fields']['created']['hide_empty'] = 0;
   $handler->display->display_options['fields']['created']['empty_zero'] = 0;
+  /* Sort criterion: CRM Contact: Updated date */
+  $handler->display->display_options['sorts']['changed']['id'] = 'changed';
+  $handler->display->display_options['sorts']['changed']['table'] = 'crm_contact';
+  $handler->display->display_options['sorts']['changed']['field'] = 'changed';
+  $handler->display->display_options['sorts']['changed']['order'] = 'DESC';
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page_1');
   $handler->display->display_options['path'] = 'crm/contact';
-  $views[$view->name] = $view;
-
-  return $views;
 }
