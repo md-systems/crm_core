@@ -6,10 +6,14 @@ version = VERSION
 core = 7.x
 configure = admin/config/crm
 
-; Dependencies
+; Core Dependencies
 dependencies[] = field_ui
 dependencies[] = image
+
+; Contrib Dependencies
 dependencies[] = views
+dependencies[] = relation
+dependencies[] = entity
 
 ; Field Dependencies
 dependencies[] = addressfield
