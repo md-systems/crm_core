@@ -107,6 +107,7 @@ function crm_contact_form_submit($form, &$form_state) {
 
   // Redirect based on the button clicked.
   drupal_set_message(t('Contact saved.'));
+  drupal_goto('crm/contact');
 }
 
 
