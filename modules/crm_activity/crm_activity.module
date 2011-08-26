@@ -50,7 +50,9 @@ function crm_activity_entity_info() {
     // Enable the entity API's admin UI.
     'admin ui' => array(
       'path' => 'crm/admin/activity/types',
+      'file' => 'crm_activity.admin.inc',
     ),
+    'access callback' => 'crm_activity_type_access',
   );
 
   return $return;
@@ -70,17 +72,6 @@ function crm_activity_get_types($type_name = NULL) {
  * modules may alter.
  */
 class CRMActivityType extends Entity {
-
-  /**
-   * Whether the profile type appears in the user categories.
-   */
-  public $userCategory = FALSE;
-
-  /**
-   * Whether the profile is displayed on the user account page.
-   */
-  public $userView = FALSE;
-
   public $type;
   public $label;
   public $weight = 0;
@@ -89,15 +80,10 @@ class CRMActivityType extends Entity {
     parent::__construct($values, 'crm_activity_type');
   }
 
-  /**
-   * Returns whether the profile type is locked, thus may not be deleted or renamed.
-   *
-   * Profile types provided in code are automatically treated as locked, as well
-   * as any fixed profile type.
-   */
-  public function isLocked() {
+  function isLocked() {
     return isset($this->status) && empty($this->is_new) && (($this->status & ENTITY_IN_CODE) || ($this->status & ENTITY_FIXED));
   }
+  
 }
 
 /**
