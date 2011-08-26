@@ -148,7 +148,7 @@ function crm_contact_type_form_validate($form, &$form_state) {
 }
 
 /**
- * Form submit handler: save a product type.
+ * Form submit handler: save a contact type.
  */
 function crm_contact_type_form_submit($form, &$form_state) {
   $contact_type = $form_state['contact_type'];
@@ -165,3 +165,57 @@ function crm_contact_type_form_submit($form, &$form_state) {
   // Redirect based on the button clicked.
   drupal_set_message(t('Contact type saved.'));
 }
+
+/**
+ * Given a contact type, present a form prompting for deletion of the contact type.
+ *
+ * @param $form
+ *  The confirmation form.
+ * @param $form_state
+ *  The state of the form.
+ * @param $contact_type
+ *  The machine readable name of the contact type to be deleted.
+ */
+function crm_contact_type_delete_confirm($form, &$form_state, $contact_type) {
+  $form_state['contact_type'] = $contact_type;
+
+  $form['message'] = array(
+    '#markup' => t('Are you sure you want to delete this contact type?  All contacts of this type will be delted.'),
+  );
+  
+  $form['actions'] = array(
+    '#type' => 'container',
+    '#attributes' => array('class' => array('form-actions')),
+    '#weight' => 40,
+  );
+
+  // We add the form's #submit array to this button along with the actual submit
+  // handler to preserve any submit handlers added by a form callback_wrapper.
+  $submit = array();
+
+  if (!empty($form['#submit'])) {
+    $submit += $form['#submit'];
+  }
+
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Delete contact type'),
+    '#submit' => $submit + array('crm_contact_type_delete_confirm_submit'),
+  );
+
+  $form['#validate'][] = 'crm_contact_type_delete_confirm_validate';
+
+  return $form;
+}
+
+/**
+ * 
+ */
+ function crm_contact_type_delete_confirm_validate($form, &$form_state) {
+  $contact_type = $form_state['contact_type'];
+  if (!crm_contact_type_validate_unique($contact_type->type)) {
+    form_set_error('submit', t('This contact type does not exist'));
+  }
+ }
+
+
