@@ -51,7 +51,7 @@ function crm_views_data() {
       'handler' => 'views_handler_sort',
     ),
     'argument' => array(
-      'handler' => 'views_handler_arugment_string',
+      'handler' => 'views_handler_argument_string',
     ),
   );
 
