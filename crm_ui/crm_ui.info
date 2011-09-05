@@ -1,0 +1,15 @@
+; $Id$
+name = DropCRM UI
+description = User Interface for DropCRM.
+package = CRM
+version = VERSION
+core = 7.x
+
+dependencies[] = crm
+
+; =======================
+; Module Files
+; =======================
+
+; Base Files
+files[] = crm.module
