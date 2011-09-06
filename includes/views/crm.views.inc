@@ -26,7 +26,7 @@ function crm_views_data() {
       'handler' => 'crm_contact_handler_field_contact',
       'click sortable' => TRUE,
     ),
-    'fitler' => array(
+    'filter' => array(
       'handler' => 'views_handler_filter_numeric',
     ),
     'sort' => array(
@@ -51,7 +51,7 @@ function crm_views_data() {
       'handler' => 'views_handler_sort',
     ),
     'argument' => array(
-      'handler' => 'views_handler_arugment_string',
+      'handler' => 'views_handler_argument_string',
     ),
   );
 
