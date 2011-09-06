@@ -45,6 +45,15 @@ function crm_ui_menu() {
     'context' => MENU_CONTEXT_PAGE,
     'file' => 'pages/contact.pages.inc',
   );
+  
+  $items['crm/contact/%crm_contact/revert/%'] = array(
+    'title' => 'Contact',
+    'page callback' => 'crm_contact_revert',
+    'page arguments' => array(2, 4),
+    'access arguments' => array('view contacts'),
+    'type' => MENU_CALLBACK,
+    'file' => 'pages/contact.pages.inc',
+  );  
 
   $items['crm/contact/%crm_contact/revisions'] = array(
     'title' => 'Revisions',

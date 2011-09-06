@@ -310,8 +310,8 @@ function crm_contact_save($contact) {
 }
 
 
-function crm_contact_load($contact_id) {
-  $contacts = crm_contact_load_multiple(array($contact_id));
+function crm_contact_load($contact_id, $conditions = array()) {
+  $contacts = crm_contact_load_multiple(array($contact_id), $conditions);  
   return $contacts ? reset($contacts) : FALSE;
 }
 
@@ -355,4 +355,12 @@ function crm_activity_form($form, &$form_state, $activity) {
  field_attach_form('crm_activity', $activity, $form, $form_state);
   $form['#validate'][] = 'crm_activity_form_validate';
   $form['#submit'][] = 'crm_activity_form_submit';
+}
+
+function crm_contact_revert($contact, $vid) {
+  if(entity_get_controller('crm_contact')->revertContact($contact, $vid)) {
+    drupal_set_message(t('CRM Contact was reversioned to %version version.', array('%version' => $vid)));  
+  }
+  drupal_goto('crm/contact/' . $contact->contact_id);
+  exit;
 }

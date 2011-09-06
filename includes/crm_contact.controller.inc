@@ -8,6 +8,9 @@
  * special handling for contact objects.
  */
 class CRMContactController extends DrupalDefaultEntityController {
+  public $revisionKey = 'vid';
+  public $revisionTable = 'crm_contact_revision';
+  
   /**
    * Create a basic contact object.
    */
@@ -109,8 +112,29 @@ class CRMContactController extends DrupalDefaultEntityController {
 
     $contact->uid = $temp_uid;
   }
-
-
+  
+  
+  /**
+   * Reverts contact to specific revision
+   */
+  public function revertContact($contact, $vid) {
+    $contact_revision = $this->load(    
+      array($contact->contact_id), 
+      array('vid' => $vid)
+    );
+    
+    $contact_revision = (is_array($contact_revision)) ? reset($contact_revision) : NULL; 
+      
+    if($contact_revision) {  
+      unset($contact_revision->vid);        
+      $this->save($contact_revision);  
+      return TRUE;     
+    }  
+    
+    return FALSE;
+  }
+  
+  
   /**
    * Delete multiple contacts by contact ID.
    */
