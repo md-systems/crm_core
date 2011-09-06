@@ -38,6 +38,7 @@ files[] = includes/views/crm.views.inc
 
 ; Views handlers
 files[] = includes/views/handlers/crm_contact_handler_field_contact.inc
+files[] = includes/views/handlers/crm_contact_handler_field_contact_revision.inc
 files[] = includes/views/handlers/crm_contact_handler_field_contact_type.inc
 ;files[] = includes/views/handlers/crm_contact_handler_field_contact_link.inc
 

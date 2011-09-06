@@ -98,6 +98,102 @@ function crm_views_data() {
     ),
   );
 
+  $data['crm_contact_revision']['table']['group'] = t('CRM Contacts Revisions');
 
+  $data['crm_contact_revision']['table']['base'] = array(
+    'field' => 'vid',
+    'title' => t('CRM Contacts Revisions'),
+    'help' => t('Contacts revisions from the CRM.'),
+  );
+
+  $data['crm_contact_revision']['vid'] = array(
+    'title' => t('Contact revision ID'),
+    'help' => t('The unqiue internal identifier for a contact revision.'),
+    'field' => array(
+      'handler' => 'crm_contact_handler_field_contact_revision',
+      'click sortable' => TRUE,
+    ),
+    'fitler' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+  );
+  
+  $data['crm_contact_revision']['contact_id'] = array(
+    'title' => t('Contact ID'),
+    'help' => t('The unqiue internal identifier for a contact revision.'),
+    'field' => array(
+      'handler' => 'crm_contact_handler_field_contact',
+      'click sortable' => TRUE,
+    ),
+    'fitler' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+  );
+
+  $data['crm_contact_revision']['table']['join'] = array(
+    // Index this array by the table name to which this table refers.
+    // 'left_field' is the primary key in the referenced table.
+    // 'field' is the foreign key in this table.
+    'users' => array(
+      'left_field' => 'uid',
+      'field' => 'uid',
+    ),
+  );  
+  
+  // Expose the creator uid.
+  $data['crm_contact_revision']['uid'] = array(
+    'title' => t('Creator'),
+    'help' => t('Relate a contact to the user who created it.'),
+    'relationship' => array(
+      'handler' => 'views_handler_relationship',
+      'base' => 'users',
+      'field' => 'uid',
+      'label' => t('Contact creator'),
+    ),
+  );
+
+  // Expose the created and changed timestamps.
+  $data['crm_contact_revision']['created'] = array(
+    'title' => t('Created date'),
+    'help' => t('The date the contact was first added.'),
+    'field' => array(
+      'handler' => 'views_handler_field_date',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort_date',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_date',
+    ),
+  );
+
+  $data['crm_contact_revision']['changed'] = array(
+    'title' => t('Updated date'),
+    'help' => t('The date the contact was last updated.'),
+    'field' => array(
+      'handler' => 'views_handler_field_date',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort_date',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_date',
+    ),
+  );  
+  
   return $data;
 }
