@@ -41,8 +41,8 @@ function crm_ui_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('crm_contact_form', 2),
     'access arguments' => array('add contacts'),
-    'type' => MENU_LOCAL_TASK,
-    'context' => MENU_CONTEXT_PAGE,
+    'type' => MENU_LOCAL_ACTION,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'file' => 'pages/contact.pages.inc',
   );
   
@@ -80,7 +80,7 @@ function crm_ui_menu() {
     'description' => 'Add a new contact to the CRM.',
     'page callback' => 'crm_contact_add_page',
     'access arguments' => array('add contacts'),
-    'type' => MENU_LOCAL_ACTION,
+    'type' => MENU_LOCAL_TASK,
     'weight' => 10,
     'file' => 'pages/contact.pages.inc',
   );
@@ -267,7 +267,7 @@ function crm_ui_block_info() {
  */
 function crm_ui_block_view($delta) {
   module_load_include('inc', 'crm_ui', 'includes/crm_ui.blocks');
-
+  
   $sub_func = 'crm_ui_block_' . $delta . '_subject';
   $con_func = 'crm_ui_block_' . $delta . '_content';
 
@@ -280,3 +280,7 @@ function crm_ui_block_view($delta) {
     'content' => $con_func(),
   );
 }
+
+
+
+
