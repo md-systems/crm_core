@@ -115,21 +115,31 @@ class CRMContactController extends DrupalDefaultEntityController {
   
   
   /**
-   * Reverts contact to specific revision
+   * Reverts contact to specific revision.
+   * 
+   * @param $contact
+   *   The fully loaded contact object of the contact to revert.
+   * @param $vid
+   *   The number revision ID to revert the contact to.
    */
   public function revertContact($contact, $vid) {
+    // Load the old revision
     $contact_revision = $this->load(    
       array($contact->contact_id), 
       array('vid' => $vid)
     );
     
+    // Reset and collect the specific revision, if it doesn't exist set to null
     $contact_revision = (is_array($contact_revision)) ? reset($contact_revision) : NULL; 
-      
+    
+    // If it's a proper contact revision, we create a new revision with the old data
+    // and log that information.
     if($contact_revision) {  
       unset($contact_revision->vid);        
+      $contact_revision->log = 'Reverted revision ' . $contact->vid . ' to revision ' . $vid . '.'; 
       $this->save($contact_revision);  
       return TRUE;     
-    }  
+    }
     
     return FALSE;
   }
