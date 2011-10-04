@@ -202,6 +202,31 @@ function crm_ui_menu() {
     'weight' => 10,
   );
 
+
+  /*
+   * Contact Relationships
+   */
+  $items['crm/contact/%crm_contact/relationships'] = array(
+    'title' => 'Relationships',
+    'description' => 'View contact relationships',
+    'page callback' => 'crm_contact_relationships',
+    'page arguments' => array(2),
+    'access arguments' => array('view contacts'),
+    'type' => MENU_LOCAL_TASK,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+    'file' => 'pages/contact_relationships.pages.inc',
+  );
+
+  $items['crm/contact/%crm_contact/relationships/add'] = array(
+    'title' => 'Add Activity',
+    'description' => 'Add a relationship to this contact',
+    'page callback' => 'crm_contact_relationships_add',
+    'page arguments' => array(2),
+    'access arguments' => array('add relationships'),
+    'type' => MENU_LOCAL_ACTION,
+    'file' => 'pages/contact_relationships.pages.inc',
+  );
+
   return $items;
 }
 
