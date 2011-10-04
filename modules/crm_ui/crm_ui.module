@@ -218,7 +218,7 @@ function crm_ui_menu() {
   );
 
   $items['crm/contact/%crm_contact/relationships/add'] = array(
-    'title' => 'Add Activity',
+    'title' => 'Add Relationship',
     'description' => 'Add a relationship to this contact',
     'page callback' => 'crm_contact_relationships_add',
     'page arguments' => array(2),
