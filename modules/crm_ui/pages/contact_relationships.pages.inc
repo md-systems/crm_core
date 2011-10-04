@@ -44,3 +44,12 @@ function crm_contact_relationships_add($crm_contact) {
 
   return $ret;
 }
+
+function crm_contact_relationships_add_form($form, &$form_state, $crm_contact, $relation_type) {  
+  $form = array();
+
+  dpm ($crm_contact);
+  dpm($relation_type);
+
+  return $form;
+}

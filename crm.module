@@ -85,7 +85,7 @@ function crm_permission() {
       'description' => t('Allows user to add relationship to the CRM contact.'),
     ),
     'edit relationships' => array(
-      'title' => t('Add Relationships'),
+      'title' => t('Edit Relationships'),
       'description' => t('Allows user to edit relationship of the CRM contact.'),
     ),
   );

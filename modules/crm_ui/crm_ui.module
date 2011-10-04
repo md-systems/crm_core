@@ -224,9 +224,20 @@ function crm_ui_menu() {
     'page arguments' => array(2),
     'access arguments' => array('add relationships'),
     'type' => MENU_LOCAL_ACTION,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'file' => 'pages/contact_relationships.pages.inc',
   );
 
+  $items['crm/contact/%crm_contact/relationships/add/%relation_type'] = array(
+    'title' => 'Add Relationship',
+    'description' => 'Add a relationship to this contact',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array(crm_contact_relationships_add_form, 2, 5),
+    'access arguments' => array('add relationships'),
+    'type' => MENU_CALLBACK,
+    'file' => 'pages/contact_relationships.pages.inc',
+  );
+  
   return $items;
 }
 
