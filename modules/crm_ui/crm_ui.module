@@ -1,11 +1,11 @@
-<?php 
+<?php
 
 /**
  * Implements hook_menu().
  */
 function crm_ui_menu() {
   $items = array();
- 
+
   /**
    * Base CRM menu
    */
@@ -45,7 +45,7 @@ function crm_ui_menu() {
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'file' => 'pages/contact.pages.inc',
   );
-  
+
   $items['crm/contact/%crm_contact/revert/%'] = array(
     'title' => 'Contact',
     'page callback' => 'crm_contact_revert',
@@ -53,7 +53,7 @@ function crm_ui_menu() {
     'access arguments' => array('view contacts'),
     'type' => MENU_CALLBACK,
     'file' => 'pages/contact.pages.inc',
-  );  
+  );
 
   $items['crm/contact/%crm_contact/revisions'] = array(
     'title' => 'Revisions',
@@ -95,8 +95,8 @@ function crm_ui_menu() {
       'file' => 'pages/contact.pages.inc',
     );
   }
-  
-  
+
+
   /*
    * Contact Debug
    */
@@ -109,12 +109,12 @@ function crm_ui_menu() {
       'type' => MENU_LOCAL_TASK,
       'weight' => 100,
     );
-    
+
     $items['crm/contact/%crm_contact/devel/load'] = array(
       'title' => 'Load',
       'type' => MENU_DEFAULT_LOCAL_TASK,
     );
-    
+
     $items['crm/contact/%crm_contact/devel/render'] = array(
       'title' => 'Render',
       'page callback' => 'crm_contact_devel_render_object',
@@ -139,13 +139,13 @@ function crm_ui_menu() {
     'file' => 'pages/contact_activity.pages.inc',
   );
 
-  $items['crm/contact/%crm_contact/activity/add'] = array(
+  $items['crm/contact/%crm_contact/activity/add/%crm_activity_type'] = array(
     'title' => 'Add Activity',
     'description' => 'Add an activity to this contact',
     'page callback' => 'entity_ui_get_form',
     'page arguments' => array('crm_activity', NULL, 'add'),
     'access arguments' => array('add activities'),
-    'type' => MENU_LOCAL_ACTION,
+    'type' => MENU_LOCAL_TASK,
     'file' => 'pages/contact_activity.pages.inc',
   );
 
@@ -159,7 +159,7 @@ function crm_ui_menu() {
   $items['crm/activity/%crm_activity/delete'] = array(
   );
 
-  
+
   /*
    * Contact types
    */
@@ -248,6 +248,10 @@ function crm_ui_menu_alter(&$items) {
   // Transform the field UI tabs into contextual links.
   $items['crm/admin/contact/types/%crm_contact_type/fields']['context'] = MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE;
   $items['crm/admin/contact/types/%crm_contact_type/display']['context'] = MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE;
+
+  // Make Views menu item local task.
+  $items['crm/contact/%/activity/add']['type'] = MENU_LOCAL_ACTION;
+  $items['crm/contact/%/activity/add']['title'] = t('Add Activity');
 }
 
 /**
@@ -303,20 +307,26 @@ function crm_ui_block_info() {
  */
 function crm_ui_block_view($delta) {
   module_load_include('inc', 'crm_ui', 'includes/crm_ui.blocks');
-  
+
   $sub_func = 'crm_ui_block_' . $delta . '_subject';
   $con_func = 'crm_ui_block_' . $delta . '_content';
 
   if(!function_exists($sub_func) || !function_exists($con_func)) {
-    return array();  
-  } 
-  
+    return array();
+  }
+
   return array(
     'subject' => $sub_func(),
     'content' => $con_func(),
   );
 }
 
-
-
-
+/**
+ * Implements hook_views_api().
+ */
+function crm_ui_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'crm_ui') . '/includes/views',
+  );
+}
