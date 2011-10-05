@@ -244,11 +244,19 @@ function crm_ui_menu() {
     'file' => 'pages/contact_relationships.pages.inc',
   );
 
-  $items['crm/contact/%crm_contact/relationships/add/%relation_type'] = array(
+  $items['crm/contact/%crm_contact/relationships/add/%relation_type/%'] = array(
     'title' => 'Add Relationship',
     'description' => 'Add a relationship to this contact',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array(crm_contact_relationships_add_form, 2, 5),
+    'page arguments' => array('crm_contact_relationships_add_form', 2, 5, 6),
+    'access arguments' => array('add relationships'),
+    'type' => MENU_CALLBACK,
+    'file' => 'pages/contact_relationships.pages.inc',
+  );
+
+  $items['crm/contact/%crm_contact/relationships/add/%relation_type/%/autocomplete'] = array(
+    'page callback' => 'crm_contact_relationships_add_autocomplete',
+    'page arguments' => array(2, 5, 6),
     'access arguments' => array('add relationships'),
     'type' => MENU_CALLBACK,
     'file' => 'pages/contact_relationships.pages.inc',
