@@ -51,12 +51,28 @@ function crm_contact_relationships_add_form($form, &$form_state, $crm_contact, $
   $form = array();
 
   // TODO: we need to take into account directional and non-directional relations
-
-  $bundle = 'crm_contact:' . $crm_contact->type;
-
-  $form['city'] = array(
-    '#title' => t('Contact name'),
+  
+  $form['relationship_type'] = array(
+    '#type' => 'item',
+    '#title' => t('Relationship type') . ': ' . $relation_type->label,
+    '#value' => "",
+  );
+  
+  $form['source_contact'] = array(
+    '#title' => t('Source contact name'),
     '#type' => 'textfield',
+    '#default_value' => !$reverse ? $crm_contact->contact_name[LANGUAGE_NONE][0]['safe_value'] . " [cid:$crm_contact->contact_id]" : '',
+    '#disabled' => !$reverse,
+    '#required' => true,
+    '#autocomplete_path' => 'crm/contact/' . $crm_contact->contact_id . '/relationships/add/' . $relation_type->relation_type . '/' . $reverse . '/autocomplete',
+  );
+
+  $form['destination_contact'] = array(
+    '#title' => t('Destination contact name'),
+    '#type' => 'textfield',
+    '#default_value' => $reverse ? $crm_contact->contact_name[LANGUAGE_NONE][0]['safe_value'] . " [cid:$crm_contact->contact_id]" : '',
+    '#disabled' => $reverse,
+    '#required' => true,
     '#autocomplete_path' => 'crm/contact/' . $crm_contact->contact_id . '/relationships/add/' . $relation_type->relation_type . '/' . $reverse . '/autocomplete',
   );
 
@@ -71,6 +87,8 @@ function crm_contact_relationships_add_form($form, &$form_state, $crm_contact, $
 function crm_contact_relationships_add_autocomplete($crm_contact, $relation_type, $reverse, $string) {
   $matches = array();
 
+  // $bundle = 'crm_contact:' . $crm_contact->type;
+    
   $query = new EntityFieldQuery;
 
   $result = $query
