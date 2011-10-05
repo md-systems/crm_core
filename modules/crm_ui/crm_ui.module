@@ -11,7 +11,7 @@ function crm_ui_menu() {
    */
   $items['crm'] = array(
     'title' => 'CRM',
-    'page callback' => 'crm_dashboard',
+    'page callback' => 'crm_ui_placeholder',
     'access arguments' => array('view crm dashboard'),
     'type' => MENU_NORMAL_ITEM,
     'file' => 'pages/crm_ui.pages.inc',
@@ -166,6 +166,14 @@ function crm_ui_menu() {
   $items['crm/activity/%crm_activity/delete'] = array(
   );
 
+  $items['crm/admin'] = array(
+    'title' => 'Administration',
+    'page callback' => 'crm_ui_placeholder',
+    'access arguments' => array('administer contact types'),
+    'type' => MENU_LOCAL_TASK,
+    'context' => MENU_CONTEXT_PAGE,
+    'weight' => 10,
+  );
 
   /*
    * Contact types
@@ -337,4 +345,11 @@ function crm_ui_views_api() {
     'path' => drupal_get_path('module', 'crm_ui') . '/includes/views',
   );
 }
+
+/**
+ * A placeholder function.
+ */
+ function crm_ui_placeholder() {
+  return "This is a placeholder.";
+ }
 
