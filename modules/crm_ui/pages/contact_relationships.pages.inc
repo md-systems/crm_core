@@ -136,12 +136,13 @@ function crm_contact_relationships_add_form_validate($form, &$form_state) {
     form_set_error('destination_contact', t('Please, input destination contact.'));
   }
 
-  if (!in_array('crm_contact:'.$source_contact->type, $relation_type->source_bundles)) {
+  $source_bundles = array_keys(_crm_contact_relationships_get_allowed_contact_types($relation_type, 0));
+  if (!in_array($source_contact->type, $source_bundles)) {
    form_set_error('source_contact', t('Please, input source contact of proper type.'));
   }
 
-  $target_bundles = $relation_type->directional ? $relation_type->target_bundles : $relation_type->source_bundles;
-  if (!in_array('crm_contact:'.$destination_contact->type, $target_bundles)) {
+  $target_bundles = array_keys(_crm_contact_relationships_get_allowed_contact_types($relation_type, $relation_type->directional));
+  if (!in_array($destination_contact->type, $target_bundles)) {
    form_set_error('destination_contact', t('Please, input destination contact of proper type.'));
   }
 }
@@ -173,7 +174,6 @@ function crm_contact_relationships_add_form_submit($form, &$form_state) {
   );
   $relation = relation_create($relation_type->relation_type, $endpoints);
   $rid = relation_save($relation);
-  dpm($rid);
 }
 
 /**
