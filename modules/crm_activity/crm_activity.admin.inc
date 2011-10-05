@@ -1,6 +1,20 @@
 <?php
 
 /**
+ * UI controller for CRM Activity Type.
+ */
+class CRMActivityTypeUIController extends EntityDefaultUIController {
+  /**
+   * Overrides hook_menu() defaults.
+   */
+  public function hook_menu() {
+    $items = parent::hook_menu();
+    $items[$this->path]['description'] = 'Manage activity types.';
+    return $items;
+  }
+}
+
+/**
  * Generates the profile type editing form.
  */
 function crm_activity_type_form($form, &$form_state, $crm_activity_type, $op = 'edit') {
@@ -63,9 +77,9 @@ function crm_activity_type_form_submit(&$form, &$form_state) {
   $crm_activity_type = entity_ui_form_submit_build_entity($form, $form_state);
   // Save and go back.
   $crm_activity_type->save();
-  $form_state['redirect'] = 'admin/structure/crm_activity_types';
+  $form_state['redirect'] = CRM_ACTIVITY_TYPE_ADMIN_PAGE;
 }
 
 function crm_activity_type_form_submit_delete(&$form, &$form_state) {
-  $form_state['redirect'] = 'admin/structure/crm_activity_types/manage/' . $form_state['crm_activity_type']->type . '/delete';
+  $form_state['redirect'] = CRM_ACTIVITY_TYPE_ADMIN_PAGE . '/manage/' . $form_state['crm_activity_type']->type . '/delete';
 }

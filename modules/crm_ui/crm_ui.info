@@ -12,4 +12,7 @@ dependencies[] = crm
 ; =======================
 
 ; Base Files
-files[] = crm.module
+files[] = crm_ui.module
+
+; Views Handlers
+files[] = includes/views/handlers/views_handler_field_activity_type.inc

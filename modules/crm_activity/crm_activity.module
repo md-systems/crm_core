@@ -1,5 +1,7 @@
 <?php
 
+define('CRM_ACTIVITY_TYPE_ADMIN_PAGE', 'crm/admin/activity/types');
+
 /**
  * Implements hook_entity_info().
  */
@@ -36,7 +38,7 @@ function crm_activity_entity_info() {
   $return['crm_activity_type'] = array(
     'label' => t('Activity Type'),
     'entity class' => 'CRMActivityType',
-    'controller class' => 'EntityAPIController',
+    'controller class' => 'EntityAPIControllerExportable',
     'base table' => 'crm_activity_type',
     'fieldable' => FALSE,
     'bundle of' => 'crm_activity',
@@ -49,8 +51,9 @@ function crm_activity_entity_info() {
     'module' => 'crm_activity',
     // Enable the entity API's admin UI.
     'admin ui' => array(
-      'path' => 'crm/admin/activity/types',
+      'path' => CRM_ACTIVITY_TYPE_ADMIN_PAGE,
       'file' => 'crm_activity.admin.inc',
+      'controller class' => 'CRMActivityTypeUIController',
     ),
     'access callback' => 'crm_activity_type_access',
   );
@@ -83,7 +86,6 @@ class CRMActivityType extends Entity {
   function isLocked() {
     return isset($this->status) && empty($this->is_new) && (($this->status & ENTITY_IN_CODE) || ($this->status & ENTITY_FIXED));
   }
-  
 }
 
 /**
