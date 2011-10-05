@@ -87,7 +87,8 @@ function crm_ui_menu() {
     'description' => 'Add a new contact to the CRM.',
     'page callback' => 'crm_contact_add_page',
     'access arguments' => array('add contacts'),
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_LOCAL_ACTION,
+    'context' => MENU_CONTEXT_PAGE,
     'weight' => 10,
     'file' => 'pages/contact.pages.inc',
   );
