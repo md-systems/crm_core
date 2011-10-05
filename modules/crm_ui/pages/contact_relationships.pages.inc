@@ -106,6 +106,10 @@ function crm_contact_relationships_add_form_validate($form, &$form_state) {
   $source_contact = _crm_contact_relationships_get_contact_from_autocomplete_field($form_state['values']['source_contact']);
   $destination_contact = _crm_contact_relationships_get_contact_from_autocomplete_field($form_state['values']['destination_contact']);
 
+  if (!$relation_type || !is_object($relation_type)) {
+    form_set_error('relation_type', t('Relation type is required.'));
+  }
+
   if (!$source_contact) {
     form_set_error('source_contact', t('Please, input source contact.'));
   }
@@ -121,6 +125,33 @@ function crm_contact_relationships_add_form_validate($form, &$form_state) {
   if (!in_array('crm_contact:'.$destination_contact->type, $target_bundles)) {
    form_set_error('destination_contact', t('Please, input destination contact of proper type.'));
   }
+}
+
+function crm_contact_relationships_add_form_submit($form, &$form_state) {
+  $relation_type = $form_state['values']['relation_type'];
+  $source_contact = _crm_contact_relationships_get_contact_from_autocomplete_field($form_state['values']['source_contact']);
+  $destination_contact = _crm_contact_relationships_get_contact_from_autocomplete_field($form_state['values']['destination_contact']);
+
+  // Create relationship between the order and the node
+  $endpoints = array(
+    0 => array(
+      'entity_type' => 'crm_contact',
+      'entity_id' => $source_contact->contact_id,
+      'entity_bundle' => $source_contact->type,
+      'r_index' => 0,
+      'entity_key' => $source_contact->type . ': ' . $source_contact->contact_id
+    ),
+    1 => array(
+      'entity_type' => 'crm_contact',
+      'entity_id' => $destination_contact->contact_id,
+      'entity_bundle' => $destination_contact->type,
+      'r_index' => 1,
+      'entity_key' => $destination_contact->type . ': ' . $destination_contact->contact_id
+    ),
+  );
+  $relation = relation_create($relation_type->relation_type, $endpoints);
+  $rid = relation_save($relation);
+  dpm($rid);
 }
 
 function crm_contact_relationships_add_autocomplete($crm_contact, $relation_type, $reverse, $string) {
