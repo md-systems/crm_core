@@ -17,6 +17,13 @@ function crm_ui_menu() {
     'file' => 'pages/crm_ui.pages.inc',
   );
 
+  $items['crm/dashboard'] = array(
+    'title' => 'Dashboard',
+    'weight' => -10,
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'context' => MENU_CONTEXT_PAGE,
+  );
+
   /*
    * Contacts
    */
