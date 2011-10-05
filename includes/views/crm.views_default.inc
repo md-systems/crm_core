@@ -116,14 +116,14 @@ function crm_views_default_views() {
   $view->description = '';
   $view->tag = 'default';
   $view->base_table = 'crm_contact_revision';
-  $view->human_name = 'crm_contacts_revisions';
+  $view->human_name = 'CRM Contact Revisions';
   $view->core = 7;
   $view->api_version = '3.0-alpha1';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'CRM Contacts Revisions';
+  $handler->display->display_options['title'] = 'CRM Contact Revisions';
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
@@ -151,7 +151,7 @@ function crm_views_default_views() {
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
-    ),  
+    ),
     'changed' => array(
       'sortable' => 0,
       'default_sort_order' => 'asc',
@@ -177,55 +177,24 @@ function crm_views_default_views() {
   $handler->display->display_options['fields']['vid']['id'] = 'vid';
   $handler->display->display_options['fields']['vid']['table'] = 'crm_contact_revision';
   $handler->display->display_options['fields']['vid']['field'] = 'vid';
-  /* Field: Contact (historical data): Name */
-  $handler->display->display_options['fields']['contact_name-revision_id']['id'] = 'contact_name-revision_id';
-  $handler->display->display_options['fields']['contact_name-revision_id']['table'] = 'field_revision_contact_name';
-  $handler->display->display_options['fields']['contact_name-revision_id']['field'] = 'contact_name-revision_id';
-  $handler->display->display_options['fields']['contact_name-revision_id']['label'] = '';
-  $handler->display->display_options['fields']['contact_name-revision_id']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['contact_name-revision_id']['alter']['alter_text'] = 0;
-  $handler->display->display_options['fields']['contact_name-revision_id']['alter']['make_link'] = 0;
-  $handler->display->display_options['fields']['contact_name-revision_id']['alter']['absolute'] = 0;
-  $handler->display->display_options['fields']['contact_name-revision_id']['alter']['external'] = 0;
-  $handler->display->display_options['fields']['contact_name-revision_id']['alter']['replace_spaces'] = 0;
-  $handler->display->display_options['fields']['contact_name-revision_id']['alter']['trim_whitespace'] = 0;
-  $handler->display->display_options['fields']['contact_name-revision_id']['alter']['nl2br'] = 0;
-  $handler->display->display_options['fields']['contact_name-revision_id']['alter']['word_boundary'] = 1;
-  $handler->display->display_options['fields']['contact_name-revision_id']['alter']['ellipsis'] = 1;
-  $handler->display->display_options['fields']['contact_name-revision_id']['alter']['strip_tags'] = 0;
-  $handler->display->display_options['fields']['contact_name-revision_id']['alter']['trim'] = 0;
-  $handler->display->display_options['fields']['contact_name-revision_id']['alter']['html'] = 0;
-  $handler->display->display_options['fields']['contact_name-revision_id']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['contact_name-revision_id']['element_default_classes'] = 1;
-  $handler->display->display_options['fields']['contact_name-revision_id']['hide_empty'] = 0;
-  $handler->display->display_options['fields']['contact_name-revision_id']['empty_zero'] = 0;
-  $handler->display->display_options['fields']['contact_name-revision_id']['hide_alter_empty'] = 0;
-  $handler->display->display_options['fields']['contact_name-revision_id']['field_api_classes'] = 0;
-  /* Field: CRM Contacts Revisions: Contact ID */
-  $handler->display->display_options['fields']['contact_id']['id'] = 'contact_id';
-  $handler->display->display_options['fields']['contact_id']['table'] = 'crm_contact_revision';
-  $handler->display->display_options['fields']['contact_id']['field'] = 'contact_id';
-  $handler->display->display_options['fields']['contact_id']['label'] = 'Contact';
-  $handler->display->display_options['fields']['contact_id']['alter']['alter_text'] = 1;
-  $handler->display->display_options['fields']['contact_id']['alter']['text'] = '[contact_name-revision_id]';
-  $handler->display->display_options['fields']['contact_id']['alter']['make_link'] = 1;
-  $handler->display->display_options['fields']['contact_id']['alter']['path'] = 'crm/contact/[contact_id]';
-  $handler->display->display_options['fields']['contact_id']['alter']['absolute'] = 0;
-  $handler->display->display_options['fields']['contact_id']['alter']['external'] = 0;
-  $handler->display->display_options['fields']['contact_id']['alter']['replace_spaces'] = 0;
-  $handler->display->display_options['fields']['contact_id']['alter']['trim_whitespace'] = 0;
-  $handler->display->display_options['fields']['contact_id']['alter']['nl2br'] = 0;
-  $handler->display->display_options['fields']['contact_id']['alter']['word_boundary'] = 1;
-  $handler->display->display_options['fields']['contact_id']['alter']['ellipsis'] = 1;
-  $handler->display->display_options['fields']['contact_id']['alter']['strip_tags'] = 0;
-  $handler->display->display_options['fields']['contact_id']['alter']['trim'] = 0;
-  $handler->display->display_options['fields']['contact_id']['alter']['html'] = 0;
-  $handler->display->display_options['fields']['contact_id']['element_label_colon'] = 1;
-  $handler->display->display_options['fields']['contact_id']['element_default_classes'] = 1;
-  $handler->display->display_options['fields']['contact_id']['hide_empty'] = 0;
-  $handler->display->display_options['fields']['contact_id']['empty_zero'] = 0;
-  $handler->display->display_options['fields']['contact_id']['hide_alter_empty'] = 0;
-  $handler->display->display_options['fields']['contact_id']['link_to_contact'] = 1;
+  $handler->display->display_options['fields']['vid']['label'] = 'Revision ID';
+  $handler->display->display_options['fields']['vid']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['vid']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['vid']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['vid']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['vid']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['vid']['alter']['trim_whitespace'] = 0;
+  $handler->display->display_options['fields']['vid']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['vid']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['vid']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['vid']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['vid']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['vid']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['vid']['element_label_colon'] = 1;
+  $handler->display->display_options['fields']['vid']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['vid']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['vid']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['vid']['hide_alter_empty'] = 0;
   /* Field: CRM Contacts Revisions: Updated date */
   $handler->display->display_options['fields']['changed']['id'] = 'changed';
   $handler->display->display_options['fields']['changed']['table'] = 'crm_contact_revision';
@@ -253,7 +222,7 @@ function crm_views_default_views() {
   $handler->display->display_options['fields']['name']['table'] = 'users';
   $handler->display->display_options['fields']['name']['field'] = 'name';
   $handler->display->display_options['fields']['name']['relationship'] = 'uid';
-  $handler->display->display_options['fields']['name']['label'] = 'Creator';
+  $handler->display->display_options['fields']['name']['label'] = 'Updated By';
   $handler->display->display_options['fields']['name']['alter']['alter_text'] = 0;
   $handler->display->display_options['fields']['name']['alter']['make_link'] = 0;
   $handler->display->display_options['fields']['name']['alter']['absolute'] = 0;
@@ -273,11 +242,34 @@ function crm_views_default_views() {
   $handler->display->display_options['fields']['name']['hide_alter_empty'] = 0;
   $handler->display->display_options['fields']['name']['link_to_user'] = 1;
   $handler->display->display_options['fields']['name']['overwrite_anonymous'] = 0;
+  /* Sort criterion: CRM Contacts Revisions: Updated date */
+  $handler->display->display_options['sorts']['changed']['id'] = 'changed';
+  $handler->display->display_options['sorts']['changed']['table'] = 'crm_contact_revision';
+  $handler->display->display_options['sorts']['changed']['field'] = 'changed';
+  $handler->display->display_options['sorts']['changed']['order'] = 'DESC';
+  /* Contextual filter: CRM Contacts Revisions: Contact ID */
+  $handler->display->display_options['arguments']['contact_id']['id'] = 'contact_id';
+  $handler->display->display_options['arguments']['contact_id']['table'] = 'crm_contact_revision';
+  $handler->display->display_options['arguments']['contact_id']['field'] = 'contact_id';
+  $handler->display->display_options['arguments']['contact_id']['default_action'] = 'empty';
+  $handler->display->display_options['arguments']['contact_id']['default_argument_type'] = 'fixed';
+  $handler->display->display_options['arguments']['contact_id']['default_argument_options']['argument'] = 'There are no revisions for this contact.';
+  $handler->display->display_options['arguments']['contact_id']['default_argument_skip_url'] = 0;
+  $handler->display->display_options['arguments']['contact_id']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['contact_id']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['contact_id']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['contact_id']['break_phrase'] = 0;
+  $handler->display->display_options['arguments']['contact_id']['not'] = 0;
 
   /* Display: CRM Contacts Revisions */
   $handler = $view->new_display('page', 'CRM Contacts Revisions', 'page');
-  $handler->display->display_options['path'] = 'crm/contact/revisions';
-   
+  $handler->display->display_options['path'] = 'crm/contact/%/revisions';
+  $handler->display->display_options['menu']['type'] = 'tab';
+  $handler->display->display_options['menu']['title'] = 'Revisions';
+  $handler->display->display_options['menu']['description'] = 'A list of revisions or this contact.';
+  $handler->display->display_options['menu']['weight'] = '0';
+  
+ 
   $views['crm_contacts_reivisions'] = $view;
   return $views;
 }
