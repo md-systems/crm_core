@@ -50,7 +50,10 @@ function crm_contact_relationships_add($crm_contact) {
 function crm_contact_relationships_add_form($form, &$form_state, $crm_contact, $relation_type, $reverse) {
   $form = array();
 
-  // TODO: we need to take into account directional and non-directional relations
+  $form['relation_type'] = array(
+    '#type' => 'value',
+    '#value' => $relation_type,
+  );
   
   $form['relationship_type'] = array(
     '#type' => 'item',
@@ -98,6 +101,28 @@ function crm_contact_relationships_add_form($form, &$form_state, $crm_contact, $
   return $form;
 }
 
+function crm_contact_relationships_add_form_validate($form, &$form_state) {
+  $relation_type = $form_state['values']['relation_type'];
+  $source_contact = _crm_contact_relationships_get_contact_from_autocomplete_field($form_state['values']['source_contact']);
+  $destination_contact = _crm_contact_relationships_get_contact_from_autocomplete_field($form_state['values']['destination_contact']);
+
+  if (!$source_contact) {
+    form_set_error('source_contact', t('Please, input source contact.'));
+  }
+  if (!$destination_contact) {
+    form_set_error('destination_contact', t('Please, input destination contact.'));
+  }
+
+  if (!in_array('crm_contact:'.$source_contact->type, $relation_type->source_bundles)) {
+   form_set_error('source_contact', t('Please, input source contact of proper type.'));
+  }
+
+  $target_bundles = $relation_type->directional ? $relation_type->target_bundles : $relation_type->source_bundles;
+  if (!in_array('crm_contact:'.$destination_contact->type, $target_bundles)) {
+   form_set_error('destination_contact', t('Please, input destination contact of proper type.'));
+  }
+}
+
 function crm_contact_relationships_add_autocomplete($crm_contact, $relation_type, $reverse, $string) {
   $matches = array();
   
@@ -138,4 +163,17 @@ function _crm_contact_relationships_get_allowed_contact_types($relation_type, $r
   }
   
   return $allowed_contact_types;
+}
+
+function _crm_contact_relationships_get_contact_from_autocomplete_field($string) {
+  $matches = array();
+  preg_match('/\[cid:([0-9]+)\]/', $string, $matches);
+  if (!array_key_exists(1, $matches) || !is_numeric($matches[1])) {
+    return false;
+  }
+  $contacts = entity_load('crm_contact', array($matches[1]));
+  if (empty($contacts)) {
+    return false;
+  }
+  return $contacts[$matches[1]];
 }
