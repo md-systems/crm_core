@@ -86,22 +86,29 @@ function crm_contact_relationships_add_form($form, &$form_state, $crm_contact, $
 
 function crm_contact_relationships_add_autocomplete($crm_contact, $relation_type, $reverse, $string) {
   $matches = array();
+  $contact_types = array();
 
-  // $bundle = 'crm_contact:' . $crm_contact->type;
-    
+  $bundles = $reverse ? $relation_type->target_bundles : $relation_type->source_bundles;
+  foreach ($bundles as $bundle) {
+    list($entity, $type) = split(':', $bundle);
+    if ($entity == 'crm_contact' && $type != '*') {
+      $contact_types[] = $type;
+    }
+  }
+  
   $query = new EntityFieldQuery;
-
-  $result = $query
+  $query
     ->entityCondition('entity_type', 'crm_contact')
     ->propertyCondition('contact_id', $crm_contact->contact_id, '<>')
-    ->fieldCondition('contact_name', 'value', $string, 'STARTS_WITH')
-    ->execute();
+    ->fieldCondition('contact_name', 'value', $string, 'STARTS_WITH');
+  if (!empty($contact_types)) $query->propertyCondition('type', $contact_types, 'IN');
+  $result = $query->execute();
 
   $contacts = entity_load('crm_contact', array_keys($result['crm_contact']));
-
   foreach ($contacts as $contact) {
     $matches[$contact->contact_name[LANGUAGE_NONE][0]['safe_value'] . " [cid:$contact->contact_id]"] = $contact->contact_name[LANGUAGE_NONE][0]['safe_value'];
   }
+  
   // return for JS
   drupal_json_output($matches);
 }
