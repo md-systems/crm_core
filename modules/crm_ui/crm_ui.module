@@ -288,6 +288,3 @@ function crm_ui_block_view($delta) {
   );
 }
 
-
-
-
