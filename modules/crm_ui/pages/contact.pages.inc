@@ -114,7 +114,29 @@ function crm_contact_form_submit($form, &$form_state) {
 /**
  * Form for deleteing a contact.
  */
-function crm_contact_delete_form($contact) {
+function crm_contact_delete_form($form, &$form_state, $contact) {
+  $form['contact_id'] = array('#type' => 'value', '#value' => $contact->contact_id);
+  return confirm_form($form,
+    t("Are you sure want to delete '@name' contact?", array('@name' => $contact->contact_name['und'][0]['value'])),
+    'crm/contact/' . $contact->contact_id, $description = NULL, $yes = t('Yes'), $no = t('No'));
+}
+
+
+/**
+ * Submit callback for crm_contact_delete_form().
+ */
+function crm_contact_delete_form_submit($form, &$form_state) {
+  if (crm_contact_delete($form_state['values']['contact_id'])) {
+    drupal_set_message(t('Contact deleted.'));
+  }
+  drupal_goto('crm/contact');
+}
+
+
+/**
+ * Validate callback for crm_contact_delete_form().
+ */
+function crm_contact_delete_form_validate($form, &$form_state) {
 
 }
 
@@ -123,7 +145,6 @@ function crm_contact_delete_form($contact) {
  * Form for comparing different versions of a contact.
  */
 function crm_contact_revision_form($contact) {
-
   $revisions = crm_contact_revision_list($contact);
   var_dump($revisions);
 

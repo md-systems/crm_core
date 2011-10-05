@@ -329,6 +329,15 @@ function crm_contact_load_multiple($contact_ids = array(), $conditions = array()
 }
 
 
+function crm_contact_delete($contact_id) {
+  return crm_contact_delete_multiple(array($contact_id));
+}
+
+function crm_contact_delete_multiple($contact_ids = array()) {
+  return entity_get_controller('crm_contact')->delete($contact_ids);
+}
+
+
 /**
  * View a single contact record.
  */
