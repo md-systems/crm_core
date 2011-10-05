@@ -1,14 +1,20 @@
 <?php
 
 /**
- * Returns a list of relatinships for this contact.
+ * Return a list of relatinships for this contact.
+ *
+ * @param $crm_contact
+ *   Entity object of crm_contact type.
  */
 function crm_contact_relationships($crm_contact) {
   return "This is a stub";
 }
 
 /**
- * Returns list of links to add relationship for specific contact.
+ * Return a list of links to add relationship for specific CRM contact.
+ *
+ * @param $crm_contact
+ *   Entity object of crm_contact type.
  */
 function crm_contact_relationships_add($crm_contact) {
 
@@ -47,6 +53,16 @@ function crm_contact_relationships_add($crm_contact) {
   return $ret;
 }
 
+/**
+ * Generate add relationship form.
+ *
+ * @param $crm_contact
+ *   Entity object of crm_contact type.
+ * @param $relation_type
+ *   Relation type object.
+ * @param $reverse
+ *   Whether relation is reversed.
+ */
 function crm_contact_relationships_add_form($form, &$form_state, $crm_contact, $relation_type, $reverse) {
   $form = array();
 
@@ -101,6 +117,9 @@ function crm_contact_relationships_add_form($form, &$form_state, $crm_contact, $
   return $form;
 }
 
+/**
+ * Perform validation for add relationship form.
+ */
 function crm_contact_relationships_add_form_validate($form, &$form_state) {
   $relation_type = $form_state['values']['relation_type'];
   $source_contact = _crm_contact_relationships_get_contact_from_autocomplete_field($form_state['values']['source_contact']);
@@ -127,6 +146,9 @@ function crm_contact_relationships_add_form_validate($form, &$form_state) {
   }
 }
 
+/**
+ * Perform submit for add relationship form. Save relationship.
+ */
 function crm_contact_relationships_add_form_submit($form, &$form_state) {
   $relation_type = $form_state['values']['relation_type'];
   $source_contact = _crm_contact_relationships_get_contact_from_autocomplete_field($form_state['values']['source_contact']);
@@ -154,6 +176,18 @@ function crm_contact_relationships_add_form_submit($form, &$form_state) {
   dpm($rid);
 }
 
+/**
+ * Autocomplete function for add relationship form. Lookup for contacts.
+ * 
+ * @param $crm_contact
+ *   Entity object of crm_contact type.
+ * @param $relation_type
+ *   Relation type object.
+ * @param $reverse
+ *   Whether relation is reversed.
+ * @param $string
+ *   String CRM contact is started with.
+ */
 function crm_contact_relationships_add_autocomplete($crm_contact, $relation_type, $reverse, $string) {
   $matches = array();
   
@@ -176,6 +210,14 @@ function crm_contact_relationships_add_autocomplete($crm_contact, $relation_type
   drupal_json_output($matches);
 }
 
+/**
+ * Return contact types available for specific relation.
+ *
+ * @param $relation_type
+ *   Relation type object.
+ * @param $reverse
+ *   Whether relation is reversed.
+ */
 function _crm_contact_relationships_get_allowed_contact_types($relation_type, $reverse) {
   $allowed_contact_types = array();
   
@@ -196,6 +238,12 @@ function _crm_contact_relationships_get_allowed_contact_types($relation_type, $r
   return $allowed_contact_types;
 }
 
+/**
+ * Extract contact id from the value of autocomplete contact field.
+ *
+ * @param $string
+ *   String that is processed.
+ */
 function _crm_contact_relationships_get_contact_from_autocomplete_field($string) {
   $matches = array();
   preg_match('/\[cid:([0-9]+)\]/', $string, $matches);
