@@ -70,7 +70,10 @@ function crm_contact_relationships_add_form($form, &$form_state, $crm_contact, $
     '#type' => 'value',
     '#value' => $relation_type,
   );
-  
+  $form['reverse'] = array(
+    '#type' => 'value',
+    '#value' => $reverse,
+  );
   $form['relationship_type'] = array(
     '#type' => 'item',
     '#title' => t('Relationship type') . ': ' . $relation_type->label,
@@ -113,7 +116,7 @@ function crm_contact_relationships_add_form($form, &$form_state, $crm_contact, $
     '#type' => 'submit',
     '#value' => t('Add relationship'),
   );
-    
+  
   return $form;
 }
 
@@ -152,6 +155,7 @@ function crm_contact_relationships_add_form_validate($form, &$form_state) {
  */
 function crm_contact_relationships_add_form_submit($form, &$form_state) {
   $relation_type = $form_state['values']['relation_type'];
+  $reverse = $form_state['values']['reverse'];
   $source_contact = _crm_contact_relationships_get_contact_from_autocomplete_field($form_state['values']['source_contact']);
   $destination_contact = _crm_contact_relationships_get_contact_from_autocomplete_field($form_state['values']['destination_contact']);
 
@@ -174,6 +178,9 @@ function crm_contact_relationships_add_form_submit($form, &$form_state) {
   );
   $relation = relation_create($relation_type->relation_type, $endpoints);
   $rid = relation_save($relation);
+
+  $redirect_contact = $reverse ? $destination_contact : $source_contact;
+  $form_state['redirect'] = 'crm/contact/' . $redirect_contact->contact_id . '/relationships/';
 }
 
 /**
