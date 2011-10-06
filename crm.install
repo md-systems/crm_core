@@ -37,8 +37,8 @@ function crm_install() {
   // Add default relationships
   $relation_types_info = array(
     array(
-      'relation_type' => 'crm_friends',
-      'label' => t('Friends'),
+      'relation_type' => 'crm_friend',
+      'label' => t('Friend'),
       'source_bundles' => array('crm_contact:individual'),
       'r_unique' => true,
     ),
