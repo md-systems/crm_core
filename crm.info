@@ -10,17 +10,17 @@ configure = admin/config/crm
 dependencies[] = field_ui
 dependencies[] = image
 
-; Contrib Dependencies
-dependencies[] = views
-dependencies[] = relation
-dependencies[] = entity
-
 ; Field Dependencies
 dependencies[] = addressfield
 dependencies[] = email
 dependencies[] = link
 dependencies[] = cck_phone
 dependencies[] = field_group
+
+; Contrib Dependencies
+dependencies[] = entity
+dependencies[] = views
+dependencies[] = relation
 
 ; =======================
 ; Module Files
