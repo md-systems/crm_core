@@ -125,6 +125,7 @@ function crm_contact_relationships_add_form($form, &$form_state, $crm_contact, $
  */
 function crm_contact_relationships_add_form_validate($form, &$form_state) {
   $relation_type = $form_state['values']['relation_type'];
+  $reverse = $form_state['values']['reverse'];
   $source_contact = _crm_contact_relationships_get_contact_from_autocomplete_field($form_state['values']['source_contact']);
   $destination_contact = _crm_contact_relationships_get_contact_from_autocomplete_field($form_state['values']['destination_contact']);
 
@@ -147,6 +148,18 @@ function crm_contact_relationships_add_form_validate($form, &$form_state) {
   $target_bundles = array_keys(_crm_contact_relationships_get_allowed_contact_types($relation_type, $relation_type->directional));
   if (!in_array($destination_contact->type, $target_bundles)) {
    form_set_error('destination_contact', t('Please, input destination contact of proper type.'));
+  }
+
+  if ($relation_type->r_unique) {
+    if(relation_relation_exists(
+      array(
+        array('entity_type' => 'crm_contact', 'entity_id' => $source_contact->contact_id),
+        array('entity_type' => 'crm_contact', 'entity_id' => $destination_contact->contact_id),
+      ),
+      $relation_type->relation_type
+    )) {
+      form_set_error($reverse ? 'source_contact' : 'destination_contact', t('This relationship exists. It should be unique.'));
+    }
   }
 }
 
