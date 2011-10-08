@@ -1,0 +1,100 @@
+<?php
+
+
+/**
+ * Implements hook_menu()
+ */
+function crm_user_sync_menu() {
+  $items = array();
+
+  // Only setup ui if crm_ui is present
+  $items['crm/admin/user-sync'] = array(
+    'title' => t('User Synchronization'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_user_sync_admin'),
+    'access arguments' => array('administer user-sync'),
+    'file' => 'crm_user_sync.admin.inc',
+  );
+
+  return $items;
+}
+
+
+/**
+ * Implements hook_permission()
+ */
+function crm_user_sync_permission() {
+  return array(
+    'administer user-sync' => array(
+      'title' => t('Administer User Synchronization'),
+      'description' => t('Access to configuration pages for User Synchronization'),
+    ),
+  );
+}
+
+
+/**
+ * Implements hook_user_insert()
+ */
+function crm_user_sync_user_insert(&$edit, $account, $category) {
+  crm_user_sync_sync($account);
+}
+
+
+/**
+ * Implements hook_user_delete()
+ */
+function crm_user_sync_user_delete($account) {
+  // @TODO: For now we delete the relation only.
+  // We should handle this properly in hook_user_cancel() regarding other
+  // cancellation methods.
+
+  $query = relation_query('user', $account->uid);
+  $query->propertyCondition('relation_type', 'crm_user_sync');
+  $query->propertyCondition('arity', 2);
+  $relations = $query->execute();
+  $relation_ids = array();
+  foreach ($relations as $relation) {
+    $relation_ids[] = $relation->rid;
+  }
+  if (!empty($relation_ids)) {
+    relation_multiple_delete($relation_ids);
+  }
+}
+
+
+/**
+ * Synchronizes user.
+ * @param $account to be synchronized 
+ */
+function crm_user_sync_sync($account) {
+  // @TODO: think about the logic here, what to do with multiple roles?
+  // For now we just use the first that has user-sync enabled, if there is.
+  $roles_sync = variable_get('crm_user_sync_roles', array());
+  $roles = array_intersect($roles_sync, $account->roles);
+  
+  $rid = key($roles);
+  $contact_type = variable_get('crm_user_sync_' . $rid . '_type', 'individual');
+
+  // Create the contact.
+  // For now we just add the name.
+  $contact = crm_contact_type_new($contact_type);
+  $contact->contact_name['und'][0]['value'] = $account->name;
+  crm_contact_save($contact);
+
+  // Create the relation
+  $endpoints = array(
+    array(
+      'entity_type' => 'user',
+      'entity_bundle' => 'user',
+      'entity_id' => $account->uid,
+    ),
+    array(
+      'entity_type' => 'crm_contact',
+      'entity_bundle' => $contact_type,
+      'entity_id' => $contact->contact_id,
+    ),
+  );
+  $relation = relation_create('crm_user_sync', $endpoints);
+  relation_save($relation);
+}
