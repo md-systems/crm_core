@@ -329,10 +329,31 @@ function crm_contact_load_multiple($contact_ids = array(), $conditions = array()
 }
 
 
+/**
+ * Delete single contact records
+ *   The wrapper for delete() method of 'crm_contact' controller.
+ *
+ * @param $contact_id
+ * contact id
+ *
+ * @return
+ * TRUE or throw exception and write it to watchdog.
+ */
 function crm_contact_delete($contact_id) {
   return crm_contact_delete_multiple(array($contact_id));
 }
 
+
+/**
+ * Delete multiply contact records
+ *   The wrapper for delete() method of 'crm_contact' controller.
+ *
+ * @param $contact_ids
+ * flat array of contact ids like array(5, 6, 7);
+ *
+ * @return
+ * TRUE or throw exception and write it to watchdog.
+ */
 function crm_contact_delete_multiple($contact_ids = array()) {
   return entity_get_controller('crm_contact')->delete($contact_ids);
 }
