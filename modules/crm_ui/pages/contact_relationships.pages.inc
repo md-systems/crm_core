@@ -1,14 +1,20 @@
 <?php
 
 /**
- * Returns a list of relatinships for this contact.
+ * Return a list of relatinships for this contact.
+ *
+ * @param $crm_contact
+ *   Entity object of crm_contact type.
  */
 function crm_contact_relationships($crm_contact) {
   return "This is a stub";
 }
 
 /**
- * Returns list of links to add relationship for specific contact.
+ * Return a list of links to add relationship for specific CRM contact.
+ *
+ * @param $crm_contact
+ *   Entity object of crm_contact type.
  */
 function crm_contact_relationships_add($crm_contact) {
 
@@ -47,6 +53,16 @@ function crm_contact_relationships_add($crm_contact) {
   return $ret;
 }
 
+/**
+ * Generate add relationship form.
+ *
+ * @param $crm_contact
+ *   Entity object of crm_contact type.
+ * @param $relation_type
+ *   Relation type object.
+ * @param $reverse
+ *   Whether relation is reversed.
+ */
 function crm_contact_relationships_add_form($form, &$form_state, $crm_contact, $relation_type, $reverse) {
   $form = array();
 
@@ -54,7 +70,10 @@ function crm_contact_relationships_add_form($form, &$form_state, $crm_contact, $
     '#type' => 'value',
     '#value' => $relation_type,
   );
-  
+  $form['reverse'] = array(
+    '#type' => 'value',
+    '#value' => $reverse,
+  );
   $form['relationship_type'] = array(
     '#type' => 'item',
     '#title' => t('Relationship type') . ': ' . $relation_type->label,
@@ -97,12 +116,16 @@ function crm_contact_relationships_add_form($form, &$form_state, $crm_contact, $
     '#type' => 'submit',
     '#value' => t('Add relationship'),
   );
-    
+  
   return $form;
 }
 
+/**
+ * Perform validation for add relationship form.
+ */
 function crm_contact_relationships_add_form_validate($form, &$form_state) {
   $relation_type = $form_state['values']['relation_type'];
+  $reverse = $form_state['values']['reverse'];
   $source_contact = _crm_contact_relationships_get_contact_from_autocomplete_field($form_state['values']['source_contact']);
   $destination_contact = _crm_contact_relationships_get_contact_from_autocomplete_field($form_state['values']['destination_contact']);
 
@@ -117,18 +140,35 @@ function crm_contact_relationships_add_form_validate($form, &$form_state) {
     form_set_error('destination_contact', t('Please, input destination contact.'));
   }
 
-  if (!in_array('crm_contact:'.$source_contact->type, $relation_type->source_bundles)) {
+  $source_bundles = array_keys(_crm_contact_relationships_get_allowed_contact_types($relation_type, 0));
+  if (!in_array($source_contact->type, $source_bundles)) {
    form_set_error('source_contact', t('Please, input source contact of proper type.'));
   }
 
-  $target_bundles = $relation_type->directional ? $relation_type->target_bundles : $relation_type->source_bundles;
-  if (!in_array('crm_contact:'.$destination_contact->type, $target_bundles)) {
+  $target_bundles = array_keys(_crm_contact_relationships_get_allowed_contact_types($relation_type, $relation_type->directional));
+  if (!in_array($destination_contact->type, $target_bundles)) {
    form_set_error('destination_contact', t('Please, input destination contact of proper type.'));
+  }
+
+  if ($relation_type->r_unique) {
+    if(relation_relation_exists(
+      array(
+        array('entity_type' => 'crm_contact', 'entity_id' => $source_contact->contact_id),
+        array('entity_type' => 'crm_contact', 'entity_id' => $destination_contact->contact_id),
+      ),
+      $relation_type->relation_type
+    )) {
+      form_set_error($reverse ? 'source_contact' : 'destination_contact', t('This relationship exists. It should be unique.'));
+    }
   }
 }
 
+/**
+ * Perform submit for add relationship form. Save relationship.
+ */
 function crm_contact_relationships_add_form_submit($form, &$form_state) {
   $relation_type = $form_state['values']['relation_type'];
+  $reverse = $form_state['values']['reverse'];
   $source_contact = _crm_contact_relationships_get_contact_from_autocomplete_field($form_state['values']['source_contact']);
   $destination_contact = _crm_contact_relationships_get_contact_from_autocomplete_field($form_state['values']['destination_contact']);
 
@@ -151,9 +191,23 @@ function crm_contact_relationships_add_form_submit($form, &$form_state) {
   );
   $relation = relation_create($relation_type->relation_type, $endpoints);
   $rid = relation_save($relation);
-  dpm($rid);
+
+  $redirect_contact = $reverse ? $destination_contact : $source_contact;
+  $form_state['redirect'] = 'crm/contact/' . $redirect_contact->contact_id . '/relationships/';
 }
 
+/**
+ * Autocomplete function for add relationship form. Lookup for contacts.
+ * 
+ * @param $crm_contact
+ *   Entity object of crm_contact type.
+ * @param $relation_type
+ *   Relation type object.
+ * @param $reverse
+ *   Whether relation is reversed.
+ * @param $string
+ *   String CRM contact is started with.
+ */
 function crm_contact_relationships_add_autocomplete($crm_contact, $relation_type, $reverse, $string) {
   $matches = array();
   
@@ -176,6 +230,14 @@ function crm_contact_relationships_add_autocomplete($crm_contact, $relation_type
   drupal_json_output($matches);
 }
 
+/**
+ * Return contact types available for specific relation.
+ *
+ * @param $relation_type
+ *   Relation type object.
+ * @param $reverse
+ *   Whether relation is reversed.
+ */
 function _crm_contact_relationships_get_allowed_contact_types($relation_type, $reverse) {
   $allowed_contact_types = array();
   
@@ -196,6 +258,12 @@ function _crm_contact_relationships_get_allowed_contact_types($relation_type, $r
   return $allowed_contact_types;
 }
 
+/**
+ * Extract contact id from the value of autocomplete contact field.
+ *
+ * @param $string
+ *   String that is processed.
+ */
 function _crm_contact_relationships_get_contact_from_autocomplete_field($string) {
   $matches = array();
   preg_match('/\[cid:([0-9]+)\]/', $string, $matches);
