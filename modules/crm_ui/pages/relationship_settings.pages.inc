@@ -35,10 +35,10 @@ function crm_relationship_types_overview() {
     if (!$type) continue;
     
     $url = 'admin/structure/relation/manage/' . $type;
-    $url_local = 'crm/admin/relationship/types/' . $type;
+    //$url_local = 'crm/admin/relationship/types/' . $type;
 
-    $row = array(l($type, $url_local));
-    $row[] = l(t('edit'), $url_local . '/edit');
+    $row = array(l($type, $url));
+    $row[] = l(t('edit'), $url . '/edit');
     if ($field_ui) {
       $row[] =  l(t('manage fields'), $url . '/fields');
       $row[] =  l(t('display fields'), $url . '/display');

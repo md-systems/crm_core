@@ -25,7 +25,7 @@ function crm_contact_relationships_add($crm_contact) {
   $bundle_any = 'crm_contact:*';
 
   $relation_types = relation_get_types();
-  $crm_relationship_types = array_values(variable_get('crm_relationship_settings_types', array()));
+  $crm_relationship_types = variable_get('crm_relationship_settings_types', array());
   foreach ($relation_types as $relation_type) {
     if (!in_array($relation_type->relation_type, $crm_relationship_types, true)) continue;
     if (in_array($bundle, $relation_type->source_bundles) || in_array($bundle_any, $relation_type->source_bundles)) {

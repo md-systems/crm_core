@@ -391,3 +391,44 @@ function crm_ui_views_api() {
   return "This is a placeholder.";
  }
 
+/**
+ * Implements hook_form_FORM_ID_alter
+ */
+function crm_ui_form_relation_type_form_alter(&$form, &$form_state) {
+  $relationship_types = variable_get('crm_relationship_settings_types');
+  $type = $form['relation_type']['#default_value'];
+  $alter = false;
+
+  if (in_array($type, $relationship_types) && $relationship_types[$type]) {
+    $alter = true;
+  }
+
+  if ($alter) {
+    $form['transitive']['#type'] = 'value';
+    $form['transitive']['#default_value'] = 0;
+
+    $form['r_unique']['#type'] = 'value';
+    $form['r_unique']['#default_value'] = 0;
+
+    $form['min_arity']['#type'] = 'value';
+    $form['r_unique']['#default_value'] = 2;
+
+    $form['max_arity']['#type'] = 'value';
+    $form['r_unique']['#default_value'] = 2;
+
+    $contact_types = crm_contact_types();
+
+    $options = array('crm_contact:*' => t('Any'));
+    foreach ($contact_types as $contact_type) {
+      $options['crm_contact:' . $contact_type->type] = t($contact_type->name);
+    }
+
+    $form['source_bundles']['#options'] = $options;
+    $form['source_bundles']['#size'] = count ($options);
+    $form['source_bundles']['#title'] = t('Source ontacts types');
+
+    $form['target_bundles']['#options'] = $options;
+    $form['target_bundles']['#size'] = count ($options);
+    $form['target_bundles']['#title'] = t('Destination destination types');
+  }
+}
