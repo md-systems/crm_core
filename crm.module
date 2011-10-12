@@ -80,14 +80,18 @@ function crm_permission() {
       'title' => t('Edit Contacts'),
       'description' => t('Allows the user to edit contacts that have already been added to the CRM.'),
     ),
-    'add relationships' => array(
+    'add crm relationships' => array(
       'title' => t('Add Relationships'),
       'description' => t('Allows user to add relationship to the CRM contact.'),
     ),
-    'edit relationships' => array(
+    'edit crm relationships' => array(
       'title' => t('Edit Relationships'),
       'description' => t('Allows user to edit relationship of the CRM contact.'),
     ),
+    'administer crm relationship' => array(
+      'title' => t('Administer Relationships'),
+      'description' => t('Allows user to administer CRM relationships.'),
+     )
   );
 }
 
@@ -326,6 +330,36 @@ function crm_contact_load($contact_id, $conditions = array()) {
 
 function crm_contact_load_multiple($contact_ids = array(), $conditions = array(), $reset = FALSE) {
   return entity_load('crm_contact', $contact_ids, $conditions, $reset);
+}
+
+
+/**
+ * Delete single contact records
+ *   The wrapper for delete() method of 'crm_contact' controller.
+ *
+ * @param $contact_id
+ * contact id
+ *
+ * @return
+ * TRUE or throw exception and write it to watchdog.
+ */
+function crm_contact_delete($contact_id) {
+  return crm_contact_delete_multiple(array($contact_id));
+}
+
+
+/**
+ * Delete multiply contact records
+ *   The wrapper for delete() method of 'crm_contact' controller.
+ *
+ * @param $contact_ids
+ * flat array of contact ids like array(5, 6, 7);
+ *
+ * @return
+ * TRUE or throw exception and write it to watchdog.
+ */
+function crm_contact_delete_multiple($contact_ids = array()) {
+  return entity_get_controller('crm_contact')->delete($contact_ids);
 }
 
 

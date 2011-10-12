@@ -33,8 +33,39 @@ function crm_install() {
   $household->description = t('A collection of individuals generally located at the same residence.');
   $household->is_new = TRUE;
   crm_contact_type_save($household);
-}
 
+  // Add default relationships
+  $relation_types_info = array(
+    array(
+      'relation_type' => 'crm_friend',
+      'label' => t('Friend'),
+      'source_bundles' => array('crm_contact:individual'),
+      'r_unique' => true,
+    ),
+    array(
+      'relation_type' => 'crm_employee',
+      'label' => t('Employee of'),
+      'reverse_label' => t('Employee'),
+      'directional' => true,
+      'r_unique' => true,
+      'source_bundles' => array('crm_contact:individual'),
+      'target_bundles' => array('crm_contact:organization'),
+    ),
+    array(
+      'relation_type' => 'crm_member',
+      'label' => t('Member of'),
+      'reverse_label' => t('Member'),
+      'directional' => true,
+      'r_unique' => true,
+      'source_bundles' => array('crm_contact:individual'),
+      'target_bundles' => array('crm_contact:household'),
+    ),
+  );
+  foreach ($relation_types_info as $relation_type_info) {
+    $relation_type = relation_type_create($relation_type_info);
+    relation_type_save($relation_type);
+  }
+}
 
 /**
  * Implements hook_schema().

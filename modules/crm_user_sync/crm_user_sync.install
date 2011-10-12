@@ -1,0 +1,20 @@
+<?php
+
+
+/**
+ * Implements hook_install()
+ */
+function crm_user_sync_install() {
+  // Add relation type
+  $relation_type_info = array(
+    'relation_type' => 'crm_user_sync',
+    'label' => t('Contact'),
+    'reverse_label' => t('User'),
+    'source_bundles' => array('user:user'),
+    'target_bundles' => array('crm_contact:*'),
+    'r_unique' => true,
+    'directional' => true,
+  );
+  $relation_type = relation_type_create($relation_type_info);
+  relation_type_save($relation_type);
+}

@@ -238,21 +238,58 @@ function crm_ui_menu() {
     'description' => 'Add a relationship to this contact',
     'page callback' => 'crm_contact_relationships_add',
     'page arguments' => array(2),
-    'access arguments' => array('add relationships'),
+    'access arguments' => array('add crm relationships'),
     'type' => MENU_LOCAL_ACTION,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'file' => 'pages/contact_relationships.pages.inc',
   );
 
-  $items['crm/contact/%crm_contact/relationships/add/%relation_type'] = array(
+  $items['crm/contact/%crm_contact/relationships/add/%relation_type/%'] = array(
     'title' => 'Add Relationship',
     'description' => 'Add a relationship to this contact',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array(crm_contact_relationships_add_form, 2, 5),
-    'access arguments' => array('add relationships'),
+    'page arguments' => array('crm_contact_relationships_add_form', 2, 5, 6),
+    'access arguments' => array('add crm relationships'),
+    'type' => MENU_LOCAL_TASK,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+    'file' => 'pages/contact_relationships.pages.inc',
+  );
+
+  $items['crm/contact/%crm_contact/relationships/add/%relation_type/%/autocomplete'] = array(
+    'page callback' => 'crm_contact_relationships_add_autocomplete',
+    'page arguments' => array(2, 5, 6),
+    'access arguments' => array('add crm relationships'),
     'type' => MENU_CALLBACK,
     'file' => 'pages/contact_relationships.pages.inc',
   );
+
+
+  /*
+   * CRM Relationship settings
+   */
+  $items['crm/admin/relationship/settings'] = array(
+    'title' => 'Relationship settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_relationship_settings'),
+    'access arguments' => array('administer crm relationship'),
+    'file' => 'pages/relationship_settings.pages.inc',
+  );
+  
+  $items['crm/admin/relationship/types'] = array(
+    'title' => 'Relationship types',
+    'page callback' => 'crm_relationship_types_overview',
+    'access arguments' => array('administer crm relationship'),
+    'file' => 'pages/relationship_settings.pages.inc',
+  );
+
+  $items['crm/admin/relationship/types/%relation_type'] = array(
+    'title' => 'Relationship types',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_relationship_type_form', 4),
+    'access arguments' => array('administer crm relationship'),
+    'file' => 'pages/relationship_settings.pages.inc',
+  );
+
   
   return $items;
 }
