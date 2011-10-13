@@ -149,17 +149,16 @@ function crm_ui_menu() {
 
   // Menu items for creation of new Activities.
   foreach (crm_activity_get_types() as $type => $info) {
-    $items['crm/contact/%crm_contact/activity/' . $type . '/%'] = array(
+    $items['crm/contact/%crm_contact/activity/add/' . $type] = array(
       'title' => 'Add Activity',
       'description' => 'Add an activity to this contact',
       'page callback' => 'crm_activity_entity_ui_get_form_wrapper',
-      'page arguments' => array(2, 4, 5),
+      'page arguments' => array(2, 5),
       'access arguments' => array('add activities'),
       'type' => MENU_LOCAL_TASK,
       'file' => 'pages/contact_activity.pages.inc',
     );
   }
-
 
   $items['crm/activity/%crm_activity'] = array(
   );

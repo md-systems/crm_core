@@ -6,7 +6,7 @@
 function crm_activity_entity_info() {
   $return = array(
     'crm_activity' => array(
-      'label' => t('Actvity'),
+      'label' => t('Activity'),
       'entity class' => 'Entity',
       'controller class' => 'EntityAPIController',
       'base table' => 'crm_activity',
@@ -133,13 +133,32 @@ function crm_activity_save($activity) {
   return entity_get_controller('crm_activity')->save($activity);
 }
 
-
 function crm_activity_delete($activity) {
   crm_acitivity_delete_multiple(array($activity->activity_id));
 }
 
 function crm_activity_delete_multiple($activity_ids) {
   entity_get_controller('crm_activity')->delete($activity_ids);
+}
+
+/**
+ * CRM Activity Type helpers.
+ */
+function crm_activity_type_load($activity_type_id, $reset = FALSE) {
+  $activity_types = crm_activity_type_load_multiple(array($activity_type_id), array(), $reset);
+  return reset($activity_types);
+}
+
+/**
+ * Loads an crm_activity_type by name.
+ */
+function crm_activity_type_load_by_name($activity_type_name) {
+  $activity_types = crm_activity_type_load_multiple(array(), array('type' => $activity_type_name));
+  return $activity_types ? reset($activity_types) : FALSE;
+}
+
+function crm_activity_type_load_multiple($activity_type_ids = array(), $conditions = array(), $reset = FALSE) {
+  return entity_load('crm_activity_type', $activity_type_ids, $conditions, $reset);
 }
 
 /**
