@@ -371,6 +371,13 @@ function crm_contact_view($contact) {
   return field_attach_view('crm_contact', $contact, 'full');
 }
 
+/**
+ * Title callback for a contact.
+ */
+function crm_contact_title($contact) {
+  return $contact->contact_name['und'][0]['value'];
+}
+
 
 function crm_contact_revision_list($contact) {
   return db_select('crm_contact_revision', 'rev')->

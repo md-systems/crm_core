@@ -31,6 +31,8 @@ function crm_ui_menu() {
     'title' => 'Contact',
     'page callback' => 'crm_contact_view',
     'page arguments' => array(2),
+    'title callback' => 'crm_contact_title',
+    'title arguments' => array(2),
     'access arguments' => array('view contacts'),
     'type' => MENU_NORMAL_ITEM,
     'file' => 'pages/contact.pages.inc',
