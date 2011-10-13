@@ -130,7 +130,7 @@ function crm_activity_create($values) {
 
 
 function crm_activity_save($activity) {
-  return entity_get_controller('crm_activity')->save($contact);
+  return entity_get_controller('crm_activity')->save($activity);
 }
 
 
@@ -138,7 +138,27 @@ function crm_activity_delete($activity) {
   crm_acitivity_delete_multiple(array($activity->activity_id));
 }
 
-
 function crm_activity_delete_multiple($activity_ids) {
   entity_get_controller('crm_activity')->delete($activity_ids);
+}
+
+/**
+ * Implements hook_forms().
+ *
+ * Create form for adding/editing crm_activity.
+ * Their id is like 'crm_activity_edit_' . $bundle . '_form'.
+ *
+ * @see entity_ui_get_form().
+ */
+function crm_activity_forms($form_id, $args) {
+  $forms = array();
+
+  // Check whether it is crm_activity form.
+  if (strpos($form_id, 'crm_activity_edit_') === 0) {
+    $forms[$form_id] = array(
+      'callback' => 'crm_activity_form',
+    );
+  }
+
+  return $forms;
 }

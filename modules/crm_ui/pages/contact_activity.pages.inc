@@ -23,18 +23,22 @@ function crm_activity_entity_ui_get_form_wrapper($contact, $type) {
   );
   $activity = crm_activity_create($values);
 
-  return entity_ui_get_form($type, $activity, 'add');
+  return entity_ui_get_form('crm_activity', $activity, 'add');
 }
 
-function crm_activity_form($form, &$form_state, $contact) {
+/**
+ * Form builder for CRM Activity forms.
+ */
+function crm_activity_form($form, &$form_state, $activity) {
   // Ensure this include file is loaded when the form is rebuilt from the cache.
-  $form_state['build_info']['file'] = drupal_get_path('module', 'crm_contact') . '/pages/contact_activity.pages.inc';
+  $form_state['build_info']['file'] = drupal_get_path('module', 'crm_ui') . '/pages/contact_activity.pages.inc';
 
-  // Add the field related form elements.
-  $form_state['crm_contact'] = $contact;
-
-  $activity = new stdClass();
-  $activity->type = 'meeting';
+  $form['title'] = array(
+    '#type' => 'textfield',
+    '#required' => TRUE,
+    '#title' => t('Title'),
+    '#default_value' => $activity->title,
+  );
 
   field_attach_form('crm_activity', $activity, $form, $form_state);
 
@@ -64,3 +68,25 @@ function crm_activity_form($form, &$form_state, $contact) {
   return $form;
 }
 
+function crm_activity_form_validate($form, &$form_state) {
+  $activity = $form_state['crm_activity'];
+  // Notify field widgets to validate their data.
+  field_attach_form_validate('crm_activity', $activity, $form, $form_state);
+}
+
+function crm_activity_form_submit($form, $form_state) {
+  $activity = $form_state['crm_activity'];
+
+  $activity->title = $form_state['values']['title'];
+
+  if (!isset($activity->created) || empty($activity->created)) {
+    $activity->created = REQUEST_TIME;
+  }
+
+  $activity->changed = REQUEST_TIME;
+
+  // Notify field widgets.
+  field_attach_submit('crm_activity', $activity, $form, $form_state);
+
+  crm_activity_save($activity);
+}
