@@ -77,9 +77,9 @@ function crm_activity_type_form_submit(&$form, &$form_state) {
   $crm_activity_type = entity_ui_form_submit_build_entity($form, $form_state);
   // Save and go back.
   $crm_activity_type->save();
-  $form_state['redirect'] = CRM_ACTIVITY_TYPE_ADMIN_PAGE;
+  $form_state['redirect'] = 'crm/admin/activity/types';
 }
 
 function crm_activity_type_form_submit_delete(&$form, &$form_state) {
-  $form_state['redirect'] = CRM_ACTIVITY_TYPE_ADMIN_PAGE . '/manage/' . $form_state['crm_activity_type']->type . '/delete';
+  $form_state['redirect'] = 'crm/admin/activity/types/manage/' . $form_state['crm_activity_type']->type . '/delete';
 }

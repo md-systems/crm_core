@@ -10,7 +10,7 @@ function crm_activity_entity_info() {
       'entity class' => 'Entity',
       'controller class' => 'EntityAPIController',
       'base table' => 'crm_activity',
-      'revision table' => 'crm_activity_revision',
+//      'revision table' => 'crm_activity_revision',
       'fieldable' => TRUE,
       'entity keys' => array(
         'id' => 'activity_id',
