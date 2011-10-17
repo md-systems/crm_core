@@ -117,7 +117,7 @@ function crm_contact_form_submit($form, &$form_state) {
 function crm_contact_delete_form($form, &$form_state, $contact) {
   $form['contact_id'] = array('#type' => 'value', '#value' => $contact->contact_id);
   return confirm_form($form,
-    t("Are you sure want to delete '@name' contact?", array('@name' => $contact->contact_name['und'][0]['value'])),
+    t("Are you sure want to delete '@name' contact?", array('@name' => crm_contact_title($contact))),
     'crm/contact/' . $contact->contact_id, $description = NULL, $yes = t('Yes'), $no = t('No'));
 }
 
