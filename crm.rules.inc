@@ -11,21 +11,21 @@ function crm_rules_event_info() {
   $events = array();
 
   $events['crm_contact_update'] = array(
-    'label' => t('After updating the contact'),
+    'label' => t('Contact has been updated'),
     'group' => t('CRM'),
     'variables' => crm_rules_event_variables(),
     'access callback' => '',
   );
 
   $events['crm_contact_insert'] = array(
-    'label' => t('After creating new contact'),
+    'label' => t('Contact has been created'),
     'group' => t('CRM'),
     'variables' => crm_rules_event_variables(),
     'access callback' => '',
   );
 
   $events['crm_contact_delete'] = array(
-    'label' => t('After deleting the contact'),
+    'label' => t('Contact has been deleted'),
     'group' => t('CRM'),
     'variables' => crm_rules_event_variables(),
     'access callback' => '',
