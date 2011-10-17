@@ -39,7 +39,7 @@ function crm_activity_type_form($form, &$form_state, $crm_activity_type, $op = '
     '#maxlength' => 32,
     '#disabled' => $crm_activity_type->isLocked() && $op != 'clone',
     '#machine_name' => array(
-      'exists' => 'crm_activity_get_types',
+      'exists' => 'crm_activity_types',
       'source' => array('label'),
     ),
     '#description' => t('A unique machine-readable name for this profile type. It must only contain lowercase letters, numbers, and underscores.'),
@@ -77,9 +77,9 @@ function crm_activity_type_form_submit(&$form, &$form_state) {
   $crm_activity_type = entity_ui_form_submit_build_entity($form, $form_state);
   // Save and go back.
   $crm_activity_type->save();
-  $form_state['redirect'] = 'crm/admin/activity/types';
+  $form_state['redirect'] = 'crm/admin/activity_types';
 }
 
 function crm_activity_type_form_submit_delete(&$form, &$form_state) {
-  $form_state['redirect'] = 'crm/admin/activity/types/manage/' . $form_state['crm_activity_type']->type . '/delete';
+  $form_state['redirect'] = 'crm/admin/activity_types/manage/' . $form_state['crm_activity_type']->type . '/delete';
 }

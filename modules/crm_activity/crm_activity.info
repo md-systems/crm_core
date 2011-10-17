@@ -4,7 +4,7 @@ description = Provide activity entity.
 package = CRM
 version = VERSION
 core = 7.x
-configure = crm/admin/activity/types
+configure = crm/admin/activity_types
 
 ; Dependencies
 dependencies[] = field_ui

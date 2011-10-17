@@ -150,7 +150,7 @@ function crm_ui_menu() {
   );
 
   // Menu items for creation of new Activities.
-  foreach (crm_activity_get_types() as $type => $info) {
+  foreach (crm_activity_types() as $type => $info) {
     $items['crm/contact/%crm_contact/activity/add/' . $type] = array(
       'title' => 'Add Activity',
       'description' => 'Add an activity to this contact',
