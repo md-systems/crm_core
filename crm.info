@@ -16,6 +16,7 @@ dependencies[] = email
 dependencies[] = link
 dependencies[] = cck_phone
 dependencies[] = field_group
+dependencies[] = name
 
 ; Contrib Dependencies
 dependencies[] = entity

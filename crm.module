@@ -239,7 +239,7 @@ function crm_initialize_contact_type($type) {
   // Name field
   $fields[] = array(
     'field_name' => 'contact_name',
-    'type' => 'text',
+    'type' => 'name',
     'entity_types' => array('crm_contact'),
     'translatable' => FALSE,
     'locked' => TRUE,
@@ -273,7 +273,7 @@ function crm_initialize_contact_type($type) {
     'required' => TRUE,
     'settings' => array(),
     'widget' => array(
-      'type' => 'text_textfield',
+      'type' => 'name_widget',
     ),
     'display' => array(),
   );
@@ -373,9 +373,14 @@ function crm_contact_view($contact) {
 
 /**
  * Title callback for a contact.
+ *
+ * @param $contact object
+ *
+ * @return title string
  */
 function crm_contact_title($contact) {
-  return $contact->contact_name['und'][0]['value'];
+  $element = field_view_value('crm_contact', $contact, 'contact_name', $contact->contact_name['und'][0]);
+  return drupal_render($element);
 }
 
 
