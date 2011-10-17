@@ -1,14 +1,12 @@
 <?php
 
-define('CRM_ACTIVITY_TYPE_ADMIN_PAGE', 'crm/admin/activity/types');
-
 /**
  * Implements hook_entity_info().
  */
 function crm_activity_entity_info() {
   $return = array(
     'crm_activity' => array(
-      'label' => t('Actvity'),
+      'label' => t('Activity'),
       'entity class' => 'Entity',
       'controller class' => 'EntityAPIController',
       'base table' => 'crm_activity',
@@ -51,7 +49,7 @@ function crm_activity_entity_info() {
     'module' => 'crm_activity',
     // Enable the entity API's admin UI.
     'admin ui' => array(
-      'path' => CRM_ACTIVITY_TYPE_ADMIN_PAGE,
+      'path' => 'crm/admin/activity/types',
       'file' => 'crm_activity.admin.inc',
       'controller class' => 'CRMActivityTypeUIController',
     ),
@@ -61,12 +59,34 @@ function crm_activity_entity_info() {
   return $return;
 }
 
+/**
+ * Implements hook_entity_info_alter().
+ *
+ * Use this hook to specify profile bundles to avoid a recursion, as loading
+ * the profile types needs the entity info too.
+ */
+function crm_activity_entity_info_alter(&$entity_info) {
+  foreach (crm_activity_get_types() as $type => $info) {
+    $entity_info['crm_activity']['bundles'][$type] = array(
+      'label' => $info->label,
+      'admin' => array(
+        'path' => 'crm/admin/activity/manage/%activity_type',
+        'real path' => 'crm/admin/activity/manage/' . $type,
+        'bundle argument' => 4,
+        // TODO write proper hook_permissions and set proper access callback here.
+        'access callback' => TRUE,
+        'access arguments' => array('administer site configuration'),
+      ),
+    );
+  }
+}
+
 function crm_activity_type_access($op, $type = NULL, $account = NULL) {
   return user_access('administer activity types', $account);
 }
 
 function crm_activity_get_types($type_name = NULL) {
-  $types = entity_load('crm_activity_type', isset($type_name) ? array($type_name) : FALSE);
+  $types = entity_load_multiple_by_name('crm_activity_type', isset($type_name) ? array($type_name) : FALSE);
   return isset($type_name) ? reset($types) : $types;
 }
 
@@ -110,15 +130,54 @@ function crm_activity_create($values) {
 
 
 function crm_activity_save($activity) {
-  return entity_get_controller('crm_activity')->save($contact);
+  return entity_get_controller('crm_activity')->save($activity);
 }
-
 
 function crm_activity_delete($activity) {
   crm_acitivity_delete_multiple(array($activity->activity_id));
 }
 
-
 function crm_activity_delete_multiple($activity_ids) {
   entity_get_controller('crm_activity')->delete($activity_ids);
+}
+
+/**
+ * CRM Activity Type helpers.
+ */
+function crm_activity_type_load($activity_type_id, $reset = FALSE) {
+  $activity_types = crm_activity_type_load_multiple(array($activity_type_id), array(), $reset);
+  return reset($activity_types);
+}
+
+/**
+ * Loads an crm_activity_type by name.
+ */
+function crm_activity_type_load_by_name($activity_type_name) {
+  $activity_types = crm_activity_type_load_multiple(array(), array('type' => $activity_type_name));
+  return $activity_types ? reset($activity_types) : FALSE;
+}
+
+function crm_activity_type_load_multiple($activity_type_ids = array(), $conditions = array(), $reset = FALSE) {
+  return entity_load('crm_activity_type', $activity_type_ids, $conditions, $reset);
+}
+
+/**
+ * Implements hook_forms().
+ *
+ * Create form for adding/editing crm_activity.
+ * Their id is like 'crm_activity_edit_' . $bundle . '_form'.
+ *
+ * @see entity_ui_get_form().
+ */
+function crm_activity_forms($form_id, $args) {
+  $forms = array();
+
+  // Check whether it is crm_activity form.
+  if (strpos($form_id, 'crm_activity_edit_') === 0) {
+    $forms[$form_id] = array(
+      'callback' => 'crm_activity_form',
+    );
+  }
+
+  return $forms;
 }

@@ -135,7 +135,7 @@ function crm_contact_types() {
  */
 function crm_contact_type_get_name($type = NULL) {
   $contact_types = crm_contact_types();
- 
+
   // If type is set return the name if it exists
   if (!empty($type)) {
     if (isset($contact_types[$type])) {
@@ -145,7 +145,7 @@ function crm_contact_type_get_name($type = NULL) {
       return FALSE;
     }
   }
-  
+
   // Otherwise return a mapping of type => name
   foreach ($contact_types as $key => $value) {
     $contact_types[$key] = $value->name;
@@ -170,7 +170,7 @@ function crm_contact_type_new($type = '') {
 
 /**
  * Loads a contact type.
- * 
+ *
  * @param $type
  *   The machine-readable name of the contact type.
  */
@@ -323,7 +323,7 @@ function crm_contact_save($contact) {
 
 
 function crm_contact_load($contact_id, $conditions = array()) {
-  $contacts = crm_contact_load_multiple(array($contact_id), $conditions);  
+  $contacts = crm_contact_load_multiple(array($contact_id), $conditions);
   return $contacts ? reset($contacts) : FALSE;
 }
 
@@ -371,6 +371,13 @@ function crm_contact_view($contact) {
   return field_attach_view('crm_contact', $contact, 'full');
 }
 
+/**
+ * Title callback for a contact.
+ */
+function crm_contact_title($contact) {
+  return $contact->contact_name['und'][0]['value'];
+}
+
 
 function crm_contact_revision_list($contact) {
   return db_select('crm_contact_revision', 'rev')->
@@ -389,14 +396,6 @@ function crm_contact_devel_load_object($contact) {
 function crm_contact_devel_render_object($contact) {
   module_load_include('inc', 'devel', 'devel.pages');
   return devel_render_object('crm_contact', $contact);
-}
-
-function crm_activity_form($form, &$form_state, $activity) {
- 
-  var_dump($activity);
- field_attach_form('crm_activity', $activity, $form, $form_state);
-  $form['#validate'][] = 'crm_activity_form_validate';
-  $form['#submit'][] = 'crm_activity_form_submit';
 }
 
 function crm_contact_revert($contact, $vid) {

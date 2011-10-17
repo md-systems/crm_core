@@ -22,8 +22,8 @@ function crm_ui_menu() {
     'weight' => -10,
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE,
-  ); 
-  
+  );
+
   /*
    * Contacts
    */
@@ -31,6 +31,8 @@ function crm_ui_menu() {
     'title' => 'Contact',
     'page callback' => 'crm_contact_view',
     'page arguments' => array(2),
+    'title callback' => 'crm_contact_title',
+    'title arguments' => array(2),
     'access arguments' => array('view contacts'),
     'type' => MENU_NORMAL_ITEM,
     'file' => 'pages/contact.pages.inc',
@@ -147,16 +149,18 @@ function crm_ui_menu() {
     'file' => 'pages/contact_activity.pages.inc',
   );
 
-  $items['crm/contact/%crm_contact/activity/add/%crm_activity_type'] = array(
-    'title' => 'Add Activity',
-    'description' => 'Add an activity to this contact',
-    'page callback' => 'entity_ui_get_form',
-    'page arguments' => array('crm_activity', NULL, 'add'),
-    'access arguments' => array('add activities'),
-    'type' => MENU_LOCAL_TASK,
-    'file' => 'pages/contact_activity.pages.inc',
-  );
-
+  // Menu items for creation of new Activities.
+  foreach (crm_activity_get_types() as $type => $info) {
+    $items['crm/contact/%crm_contact/activity/add/' . $type] = array(
+      'title' => 'Add Activity',
+      'description' => 'Add an activity to this contact',
+      'page callback' => 'crm_activity_entity_ui_get_form_wrapper',
+      'page arguments' => array(2, 5),
+      'access arguments' => array('add activities'),
+      'type' => MENU_LOCAL_TASK,
+      'file' => 'pages/contact_activity.pages.inc',
+    );
+  }
 
   $items['crm/activity/%crm_activity'] = array(
   );
@@ -274,7 +278,7 @@ function crm_ui_menu() {
     'access arguments' => array('administer crm relationship'),
     'file' => 'pages/relationship_settings.pages.inc',
   );
-  
+
   $items['crm/admin/relationship/types'] = array(
     'title' => 'Relationship types',
     'page callback' => 'crm_relationship_types_overview',
@@ -282,15 +286,17 @@ function crm_ui_menu() {
     'file' => 'pages/relationship_settings.pages.inc',
   );
 
-  $items['crm/admin/relationship/types/%relation_type'] = array(
-    'title' => 'Relationship types',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('crm_relationship_type_form', 4),
+  $items['crm/admin/relationship/types/add'] = array(
+    'title' => 'Add relationship type',
     'access arguments' => array('administer crm relationship'),
-    'file' => 'pages/relationship_settings.pages.inc',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('relation_type_form'),
+    'type' => MENU_LOCAL_ACTION,
+    'file path' => drupal_get_path('module', 'relation'),
+    'file' => '/relation.admin.inc',
   );
 
-  
+
   return $items;
 }
 
@@ -391,3 +397,84 @@ function crm_ui_views_api() {
   return "This is a placeholder.";
  }
 
+/**
+ * Implements hook_form_FORM_ID_alter
+ */
+function crm_ui_form_relation_type_form_alter(&$form, &$form_state) {
+  $relationship_types = variable_get('crm_relationship_types');
+  $type = $form['relation_type']['#default_value'];
+  $alter_edit = $alter_add = false;
+
+  if (in_array($type, $relationship_types) && $relationship_types[$type]) {
+    $alter_edit = true;
+  }
+
+  if (implode('/', arg()) == 'crm/admin/relationship/types/add') {
+    $alter_add = true;
+  }
+
+  if ($alter_edit || $alter_add) {
+    // TODO: update breadcrumb here
+
+    // Hide unused fields
+    $form['transitive']['#type'] = 'value';
+    $form['transitive']['#default_value'] = 0;
+
+    $form['r_unique']['#type'] = 'value';
+    $form['r_unique']['#default_value'] = 0;
+
+    $form['min_arity']['#type'] = 'value';
+    $form['r_unique']['#default_value'] = 2;
+
+    $form['max_arity']['#type'] = 'value';
+    $form['r_unique']['#default_value'] = 2;
+
+    $contact_types = crm_contact_types();
+
+    $options = array('crm_contact:*' => t('Any'));
+    foreach ($contact_types as $contact_type) {
+      $options['crm_contact:' . $contact_type->type] = t($contact_type->name);
+    }
+
+    $form['source_bundles']['#options'] = $options;
+    $form['source_bundles']['#size'] = count ($options);
+    $form['source_bundles']['#title'] = t('Source contacts types');
+
+    $form['target_bundles']['#options'] = $options;
+    $form['target_bundles']['#size'] = count ($options);
+    $form['target_bundles']['#title'] = t('Destination contact types');
+
+    $form['#submit'][] = 'crm_ui_form_relation_type_form_submit';
+  }
+
+}
+
+/**
+ * Submit handler for relation_type_form.
+ */
+function crm_ui_form_relation_type_form_submit($form, &$form_state) {
+  $relationship_types = variable_get('crm_relationship_types', array());
+  $relationship_types[$form_state['values']['relation_type']] = $form_state['values']['relation_type'];
+  variable_set('crm_relationship_types', $relationship_types);
+  $form_state['redirect'] = 'crm/admin/relationship/types';
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter
+ */
+function crm_ui_form_relation_type_delete_confirm_alter(&$form, &$form_state) {
+  $relationship_types = variable_get('crm_relationship_types', array());
+  if (isset($relationship_types[$form['relation_type']['#value']])) {
+    $form['#submit'][] = 'crm_ui_form_relation_type_delete_confirm_submit';
+  }
+}
+
+/**
+ * Submit handler for relation_type_delete_confirm.
+ */
+function crm_ui_form_relation_type_delete_confirm_submit($form, &$form_state) {
+  $relationship_types = variable_get('crm_relationship_types', array());
+  unset($relationship_types[$form_state['values']['relation_type']]);
+  variable_set('crm_relationship_types', $relationship_types);
+  $form_state['redirect'] = 'crm/admin/relationship/types';
+}

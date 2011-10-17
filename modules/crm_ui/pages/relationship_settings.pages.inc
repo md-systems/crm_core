@@ -6,12 +6,12 @@
 function crm_relationship_settings() {
   $form = array();
 
-  $form['crm_relationship_settings_types'] = array(
+  $form['crm_relationship_types'] = array(
     '#type' => 'checkboxes',
     '#options' => relation_list_types(),
-    '#default_value' => variable_get('crm_relationship_settings_types', array()),
-    '#title' => t('CRM relationships'),
-    '#description' => t('Enable relationships, that can be used by CRM module.'),
+    '#default_value' => variable_get('crm_relationship_types', array()),
+    '#title' => t('CRM relation types'),
+    '#description' => t('Enable relation types, that can be used by CRM module as relationship types.'),
   );
 
   return system_settings_form($form);
@@ -22,7 +22,8 @@ function crm_relationship_settings() {
  */
 function crm_relationship_types_overview() {
   $relation_types = relation_list_types();
-  $crm_relationship_types = array_values(variable_get('crm_relationship_settings_types', array()));
+  $crm_relationship_types = array_values(variable_get('crm_relationship_types', array()));
+
   $field_ui = module_exists('field_ui');
 
   $headers = array(
@@ -32,13 +33,13 @@ function crm_relationship_types_overview() {
   $rows = array();
 
   foreach ($crm_relationship_types as $type) {
-    if (!$type) continue;
+    if (!$type || !isset($relation_types[$type])) continue;
     
     $url = 'admin/structure/relation/manage/' . $type;
-    $url_local = 'crm/admin/relationship/types/' . $type;
+    //$url_local = 'crm/admin/relationship/types/' . $type;
 
-    $row = array(l($type, $url_local));
-    $row[] = l(t('edit'), $url_local . '/edit');
+    $row = array(l($type, $url));
+    $row[] = l(t('edit'), $url . '/edit');
     if ($field_ui) {
       $row[] =  l(t('manage fields'), $url . '/fields');
       $row[] =  l(t('display fields'), $url . '/display');
