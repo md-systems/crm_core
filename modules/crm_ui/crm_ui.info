@@ -6,6 +6,7 @@ version = VERSION
 core = 7.x
 
 dependencies[] = crm
+dependencies[] = crm_activity
 
 ; =======================
 ; Module Files
