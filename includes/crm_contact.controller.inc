@@ -84,6 +84,11 @@ class CRMContactController extends DrupalDefaultEntityController {
       module_invoke_all('crm_contact_' . $op, $contact);
       module_invoke_all('entity_' . $op, $contact, 'crm_contact');
 
+      // rules integration
+      if (module_exists('rules')) {
+        rules_invoke_event('crm_contact_'.$op, $contact);
+      }
+      
       unset($contact->is_new);
       $this->resetCache();
 
@@ -162,6 +167,10 @@ class CRMContactController extends DrupalDefaultEntityController {
         foreach ($contacts as $contact) {
           module_invoke_all('crm_contact_delete', $contact);
           field_attach_delete('crm_contact', $contact);
+          // rules integration
+          if (module_exists('rules')) {
+            rules_invoke_event('crm_contact_delete', $contact);
+          }
         }
       }
       catch (Exception $e) {
