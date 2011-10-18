@@ -106,6 +106,13 @@ function crm_activity_type_add_default_fields($activity_type) {
     'entity_types' => array('crm_activity'),
     'translatable' => FALSE,
     'locked' => TRUE,
+    'settings' => array(
+      'target_type' => 'crm_contact',
+      'handler' => 'base',
+      'handler_submit' => 'Change handler',
+      'handler_settings' => array('target_bundles' => array()),
+    ),
+    'cardinality' => -1,
   );
 
   // Create the fields if they don't exist
@@ -129,7 +136,7 @@ function crm_activity_type_add_default_fields($activity_type) {
       'user_register_form' => FALSE,
     ),
     'widget' => array(
-      'type' => 'entityreference_autocomplete',
+      'type' => 'entityreference_autocomplete_tags',
       'module' => 'entityreference',
       'active' => 1,
       'settings' => array(
