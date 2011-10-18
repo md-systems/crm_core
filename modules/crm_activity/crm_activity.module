@@ -15,7 +15,7 @@ function crm_activity_entity_info() {
       'entity keys' => array(
         'id' => 'activity_id',
         'bundle' => 'type',
-        'revision' => 'revision_id',
+//        'revision' => 'revision_id',
       ),
       'bundle keys' => array(
         'bundle' => 'type',

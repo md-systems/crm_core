@@ -77,9 +77,75 @@ function crm_activity_type_form_submit(&$form, &$form_state) {
   $crm_activity_type = entity_ui_form_submit_build_entity($form, $form_state);
   // Save and go back.
   $crm_activity_type->save();
+
+  // If we create new activity type we need to add default fields to it.
+  if ($form_state['op'] == 'add') {
+    crm_activity_type_add_default_fields($crm_activity_type);
+  }
+
+  // Redirect user back to list of activity types.
   $form_state['redirect'] = 'crm/admin/activity_types';
 }
 
 function crm_activity_type_form_submit_delete(&$form, &$form_state) {
   $form_state['redirect'] = 'crm/admin/activity_types/manage/' . $form_state['crm_activity_type']->type . '/delete';
+}
+
+/**
+ * Add default fields to newly created activity type.
+ */
+function crm_activity_type_add_default_fields($activity_type) {
+  $type = $activity_type->type;
+
+  $fields = array();
+
+  // Participants field.
+  $fields[] = array(
+    'field_name' => 'field_acitivity_participants',
+    'type' => 'entityreference',
+    'entity_types' => array('crm_activity'),
+    'translatable' => FALSE,
+    'locked' => TRUE,
+  );
+
+  // Create the fields if they don't exist
+  foreach ($fields as $field) {
+    $info = field_info_field($field['field_name']);
+    if (empty($info)) {
+      field_create_field($field);
+    }
+  }
+
+  // Create field instances for the type if they don't exist
+  $instances = array();
+
+  $instances[] = array(
+    'field_name' => 'field_acitivity_participants',
+    'entity_type' => 'crm_activity',
+    'bundle' => $type,
+    'label' => t('Participants'),
+    'required' => TRUE,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'type' => 'entityreference_autocomplete',
+      'module' => 'entityreference',
+      'active' => 1,
+      'settings' => array(
+        'match_operator' => 'CONTAINS',
+        'size' => 60,
+        'path' => '',
+      ),
+    ),
+    'display' => array(),
+  );
+
+  // Create field instances if they don't exist
+  foreach ($instances as $instance) {
+    $info_instance = field_info_instance('crm_activity', $instance['field_name'], $type);
+    if (empty($info_instance)) {
+      field_create_instance($instance);
+    }
+  }
 }

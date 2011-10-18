@@ -11,7 +11,8 @@ dependencies[] = field_ui
 dependencies[] = entity
 
 ; Field Dependencies
-;dependencies[] = field_group
+dependencies[] = entity
+dependencies[] = entityreference
 
 ; =======================
 ; Module Files

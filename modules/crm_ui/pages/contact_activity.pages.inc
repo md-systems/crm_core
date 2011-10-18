@@ -65,15 +65,27 @@ function crm_activity_form($form, &$form_state, $activity) {
   // We append the validate handler to #validate in case a form callback_wrapper
   // is used to add validate handlers earlier.
   $form['#validate'][] = 'crm_activity_form_validate';
+
+  // Add after build to set proper page Title as it
+  // got set by entity_ui_main_form_defaults
+  // @see entity_ui_get_form().
+  $form['#after_build'][] = 'crm_activity_form_after_build';
+
   return $form;
 }
 
+/**
+ * Validation callback for crm_activity_form.
+ */
 function crm_activity_form_validate($form, &$form_state) {
   $activity = $form_state['crm_activity'];
   // Notify field widgets to validate their data.
   field_attach_form_validate('crm_activity', $activity, $form, $form_state);
 }
 
+/**
+ * Submit callback for crm_activity_form.
+ */
 function crm_activity_form_submit($form, $form_state) {
   $activity = $form_state['crm_activity'];
 
@@ -89,4 +101,15 @@ function crm_activity_form_submit($form, $form_state) {
   field_attach_submit('crm_activity', $activity, $form, $form_state);
 
   crm_activity_save($activity);
+}
+
+/**
+ * After build callback for crm_activity_form
+ *
+ * Set proper page title.
+ */
+function crm_activity_form_after_build(&$form, &$form_state) {
+  $crm_activity_type = crm_activity_types($form_state['crm_activity']->type);
+  drupal_set_title(t('Add new activity @label', array('@label' => $crm_activity_type->label)));
+  return $form;
 }
