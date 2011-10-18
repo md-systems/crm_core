@@ -153,3 +153,17 @@ function crm_activity_form_after_build(&$form, &$form_state) {
   drupal_set_title(t('Add new activity @label', array('@label' => $crm_activity_type->label)));
   return $form;
 }
+
+/**
+ * Activity view callback.
+ */
+function crm_activity_view($activity) {
+  $content = entity_get_controller('crm_activity')->view(array($activity->activity_id => $activity), 'full');
+
+  // We don't want to run output through entity theming function.
+  // To avoid this hack apply patch from http://drupal.org/node/1259916
+  // Then we can load content in following way
+  // $content = entity_build_content('crm_activity', $activity);
+  unset($content['crm_activity'][1]['#theme']);
+  return $content;
+}

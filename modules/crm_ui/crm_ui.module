@@ -162,7 +162,22 @@ function crm_ui_menu() {
     );
   }
 
-  $items['crm/activity/%crm_activity'] = array(
+  $items['crm/activity/%crm_activity'] =  array(
+    'title' => 'Contact',
+    'page callback' => 'crm_activity_view',
+    'page arguments' => array(2),
+    'title callback' => 'crm_activity_label',
+    'title arguments' => array(2),
+    'access arguments' => array('view activities'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'pages/contact_activity.pages.inc',
+  );
+
+  $items['crm/activity/%crm_activity/view'] = array(
+    'title' => 'View',
+    'weight' => -10,
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
   );
 
   $items['crm/activity/%crm_activity/edit'] = array(

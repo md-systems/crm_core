@@ -24,11 +24,11 @@ function crm_activity_entity_info() {
       'load hook' => 'crm_activity_load',
       'view modes' => array(
         'full' => array(
-          'label' => t('Activity'),
+          'label' => t('Default'),
           'custom settings' => FALSE,
         ),
       ),
-      'label callback' => 'entity_class_label',
+      'label callback' => 'crm_activity_label',
       'uri callback' => 'entity_class_uri',
       'module' => 'crm_activity',
     ),
@@ -174,4 +174,13 @@ function crm_activity_forms($form_id, $args) {
   }
 
   return $forms;
+}
+
+/**
+ * Label callback for activity.
+ *
+ * Used to set title of the view activity page.
+ */
+function crm_activity_label($activity) {
+  return $activity->title;
 }
