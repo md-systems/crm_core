@@ -188,11 +188,12 @@ function crm_ui_menu() {
 
   $items['crm/admin'] = array(
     'title' => 'Administration',
-    'page callback' => 'crm_ui_placeholder',
+    'page callback' => 'crm_ui_admin_dashboard',
     'access arguments' => array('administer contact types'),
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE,
     'weight' => 10,
+    'file' => 'pages/crm_ui.pages.inc',
   );
 
   /*
