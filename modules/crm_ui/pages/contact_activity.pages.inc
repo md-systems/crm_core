@@ -120,7 +120,7 @@ function crm_activity_form_validate($form, &$form_state) {
 /**
  * Submit callback for crm_activity_form.
  */
-function crm_activity_form_submit($form, $form_state) {
+function crm_activity_form_submit($form, &$form_state) {
   $activity = $form_state['crm_activity'];
 
   $activity->title = $form_state['values']['title'];
@@ -139,6 +139,8 @@ function crm_activity_form_submit($form, $form_state) {
 
   // Show message to user.
   drupal_set_message(t('Activity @title created.', array('@title' => $activity->title)));
+
+  $form_state['redirect'] = 'crm/contact/' . arg(2) . '/activity';
 }
 
 /**

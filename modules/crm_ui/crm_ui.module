@@ -138,16 +138,16 @@ function crm_ui_menu() {
   /*
    * Contact Activities
    */
-  $items['crm/contact/%crm_contact/activity'] = array(
-    'title' => 'Activity',
-    'description' => 'View contact activity',
-    'page callback' => 'crm_contact_activity',
-    'page arguments' => array(2),
-    'access arguments' => array('view contacts'),
-    'type' => MENU_LOCAL_TASK,
-    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
-    'file' => 'pages/contact_activity.pages.inc',
-  );
+//  $items['crm/contact/%crm_contact/activity'] = array(
+//    'title' => 'Activity',
+//    'description' => 'View contact activity',
+//    'page callback' => 'crm_contact_activity',
+//    'page arguments' => array(2),
+//    'access arguments' => array('view contacts'),
+//    'type' => MENU_LOCAL_TASK,
+//    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+//    'file' => 'pages/contact_activity.pages.inc',
+//  );
 
   // Menu items for creation of new Activities.
   foreach (crm_activity_types() as $type => $info) {
@@ -311,6 +311,11 @@ function crm_ui_menu_alter(&$items) {
   // Make Views menu item local task.
   $items['crm/contact/%/activity/add']['type'] = MENU_LOCAL_ACTION;
   $items['crm/contact/%/activity/add']['title'] = t('Add Activity');
+
+  // Alter Views menu item.
+  $items['crm/contact/%/activity']['title'] = t('Activity');
+  $items['crm/contact/%/activity']['type'] = MENU_LOCAL_TASK;
+  $items['crm/contact/%/activity']['context'] = MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE;
 }
 
 /**
