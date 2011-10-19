@@ -154,3 +154,30 @@ function crm_contact_revision_form($contact) {
 
   return $form;
 }
+
+/**
+ * Form for reverting a contact to a previous version.
+ */
+function crm_contact_revert_form($form, &$form_state, $contact, $vid) {
+  
+  $form['vid'] = array(
+    '#type' => 'value',
+    '#value' => $vid,
+  );
+  
+  $form_state['crm_ui']['contact'] = $contact;
+  
+  return confirm_form($form,
+    t("Are you sure want to revert this contact?"),
+    'crm/contact/' . $contact->contact_id . '/revisions', 'Reverting the contact will result in a new revision being created', t('Yes'), t('Cancel')); 
+}
+
+function crm_contact_revert_form_submit($form, &$form_state) {
+  
+  $contact = $form_state['crm_ui']['contact'];
+  
+  if (crm_contact_revert($contact, $form_state['values']['vid'])) {
+    drupal_set_message(t('Contact reverted.'));
+  }
+  $form_state['redirect'] = 'crm/contact/' . $contact->contact_id . '/revisions';  
+}

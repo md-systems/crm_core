@@ -57,9 +57,9 @@ function crm_ui_menu() {
 
   $items['crm/contact/%crm_contact/revert/%'] = array(
     'title' => 'Contact',
-    'page callback' => 'crm_contact_revert',
-    'page arguments' => array(2, 4),
-    'access arguments' => array('view contacts'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_contact_revert_form', 2, 4),
+    'access arguments' => array('add contacts'),
     'type' => MENU_CALLBACK,
     'file' => 'pages/contact.pages.inc',
   );

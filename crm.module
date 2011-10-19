@@ -411,6 +411,16 @@ function crm_contact_devel_render_object($contact) {
   return devel_render_object('crm_contact', $contact);
 }
 
+/**
+ * Revert a contact to a previous revision
+ *
+ * @param 
+ * $contact object
+ * $vid int
+ *
+ * @return
+ * TRUE upon success, FALSE upon failure
+ */
 function crm_contact_revert($contact, $vid) {
   return entity_get_controller('crm_contact')->revertContact($contact, $vid);
 }
