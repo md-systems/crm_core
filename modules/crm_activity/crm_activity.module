@@ -129,7 +129,7 @@ function crm_activity_save($activity) {
 }
 
 function crm_activity_delete($activity) {
-  crm_acitivity_delete_multiple(array($activity->activity_id));
+  crm_activity_delete_multiple(array($activity->activity_id));
 }
 
 function crm_activity_delete_multiple($activity_ids) {
@@ -153,6 +153,21 @@ function crm_activity_type_load($activity_type) {
 function crm_activity_types($type_name = NULL) {
   $types = entity_load_multiple_by_name('crm_activity_type', isset($type_name) ? array($type_name) : FALSE);
   return isset($type_name) ? reset($types) : $types;
+}
+
+/**
+ * Get label of activity type.
+ *
+ * Argument is activity type itself or its name.
+ *
+ * @param object $activity_type
+ */
+function crm_activity_type_label($activity_type) {
+  if (!is_object($activity_type)) {
+    $activity_type = crm_activity_type_load($activity_type);
+  }
+
+  return $activity_type->label;
 }
 
 /**

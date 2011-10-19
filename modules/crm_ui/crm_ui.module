@@ -163,7 +163,7 @@ function crm_ui_menu() {
   }
 
   $items['crm/activity/%crm_activity'] =  array(
-    'title' => 'Contact',
+    'title' => 'Activity',
     'page callback' => 'crm_activity_view',
     'page arguments' => array(2),
     'title callback' => 'crm_activity_label',
@@ -181,9 +181,22 @@ function crm_ui_menu() {
   );
 
   $items['crm/activity/%crm_activity/edit'] = array(
+    'title' => 'Edit',
+    'page callback' => 'entity_ui_get_form',
+    'page arguments' => array('crm_activity', 2, 'edit'),
+    'access arguments' => array('edit activities'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'pages/contact_activity.pages.inc',
   );
 
   $items['crm/activity/%crm_activity/delete'] = array(
+    'title' => 'Delete',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_activity_form_delete_confirm', 2),
+    'access arguments' => array('delete activities'),
+    'weight' => 1,
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'pages/contact_activity.pages.inc',
   );
 
   $items['crm/admin'] = array(

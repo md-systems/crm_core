@@ -72,9 +72,18 @@ function crm_activity_form($form, &$form_state, $activity) {
 
   $form['actions']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Add Activity'),
+    '#value' => t('Save Activity'),
     '#submit' => $submit + array('crm_activity_form_submit'),
   );
+
+  // Show Delete button if we edit activity.
+  if ($form_state['op'] == 'edit') {
+    $form['actions']['delete'] = array(
+      '#type' => 'submit',
+      '#value' => t('Delete'),
+      '#submit' => array('crm_activity_form_submit_delete'),
+    );
+  }
 
   // We append the validate handler to #validate in case a form callback_wrapper
   // is used to add validate handlers earlier.
@@ -138,9 +147,57 @@ function crm_activity_form_submit($form, &$form_state) {
   crm_activity_save($activity);
 
   // Show message to user.
-  drupal_set_message(t('Activity @title created.', array('@title' => $activity->title)));
+  if ($form_state['op'] == 'add') {
+    drupal_set_message(t('Activity @title created.', array('@title' => $activity->title)));
+  }
+  elseif ($form_state['op'] == 'edit') {
+    drupal_set_message(t('Activity @title edited.', array('@title' => $activity->title)));
+  }
 
-  $form_state['redirect'] = 'crm/contact/' . arg(2) . '/activity';
+  $form_state['redirect'] = 'crm/activity/' . $activity->activity_id;
+}
+
+/**
+ * Submit handler for Delete button.
+ *
+ * Redirect to delete confirmation page.
+ */
+function crm_activity_form_submit_delete($form, &$form_state) {
+  $destination = array();
+  if (isset($_GET['destination'])) {
+    $destination = drupal_get_destination();
+    unset($_GET['destination']);
+  }
+  $activity = $form_state['crm_activity'];
+  $form_state['redirect'] = array('crm/activity/' . $activity->activity_id . '/delete', array('query' => $destination));
+}
+
+function crm_activity_form_delete_confirm($form, &$form_state, $activity) {
+  $form_state['activity'] = $activity;
+  // Always provide entity id in the same form key as in the entity edit form.
+  $form['activity_id'] = array('#type' => 'value', '#value' => $activity->activity_id);
+  return confirm_form($form,
+    t('Are you sure you want to delete activity %title?', array('%title' => $activity->title)),
+    'crm/activity/' . $activity->activity_id,
+    t('This action cannot be undone.'),
+    t('Delete'),
+    t('Cancel')
+  );
+}
+
+/**
+ * Execute node deletion.
+ */
+function crm_activity_form_delete_confirm_submit($form, &$form_state) {
+  if ($form_state['values']['confirm']) {
+    $activity = $form_state['activity'];
+    crm_activity_delete($activity);
+
+    watchdog('crm_activity', '@type: deleted %title.', array('@type' => $activity->type, '%title' => $activity->title));
+    drupal_set_message(t('@type %title has been deleted.', array('@type' => crm_activity_type_label($activity->type), '%title' => $activity->title)));
+  }
+
+  $form_state['redirect'] = 'crm/contact';
 }
 
 /**
@@ -150,7 +207,9 @@ function crm_activity_form_submit($form, &$form_state) {
  */
 function crm_activity_form_after_build(&$form, &$form_state) {
   $crm_activity_type = crm_activity_types($form_state['crm_activity']->type);
-  drupal_set_title(t('Add new activity @label', array('@label' => $crm_activity_type->label)));
+  if ($form_state['op'] == 'add') {
+    drupal_set_title(t('Add new activity @label', array('@label' => $crm_activity_type->label)));
+  }
   return $form;
 }
 
