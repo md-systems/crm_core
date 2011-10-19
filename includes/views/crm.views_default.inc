@@ -9,7 +9,7 @@
  * Implements hook_views_default_views().
  */
 function crm_views_default_views() {
-  $view = new view;
+ $view = new view;
   $view->name = 'crm_contacts';
   $view->description = 'A list of all contacts in the system';
   $view->tag = '';
@@ -53,6 +53,14 @@ function crm_views_default_views() {
   );
   $handler->display->display_options['style_options']['override'] = 1;
   $handler->display->display_options['style_options']['sticky'] = 0;
+  /* No results behavior: Global: Text area */
+  $handler->display->display_options['empty']['area']['id'] = 'area';
+  $handler->display->display_options['empty']['area']['table'] = 'views';
+  $handler->display->display_options['empty']['area']['field'] = 'area';
+  $handler->display->display_options['empty']['area']['empty'] = FALSE;
+  $handler->display->display_options['empty']['area']['content'] = 'There are no contacts in the CRM.  Add one by clicking above.';
+  $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
+  $handler->display->display_options['empty']['area']['tokenize'] = 0;
   /* Field: CRM Contact: Contact ID */
   $handler->display->display_options['fields']['contact_id']['id'] = 'contact_id';
   $handler->display->display_options['fields']['contact_id']['table'] = 'crm_contact';
@@ -69,6 +77,33 @@ function crm_views_default_views() {
   $handler->display->display_options['fields']['contact_id']['hide_empty'] = 0;
   $handler->display->display_options['fields']['contact_id']['empty_zero'] = 0;
   $handler->display->display_options['fields']['contact_id']['link_to_contact'] = 0;
+  /* Field: Contact: Image */
+  $handler->display->display_options['fields']['contact_image']['id'] = 'contact_image';
+  $handler->display->display_options['fields']['contact_image']['table'] = 'field_data_contact_image';
+  $handler->display->display_options['fields']['contact_image']['field'] = 'contact_image';
+  $handler->display->display_options['fields']['contact_image']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['contact_image']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['contact_image']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['contact_image']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['contact_image']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['contact_image']['alter']['trim_whitespace'] = 0;
+  $handler->display->display_options['fields']['contact_image']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['contact_image']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['contact_image']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['contact_image']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['contact_image']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['contact_image']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['contact_image']['element_label_colon'] = 1;
+  $handler->display->display_options['fields']['contact_image']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['contact_image']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['contact_image']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['contact_image']['hide_alter_empty'] = 0;
+  $handler->display->display_options['fields']['contact_image']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['contact_image']['settings'] = array(
+    'image_style' => 'thumbnail',
+    'image_link' => 'content',
+  );
+  $handler->display->display_options['fields']['contact_image']['field_api_classes'] = 0;
   /* Field: Contact: Name */
   $handler->display->display_options['fields']['entity_id']['id'] = 'entity_id';
   $handler->display->display_options['fields']['entity_id']['table'] = 'field_data_contact_name';
@@ -108,7 +143,10 @@ function crm_views_default_views() {
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page_1');
   $handler->display->display_options['path'] = 'crm/contact';
-  
+  $handler->display->display_options['menu']['type'] = 'tab';
+  $handler->display->display_options['menu']['title'] = 'Contacts';
+  $handler->display->display_options['menu']['weight'] = '0';
+ 
   $views['crm_contacts'] = $view;
   
   $view = new view;
