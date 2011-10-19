@@ -318,7 +318,19 @@ function crm_initialize_contact_type($type) {
     'widget' => array(
       'type' => 'image_image',
     ),
-    'display' => array(),
+    'display' => array(
+      'default' => array (
+        'label' => 'hidden',
+        'type' => 'image',
+        'weight' => '1',
+        'settings' => 
+        array (
+          'image_style' => 'medium',
+          'image_link' => '',
+        ),
+        'module' => 'image',
+      ), 
+    ),
   );
 
   // Create field instances if they don't exist
