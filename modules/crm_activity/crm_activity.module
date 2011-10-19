@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * Include file with hook_property_info().
+ */
+module_load_include('inc', 'crm_activity', 'crm_activity.info');
+
+/**
  * Implements hook_entity_info().
  */
 function crm_activity_entity_info() {
@@ -156,18 +161,28 @@ function crm_activity_types($type_name = NULL) {
 }
 
 /**
- * Get label of activity type.
+ * Get activity type name by machine name of activity type.
  *
- * Argument is activity type itself or its name.
- *
- * @param object $activity_type
+ * @param type $type_name
+ * @return type
  */
-function crm_activity_type_label($activity_type) {
-  if (!is_object($activity_type)) {
-    $activity_type = crm_activity_type_load($activity_type);
+function crm_activity_type_name($type_name = NULL) {
+  $types = crm_activity_types($type_name);
+
+  $names = array();
+  foreach ($types as $type) {
+    $names[$type->type] = $type->label;
   }
 
-  return $activity_type->label;
+  if (!empty($type_name)) {
+    if (isset($names[$type_name])) {
+      return $names[$type_name];
+    }
+    else {
+      return FALSE;
+    }
+  }
+  return $names;
 }
 
 /**
@@ -198,4 +213,14 @@ function crm_activity_forms($form_id, $args) {
  */
 function crm_activity_label($activity) {
   return $activity->title;
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function crm_activity_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'crm_activity') . '/views',
+  );
 }

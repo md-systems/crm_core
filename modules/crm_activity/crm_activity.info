@@ -27,7 +27,7 @@ files[] = crm_activity.admin.inc
 ;files[] = includes/crm_contact.controller.inc
 
 ; Views include
-;files[] = includes/views/crm.views.inc
+;files[] = views/crm_activity.views.inc
 
 ; Views handlers
-;files[] = includes/views/handlers/crm_contact_handler_field_contact.inc
+files[] = views/handlers/crm_activity_handler_field_links.inc

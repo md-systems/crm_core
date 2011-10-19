@@ -194,7 +194,7 @@ function crm_activity_form_delete_confirm_submit($form, &$form_state) {
     crm_activity_delete($activity);
 
     watchdog('crm_activity', '@type: deleted %title.', array('@type' => $activity->type, '%title' => $activity->title));
-    drupal_set_message(t('@type %title has been deleted.', array('@type' => crm_activity_type_label($activity->type), '%title' => $activity->title)));
+    drupal_set_message(t('@type %title has been deleted.', array('@type' => crm_activity_type_name($activity->type), '%title' => $activity->title)));
   }
 
   $form_state['redirect'] = 'crm/contact';
