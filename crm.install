@@ -34,6 +34,15 @@ function crm_install() {
   $household->is_new = TRUE;
   crm_contact_type_save($household);
 
+  if (!field_info_field('endpoints')) {
+    $field = array(
+      'field_name' => 'endpoints',
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'type' => 'relation_endpoint'
+    );
+    field_create_field($field);
+  }
+
   // Add default relationships
   $relation_types_info = array(
     array(
