@@ -227,7 +227,15 @@ function crm_contact_type_save($contact_type) {
 
 /** 
  * Sets the default contact type
- * @param arary $info 
+ * @param arary $info
+ *   an associative array of contact type information
+ *   possible keys:
+ *     - type
+ *     - name
+ *     - description
+ *     - custom
+ *     - modified
+ *     - is_new 
  *
  * @return 
  * A default contact type  
