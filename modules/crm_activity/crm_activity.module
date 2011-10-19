@@ -62,6 +62,7 @@ function crm_activity_entity_info() {
       'file' => 'crm_activity.admin.inc',
       'controller class' => 'CRMActivityTypeUIController',
     ),
+    'access callback' => 'user_access',
     'access arguments' => array('administer activity types'),
   );
 
@@ -256,14 +257,14 @@ function crm_activity_create_access($contact, $activity_type) {
 
 function crm_activity_view_access($activity) {
   global $user;
-  if (user_access('administer crm_activity entities')
+  return (user_access('administer crm_activity entities')
    || user_access('view any crm_activity entity')
    || user_access('view any crm_activity entity of bundle ' . $activity_type));
 }
 
 function crm_activity_edit_access($activity) {
   global $user;
-  if (user_access('administer crm_activity entities')
+  return (user_access('administer crm_activity entities')
    || user_access('edit any crm_activity entity')
    || user_access('edit any crm_activity entity of bundle ' . $activity_type));
 }
