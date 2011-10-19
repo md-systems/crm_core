@@ -165,6 +165,12 @@ function crm_contact_type_get_name($type = NULL) {
 
 /**
  * Return a new contact type with initialize fields.
+ *
+ * @param string $type
+ *   The machine-readable name of the contact type. (eg. individual)
+ *
+ * @return
+ *   A stdClass object with contact type fields
  */
 function crm_contact_type_new($type = '') {
   return (object) array(
@@ -179,7 +185,7 @@ function crm_contact_type_new($type = '') {
 /**
  * Loads a contact type.
  *
- * @param $type
+ * @param string $type
  *   The machine-readable name of the contact type.
  */
 function crm_contact_type_load($type) {
@@ -189,6 +195,12 @@ function crm_contact_type_load($type) {
 
 /**
  * Saves a contact type.
+ *
+ * @param $contact_type object
+ *
+ * @return 
+ *   FALSE if the insert fails and SAVED_NEW or SAVED_UPDATED
+ *   based on the operation performed
  */
 function crm_contact_type_save($contact_type) {
   $op = drupal_write_record('crm_contact_type', $contact_type, empty($contact_type->is_new) ? 'type' : array());
@@ -213,7 +225,13 @@ function crm_contact_type_save($contact_type) {
   return $op;
 }
 
-
+/** 
+ * Sets the default contact type
+ * @param arary $info 
+ *
+ * @return 
+ * A default contact type  
+ */
 function crm_contact_type_set_defaults($info = array()) {
   $type = &drupal_static(__FUNCTION__);
 
@@ -240,6 +258,10 @@ function crm_contact_type_set_defaults($info = array()) {
 
 /**
  * Initialize new contact type with basic fields.
+ * 
+ * @param string $type
+ *   The contact type (machine readable name) going to be
+ *   stored in the field instance 
  */
 function crm_initialize_contact_type($type) {
   $fields = array();
@@ -324,18 +346,49 @@ function crm_contact_type_validate_unique($type) {
   return !$match_id;
 }
 
-
+/**
+ * Save a contact
+ *
+ * @param stdClass $contact
+ *   The contact object to be saved
+ *
+ * @return
+ *   a contact object upon successful save
+ *   or an exception thrown
+ */
 function crm_contact_save($contact) {
   return entity_get_controller('crm_contact')->save($contact);
 }
 
-
+/**
+ * Load a contact
+ *
+ * @param int $contact_id
+ *   Contact id of the contact to be loaded
+ * @param array $conditions
+ *   @see crm_contact_load_multiple()
+ * @return
+ *   A contact object upon successful load
+ *   FALSE if loading fails
+ */
 function crm_contact_load($contact_id, $conditions = array()) {
   $contacts = crm_contact_load_multiple(array($contact_id), $conditions);
   return $contacts ? reset($contacts) : FALSE;
 }
 
-
+/**
+ * Load one or more contact
+ *
+ * @param array $contact_ids
+ *   An array of contact id to be loaded
+ * @param array $conditions (deprecated)
+ *   An associative array of conditions on the base table
+ *   with keys equal to the field name and value equal to
+ *   the value the fields must have
+ *
+ * @return
+ *   An array of entity object indexed by their ids
+ */
 function crm_contact_load_multiple($contact_ids = array(), $conditions = array(), $reset = FALSE) {
   return entity_load('crm_contact', $contact_ids, $conditions, $reset);
 }
@@ -391,7 +444,20 @@ function crm_contact_title($contact) {
   return drupal_render($element);
 }
 
-
+/**
+ * Fetch revision list for a contact
+ *
+ * @param stdClass $contact
+ *
+ * @return
+ *   An associative array of revision information for 
+ *   a given contact (keys below)
+ *     - vid
+ *     - log
+ *     - created
+ *     - changed
+ *     - uid
+ */
 function crm_contact_revision_list($contact) {
   return db_select('crm_contact_revision', 'rev')->
            fields('rev', array('vid', 'log', 'created', 'changed', 'uid'))->
@@ -400,12 +466,27 @@ function crm_contact_revision_list($contact) {
            fetchAllAssoc('vid', $fetch);
 }
 
-
+/**
+ * Return a contact object structure
+ *
+ * @param stdClass $contact
+ *
+ * @return
+ * A structured contact string
+ */
 function crm_contact_devel_load_object($contact) {
   module_load_include('inc', 'devel', 'devel.pages');
   return devel_load_object('crm_contact', $contact);
 }
 
+/**
+ * Print the contact structure being loaded
+ *
+ * @param stdClass $contact
+ *
+ * @return
+ * prints a structured contact object
+ */
 function crm_contact_devel_render_object($contact) {
   module_load_include('inc', 'devel', 'devel.pages');
   return devel_render_object('crm_contact', $contact);
@@ -414,9 +495,8 @@ function crm_contact_devel_render_object($contact) {
 /**
  * Revert a contact to a previous revision
  *
- * @param 
- * $contact object
- * $vid int
+ * @param stdClass $contact
+ * @param int $vid
  *
  * @return
  * TRUE upon success, FALSE upon failure
@@ -429,6 +509,11 @@ function crm_contact_revert($contact, $vid) {
  * Return permission names for a given entity type.
  *
  * Copied from commerce_entity_access_permissions().
+ *
+ * @param string $entity_type
+ *
+ * @return 
+ *   An associative array of entity permissions
  */
 function crm_entity_access_permissions($entity_type) {
   $entity_info = entity_get_info($entity_type);
