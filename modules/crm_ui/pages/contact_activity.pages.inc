@@ -164,6 +164,6 @@ function crm_activity_view($activity) {
   // To avoid this hack apply patch from http://drupal.org/node/1259916
   // Then we can load content in following way
   // $content = entity_build_content('crm_activity', $activity);
-  unset($content['crm_activity'][1]['#theme']);
+  unset($content['crm_activity'][$activity->activity_id]['#theme']);
   return $content;
 }
