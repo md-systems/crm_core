@@ -36,6 +36,10 @@ function crm_activity_entity_info() {
       'label callback' => 'crm_activity_label',
       'uri callback' => 'entity_class_uri',
       'module' => 'crm_activity',
+      'permission labels' => array(
+        'singular' => t('activity'),
+        'plural' => t('activities'),
+      ),
     ),
   );
   $return['crm_activity_type'] = array(
@@ -58,7 +62,7 @@ function crm_activity_entity_info() {
       'file' => 'crm_activity.admin.inc',
       'controller class' => 'CRMActivityTypeUIController',
     ),
-    'access callback' => 'crm_activity_type_access',
+    'access arguments' => array('administer activity types'),
   );
 
   return $return;
@@ -80,14 +84,27 @@ function crm_activity_entity_info_alter(&$entity_info) {
         'bundle argument' => 4,
         // TODO write proper hook_permissions and set proper access callback here.
         'access callback' => TRUE,
-        'access arguments' => array('administer site configuration'),
+        'access arguments' => array('administer crm_activity types'),
       ),
     );
   }
 }
 
-function crm_activity_type_access($op, $type = NULL, $account = NULL) {
-  return user_access('administer activity types', $account);
+/**
+ * Implements hook_permission().
+ */
+function crm_activity_permission() {
+  $permissions = array(
+    'administer crm_activity types' => array(
+      'title' => t('Administer activity types'),
+      'description' => t('Allows users to configure activity types and their fields.'),
+      'restrict access' => TRUE,
+    ),
+  );
+
+  $permissions += crm_entity_access_permissions('crm_activity');
+
+  return $permissions;
 }
 
 /**
@@ -223,4 +240,30 @@ function crm_activity_views_api() {
     'api' => 3,
     'path' => drupal_get_path('module', 'crm_activity') . '/views',
   );
+}
+
+/**
+ * Access callback to create new activity.
+ *
+ * @param type $contact
+ * @param type $activity_type
+ */
+function crm_activity_create_access($contact, $activity_type) {
+  return (user_access('administer crm_activity entities')
+       || user_access('create crm_activity entities')
+       || user_access('create crm_activity entities of bundle ' . $activity_type));
+}
+
+function crm_activity_view_access($activity) {
+  global $user;
+  if (user_access('administer crm_activity entities')
+   || user_access('view any crm_activity entity')
+   || user_access('view any crm_activity entity of bundle ' . $activity_type));
+}
+
+function crm_activity_edit_access($activity) {
+  global $user;
+  if (user_access('administer crm_activity entities')
+   || user_access('edit any crm_activity entity')
+   || user_access('edit any crm_activity entity of bundle ' . $activity_type));
 }

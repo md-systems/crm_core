@@ -425,3 +425,73 @@ function crm_contact_revert($contact, $vid) {
   return entity_get_controller('crm_contact')->revertContact($contact, $vid);
 }
 
+/**
+ * Return permission names for a given entity type.
+ *
+ * Copied from commerce_entity_access_permissions().
+ */
+function crm_entity_access_permissions($entity_type) {
+  $entity_info = entity_get_info($entity_type);
+  $labels = $entity_info['permission labels'];
+
+  $permissions = array();
+
+  // General 'administer' permission.
+  $permissions['administer ' . $entity_type . ' entities'] = array(
+    'title' => t('Administer @entity_type', array('@entity_type' => $labels['plural'])),
+    'description' => t('Allows users to perform any action on @entity_type.', array('@entity_type' => $labels['plural'])),
+    'restrict access' => TRUE,
+  );
+
+  // Generic create and edit permissions.
+  $permissions['create ' . $entity_type . ' entities'] = array(
+    'title' => t('Create @entity_type of any type', array('@entity_type' => $labels['plural'])),
+  );
+  if (!empty($entity_info['access arguments']['user key'])) {
+    $permissions['edit own ' . $entity_type . ' entities'] = array(
+      'title' => t('Edit own @entity_type of any type', array('@entity_type' => $labels['plural'])),
+    );
+  }
+  $permissions['edit any ' . $entity_type . ' entity'] = array(
+    'title' => t('Edit any @entity_type of any type', array('@entity_type' => $labels['singular'])),
+    'restrict access' => TRUE,
+  );
+  if (!empty($entity_info['access arguments']['user key'])) {
+    $permissions['view own ' . $entity_type . ' entities'] = array(
+      'title' => t('View own @entity_type of any type', array('@entity_type' => $labels['plural'])),
+    );
+  }
+  $permissions['view any ' . $entity_type . ' entity'] = array(
+    'title' => t('View any @entity_type of any type', array('@entity_type' => $labels['singular'])),
+    'restrict access' => TRUE,
+  );
+
+  // Per-bundle create and edit permissions.
+  if (!empty($entity_info['entity keys']['bundle'])) {
+    foreach ($entity_info['bundles'] as $bundle_name => $bundle_info) {
+      $permissions['create ' . $entity_type . ' entities of bundle ' . $bundle_name] = array(
+        'title' => t('Create %bundle @entity_type', array('@entity_type' => $labels['plural'], '%bundle' => $bundle_info['label'])),
+      );
+      if (!empty($entity_info['access arguments']['user key'])) {
+        $permissions['edit own ' . $entity_type . ' entities of bundle ' . $bundle_name] = array(
+          'title' => t('Edit own %bundle @entity_type', array('@entity_type' => $labels['plural'], '%bundle' => $bundle_info['label'])),
+        );
+      }
+      $permissions['edit any ' . $entity_type . ' entity of bundle ' . $bundle_name] = array(
+        'title' => t('Edit any %bundle @entity_type', array('@entity_type' => $labels['singular'], '%bundle' => $bundle_info['label'])),
+        'restrict access' => TRUE,
+      );
+      if (!empty($entity_info['access arguments']['user key'])) {
+        $permissions['view own ' . $entity_type . ' entities of bundle ' . $bundle_name] = array(
+          'title' => t('View own %bundle @entity_type', array('@entity_type' => $labels['plural'], '%bundle' => $bundle_info['label'])),
+        );
+      }
+      $permissions['view any ' . $entity_type . ' entity of bundle ' . $bundle_name] = array(
+        'title' => t('View any %bundle @entity_type', array('@entity_type' => $labels['singular'], '%bundle' => $bundle_info['label'])),
+        'restrict access' => TRUE,
+      );
+    }
+  }
+
+  return $permissions;
+}
