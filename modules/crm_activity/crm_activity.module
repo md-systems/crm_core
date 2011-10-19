@@ -62,7 +62,7 @@ function crm_activity_entity_info() {
       'file' => 'crm_activity.admin.inc',
       'controller class' => 'CRMActivityTypeUIController',
     ),
-    'access callback' => 'user_access',
+    'access callback' => 'crm_activity_type_access',
     'access arguments' => array('administer activity types'),
   );
 
@@ -241,6 +241,13 @@ function crm_activity_views_api() {
     'api' => 3,
     'path' => drupal_get_path('module', 'crm_activity') . '/views',
   );
+}
+
+/**
+ * Activity type access callback.
+ */
+function crm_activity_type_access($string) {
+  return user_access($string);
 }
 
 /**

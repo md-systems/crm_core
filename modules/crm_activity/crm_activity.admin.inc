@@ -101,7 +101,7 @@ function crm_activity_type_add_default_fields($activity_type) {
 
   // Participants field.
   $fields[] = array(
-    'field_name' => 'field_acitivity_participants',
+    'field_name' => 'field_activity_participants',
     'type' => 'entityreference',
     'entity_types' => array('crm_activity'),
     'translatable' => FALSE,
@@ -115,6 +115,46 @@ function crm_activity_type_add_default_fields($activity_type) {
     'cardinality' => -1,
   );
 
+  // Date field.
+  $fields[] = array(
+    'field_name' => 'field_activity_date',
+    'type' => 'datetime',
+    'module' => 'date',
+    'active' => TRUE,
+    'entity_types' => array('crm_activity'),
+    'translatable' => FALSE,
+    // Allow admin to change settings of this field as for
+    // example meeting might need end date.
+    'locked' => FALSE,
+    'settings' => array(
+      'repeat' => 0,
+      'granularity' => array(
+        'month' => 'month',
+        'day' => 'day',
+        'hour' => 'hour',
+        'minute' => 'minute',
+        'year' => 'year',
+        'second' => 0,
+      ),
+      'tz_handling' => 'site',
+      'timezone_db' => 'UTC',
+      'todate' => '',
+    ),
+    'cardinality' => 1,
+  );
+
+  // Notes field.
+  $fields[] = array(
+    'field_name' => 'field_activity_notes',
+    'type' => 'text_long',
+    'entity_types' => array('crm_activity'),
+    'translatable' => FALSE,
+    'locked' => TRUE,
+    'module' => 'text',
+    'settings' => array(),
+    'cardinality' => 1,
+  );
+
   // Create the fields if they don't exist
   foreach ($fields as $field) {
     $info = field_info_field($field['field_name']);
@@ -126,8 +166,9 @@ function crm_activity_type_add_default_fields($activity_type) {
   // Create field instances for the type if they don't exist
   $instances = array();
 
+  // Participants field.
   $instances[] = array(
-    'field_name' => 'field_acitivity_participants',
+    'field_name' => 'field_activity_participants',
     'entity_type' => 'crm_activity',
     'bundle' => $type,
     'label' => t('Participants'),
@@ -146,6 +187,84 @@ function crm_activity_type_add_default_fields($activity_type) {
       ),
     ),
     'display' => array(),
+  );
+
+  // Date field.
+  $instances[] = array(
+    'field_name' => 'field_activity_date',
+    'entity_type' => 'crm_activity',
+    'bundle' => $type,
+    'label' => t('Date'),
+    'required' => FALSE,
+    'settings' => array(
+      'default_value' => 'now',
+      'default_value_code' => '',
+      'default_value2' => 'blank',
+      'default_value_code2' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'weight' => '1',
+      'type' => 'date_popup',
+      'module' => 'date',
+      'active' => 1,
+      'settings' => array(
+        'input_format' => 'm/d/Y - H:i:s',
+        'input_format_custom' => '',
+        'year_range' => '-3:+3',
+        'increment' => '15',
+        'label_position' => 'above',
+        'text_parts' => array(),
+        'repeat_collapsed' => 0,
+      ),
+    ),
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'type' => 'date_default',
+        'settings' => array(
+          'format_type' => 'long',
+          'show_repeat_rule' => 'show',
+          'multiple_number' => '',
+          'multiple_from' => '',
+          'multiple_to' => '',
+          'fromto' => 'both',
+        ),
+        'module' => 'date',
+        'weight' => 1,
+      ),
+    ),
+  );
+
+  // Participants field.
+  $instances[] = array(
+    'field_name' => 'field_activity_notes',
+    'entity_type' => 'crm_activity',
+    'bundle' => $type,
+    'label' => t('Notes'),
+    'required' => FALSE,
+    'settings' => array(
+      'text_processing' => '0',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'weight' => 2,
+      'type' => 'text_textarea',
+      'module' => 'text',
+      'active' => 1,
+      'settings' => array(
+        'rows' => 5,
+      ),
+    ),
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'type' => 'text_default',
+        'settings' => array(),
+        'module' => 'text',
+        'weight' => 2,
+      ),
+    ),
   );
 
   // Create field instances if they don't exist
