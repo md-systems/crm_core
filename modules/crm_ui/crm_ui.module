@@ -64,7 +64,7 @@ function crm_ui_menu() {
     'file' => 'pages/contact.pages.inc',
   );
 
-  $items['crm/contact/%crm_contact/revisions'] = array(
+/*  $items['crm/contact/%crm_contact/revisions'] = array(
     'title' => 'Revisions',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('crm_contact_revision_form', 2),
@@ -72,7 +72,7 @@ function crm_ui_menu() {
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'file' => 'pages/contact.pages.inc',
-  );
+  ); */
 
   $items['crm/contact/%crm_contact/delete'] = array(
     'title' => 'Delete',
@@ -203,26 +203,28 @@ function crm_ui_menu() {
     'file' => 'pages/contact_activity.pages.inc',
   );
 
-  $items['crm/admin'] = array(
-    'title' => 'Administration',
-    'page callback' => 'crm_ui_admin_dashboard',
+  $items['admin/structure/crm'] = array(
+    'title' => 'CRM',
+    'description' => 'Manage contact types, activity types, and contact relationship types.',
+    'page callback' => 'crm_contact_types_overview',
     'access arguments' => array('administer contact types'),
-    'type' => MENU_LOCAL_TASK,
-    'context' => MENU_CONTEXT_PAGE,
-    'weight' => 10,
-    'file' => 'pages/crm_ui.pages.inc',
+    //'type' => MENU_LOCAL_TASK,
+    //'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+    //'weight' => 10,
+    'file' => 'pages/contact_types.pages.inc',
   );
 
   /*
    * Contact types
    */
-  $items['crm/admin/contact/types'] = array(
+  $items['admin/structure/crm/contact-types'] = array(
     'title' => 'Manage contact types',
     'page callback' => 'crm_contact_types_overview',
     'access arguments' => array('administer contact types'),
     'file' => 'pages/contact_types.pages.inc',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['crm/admin/contact/types/add'] = array(
+  $items['admin/structure/crm/contact-types/add'] = array(
     'title' => 'Add contact type',
     'page callback' => 'crm_contact_type_form_wrapper',
     'page arguments' => array(crm_contact_type_new()),
@@ -230,7 +232,7 @@ function crm_ui_menu() {
     'type' => MENU_LOCAL_ACTION | MENU_VISIBLE_IN_BREADCRUMB,
     'file' => 'pages/contact_types.pages.inc',
   );
-  $items['crm/admin/contact/types/%crm_contact_type'] = array(
+  $items['admin/structure/crm/contact-types/%crm_contact_type'] = array(
     'title' => 'Edit contact type',
     'title callback' => 'crm_contact_type_title',
     'title arguments' => array(4),
@@ -239,12 +241,12 @@ function crm_ui_menu() {
     'access arguments' => array('administer contact types'),
     'file' => 'pages/contact_types.pages.inc',
   );
-  $items['crm/admin/contact/types/%crm_contact_type/edit'] = array(
+  $items['admin/structure/crm/contact-types/%crm_contact_type/edit'] = array(
     'title' => 'Edit',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
   );
-  $items['crm/admin/contact/types/%crm_contact_type/delete'] = array(
+  $items['admin/structure/crm/contact-types/%crm_contact_type/delete'] = array(
     'title' => 'Delete',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('crm_contact_type_delete_confirm', 4),
@@ -338,8 +340,8 @@ function crm_ui_menu() {
  */
 function crm_ui_menu_alter(&$items) {
   // Transform the field UI tabs into contextual links.
-  $items['crm/admin/contact/types/%crm_contact_type/fields']['context'] = MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE;
-  $items['crm/admin/contact/types/%crm_contact_type/display']['context'] = MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE;
+  $items['admin/structure/crm/contact-types/%crm_contact_type/fields']['context'] = MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE;
+  $items['admin/structure/crm/contact-types/%crm_contact_type/display']['context'] = MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE;
 
   // Make Views menu item local task.
   $items['crm/contact/%/activity/add']['type'] = MENU_LOCAL_ACTION;

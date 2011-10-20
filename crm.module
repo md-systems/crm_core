@@ -42,8 +42,8 @@ function crm_entity_info() {
     $return['crm_contact']['bundles'][$type] = array(
       'label' => $name,
       'admin' => array(
-        'path' => 'crm/admin/contact/types/%crm_contact_type',
-        'real path' => 'crm/admin/contact/types/' . str_replace('_', '-', $type),
+        'path' => 'admin/structure/crm/contact-types/%crm_contact_type',
+        'real path' => 'admin/structure/crm/contact-types/' . str_replace('_', '-', $type),
         'bundle argument' => 4,
         'access arguments' => array('administer contact types'),
       ),
