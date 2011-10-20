@@ -84,11 +84,11 @@ function crm_activity_type_form_submit(&$form, &$form_state) {
   }
 
   // Redirect user back to list of activity types.
-  $form_state['redirect'] = 'crm/admin/activity_types';
+  $form_state['redirect'] = 'admin/structure/crm/activity-types';
 }
 
 function crm_activity_type_form_submit_delete(&$form, &$form_state) {
-  $form_state['redirect'] = 'crm/admin/activity_types/manage/' . $form_state['crm_activity_type']->type . '/delete';
+  $form_state['redirect'] = 'admin/structure/crm/activity-types/' . $form_state['crm_activity_type']->type . '/delete';
 }
 
 /**

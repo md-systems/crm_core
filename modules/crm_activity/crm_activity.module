@@ -58,7 +58,7 @@ function crm_activity_entity_info() {
     'module' => 'crm_activity',
     // Enable the entity API's admin UI.
     'admin ui' => array(
-      'path' => 'crm/admin/activity_types',
+      'path' => 'admin/structure/crm/activity-types',
       'file' => 'crm_activity.admin.inc',
       'controller class' => 'CRMActivityTypeUIController',
     ),
@@ -80,8 +80,8 @@ function crm_activity_entity_info_alter(&$entity_info) {
     $entity_info['crm_activity']['bundles'][$type] = array(
       'label' => $info->label,
       'admin' => array(
-        'path' => 'crm/admin/activity_types/manage/%crm_activity_type',
-        'real path' => 'crm/admin/activity_types/manage/' . $type,
+        'path' => 'admin/structure/crm/activity-types/%crm_activity_type',
+        'real path' => 'admin/structure/crm/activity-types/' . $type,
         'bundle argument' => 4,
         // TODO write proper hook_permissions and set proper access callback here.
         'access callback' => TRUE,
