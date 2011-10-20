@@ -373,4 +373,5 @@ function crm_views_default_views() {
   $handler->display->display_options['menu']['weight'] = '0';
 
   $views['crm_contact_revisions'] = $view; 
+  return $views;
 }
