@@ -90,13 +90,16 @@ function crm_contact_form_validate($form, &$form_state) {
  */
 function crm_contact_form_submit($form, &$form_state) {
   global $user;
-
+  
+  $create = FALSE;
+  
   $contact = &$form_state['crm_contact'];
 
 
   // Set the contact's uid if it's being created at this time.
   if (empty($contact->contact_id)) {
     $contact->uid = $user->uid;
+    $create = TRUE;
   }
 
   // Notify field widgets.
@@ -107,7 +110,7 @@ function crm_contact_form_submit($form, &$form_state) {
 
   // Redirect based on the button clicked.
   drupal_set_message(t('Contact saved.'));
-  drupal_goto('crm/contact');
+  ($create) ? drupal_goto('crm/contact') : drupal_goto("crm/contact/{$contact->contact_id}");
 }
 
 
