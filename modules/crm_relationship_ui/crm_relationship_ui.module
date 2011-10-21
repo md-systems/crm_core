@@ -14,29 +14,29 @@ function crm_relationship_ui_menu() {
     'description' => 'View contact relationships',
     'page callback' => 'crm_relationship_ui_contact_relationships',
     'page arguments' => array(2),
-    'access arguments' => array('view contacts'),
+    'access arguments' => array('view contact relationships'),
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'file' => 'crm_relationship_ui.pages.inc',
   );
 
   $items['crm/contact/%crm_contact/relationships/add'] = array(
-    'title' => 'Add Relationship',
+    'title' => 'Add Contact Relationship',
     'description' => 'Add a relationship to this contact',
     'page callback' => 'crm_relationship_ui_add_relationship',
     'page arguments' => array(2),
-    'access arguments' => array('add crm relationships'),
+    'access arguments' => array('add crm relationship'),
     'type' => MENU_LOCAL_ACTION,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'file' => 'crm_relationship_ui.pages.inc',
   );
 
   $items['crm/contact/%crm_contact/relationships/add/%relation_type/%'] = array(
-    'title' => 'Add Relationship',
+    'title' => 'Add Contact Relationship',
     'description' => 'Add a relationship to this contact',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('crm_relationship_ui_add_relationship_form', 2, 5, 6),
-    'access arguments' => array('add crm relationships'),
+    'access arguments' => array('add contact relationships'),
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'file' => 'crm_relationship_ui.pages.inc',
@@ -45,7 +45,7 @@ function crm_relationship_ui_menu() {
   $items['crm/contact/%crm_contact/relationships/add/%relation_type/%/autocomplete'] = array(
     'page callback' => 'crm_relationship_ui_add_relationship_autocomplete',
     'page arguments' => array(2, 5, 6),
-    'access arguments' => array('add crm relationships'),
+    'access arguments' => array('add contact relationships'),
     'type' => MENU_CALLBACK,
     'file' => 'crm_relationship_ui.pages.inc',
   );
@@ -56,14 +56,14 @@ function crm_relationship_ui_menu() {
   $items['admin/structure/crm/relationship-types'] = array(
     'title' => 'Relationship types',
     'page callback' => 'crm_relationship_ui_types_overview',
-    'access arguments' => array('administer crm relationship'),
+    'access arguments' => array('administer relation types'),
     'file' => 'crm_relationship_ui.admin.inc',
     'type' => MENU_LOCAL_TASK,
   );
 
   $items['admin/structure/crm/relationship-types/add'] = array(
     'title' => 'Add relationship type',
-    'access arguments' => array('administer crm relationship'),
+    'access arguments' => array('administer relation types'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('relation_type_form'),
     'type' => MENU_LOCAL_ACTION,

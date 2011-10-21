@@ -80,6 +80,10 @@ function crm_permission() {
       'title' => t('Administer Contact Types'),
       'description' => t('Allows the user to edit the types of contact such as Individual, Organization, etc.'),
     ),
+    'view contacts' => array(
+      'title' => t('View Contacts'),
+      'description' => t('Allows the user to view list of CRM contacts.'),
+    ),
     'add contacts' => array(
       'title' => t('Add Contacts'),
       'description' => t('Allows the user to add contact to the CRM.'),
@@ -88,18 +92,18 @@ function crm_permission() {
       'title' => t('Edit Contacts'),
       'description' => t('Allows the user to edit contacts that have already been added to the CRM.'),
     ),
-    'add crm relationships' => array(
-      'title' => t('Add Relationships'),
+    'view contact relationships' => array(
+      'title' => t('View Contact Relationships'),
+      'description' => t('Allows user to view list of CRM relationship.'),
+    ),      
+    'add contact relationships' => array(
+      'title' => t('Add Contact Relationships'),
       'description' => t('Allows user to add relationship to the CRM contact.'),
     ),
-    'edit crm relationships' => array(
-      'title' => t('Edit Relationships'),
+    'edit contact relationships' => array(
+      'title' => t('Edit Contact Relationships'),
       'description' => t('Allows user to edit relationship of the CRM contact.'),
     ),
-    'administer crm relationship' => array(
-      'title' => t('Administer Relationships'),
-      'description' => t('Allows user to administer CRM relationships.'),
-     )
   );
 }
 
