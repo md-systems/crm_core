@@ -124,6 +124,14 @@ function crm_views_data() {
     ),
   );
   
+   $data['crm_contact_revision']['revert_link'] = array(
+   'field' => array(
+     'title' => t('Revision Link'),
+     'help' => t('Provide a simple link to revert the contact'),
+     'handler' => 'crm_contact_handler_field_contact_revert',
+   ),
+ );
+  
   $data['crm_contact_revision']['contact_id'] = array(
     'title' => t('Contact ID'),
     'help' => t('The unqiue internal identifier for a contact revision.'),
