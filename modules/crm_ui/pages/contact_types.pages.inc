@@ -13,7 +13,7 @@ function crm_contact_types_overview() {
   $rows = array();
 
   foreach (crm_contact_types() as $type => $contact_type) {
-    $links = menu_contextual_links('crm', 'crm/admin/contact/types', array($type));
+    $links = menu_contextual_links('crm', 'admin/structure/crm/contact-types', array($type));
 
     $rows[] = array(
       theme('crm_contact_type_overview', array('contact_type' => $contact_type)),

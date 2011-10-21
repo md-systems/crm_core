@@ -156,6 +156,14 @@ function crm_ui_views_default_views() {
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '10';
   $handler->display->display_options['style_plugin'] = 'table';
+  /* No results behavior: Global: Text area */
+  $handler->display->display_options['empty']['area']['id'] = 'area';
+  $handler->display->display_options['empty']['area']['table'] = 'views';
+  $handler->display->display_options['empty']['area']['field'] = 'area';
+  $handler->display->display_options['empty']['area']['empty'] = FALSE;
+  $handler->display->display_options['empty']['area']['content'] = 'This contact has no activity, add an activity above.';
+  $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
+  $handler->display->display_options['empty']['area']['tokenize'] = 0;
   /* Field: Activity: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'crm_activity';
@@ -177,35 +185,6 @@ function crm_ui_views_default_views() {
   $handler->display->display_options['fields']['title']['hide_empty'] = 0;
   $handler->display->display_options['fields']['title']['empty_zero'] = 0;
   $handler->display->display_options['fields']['title']['hide_alter_empty'] = 0;
-  /* Field: Activity: Participants */
-  $handler->display->display_options['fields']['field_acitivity_participants']['id'] = 'field_acitivity_participants';
-  $handler->display->display_options['fields']['field_acitivity_participants']['table'] = 'field_data_field_acitivity_participants';
-  $handler->display->display_options['fields']['field_acitivity_participants']['field'] = 'field_acitivity_participants';
-  $handler->display->display_options['fields']['field_acitivity_participants']['alter']['alter_text'] = 0;
-  $handler->display->display_options['fields']['field_acitivity_participants']['alter']['make_link'] = 0;
-  $handler->display->display_options['fields']['field_acitivity_participants']['alter']['absolute'] = 0;
-  $handler->display->display_options['fields']['field_acitivity_participants']['alter']['external'] = 0;
-  $handler->display->display_options['fields']['field_acitivity_participants']['alter']['replace_spaces'] = 0;
-  $handler->display->display_options['fields']['field_acitivity_participants']['alter']['trim_whitespace'] = 0;
-  $handler->display->display_options['fields']['field_acitivity_participants']['alter']['nl2br'] = 0;
-  $handler->display->display_options['fields']['field_acitivity_participants']['alter']['word_boundary'] = 1;
-  $handler->display->display_options['fields']['field_acitivity_participants']['alter']['ellipsis'] = 1;
-  $handler->display->display_options['fields']['field_acitivity_participants']['alter']['strip_tags'] = 0;
-  $handler->display->display_options['fields']['field_acitivity_participants']['alter']['trim'] = 0;
-  $handler->display->display_options['fields']['field_acitivity_participants']['alter']['html'] = 0;
-  $handler->display->display_options['fields']['field_acitivity_participants']['element_label_colon'] = 1;
-  $handler->display->display_options['fields']['field_acitivity_participants']['element_default_classes'] = 1;
-  $handler->display->display_options['fields']['field_acitivity_participants']['hide_empty'] = 0;
-  $handler->display->display_options['fields']['field_acitivity_participants']['empty_zero'] = 0;
-  $handler->display->display_options['fields']['field_acitivity_participants']['hide_alter_empty'] = 0;
-  $handler->display->display_options['fields']['field_acitivity_participants']['click_sort_column'] = 'target_id';
-  $handler->display->display_options['fields']['field_acitivity_participants']['settings'] = array(
-    'link' => 0,
-  );
-  $handler->display->display_options['fields']['field_acitivity_participants']['group_rows'] = 1;
-  $handler->display->display_options['fields']['field_acitivity_participants']['delta_offset'] = '0';
-  $handler->display->display_options['fields']['field_acitivity_participants']['delta_reversed'] = 0;
-  $handler->display->display_options['fields']['field_acitivity_participants']['field_api_classes'] = 0;
   /* Field: Activity: Activity ID */
   $handler->display->display_options['fields']['activity_id']['id'] = 'activity_id';
   $handler->display->display_options['fields']['activity_id']['table'] = 'crm_activity';
@@ -310,10 +289,10 @@ function crm_ui_views_default_views() {
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = 'Operations';
   $handler->display->display_options['fields']['nothing']['alter']['text'] = '<ul>
-    <li>[view_crm_activity]</li>
-    <li>[edit_crm_activity]</li>
-    <li>[delete_crm_activity]</li>
-    </ul>';
+      <li>[view_crm_activity]</li>
+      <li>[edit_crm_activity]</li>
+      <li>[delete_crm_activity]</li>
+      </ul>';
   $handler->display->display_options['fields']['nothing']['alter']['make_link'] = 0;
   $handler->display->display_options['fields']['nothing']['alter']['absolute'] = 0;
   $handler->display->display_options['fields']['nothing']['alter']['external'] = 0;
@@ -330,18 +309,6 @@ function crm_ui_views_default_views() {
   $handler->display->display_options['fields']['nothing']['hide_empty'] = 0;
   $handler->display->display_options['fields']['nothing']['empty_zero'] = 0;
   $handler->display->display_options['fields']['nothing']['hide_alter_empty'] = 0;
-  /* Contextual filter: Activity: Participants (field_acitivity_participants:target_id) */
-  $handler->display->display_options['arguments']['field_acitivity_participants_target_id']['id'] = 'field_acitivity_participants_target_id';
-  $handler->display->display_options['arguments']['field_acitivity_participants_target_id']['table'] = 'field_data_field_acitivity_participants';
-  $handler->display->display_options['arguments']['field_acitivity_participants_target_id']['field'] = 'field_acitivity_participants_target_id';
-  $handler->display->display_options['arguments']['field_acitivity_participants_target_id']['default_action'] = 'empty';
-  $handler->display->display_options['arguments']['field_acitivity_participants_target_id']['default_argument_type'] = 'fixed';
-  $handler->display->display_options['arguments']['field_acitivity_participants_target_id']['default_argument_skip_url'] = 0;
-  $handler->display->display_options['arguments']['field_acitivity_participants_target_id']['summary']['number_of_records'] = '0';
-  $handler->display->display_options['arguments']['field_acitivity_participants_target_id']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['field_acitivity_participants_target_id']['summary_options']['items_per_page'] = '25';
-  $handler->display->display_options['arguments']['field_acitivity_participants_target_id']['break_phrase'] = 0;
-  $handler->display->display_options['arguments']['field_acitivity_participants_target_id']['not'] = 0;
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
@@ -351,3 +318,4 @@ function crm_ui_views_default_views() {
 
   return $views;
 }
+

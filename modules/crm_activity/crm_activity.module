@@ -58,11 +58,11 @@ function crm_activity_entity_info() {
     'module' => 'crm_activity',
     // Enable the entity API's admin UI.
     'admin ui' => array(
-      'path' => 'crm/admin/activity_types',
+      'path' => 'admin/structure/crm/activity-types',
       'file' => 'crm_activity.admin.inc',
       'controller class' => 'CRMActivityTypeUIController',
     ),
-    'access callback' => 'user_access',
+    'access callback' => 'crm_activity_type_access',
     'access arguments' => array('administer activity types'),
   );
 
@@ -80,8 +80,8 @@ function crm_activity_entity_info_alter(&$entity_info) {
     $entity_info['crm_activity']['bundles'][$type] = array(
       'label' => $info->label,
       'admin' => array(
-        'path' => 'crm/admin/activity_types/manage/%crm_activity_type',
-        'real path' => 'crm/admin/activity_types/manage/' . $type,
+        'path' => 'admin/structure/crm/activity-types/%crm_activity_type',
+        'real path' => 'admin/structure/crm/activity-types/' . $type,
         'bundle argument' => 4,
         // TODO write proper hook_permissions and set proper access callback here.
         'access callback' => TRUE,
@@ -241,6 +241,13 @@ function crm_activity_views_api() {
     'api' => 3,
     'path' => drupal_get_path('module', 'crm_activity') . '/views',
   );
+}
+
+/**
+ * Activity type access callback.
+ */
+function crm_activity_type_access($string) {
+  return user_access($string);
 }
 
 /**

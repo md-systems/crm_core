@@ -21,7 +21,7 @@ function crm_activity_entity_ui_get_form_wrapper($contact, $type) {
   $values = array(
     'type' => $type,
     'uid' => $user->uid,
-    'field_acitivity_participants' => array(
+    'field_activity_participants' => array(
       LANGUAGE_NONE => array(array(
           'target_id' => $contact->contact_id,
           'target_type' => 'crm_contact',
@@ -107,19 +107,19 @@ function crm_activity_form_validate($form, &$form_state) {
   // from the page of the contact. So we ensure that this contact is added in
   // participants field.
   $form_state_values = array();
-  foreach ($form_state['values']['field_acitivity_participants'][LANGUAGE_NONE] as $value) {
+  foreach ($form_state['values']['field_activity_participants'][LANGUAGE_NONE] as $value) {
     $form_state_values[] = $value['target_id'];
   }
 
   $activity_values = array();
-  foreach ($activity->field_acitivity_participants[LANGUAGE_NONE] as $value) {
+  foreach ($activity->field_activity_participants[LANGUAGE_NONE] as $value) {
     $activity_values[] = $value['target_id'];
   }
   $array_intersect = array_intersect($form_state_values, $activity_values);
 
   // Not all default values present in form state values.
   if (array_values($array_intersect) != $activity_values) {
-    form_set_error('field_acitivity_participants', t('Original contact should be included in Participants field.'));
+    form_set_error('field_activity_participants', t('Original contact should be included in Participants field.'));
   }
 
   // Notify field widgets to validate their data.
