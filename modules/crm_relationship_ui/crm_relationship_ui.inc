@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Return contact types available for specific relation type.
+ * Return contact types available for specific relationship type.
  *
  * @param $relation_type
  *   Relation type object.
  * @param $reverse
- *   Whether relation is reversed.
+ *   Whether relationship is reversed.
  */
-function crm_relationship_ui_load_relationship_type_contacts($relation_type, $reverse) {
+function crm_relationship_ui_load_contact_types($relation_type, $reverse = 0) {
   // Check if it is a relationship type  
   if (!crm_relationship_ui_is_relationship_type($relation_type->relation_type)) {
     return array();
@@ -31,7 +31,33 @@ function crm_relationship_ui_load_relationship_type_contacts($relation_type, $re
 }
 
 /**
+ * Return relationship types that can be applied to specific contact type.
+ * 
+ * @param type $contact_type
+ *   CRM contact type name.
+ * @param type $reverse 
+ *   Whether relationship is reversed.
+ */
+function crm_relationship_ui_load_relationship_types($contact_type, $reverse = 0) {
+  $relation_types = relation_get_types();
+  
+  $available_relationship_types = array();
+  
+  foreach ($relation_types as $relation_type) {
+    if (!crm_relationship_ui_is_relationship_type($relation_type->relation_type)) continue;
+    
+    $bundles = $reverse ? $relation_type->target_bundles : $relation_type->source_bundles;
+    if (in_array('crm_contact:' . $contact_type, $bundles) || in_array('crm_contact:*', $bundles)) {
+      $available_relationship_types[] = $relation_type;  
+    }
+  }
+  
+  return $available_relationship_types;
+}
+
+/**
  * Check if relation_type is CRM relationship_type.
+ * 
  * @param $relation_type
  *   Relation type name provided by Relation module.
  */
@@ -61,7 +87,8 @@ function crm_relationship_ui_is_relationship_type($relation_type) {
 }
 
 /**
- * Return true if there is only CRM contacts in relation type bundles. 
+ * Return true if there is only CRM contacts in relation type bundles.
+ * 
  * @param $bundles
  *   Array of relation type bundles.
  */
