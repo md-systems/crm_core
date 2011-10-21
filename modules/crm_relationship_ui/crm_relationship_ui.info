@@ -1,0 +1,16 @@
+name = DropCRM Relationships UI
+description = User Interface for relationships between contacts.
+package = CRM
+version = VERSION
+core = 7.x
+
+dependencies[] = crm
+dependencies[] = crm_ui
+dependencies[] = relation
+
+; =======================
+; Module Files
+; =======================
+
+files[] = crm_relationship_ui.module
+files[] = crm_relationship_ui.inc
