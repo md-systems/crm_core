@@ -127,6 +127,20 @@ class CRMActivityType extends Entity {
 }
 
 /**
+ * UI controller for CRM Activity Type.
+ */
+class CRMActivityTypeUIController extends EntityDefaultUIController {
+  /**
+   * Overrides hook_menu() defaults.
+   */
+  public function hook_menu() {
+    $items = parent::hook_menu();
+    $items[$this->path]['description'] = 'Manage activity types.';
+    return $items;
+  }
+}
+
+/**
  * Load a CRM Activity object.
  */
 function crm_activity_load($activity_id, $reset = FALSE) {
@@ -274,4 +288,57 @@ function crm_activity_edit_access($activity) {
   return (user_access('administer crm_activity entities')
    || user_access('edit any crm_activity entity')
    || user_access('edit any crm_activity entity of bundle ' . $activity_type));
+}
+
+/**
+ * Creates or Saves an activity type
+ * 
+ * @param stdClass $activity_type
+ *   The activity type info to be saved 
+ *
+ */
+function crm_activity_type_save($activity_type) {
+
+ $op = drupal_write_record('crm_activity_type', $activity_type, (!$activity_type->is_new) ? 'id' : array());
+  
+  menu_rebuild();
+
+ // If this is a new activity type and the insert did not fail...
+  if ($activity_type->is_new && $op != FALSE) {
+    // Notify the field API that a new bundle has been created.
+    field_attach_create_bundle('crm_activity_type', $activity_type->type);
+
+    // Add base fields to the contact
+    /// Bug: the function is in crm_activity_admin.inc, why file not auto included
+    module_load_include('inc', 'crm_activity', 'crm_activity.admin');
+    crm_activity_type_add_default_fields($activity_type);
+
+    // Notify other modules that a new contact type has been created.
+    module_invoke_all('crm_activity_type_insert', $activity_type);
+  }
+  else {
+    // Notify other modules that an existing contact type has been updated.
+    module_invoke_all('crm_activity_type_update', $activity_type);
+  }
+
+  return $op; 
+  
+}
+
+/**
+ * Return a new activity type with initialize fields.
+ *
+ * @param string $type
+ *   The machine-readable name of the contact type. (eg. Meeting)
+ *
+ * @return
+ *   A stdClass object with activity fields
+ */
+function crm_activity_type_new($type = '') {
+  return (object) array(
+    'type' => $type,
+    'label' => '',
+    'description' => '',
+    // 'help' => '',
+  );
 }

@@ -1,18 +1,6 @@
 <?php
 
-/**
- * UI controller for CRM Activity Type.
- */
-class CRMActivityTypeUIController extends EntityDefaultUIController {
-  /**
-   * Overrides hook_menu() defaults.
-   */
-  public function hook_menu() {
-    $items = parent::hook_menu();
-    $items[$this->path]['description'] = 'Manage activity types.';
-    return $items;
-  }
-}
+
 
 /**
  * Generates the profile type editing form.
@@ -95,6 +83,7 @@ function crm_activity_type_form_submit_delete(&$form, &$form_state) {
  * Add default fields to newly created activity type.
  */
 function crm_activity_type_add_default_fields($activity_type) {
+ 
   $type = $activity_type->type;
 
   $fields = array();

@@ -1,6 +1,28 @@
 <?php
 
 /**
+ * Implements hook_install()
+ */ 
+function crm_activity_install() {
+  
+  // create a default meeting activity type
+  $meeting = crm_activity_type_new();
+  $meeting->type = 'meeting';
+  $meeting->label = t('Meeting');
+  $meeting->description = t('A meeting between 2 or more contacts');
+  $meeting->is_new = TRUE;
+  crm_activity_type_save($meeting);
+  
+  // create a phone call activity type
+  $phone_call = crm_activity_type_new();
+  $phone_call->type = 'phone_call';
+  $phone_call->label = t('Phone call');
+  $phone_call->description = t('A phone call between 2 or more contacts');
+  $phone_call->is_new = TRUE;
+  crm_activity_type_save($phone_call);
+}
+
+/**
  * Implements hook_schema().
  */
 function crm_activity_schema() {
