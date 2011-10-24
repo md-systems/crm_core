@@ -59,14 +59,25 @@ function crm_relationship_ui_load_relationship_types($contact_type, $reverse = 0
  * Check if relation_type is CRM relationship_type.
  * 
  * @param $relation_type
- *   Relation type name provided by Relation module.
+ *   Relation type name or relation object provided by Relation module.
  */
 function crm_relationship_ui_is_relationship_type($relation_type) {
   static $types = array();
   
+  if (is_object($relation_type)) {
+    $relation_type_object = $relation_type;
+    $relation_type = $relation_type_object->relation_type;
+  }
+  
   if (isset($types[$relation_type])) {
     return $types[$relation_type];
-  } elseif ($relation_type_object = relation_type_load($relation_type)) {
+  }
+  
+  if (!isset($relation_type_object)) {
+    $relation_type_object = relation_type_load($relation_type);
+  }
+  
+  if ($relation_type_object) {
     $ret = true;
     
     // It should be between CRM contact types only

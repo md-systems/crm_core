@@ -109,8 +109,13 @@ function crm_relationship_ui_add_relationship_form_validate($form, &$form_state)
   $destination_contact = _crm_relationship_ui_get_contact_from_autocomplete_field_value($form_state['values']['destination_contact']);
 
   if (!$relationship_type || !is_object($relationship_type)) {
-    form_set_error('relationship_type', t('Relation type is required.'));
+    form_set_error('relationship_type', t('Relationship type is required.'));
     return;
+  }
+
+  if (!crm_relationship_ui_is_relationship_type($relationship_type)) {
+    form_set_error('relationship_type', t('Relationship type is not valid CRM relationship type.'));
+    return; 
   }
 
   if (!$source_contact) {
@@ -133,6 +138,10 @@ function crm_relationship_ui_add_relationship_form_validate($form, &$form_state)
   if (!in_array($destination_contact->type, $target_bundles)) {
    form_set_error('destination_contact', t('Please, input destination contact of proper type.'));
    return;
+  }
+  
+  if ($source_contact->contact_id == $destination_contact->contact_id) {
+    form_set_error($reverse ? 'source_contact' : 'destination_contact', t('Relationship could not be loopback.'));
   }
 
   if ($relationship_type->r_unique) {
