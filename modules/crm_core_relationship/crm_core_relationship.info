@@ -1,0 +1,16 @@
+; $Id$
+name = CRM Core Relationship
+description = Provide relationship between contacts
+package = CRM
+version = VERSION
+core = 7.x
+
+dependencies[] = crm
+dependencies[] = relation
+
+; =======================
+; Module Files
+; =======================
+
+;base files
+files[] = crm_core_relationship.module
