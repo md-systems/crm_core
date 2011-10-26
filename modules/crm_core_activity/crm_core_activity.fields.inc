@@ -12,7 +12,7 @@ function _crm_core_activity_type_default_fields() {
     'translatable' => FALSE,
     'locked' => TRUE,
     'settings' => array(
-      'target_type' => 'crm_contact',
+      'target_type' => 'crm_core_contact',
       'handler' => 'base',
       'handler_submit' => 'Change handler',
       'handler_settings' => array('target_bundles' => array()),
