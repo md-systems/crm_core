@@ -206,7 +206,7 @@ function crm_core_contact_type_save($contact_type) {
     field_attach_create_bundle('crm_core_contact', $contact_type->type);
 
     // Add base fields to the contact
-    crm_initialize_contact_type($contact_type->type);
+    crm_core_contact_type_initialize($contact_type->type);
 
     // Notify other modules that a new contact type has been created.
     module_invoke_all('crm_core_contact_type_insert', $contact_type);
@@ -266,7 +266,7 @@ function crm_core_contact_type_set_defaults($info = array()) {
  *   The contact type (machine readable name) going to be
  *   stored in the field instance 
  */
-function crm_initialize_contact_type($type) {
+function crm_core_contact_type_initialize($type) {
   $fields = array();
 
   // Name field
