@@ -27,6 +27,9 @@ files[] = crm_activity.module
 files[] = crm_activity.install
 files[] = crm_activity.admin.inc
 
+; Fields
+files[] = crm_activity.fields.inc
+
 ; Module includes
 ;files[] = includes/crm_contact.controller.inc
 

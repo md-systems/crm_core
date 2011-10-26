@@ -22,6 +22,18 @@ function crm_activity_install() {
   crm_activity_type_save($phone_call);
 }
 
+function crm_activity_uninstall() {
+
+  // delete all the fields
+  // right now we only have the default fields, what if we can add more fields to the 
+  // activities? (we will need to go through the field array and idenfity activity fields?)
+  module_load_include('inc', 'crm_activity', 'crm_activity.fields');
+  foreach (_crm_activity_type_default_fields() as $field) {
+    field_delete_field($field['field_name']);
+  }
+  
+}
+
 /**
  * Implements hook_schema().
  */
