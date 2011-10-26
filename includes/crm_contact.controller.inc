@@ -40,8 +40,8 @@ class CRMContactController extends DrupalDefaultEntityController {
       $contact->changed = REQUEST_TIME;
 
       // Give modules a chance to alter things
-      field_attach_presave('crm_contact', $contact);
-      module_invoke_all('crm_contact_presave', $contact);
+      field_attach_presave('crm_core_contact', $contact);
+      module_invoke_all('crm_core_contact_presave', $contact);
 
       // Initialize the log field if necessary
       if (!isset($contact->log)) {
@@ -59,7 +59,7 @@ class CRMContactController extends DrupalDefaultEntityController {
         $this->saveRevision($contact, $user->uid);
 
         // Save the fields attched to the contact
-        field_attach_insert('crm_contact', $contact);
+        field_attach_insert('crm_core_contact', $contact);
 
         $op = 'insert';
       }
@@ -70,7 +70,7 @@ class CRMContactController extends DrupalDefaultEntityController {
 
         // Update the record and its fields
         drupal_write_record('crm_core_contact', $contact, 'contact_id');
-        field_attach_update('crm_contact', $contact);
+        field_attach_update('crm_core_contact', $contact);
 
         $op = 'update';
       }
@@ -81,12 +81,12 @@ class CRMContactController extends DrupalDefaultEntityController {
         condition('contact_id', $contact->contact_id)->
         execute();
 
-      module_invoke_all('crm_contact_' . $op, $contact);
-      module_invoke_all('entity_' . $op, $contact, 'crm_contact');
+      module_invoke_all('crm_core_contact_' . $op, $contact);
+      module_invoke_all('entity_' . $op, $contact, 'crm_core_contact');
 
       // rules integration
       if (module_exists('rules')) {
-        rules_invoke_event('crm_contact_'.$op, $contact);
+        rules_invoke_event('crm_core_contact_'.$op, $contact);
       }
       
       unset($contact->is_new);
@@ -165,17 +165,17 @@ class CRMContactController extends DrupalDefaultEntityController {
         db_delete('crm_core_contact')->condition('contact_id', $contact_ids, 'IN')->execute();
 
         foreach ($contacts as $contact) {
-          module_invoke_all('crm_contact_delete', $contact);
-          field_attach_delete('crm_contact', $contact);
+          module_invoke_all('crm_core_contact_delete', $contact);
+          field_attach_delete('crm_core_contact', $contact);
           // rules integration
           if (module_exists('rules')) {
-            rules_invoke_event('crm_contact_delete', $contact);
+            rules_invoke_event('crm_core_contact_delete', $contact);
           }
         }
       }
       catch (Exception $e) {
         $transaction->rollback();
-        watchdog_exception('crm_contact', $e);
+        watchdog_exception('crm_core_contact', $e);
         throw $e;
       }
 

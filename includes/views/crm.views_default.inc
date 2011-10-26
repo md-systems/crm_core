@@ -10,7 +10,7 @@
  */
 function crm_views_default_views() {
   $view = new view;
-  $view->name = 'crm_contacts';
+  $view->name = 'crm_core_contacts';
   $view->description = 'A list of all contacts in the system';
   $view->tag = '';
   $view->base_table = 'crm_core_contact';
@@ -187,10 +187,10 @@ function crm_views_default_views() {
   $handler->display->display_options['menu']['title'] = 'Contacts';
   $handler->display->display_options['menu']['weight'] = '0';
  
-  $views['crm_contacts'] = $view;
+  $views['crm_core_contacts'] = $view;
 
   $view = new view;
-  $view->name = 'crm_contacts_revisions';
+  $view->name = 'crm_core_contacts_revisions';
   $view->description = '';
   $view->tag = 'default';
   $view->base_table = 'crm_core_contact_revision';

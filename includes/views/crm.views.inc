@@ -23,7 +23,7 @@ function crm_views_data() {
     'title' => t('Contact ID'),
     'help' => t('The unqiue internal identifier for a contact.'),
     'field' => array(
-      'handler' => 'crm_contact_handler_field_contact',
+      'handler' => 'crm_core_contact_handler_field_contact',
       'click sortable' => TRUE,
     ),
     'filter' => array(
@@ -41,7 +41,7 @@ function crm_views_data() {
     'title' => t('Contact Type'),
     'help' => t('The human-readable name of the type of a contact.'),
     'field' => array(
-      'handler' => 'crm_contact_handler_field_contact_type',
+      'handler' => 'crm_core_contact_handler_field_contact_type',
       'click sortable' => TRUE,
     ),
     'filter' => array(
@@ -110,7 +110,7 @@ function crm_views_data() {
     'title' => t('Contact revision ID'),
     'help' => t('The unqiue internal identifier for a contact revision.'),
     'field' => array(
-      'handler' => 'crm_contact_handler_field_contact_revision',
+      'handler' => 'crm_core_contact_handler_field_contact_revision',
       'click sortable' => TRUE,
     ),
     'fitler' => array(
@@ -128,7 +128,7 @@ function crm_views_data() {
    'field' => array(
      'title' => t('Revision Link'),
      'help' => t('Provide a simple link to revert the contact'),
-     'handler' => 'crm_contact_handler_field_contact_revert',
+     'handler' => 'crm_core_contact_handler_field_contact_revert',
    ),
  );
   
@@ -136,7 +136,7 @@ function crm_views_data() {
     'title' => t('Contact ID'),
     'help' => t('The unqiue internal identifier for a contact revision.'),
     'field' => array(
-      'handler' => 'crm_contact_handler_field_contact',
+      'handler' => 'crm_core_contact_handler_field_contact',
       'click sortable' => TRUE,
     ),
     'fitler' => array(

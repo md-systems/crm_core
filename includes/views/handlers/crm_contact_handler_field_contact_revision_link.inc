@@ -3,7 +3,7 @@
 /**
  * A link to a CRM contact.
  */
-class crm_contact_handler_field_contact_revision extends views_handler_field {
+class crm_core_contact_handler_field_contact_revision extends views_handler_field {
   function construct() {
     parent::construct();
 

@@ -12,13 +12,13 @@
  */
 function crm_entity_info() {
   $return = array(
-    'crm_contact' => array(
+    'crm_core_contact' => array(
       'label' => t('Contact'),
-      'label callback' => 'crm_contact_label',
+      'label callback' => 'crm_core_contact_label',
       'controller class' => 'CRMContactController',
       'base table' => 'crm_core_contact',
       'revision table' => 'crm_core_contact_revision',
-      'uri callback' => 'crm_contact_uri',
+      'uri callback' => 'crm_core_contact_uri',
       'fieldable' => TRUE,
       'entity keys' => array(
         'id' => 'contact_id',
@@ -38,11 +38,11 @@ function crm_entity_info() {
     ),
   );
 
-  foreach (crm_contact_type_get_name() as $type => $name) {
-    $return['crm_contact']['bundles'][$type] = array(
+  foreach (crm_core_contact_type_get_name() as $type => $name) {
+    $return['crm_core_contact']['bundles'][$type] = array(
       'label' => $name,
       'admin' => array(
-        'path' => 'admin/structure/crm/contact-types/%crm_contact_type',
+        'path' => 'admin/structure/crm/contact-types/%crm_core_contact_type',
         'real path' => 'admin/structure/crm/contact-types/' . str_replace('_', '-', $type),
         'bundle argument' => 4,
         'access arguments' => array('administer contact types'),
@@ -57,7 +57,7 @@ function crm_entity_info() {
 /**
  * Entity uri callback.
  */
-function crm_contact_uri($contact) {
+function crm_core_contact_uri($contact) {
   return array(
     'path' => 'crm/contact/' . $contact->contact_id,
   );
@@ -66,8 +66,8 @@ function crm_contact_uri($contact) {
 /**
  * Entity label callback.
  */
-function crm_contact_label($entity) {
-  $build_info = crm_contact_view($entity);
+function crm_core_contact_label($entity) {
+  $build_info = crm_core_contact_view($entity);
   return render($build_info['contact_name'][0]);
 }
 
@@ -121,7 +121,7 @@ function crm_views_api() {
 /**
  * Returns an array of contact type objects keyed by type.
  */
-function crm_contact_types() {
+function crm_core_contact_types() {
   // First check the static cache for a contact types array.
   $contact_types = &drupal_static(__FUNCTION__);
 
@@ -145,8 +145,8 @@ function crm_contact_types() {
  *  If $type isn't specified an array containing all human
  *  readable names keyed on the machine type.
  */
-function crm_contact_type_get_name($type = NULL) {
-  $contact_types = crm_contact_types();
+function crm_core_contact_type_get_name($type = NULL) {
+  $contact_types = crm_core_contact_types();
 
   // If type is set return the name if it exists
   if (!empty($type)) {
@@ -176,7 +176,7 @@ function crm_contact_type_get_name($type = NULL) {
  * @return
  *   A stdClass object with contact type fields
  */
-function crm_contact_type_new($type = '') {
+function crm_core_contact_type_new($type = '') {
   return (object) array(
     'type' => $type,
     'name' => '',
@@ -192,7 +192,7 @@ function crm_contact_type_new($type = '') {
  * @param string $type
  *   The machine-readable name of the contact type.
  */
-function crm_contact_type_load($type) {
+function crm_core_contact_type_load($type) {
   return db_query("SELECT * FROM {crm_core_contact_type} WHERE type = :type", array(':type' => $type))->fetchObject();
 }
 
@@ -206,24 +206,24 @@ function crm_contact_type_load($type) {
  *   FALSE if the insert fails and SAVED_NEW or SAVED_UPDATED
  *   based on the operation performed
  */
-function crm_contact_type_save($contact_type) {
+function crm_core_contact_type_save($contact_type) {
   $op = drupal_write_record('crm_core_contact_type', $contact_type, empty($contact_type->is_new) ? 'type' : array());
   menu_rebuild();
 
   // If this is a new contact type and the insert did not fail...
   if (!empty($contact_type->is_new) && $op !== FALSE) {
     // Notify the field API that a new bundle has been created.
-    field_attach_create_bundle('crm_contact', $contact_type->type);
+    field_attach_create_bundle('crm_core_contact', $contact_type->type);
 
     // Add base fields to the contact
     crm_initialize_contact_type($contact_type->type);
 
     // Notify other modules that a new contact type has been created.
-    module_invoke_all('crm_contact_type_insert', $contact_type);
+    module_invoke_all('crm_core_contact_type_insert', $contact_type);
   }
   else {
     // Notify other modules that an existing contact type has been updated.
-    module_invoke_all('crm_contact_type_update', $contact_type);
+    module_invoke_all('crm_core_contact_type_update', $contact_type);
   }
 
   return $op;
@@ -244,7 +244,7 @@ function crm_contact_type_save($contact_type) {
  * @return 
  * A default contact type  
  */
-function crm_contact_type_set_defaults($info = array()) {
+function crm_core_contact_type_set_defaults($info = array()) {
   $type = &drupal_static(__FUNCTION__);
 
   if (!isset($type)) {
@@ -282,7 +282,7 @@ function crm_initialize_contact_type($type) {
   $fields[] = array(
     'field_name' => 'contact_name',
     'type' => 'name',
-    'entity_types' => array('crm_contact'),
+    'entity_types' => array('crm_core_contact'),
     'translatable' => FALSE,
     'locked' => TRUE,
   );
@@ -291,7 +291,7 @@ function crm_initialize_contact_type($type) {
   $fields[] = array(
     'field_name' => 'contact_image',
     'type' => 'image',
-    'entity_types' => array('crm_contact'),
+    'entity_types' => array('crm_core_contact'),
     'translatable' => FALSE,
     'locked' => FALSE,
   );
@@ -309,7 +309,7 @@ function crm_initialize_contact_type($type) {
 
   $instances[] = array(
     'field_name' => 'contact_name',
-    'entity_type' => 'crm_contact',
+    'entity_type' => 'crm_core_contact',
     'bundle' => $type,
     'label' => t('Name'),
     'required' => TRUE,
@@ -322,7 +322,7 @@ function crm_initialize_contact_type($type) {
 
   $instances[] = array(
     'field_name' => 'contact_image',
-    'entity_type' => 'crm_contact',
+    'entity_type' => 'crm_core_contact',
     'bundle' => $type,
     'label' => t('Image'),
     'required' => FALSE,
@@ -347,7 +347,7 @@ function crm_initialize_contact_type($type) {
 
   // Create field instances if they don't exist
   foreach ($instances as $instance) {
-    $info_instance = field_info_instance('crm_contact', $instance['field_name'], $type);
+    $info_instance = field_info_instance('crm_core_contact', $instance['field_name'], $type);
     if (empty($info_instance)) {
       field_create_instance($instance);
     }
@@ -364,7 +364,7 @@ function crm_initialize_contact_type($type) {
 * @return
 * TRUE or FALSE indicating whether or not the contact type exists.
 */
-function crm_contact_type_validate_unique($type) {
+function crm_core_contact_type_validate_unique($type) {
   // Look for a match of the type.
   $match_id = db_query('SELECT type FROM {crm_core_contact_type} WHERE type = :type', array(':type' => $type))->fetchField();
   return !$match_id;
@@ -380,8 +380,8 @@ function crm_contact_type_validate_unique($type) {
  *   a contact object upon successful save
  *   or an exception thrown
  */
-function crm_contact_save($contact) {
-  return entity_get_controller('crm_contact')->save($contact);
+function crm_core_contact_save($contact) {
+  return entity_get_controller('crm_core_contact')->save($contact);
 }
 
 /**
@@ -390,13 +390,13 @@ function crm_contact_save($contact) {
  * @param int $contact_id
  *   Contact id of the contact to be loaded
  * @param array $conditions
- *   @see crm_contact_load_multiple()
+ *   @see crm_core_contact_load_multiple()
  * @return
  *   A contact object upon successful load
  *   FALSE if loading fails
  */
-function crm_contact_load($contact_id, $conditions = array()) {
-  $contacts = crm_contact_load_multiple(array($contact_id), $conditions);
+function crm_core_contact_load($contact_id, $conditions = array()) {
+  $contacts = crm_core_contact_load_multiple(array($contact_id), $conditions);
   return $contacts ? reset($contacts) : FALSE;
 }
 
@@ -413,14 +413,14 @@ function crm_contact_load($contact_id, $conditions = array()) {
  * @return
  *   An array of entity object indexed by their ids
  */
-function crm_contact_load_multiple($contact_ids = array(), $conditions = array(), $reset = FALSE) {
-  return entity_load('crm_contact', $contact_ids, $conditions, $reset);
+function crm_core_contact_load_multiple($contact_ids = array(), $conditions = array(), $reset = FALSE) {
+  return entity_load('crm_core_contact', $contact_ids, $conditions, $reset);
 }
 
 
 /**
  * Delete single contact records
- *   The wrapper for delete() method of 'crm_contact' controller.
+ *   The wrapper for delete() method of 'crm_core_contact' controller.
  *
  * @param $contact_id
  * contact id
@@ -428,14 +428,14 @@ function crm_contact_load_multiple($contact_ids = array(), $conditions = array()
  * @return
  * TRUE or throw exception and write it to watchdog.
  */
-function crm_contact_delete($contact_id) {
-  return crm_contact_delete_multiple(array($contact_id));
+function crm_core_contact_delete($contact_id) {
+  return crm_core_contact_delete_multiple(array($contact_id));
 }
 
 
 /**
  * Delete multiply contact records
- *   The wrapper for delete() method of 'crm_contact' controller.
+ *   The wrapper for delete() method of 'crm_core_contact' controller.
  *
  * @param $contact_ids
  * flat array of contact ids like array(5, 6, 7);
@@ -443,17 +443,17 @@ function crm_contact_delete($contact_id) {
  * @return
  * TRUE or throw exception and write it to watchdog.
  */
-function crm_contact_delete_multiple($contact_ids = array()) {
-  return entity_get_controller('crm_contact')->delete($contact_ids);
+function crm_core_contact_delete_multiple($contact_ids = array()) {
+  return entity_get_controller('crm_core_contact')->delete($contact_ids);
 }
 
 
 /**
  * View a single contact record.
  */
-function crm_contact_view($contact) {
-  field_attach_prepare_view('crm_contact', array($contact->contact_id => $contact), 'full');
-  return field_attach_view('crm_contact', $contact, 'full');
+function crm_core_contact_view($contact) {
+  field_attach_prepare_view('crm_core_contact', array($contact->contact_id => $contact), 'full');
+  return field_attach_view('crm_core_contact', $contact, 'full');
 }
 
 /**
@@ -463,8 +463,8 @@ function crm_contact_view($contact) {
  *
  * @return title string
  */
-function crm_contact_title($contact) {
-  $element = field_view_value('crm_contact', $contact, 'contact_name', $contact->contact_name['und'][0]);
+function crm_core_contact_title($contact) {
+  $element = field_view_value('crm_core_contact', $contact, 'contact_name', $contact->contact_name['und'][0]);
   return drupal_render($element);
 }
 
@@ -482,7 +482,7 @@ function crm_contact_title($contact) {
  *     - changed
  *     - uid
  */
-function crm_contact_revision_list($contact) {
+function crm_core_contact_revision_list($contact) {
   return db_select('crm_core_contact_revision', 'rev')->
            fields('rev', array('vid', 'log', 'created', 'changed', 'uid'))->
            condition('contact_id', $contact->contact_id)->
@@ -498,9 +498,9 @@ function crm_contact_revision_list($contact) {
  * @return
  * A structured contact string
  */
-function crm_contact_devel_load_object($contact) {
+function crm_core_contact_devel_load_object($contact) {
   module_load_include('inc', 'devel', 'devel.pages');
-  return devel_load_object('crm_contact', $contact);
+  return devel_load_object('crm_core_contact', $contact);
 }
 
 /**
@@ -511,9 +511,9 @@ function crm_contact_devel_load_object($contact) {
  * @return
  * prints a structured contact object
  */
-function crm_contact_devel_render_object($contact) {
+function crm_core_contact_devel_render_object($contact) {
   module_load_include('inc', 'devel', 'devel.pages');
-  return devel_render_object('crm_contact', $contact);
+  return devel_render_object('crm_core_contact', $contact);
 }
 
 /**
@@ -525,8 +525,8 @@ function crm_contact_devel_render_object($contact) {
  * @return
  * TRUE upon success, FALSE upon failure
  */
-function crm_contact_revert($contact, $vid) {
-  return entity_get_controller('crm_contact')->revertContact($contact, $vid);
+function crm_core_contact_revert($contact, $vid) {
+  return entity_get_controller('crm_core_contact')->revertContact($contact, $vid);
 }
 
 /**

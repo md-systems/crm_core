@@ -3,7 +3,7 @@
 /**
  * Field handler to provide simple renderer that allows linking to a contact.
  */
-class crm_contact_handler_field_contact_revision extends views_handler_field {
+class crm_core_contact_handler_field_contact_revision extends views_handler_field {
   function init(&$view, $options) {
     parent::init($view, $options);    
   
