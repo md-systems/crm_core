@@ -3,7 +3,7 @@
 /**
  * A list of activities this contact has participated in.
  */
-function crm_contact_activity() {
+function crm_core_contact_activity() {
   return "This is a stub";
 }
 
@@ -24,7 +24,7 @@ function crm_activity_entity_ui_get_form_wrapper($contact, $type) {
     'field_activity_participants' => array(
       LANGUAGE_NONE => array(array(
           'target_id' => $contact->contact_id,
-          'target_type' => 'crm_contact',
+          'target_type' => 'crm_core_contact',
         ),
       ),
     ),

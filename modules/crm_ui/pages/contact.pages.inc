@@ -3,18 +3,18 @@
 /*
  *
  */
-function crm_contact_form_wrapper($contact) {
-  return drupal_get_form('crm_contact_form', $contact);
+function crm_core_contact_form_wrapper($contact) {
+  return drupal_get_form('crm_core_contact_form', $contact);
 }
 
 
 /**
  * Show a list of contact types that can be added into the CRM.
  */
-function crm_contact_add_page() {
+function crm_core_contact_add_page() {
   $item = menu_get_item();
   
-  $types = crm_contact_types();
+  $types = crm_core_contact_types();
   $content = array();
   foreach ($types as $type) {
     $content[] = menu_get_item($item['href'] . '/' . $type->type);
@@ -27,7 +27,7 @@ function crm_contact_add_page() {
     drupal_goto($item['href']);
   }
 
-  return theme('crm_contact_add_list', array('content' => $content));
+  return theme('crm_core_contact_add_list', array('content' => $content));
 }
 
 
@@ -38,13 +38,13 @@ function crm_contact_add_page() {
  *   The contact object to edit or for a create form an empty contact object
  *     with only a contact type defined.
  */
-function crm_contact_form($form, &$form_state, $contact) {
+function crm_core_contact_form($form, &$form_state, $contact) {
   // Ensure this include file is loaded when the form is rebuilt from the cache.
-  $form_state['build_info']['file'] = drupal_get_path('module', 'crm_contact') . '/pages/contact.pages.inc';
+  $form_state['build_info']['file'] = drupal_get_path('module', 'crm_core_contact') . '/pages/contact.pages.inc';
   
   // Add the field related form elements.
-  $form_state['crm_contact'] = $contact;
-  field_attach_form('crm_contact', $contact, $form, $form_state);
+  $form_state['crm_core_contact'] = $contact;
+  field_attach_form('crm_core_contact', $contact, $form, $form_state);
 
   $form['actions'] = array(
     '#type' => 'container',
@@ -63,37 +63,37 @@ function crm_contact_form($form, &$form_state, $contact) {
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save Contact'),
-    '#submit' => $submit + array('crm_contact_form_submit'),
+    '#submit' => $submit + array('crm_core_contact_form_submit'),
   );
 
   // We append the validate handler to #validate in case a form callback_wrapper
   // is used to add validate handlers earlier.
-  $form['#validate'][] = 'crm_contact_form_validate';
+  $form['#validate'][] = 'crm_core_contact_form_validate';
 
   return $form;
 }
 
 
 /**
- * Validation callback for crm_contact_form().
+ * Validation callback for crm_core_contact_form().
  */
-function crm_contact_form_validate($form, &$form_state) {
-  $contact = $form_state['crm_contact'];
+function crm_core_contact_form_validate($form, &$form_state) {
+  $contact = $form_state['crm_core_contact'];
 
   // Notify field widgets to validate their data.
-  field_attach_form_validate('crm_contact', $contact, $form, $form_state);
+  field_attach_form_validate('crm_core_contact', $contact, $form, $form_state);
 }
 
 
 /**
  * Submit callback for commerce_product_product_form().
  */
-function crm_contact_form_submit($form, &$form_state) {
+function crm_core_contact_form_submit($form, &$form_state) {
   global $user;
   
   $create = FALSE;
   
-  $contact = &$form_state['crm_contact'];
+  $contact = &$form_state['crm_core_contact'];
 
 
   // Set the contact's uid if it's being created at this time.
@@ -103,10 +103,10 @@ function crm_contact_form_submit($form, &$form_state) {
   }
 
   // Notify field widgets.
-  field_attach_submit('crm_contact', $contact, $form, $form_state);
+  field_attach_submit('crm_core_contact', $contact, $form, $form_state);
 
   // Save the contact
-  crm_contact_save($contact);
+  crm_core_contact_save($contact);
 
   // Redirect based on the button clicked.
   drupal_set_message(t('Contact saved.'));
@@ -117,19 +117,19 @@ function crm_contact_form_submit($form, &$form_state) {
 /**
  * Form for deleteing a contact.
  */
-function crm_contact_delete_form($form, &$form_state, $contact) {
+function crm_core_contact_delete_form($form, &$form_state, $contact) {
   $form['contact_id'] = array('#type' => 'value', '#value' => $contact->contact_id);
   return confirm_form($form,
-    t("Are you sure want to delete '@name' contact?", array('@name' => crm_contact_title($contact))),
+    t("Are you sure want to delete '@name' contact?", array('@name' => crm_core_contact_title($contact))),
     'crm/contact/' . $contact->contact_id, $description = NULL, $yes = t('Yes'), $no = t('No'));
 }
 
 
 /**
- * Submit callback for crm_contact_delete_form().
+ * Submit callback for crm_core_contact_delete_form().
  */
-function crm_contact_delete_form_submit($form, &$form_state) {
-  if (crm_contact_delete($form_state['values']['contact_id'])) {
+function crm_core_contact_delete_form_submit($form, &$form_state) {
+  if (crm_core_contact_delete($form_state['values']['contact_id'])) {
     drupal_set_message(t('Contact deleted.'));
   }
   drupal_goto('crm/contact');
@@ -137,9 +137,9 @@ function crm_contact_delete_form_submit($form, &$form_state) {
 
 
 /**
- * Validate callback for crm_contact_delete_form().
+ * Validate callback for crm_core_contact_delete_form().
  */
-function crm_contact_delete_form_validate($form, &$form_state) {
+function crm_core_contact_delete_form_validate($form, &$form_state) {
 
 }
 
@@ -147,8 +147,8 @@ function crm_contact_delete_form_validate($form, &$form_state) {
 /**
  * Form for comparing different versions of a contact.
  */
-function crm_contact_revision_form($contact) {
-  $revisions = crm_contact_revision_list($contact);
+function crm_core_contact_revision_form($contact) {
+  $revisions = crm_core_contact_revision_list($contact);
   var_dump($revisions);
 
   $form['placeholder'] = array(
@@ -161,7 +161,7 @@ function crm_contact_revision_form($contact) {
 /**
  * Form for reverting a contact to a previous version.
  */
-function crm_contact_revert_form($form, &$form_state, $contact, $vid) {
+function crm_core_contact_revert_form($form, &$form_state, $contact, $vid) {
   
   $form['vid'] = array(
     '#type' => 'value',
@@ -175,11 +175,11 @@ function crm_contact_revert_form($form, &$form_state, $contact, $vid) {
     'crm/contact/' . $contact->contact_id . '/revisions', 'Reverting the contact will result in a new revision being created', t('Yes'), t('Cancel')); 
 }
 
-function crm_contact_revert_form_submit($form, &$form_state) {
+function crm_core_contact_revert_form_submit($form, &$form_state) {
   
   $contact = $form_state['crm_ui']['contact'];
   
-  if (crm_contact_revert($contact, $form_state['values']['vid'])) {
+  if (crm_core_contact_revert($contact, $form_state['values']['vid'])) {
     drupal_set_message(t('Contact reverted.'));
   }
   $form_state['redirect'] = 'crm/contact/' . $contact->contact_id . '/revisions';  

@@ -1,6 +1,6 @@
 <?php
 
-function theme_crm_contact_type_overview($vars) {
+function theme_crm_core_contact_type_overview($vars) {
   $contact_type = $vars['contact_type'];
 
   $output = check_plain($contact_type->name);

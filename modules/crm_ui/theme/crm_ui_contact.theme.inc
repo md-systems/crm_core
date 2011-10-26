@@ -1,6 +1,6 @@
 <?php
 
-function theme_crm_contact_add_list($variables) {
+function theme_crm_core_contact_add_list($variables) {
   $content = $variables['content'];
   $output = '';
 

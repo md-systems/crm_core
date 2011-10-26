@@ -5,18 +5,18 @@
  */
 
 
-function crm_contact_types_overview() {
+function crm_core_contact_types_overview() {
   $header = array(
     t('Name'),
     t('Operations'),
   );
   $rows = array();
 
-  foreach (crm_contact_types() as $type => $contact_type) {
+  foreach (crm_core_contact_types() as $type => $contact_type) {
     $links = menu_contextual_links('crm', 'admin/structure/crm/contact-types', array($type));
 
     $rows[] = array(
-      theme('crm_contact_type_overview', array('contact_type' => $contact_type)),
+      theme('crm_core_contact_type_overview', array('contact_type' => $contact_type)),
       theme('links', array('links' => $links, 'attributes' => array('class' => 'links operations'))),
     );
   }
@@ -32,8 +32,8 @@ function crm_contact_types_overview() {
 }
 
 
-function crm_contact_type_form_wrapper($contact_type) {
-  return drupal_get_form('crm_contact_type_form', $contact_type);
+function crm_core_contact_type_form_wrapper($contact_type) {
+  return drupal_get_form('crm_core_contact_type_form', $contact_type);
 }
 
 
@@ -44,7 +44,7 @@ function crm_contact_type_form_wrapper($contact_type) {
  * The contact type object to edit or for a create form an empty contact type
  * object with properties instantiated but not populated.
  */
-function crm_contact_type_form($form, &$form_state, $contact_type) {
+function crm_core_contact_type_form($form, &$form_state, $contact_type) {
   // Ensure this include file is loaded when the form is rebuilt from the cache.
   //$form_state['build_info']['file'] = drupal_get_path('module', 'commerce_product') . '/includes/commerce_product.forms.inc';
 
@@ -125,10 +125,10 @@ function crm_contact_type_form($form, &$form_state, $contact_type) {
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save contact type'),
-    '#submit' => $submit + array('crm_contact_type_form_submit'),
+    '#submit' => $submit + array('crm_core_contact_type_form_submit'),
   );
 
-  $form['#validate'][] = 'crm_contact_type_form_validate';
+  $form['#validate'][] = 'crm_core_contact_type_form_validate';
 
   return $form;
 }
@@ -136,12 +136,12 @@ function crm_contact_type_form($form, &$form_state, $contact_type) {
 /**
  * Validation callback for commerce_product_product_type_form().
  */
-function crm_contact_type_form_validate($form, &$form_state) {
+function crm_core_contact_type_form_validate($form, &$form_state) {
   $contact_type = $form_state['contact_type'];
 
   // If saving a new product type, ensure it has a unique machine name.
   if (empty($contact_type->type)) {
-    if (!crm_contact_type_validate_unique($form_state['values']['contact_type']['type'])) {
+    if (!crm_core_contact_type_validate_unique($form_state['values']['contact_type']['type'])) {
       form_set_error('contact_type][type', 'The machine name specified is already in use.');
     }
   }
@@ -150,7 +150,7 @@ function crm_contact_type_form_validate($form, &$form_state) {
 /**
  * Form submit handler: save a contact type.
  */
-function crm_contact_type_form_submit($form, &$form_state) {
+function crm_core_contact_type_form_submit($form, &$form_state) {
   $contact_type = $form_state['contact_type'];
   $updated = !empty($contact_type->type);
 
@@ -160,7 +160,7 @@ function crm_contact_type_form_submit($form, &$form_state) {
 
   // Write the contact type to the database.
   $contact_type->is_new = !$updated;
-  crm_contact_type_save($contact_type);
+  crm_core_contact_type_save($contact_type);
 
   // Redirect based on the button clicked.
   drupal_set_message(t('Contact type saved.'));
@@ -176,7 +176,7 @@ function crm_contact_type_form_submit($form, &$form_state) {
  * @param $contact_type
  *  The machine readable name of the contact type to be deleted.
  */
-function crm_contact_type_delete_confirm($form, &$form_state, $contact_type) {
+function crm_core_contact_type_delete_confirm($form, &$form_state, $contact_type) {
   $form_state['contact_type'] = $contact_type;
 
   $form['message'] = array(
@@ -200,10 +200,10 @@ function crm_contact_type_delete_confirm($form, &$form_state, $contact_type) {
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Delete contact type'),
-    '#submit' => $submit + array('crm_contact_type_delete_confirm_submit'),
+    '#submit' => $submit + array('crm_core_contact_type_delete_confirm_submit'),
   );
 
-  $form['#validate'][] = 'crm_contact_type_delete_confirm_validate';
+  $form['#validate'][] = 'crm_core_contact_type_delete_confirm_validate';
 
   return $form;
 }
@@ -211,9 +211,9 @@ function crm_contact_type_delete_confirm($form, &$form_state, $contact_type) {
 /**
  * 
  */
- function crm_contact_type_delete_confirm_validate($form, &$form_state) {
+ function crm_core_contact_type_delete_confirm_validate($form, &$form_state) {
   $contact_type = $form_state['contact_type'];
-  if (!crm_contact_type_validate_unique($contact_type->type)) {
+  if (!crm_core_contact_type_validate_unique($contact_type->type)) {
     form_set_error('submit', t('This contact type does not exist'));
   }
  }
