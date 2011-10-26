@@ -3,20 +3,20 @@
 /**
  * Return a list of relatinships for this contact.
  *
- * @param $crm_contact
- *   Entity object of crm_contact type.
+ * @param $crm_core_contact
+ *   Entity object of crm_core_contact type.
  */
-function crm_core_relationship_ui_contact_relationships($crm_contact) {
+function crm_core_relationship_ui_contact_relationships($crm_core_contact) {
   return "This is a stub";
 }
 
 /**
  * Return a list of links to add relationship for specific CRM contact.
  *
- * @param $crm_contact
- *   Entity object of crm_contact type.
+ * @param $crm_core_contact
+ *   Entity object of crm_core_contact type.
  */
-function crm_core_relationship_ui_add_relationship($crm_contact) {
+function crm_core_relationship_ui_add_relationship($crm_core_contact) {
   drupal_set_title(t('Add relationship'));
   
   module_load_include('inc', 'crm_core_relationship_ui');
@@ -24,12 +24,12 @@ function crm_core_relationship_ui_add_relationship($crm_contact) {
   $ret = '';
   
   foreach (array(0, 1) as $reverse) {    
-    $relationship_types = crm_core_relationship_load_relationship_types($crm_contact->type, $reverse);  
+    $relationship_types = crm_core_relationship_load_relationship_types($crm_core_contact->type, $reverse);  
     $relationship_type_links = array();
 
     foreach ($relationship_types as $relationship_type) {
       $relationship_type_links[$relationship_type->relation_type] = array(
-        'href' => 'crm/contact/' . $crm_contact->contact_id . '/relationships/add/' . $relationship_type->relation_type . '/' . $reverse, 
+        'href' => 'crm/contact/' . $crm_core_contact->contact_id . '/relationships/add/' . $relationship_type->relation_type . '/' . $reverse, 
         'title' => $reverse ? $relationship_type->reverse_label : $relationship_type->label,
       );
     }
@@ -49,14 +49,14 @@ function crm_core_relationship_ui_add_relationship($crm_contact) {
 /**
  * Generate add relationship form.
  *
- * @param $crm_contact
- *   Entity object of crm_contact type.
+ * @param $crm_core_contact
+ *   Entity object of crm_core_contact type.
  * @param $relationship_type
  *   Relation type object.
  * @param $reverse
  *   Whether relation is reversed.
  */
-function crm_core_relationship_ui_add_relationship_form($form, &$form_state, $crm_contact, $relationship_type, $reverse) {
+function crm_core_relationship_ui_add_relationship_form($form, &$form_state, $crm_core_contact, $relationship_type, $reverse) {
   drupal_set_title(t('Add relationship'));
 
   module_load_include('inc', 'crm_core_relationship_ui');
@@ -88,10 +88,10 @@ function crm_core_relationship_ui_add_relationship_form($form, &$form_state, $cr
       '#title' => $reverse_field ? t('Destination contact name') : t('Source contact name'),
       '#description' => (t('Following contact types allowed: !types.', array('!types' => $contact_type_names))),
       '#type' => 'textfield',
-      '#default_value' => !($reverse_field ^ $reverse) ? crm_contact_title($crm_contact) . " [cid:$crm_contact->contact_id]" : '',
+      '#default_value' => !($reverse_field ^ $reverse) ? crm_core_contact_title($crm_core_contact) . " [cid:$crm_core_contact->contact_id]" : '',
       '#disabled' => !($reverse_field ^ $reverse),
       '#required' => true,
-      '#autocomplete_path' => 'crm/contact/' . $crm_contact->contact_id . '/relationships/add/' . $relationship_type->relation_type . '/' . $reverse_field . '/autocomplete',
+      '#autocomplete_path' => 'crm/contact/' . $crm_core_contact->contact_id . '/relationships/add/' . $relationship_type->relation_type . '/' . $reverse_field . '/autocomplete',
     );
   }    
 
@@ -151,8 +151,8 @@ function crm_core_relationship_ui_add_relationship_form_validate($form, &$form_s
   if ($relationship_type->r_unique) {
     if(relation_relation_exists(
       array(
-        array('entity_type' => 'crm_contact', 'entity_id' => $source_contact->contact_id),
-        array('entity_type' => 'crm_contact', 'entity_id' => $destination_contact->contact_id),
+        array('entity_type' => 'crm_core_contact', 'entity_id' => $source_contact->contact_id),
+        array('entity_type' => 'crm_core_contact', 'entity_id' => $destination_contact->contact_id),
       ),
       $relationship_type->relation_type
     )) {
@@ -174,14 +174,14 @@ function crm_core_relationship_ui_add_relationship_form_submit($form, &$form_sta
   // Create relationship between the order and the node
   $endpoints = array(
     0 => array(
-      'entity_type' => 'crm_contact',
+      'entity_type' => 'crm_core_contact',
       'entity_id' => $source_contact->contact_id,
       'entity_bundle' => $source_contact->type,
       'r_index' => 0,
       'entity_key' => $source_contact->type . ': ' . $source_contact->contact_id
     ),
     1 => array(
-      'entity_type' => 'crm_contact',
+      'entity_type' => 'crm_core_contact',
       'entity_id' => $destination_contact->contact_id,
       'entity_bundle' => $destination_contact->type,
       'r_index' => 1,
@@ -198,8 +198,8 @@ function crm_core_relationship_ui_add_relationship_form_submit($form, &$form_sta
 /**
  * Autocomplete function for add relationship form. Lookup for contacts.
  * 
- * @param $crm_contact
- *   Entity object of crm_contact type.
+ * @param $crm_core_contact
+ *   Entity object of crm_core_contact type.
  * @param $relationship_type
  *   Relation type object.
  * @param $reverse
@@ -207,7 +207,7 @@ function crm_core_relationship_ui_add_relationship_form_submit($form, &$form_sta
  * @param $string
  *   String CRM contact is started with.
  */
-function crm_core_relationship_ui_add_relationship_autocomplete($crm_contact, $relationship_type, $reverse, $string) {
+function crm_core_relationship_ui_add_relationship_autocomplete($crm_core_contact, $relationship_type, $reverse, $string) {
   module_load_include('inc', 'crm_core_relationship_ui');
 
   $matches = array();
@@ -216,16 +216,16 @@ function crm_core_relationship_ui_add_relationship_autocomplete($crm_contact, $r
   
   $query = new EntityFieldQuery;
   $result = $query
-    ->entityCondition('entity_type', 'crm_contact')
-    ->propertyCondition('contact_id', $crm_contact->contact_id, '<>')
+    ->entityCondition('entity_type', 'crm_core_contact')
+    ->propertyCondition('contact_id', $crm_core_contact->contact_id, '<>')
     ->propertyCondition('type', $contact_types, 'IN')
     //TODO: add support to search by name
     //->fieldCondition('contact_name', 'value', $string, 'STARTS_WITH')
     ->execute();
 
-  $contacts = entity_load('crm_contact', array_keys($result['crm_contact']));
+  $contacts = entity_load('crm_core_contact', array_keys($result['crm_core_contact']));
   foreach ($contacts as $contact) {
-    $matches[crm_contact_title($contact) . " [cid:$contact->contact_id]"] = crm_contact_title($contact);
+    $matches[crm_core_contact_title($contact) . " [cid:$contact->contact_id]"] = crm_core_contact_title($contact);
   }
   
   // return for JS
@@ -244,7 +244,7 @@ function _crm_core_relationship_ui_get_contact_from_autocomplete_field_value($st
   if (!array_key_exists(1, $matches) || !is_numeric($matches[1])) {
     return false;
   }
-  $contacts = entity_load('crm_contact', array($matches[1]));
+  $contacts = entity_load('crm_core_contact', array($matches[1]));
   if (empty($contacts)) {
     return false;
   }

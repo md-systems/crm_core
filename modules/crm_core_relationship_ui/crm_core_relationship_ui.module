@@ -9,7 +9,7 @@ function crm_core_relationship_ui_menu() {
   /*
    * CRM Contact Relationships
    */
-  $items['crm/contact/%crm_contact/relationships'] = array(
+  $items['crm/contact/%crm_core_contact/relationships'] = array(
     'title' => 'Relationships',
     'description' => 'View contact relationships',
     'page callback' => 'crm_core_relationship_ui_contact_relationships',
@@ -20,7 +20,7 @@ function crm_core_relationship_ui_menu() {
     'file' => 'crm_core_relationship_ui.pages.inc',
   );
 
-  $items['crm/contact/%crm_contact/relationships/add'] = array(
+  $items['crm/contact/%crm_core_contact/relationships/add'] = array(
     'title' => 'Add Contact Relationship',
     'description' => 'Add a relationship to this contact',
     'page callback' => 'crm_core_relationship_ui_add_relationship',
@@ -31,7 +31,7 @@ function crm_core_relationship_ui_menu() {
     'file' => 'crm_core_relationship_ui.pages.inc',
   );
 
-  $items['crm/contact/%crm_contact/relationships/add/%relation_type/%'] = array(
+  $items['crm/contact/%crm_core_contact/relationships/add/%relation_type/%'] = array(
     'title' => 'Add Contact Relationship',
     'description' => 'Add a relationship to this contact',
     'page callback' => 'drupal_get_form',
@@ -42,7 +42,7 @@ function crm_core_relationship_ui_menu() {
     'file' => 'crm_core_relationship_ui.pages.inc',
   );
 
-  $items['crm/contact/%crm_contact/relationships/add/%relation_type/%/autocomplete'] = array(
+  $items['crm/contact/%crm_core_contact/relationships/add/%relation_type/%/autocomplete'] = array(
     'page callback' => 'crm_core_relationship_ui_add_relationship_autocomplete',
     'page arguments' => array(2, 5, 6),
     'access arguments' => array('add contact relationships'),
@@ -138,11 +138,11 @@ function crm_core_relationship_ui_form_relation_type_form_alter(&$form, &$form_s
     $form['max_arity']['#type'] = 'value';
     $form['r_unique']['#default_value'] = 2;
 
-    $contact_types = crm_contact_types();
+    $contact_types = crm_core_contact_types();
 
-    $options = array('crm_contact:*' => t('Any'));
+    $options = array('crm_core_contact:*' => t('Any'));
     foreach ($contact_types as $contact_type) {
-      $options['crm_contact:' . $contact_type->type] = t($contact_type->name);
+      $options['crm_core_contact:' . $contact_type->type] = t($contact_type->name);
     }
 
     $form['source_bundles']['#options'] = $options;
