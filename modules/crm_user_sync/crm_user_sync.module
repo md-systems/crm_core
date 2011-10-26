@@ -78,9 +78,9 @@ function crm_user_sync_sync($account) {
 
   // Create the contact.
   // For now we just add the name.
-  $contact = crm_contact_type_new($contact_type);
+  $contact = crm_core_contact_type_new($contact_type);
   $contact->contact_name['und'][0]['value'] = $account->name;
-  crm_contact_save($contact);
+  crm_core_contact_save($contact);
 
   // Create the relation
   $endpoints = array(
@@ -90,7 +90,7 @@ function crm_user_sync_sync($account) {
       'entity_id' => $account->uid,
     ),
     array(
-      'entity_type' => 'crm_contact',
+      'entity_type' => 'crm_core_contact',
       'entity_bundle' => $contact_type,
       'entity_id' => $contact->contact_id,
     ),

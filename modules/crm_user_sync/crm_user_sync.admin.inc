@@ -7,7 +7,7 @@ function crm_user_sync_admin($form_state) {
   $form = array();
 
   $roles = user_roles(TRUE);
-  $types = crm_contact_types();
+  $types = crm_core_contact_types();
  
   $form['crm_user_sync_roles'] = array(
     '#type' => 'checkboxes',
