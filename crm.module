@@ -127,7 +127,7 @@ function crm_contact_types() {
 
   // If it did not exist, fetch the types now.
   if (!isset($contact_types)) {
-    $contact_types = db_query('SELECT * FROM {crm_contact_type}')->fetchAllAssoc('type');
+    $contact_types = db_query('SELECT * FROM {crm_core_contact_type}')->fetchAllAssoc('type');
   }
 
   return $contact_types;
@@ -193,7 +193,7 @@ function crm_contact_type_new($type = '') {
  *   The machine-readable name of the contact type.
  */
 function crm_contact_type_load($type) {
-  return db_query("SELECT * FROM {crm_contact_type} WHERE type = :type", array(':type' => $type))->fetchObject();
+  return db_query("SELECT * FROM {crm_core_contact_type} WHERE type = :type", array(':type' => $type))->fetchObject();
 }
 
 
@@ -207,7 +207,7 @@ function crm_contact_type_load($type) {
  *   based on the operation performed
  */
 function crm_contact_type_save($contact_type) {
-  $op = drupal_write_record('crm_contact_type', $contact_type, empty($contact_type->is_new) ? 'type' : array());
+  $op = drupal_write_record('crm_core_contact_type', $contact_type, empty($contact_type->is_new) ? 'type' : array());
   menu_rebuild();
 
   // If this is a new contact type and the insert did not fail...
@@ -366,7 +366,7 @@ function crm_initialize_contact_type($type) {
 */
 function crm_contact_type_validate_unique($type) {
   // Look for a match of the type.
-  $match_id = db_query('SELECT type FROM {crm_contact_type} WHERE type = :type', array(':type' => $type))->fetchField();
+  $match_id = db_query('SELECT type FROM {crm_core_contact_type} WHERE type = :type', array(':type' => $type))->fetchField();
   return !$match_id;
 }
 

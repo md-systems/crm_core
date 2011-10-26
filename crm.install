@@ -97,7 +97,7 @@ function crm_schema() {
         'default' => 0,
       ),
       'type' => array(
-        'description' => 'The {crm_contact_type}.type of contact.',
+        'description' => 'The {crm_core_contact_type}.type of contact.',
         'type' => 'varchar',
         'length' => 40,
         'not null' => TRUE,
@@ -182,7 +182,7 @@ function crm_schema() {
     'primary key' => array('vid'),
   );
 
-  $schema['crm_contact_type'] = array(
+  $schema['crm_core_contact_type'] = array(
     'description' => 'Stores information about all defined contact types.',
     'fields' => array(
       'type' => array(
