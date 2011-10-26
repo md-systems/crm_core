@@ -17,6 +17,8 @@ function crm_relationship_ui_contact_relationships($crm_contact) {
  *   Entity object of crm_contact type.
  */
 function crm_relationship_ui_add_relationship($crm_contact) {
+  drupal_set_title(t('Add relationship'));
+  
   module_load_include('inc', 'crm_relationship_ui');
   
   $ret = '';
@@ -55,6 +57,8 @@ function crm_relationship_ui_add_relationship($crm_contact) {
  *   Whether relation is reversed.
  */
 function crm_relationship_ui_add_relationship_form($form, &$form_state, $crm_contact, $relationship_type, $reverse) {
+  drupal_set_title(t('Add relationship'));
+
   module_load_include('inc', 'crm_relationship_ui');
 
   $form = array();

@@ -9,7 +9,7 @@
  */
 class CRMContactController extends DrupalDefaultEntityController {
   public $revisionKey = 'vid';
-  public $revisionTable = 'crm_contact_revision';
+  public $revisionTable = 'crm_core_contact_revision';
   
   /**
    * Create a basic contact object.
@@ -53,7 +53,7 @@ class CRMContactController extends DrupalDefaultEntityController {
         $contact->created = REQUEST_TIME;
 
         // Save the new contact
-        drupal_write_record('crm_contact', $contact);
+        drupal_write_record('crm_core_contact', $contact);
         
         // Save the first revision
         $this->saveRevision($contact, $user->uid);
@@ -69,14 +69,14 @@ class CRMContactController extends DrupalDefaultEntityController {
         $this->saveRevision($contact, $user->uid);
 
         // Update the record and its fields
-        drupal_write_record('crm_contact', $contact, 'contact_id');
+        drupal_write_record('crm_core_contact', $contact, 'contact_id');
         field_attach_update('crm_contact', $contact);
 
         $op = 'update';
       }
 
       // Update the vid of the contact record
-      db_update('crm_contact')->
+      db_update('crm_core_contact')->
         fields(array('vid' => $contact->vid))->
         condition('contact_id', $contact->contact_id)->
         execute();
@@ -109,10 +109,10 @@ class CRMContactController extends DrupalDefaultEntityController {
     $contact->uid = $uid;
 
     if ($update) {
-      drupal_write_record('crm_contact_revision', $contact, 'vid');
+      drupal_write_record('crm_core_revision', $contact, 'vid');
     }
     else {
-      drupal_write_record('crm_contact_revision', $contact);
+      drupal_write_record('crm_core_contact_revision', $contact);
     }
 
     $contact->uid = $temp_uid;
@@ -162,7 +162,7 @@ class CRMContactController extends DrupalDefaultEntityController {
       $transaction = db_transaction();
 
       try {
-        db_delete('crm_contact')->condition('contact_id', $contact_ids, 'IN')->execute();
+        db_delete('crm_core_contact')->condition('contact_id', $contact_ids, 'IN')->execute();
 
         foreach ($contacts as $contact) {
           module_invoke_all('crm_contact_delete', $contact);

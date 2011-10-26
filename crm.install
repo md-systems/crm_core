@@ -80,7 +80,7 @@ function crm_install() {
  * Implements hook_schema().
  */
 function crm_schema() {
-  $schema['crm_contact'] = array(
+  $schema['crm_core_contact'] = array(
     'description' => 'Stores contact data.',
     'fields' => array(
       'contact_id' => array(
@@ -90,14 +90,14 @@ function crm_schema() {
         'not null' => TRUE,
       ),
       'vid' => array(
-        'description' => 'The current {crm_contact_revision}.vid of this contact.',
+        'description' => 'The current {crm_core_contact_revision}.vid of this contact.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'type' => array(
-        'description' => 'The {crm_contact_type}.type of contact.',
+        'description' => 'The {crm_core_contact_type}.type of contact.',
         'type' => 'varchar',
         'length' => 40,
         'not null' => TRUE,
@@ -122,24 +122,24 @@ function crm_schema() {
     ),
     'foreign keys' => array(
       'contact_revision' => array(
-        'table' => 'crm_contact_revision',
+        'table' => 'crm_core_contact_revision',
         'columns' => array('vid' => 'vid'),
       ),
     ),
     'primary key' => array('contact_id'),
   );
 
-  $schema['crm_contact_revision'] = array(
-    'description' => 'Saves information about each saved revision of a {crm_contact}',
+  $schema['crm_core_contact_revision'] = array(
+    'description' => 'Saves information about each saved revision of a {crm_core_contact}',
     'fields' => array(
       'vid' => array(
-        'description' => 'The primary identifier of this {crm_contact_revision}.',
+        'description' => 'The primary identifier of this {crm_core_contact_revision}.',
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
       'contact_id' => array(
-        'description' => 'The {crm_contact}.contact_id for this revision.',
+        'description' => 'The {crm_core_contact}.contact_id for this revision.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
@@ -171,7 +171,7 @@ function crm_schema() {
     ),
     'foreign keys' => array(
       'versioned_contact' => array(
-        'table' => 'crm_contact',
+        'table' => 'crm_core_contact',
         'columns' => array('contact_id' => 'contact_id'),
       ),
       'version_creator' => array(
@@ -182,7 +182,7 @@ function crm_schema() {
     'primary key' => array('vid'),
   );
 
-  $schema['crm_contact_type'] = array(
+  $schema['crm_core_contact_type'] = array(
     'description' => 'Stores information about all defined contact types.',
     'fields' => array(
       'type' => array(

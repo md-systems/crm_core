@@ -11,15 +11,15 @@
 function crm_views_data() {
   $data = array();
 
-  $data['crm_contact']['table']['group'] = t('CRM Contact');
+  $data['crm_core_contact']['table']['group'] = t('CRM Contact');
 
-  $data['crm_contact']['table']['base'] = array(
+  $data['crm_core_contact']['table']['base'] = array(
     'field' => 'contact_id',
     'title' => t('CRM Contact'),
     'help' => t('Contacts from the CRM.'),
   );
 
-  $data['crm_contact']['contact_id'] = array(
+  $data['crm_core_contact']['contact_id'] = array(
     'title' => t('Contact ID'),
     'help' => t('The unqiue internal identifier for a contact.'),
     'field' => array(
@@ -37,7 +37,7 @@ function crm_views_data() {
     ),
   );
 
-  $data['crm_contact']['type'] = array(
+  $data['crm_core_contact']['type'] = array(
     'title' => t('Contact Type'),
     'help' => t('The human-readable name of the type of a contact.'),
     'field' => array(
@@ -56,7 +56,7 @@ function crm_views_data() {
   );
 
   // Expose the creator uid.
-  $data['crm_contact']['uid'] = array(
+  $data['crm_core_contact']['uid'] = array(
     'title' => t('Creator'),
     'help' => t('Relate a contact to the user who created it.'),
     'relationship' => array(
@@ -68,7 +68,7 @@ function crm_views_data() {
   );
 
   // Expose the created and changed timestamps.
-  $data['crm_contact']['created'] = array(
+  $data['crm_core_contact']['created'] = array(
     'title' => t('Created date'),
     'help' => t('The date the contact was first added.'),
     'field' => array(
@@ -83,7 +83,7 @@ function crm_views_data() {
     ),
   );
 
-  $data['crm_contact']['changed'] = array(
+  $data['crm_core_contact']['changed'] = array(
     'title' => t('Updated date'),
     'help' => t('The date the contact was last updated.'),
     'field' => array(
@@ -98,15 +98,15 @@ function crm_views_data() {
     ),
   );
 
-  $data['crm_contact_revision']['table']['group'] = t('CRM Contacts Revisions');
+  $data['crm_core_contact_revision']['table']['group'] = t('CRM Contacts Revisions');
 
-  $data['crm_contact_revision']['table']['base'] = array(
+  $data['crm_core_contact_revision']['table']['base'] = array(
     'field' => 'vid',
     'title' => t('CRM Contacts Revisions'),
     'help' => t('Contacts revisions from the CRM.'),
   );
 
-  $data['crm_contact_revision']['vid'] = array(
+  $data['crm_core_contact_revision']['vid'] = array(
     'title' => t('Contact revision ID'),
     'help' => t('The unqiue internal identifier for a contact revision.'),
     'field' => array(
@@ -124,7 +124,7 @@ function crm_views_data() {
     ),
   );
   
-   $data['crm_contact_revision']['revert_link'] = array(
+   $data['crm_core_contact_revision']['revert_link'] = array(
    'field' => array(
      'title' => t('Revision Link'),
      'help' => t('Provide a simple link to revert the contact'),
@@ -132,7 +132,7 @@ function crm_views_data() {
    ),
  );
   
-  $data['crm_contact_revision']['contact_id'] = array(
+  $data['crm_core_contact_revision']['contact_id'] = array(
     'title' => t('Contact ID'),
     'help' => t('The unqiue internal identifier for a contact revision.'),
     'field' => array(
@@ -150,7 +150,7 @@ function crm_views_data() {
     ),
   );
 
-  $data['crm_contact_revision']['table']['join'] = array(
+  $data['crm_core_contact_revision']['table']['join'] = array(
     // Index this array by the table name to which this table refers.
     // 'left_field' is the primary key in the referenced table.
     // 'field' is the foreign key in this table.
@@ -161,7 +161,7 @@ function crm_views_data() {
   );  
   
   // Expose the creator uid.
-  $data['crm_contact_revision']['uid'] = array(
+  $data['crm_core_contact_revision']['uid'] = array(
     'title' => t('Creator'),
     'help' => t('Relate a contact to the user who created it.'),
     'relationship' => array(
@@ -173,7 +173,7 @@ function crm_views_data() {
   );
 
   // Expose the created and changed timestamps.
-  $data['crm_contact_revision']['created'] = array(
+  $data['crm_core_contact_revision']['created'] = array(
     'title' => t('Created date'),
     'help' => t('The date the contact was first added.'),
     'field' => array(
@@ -188,7 +188,7 @@ function crm_views_data() {
     ),
   );
 
-  $data['crm_contact_revision']['changed'] = array(
+  $data['crm_core_contact_revision']['changed'] = array(
     'title' => t('Updated date'),
     'help' => t('The date the contact was last updated.'),
     'field' => array(
