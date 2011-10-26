@@ -41,3 +41,36 @@ function crm_core_relationship_install() {
     relation_type_save($relation_type);
   }
 }
+
+/**
+ * Implements hook_uninstall()
+ */
+function crm_core_relationship_uninstall() {
+
+  // get all the relationship_types (bundles), find all fields 
+  // delete them
+  $query = db_select('relation_bundles', 'rb')->
+           fields('rb', array('relation_type'))->
+           condition('rb.entity_type', 'crm_contact')->
+           distinct()->
+           execute();
+           
+   while($record = $query->fetchAssoc()) {
+     $relationship_type[] = $record['relation_type'];
+   }
+   
+   foreach($relationship_type as $type) {
+     // look into the database for each type
+     $relationship_query = db_select('relation', 'r')->
+           fields('r', array('rid'))->
+           condition('r.relation_type', $type)->
+           execute();
+       
+     while($result = $relationship_query->fetchAssoc()) {
+       // delete all the relationships of that type
+       relation_delete($result['rid']);  
+     }
+     // finally delete the relationshp_type
+     relation_type_delete($type); 
+   }
+}
