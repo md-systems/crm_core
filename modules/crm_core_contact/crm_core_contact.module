@@ -84,7 +84,7 @@ function crm_core_contact_permission() {
 function crm_core_contact_views_api() {
   return array(
     'api' => 3,
-    'path' => drupal_get_path('module', 'crm') . '/includes/views',
+    'path' => drupal_get_path('module', 'crm_core_contact') . '/includes/views',
   );
 }
 
