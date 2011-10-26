@@ -104,7 +104,7 @@ function crm_core_contact_type_form($form, &$form_state, $contact_type) {
     '#type' => 'textarea',
     '#title' => t('Explanation or submission guidelines'),
     '#description' => t('This text will be displayed at the top of the page when creating or editing contacts of this type.'),
-    '#default_value' => $contact_type->help,
+    '#default_value' => (isset($contact_type->help)) ? $contact_type->help : '',
     '#rows' => 3,
   );
 
