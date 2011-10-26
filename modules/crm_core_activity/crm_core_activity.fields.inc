@@ -1,6 +1,6 @@
 <?php
 
-function _crm_activity_type_default_fields() {
+function _crm_core_activity_type_default_fields() {
 
   $fields = array();
 
@@ -8,7 +8,7 @@ function _crm_activity_type_default_fields() {
   $fields[] = array(
     'field_name' => 'field_activity_participants',
     'type' => 'entityreference',
-    'entity_types' => array('crm_activity'),
+    'entity_types' => array('crm_core_activity'),
     'translatable' => FALSE,
     'locked' => TRUE,
     'settings' => array(
@@ -26,7 +26,7 @@ function _crm_activity_type_default_fields() {
     'type' => 'datetime',
     'module' => 'date',
     'active' => TRUE,
-    'entity_types' => array('crm_activity'),
+    'entity_types' => array('crm_core_activity'),
     'translatable' => FALSE,
     // Allow admin to change settings of this field as for
     // example meeting might need end date.
@@ -52,7 +52,7 @@ function _crm_activity_type_default_fields() {
   $fields[] = array(
     'field_name' => 'field_activity_notes',
     'type' => 'text_long',
-    'entity_types' => array('crm_activity'),
+    'entity_types' => array('crm_core_activity'),
     'translatable' => FALSE,
     'locked' => TRUE,
     'module' => 'text',
