@@ -24,7 +24,7 @@ function crm_core_relationship_ui_add_relationship($crm_contact) {
   $ret = '';
   
   foreach (array(0, 1) as $reverse) {    
-    $relationship_types = crm_core_relationship_ui_load_relationship_types($crm_contact->type, $reverse);  
+    $relationship_types = crm_core_relationship_load_relationship_types($crm_contact->type, $reverse);  
     $relationship_type_links = array();
 
     foreach ($relationship_types as $relationship_type) {
@@ -79,7 +79,7 @@ function crm_core_relationship_ui_add_relationship_form($form, &$form_state, $cr
   
   foreach (array(0, 1) as $reverse_field) {
     $contact_type_names = array();
-    foreach (crm_core_relationship_ui_load_contact_types($relationship_type, $reverse_field) as $contact_type) {
+    foreach (crm_core_relationship_load_contact_types($relationship_type, $reverse_field) as $contact_type) {
       $contact_type_names[] = t($contact_type->name);
     }
     $contact_type_names = implode(', ', $contact_type_names);
@@ -117,7 +117,7 @@ function crm_core_relationship_ui_add_relationship_form_validate($form, &$form_s
     return;
   }
 
-  if (!crm_core_relationship_ui_is_relationship_type($relationship_type)) {
+  if (!crm_core_relationship_is_relationship_type($relationship_type)) {
     form_set_error('relationship_type', t('Relationship type is not valid CRM relationship type.'));
     return; 
   }
@@ -132,13 +132,13 @@ function crm_core_relationship_ui_add_relationship_form_validate($form, &$form_s
     return;
   }
 
-  $source_bundles = array_keys(crm_core_relationship_ui_load_contact_types($relationship_type, 0));
+  $source_bundles = array_keys(crm_core_relationship_load_contact_types($relationship_type, 0));
   if (!in_array($source_contact->type, $source_bundles)) {
    form_set_error('source_contact', t('Please, input source contact of proper type.'));
    return;
   }
 
-  $target_bundles = array_keys(crm_core_relationship_ui_load_contact_types($relationship_type, $relationship_type->directional));
+  $target_bundles = array_keys(crm_core_relationship_load_contact_types($relationship_type, $relationship_type->directional));
   if (!in_array($destination_contact->type, $target_bundles)) {
    form_set_error('destination_contact', t('Please, input destination contact of proper type.'));
    return;
@@ -212,7 +212,7 @@ function crm_core_relationship_ui_add_relationship_autocomplete($crm_contact, $r
 
   $matches = array();
   
-  $contact_types = array_keys(crm_core_relationship_ui_load_contact_types($relationship_type, $reverse));
+  $contact_types = array_keys(crm_core_relationship_load_contact_types($relationship_type, $reverse));
   
   $query = new EntityFieldQuery;
   $result = $query

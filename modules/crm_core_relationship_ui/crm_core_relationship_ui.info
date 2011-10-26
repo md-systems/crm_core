@@ -12,4 +12,3 @@ dependencies[] = relation
 ; =======================
 
 files[] = crm_core_relationship_ui.module
-files[] = crm_core_relationship_ui.inc

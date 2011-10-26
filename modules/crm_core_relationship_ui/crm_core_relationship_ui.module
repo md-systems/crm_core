@@ -89,7 +89,7 @@ function crm_core_relationship_ui_form_alter(&$form, &$form_state, $form_id) {
     case 'relation_type_delete_confirm':  
       $type = arg(4);
       module_load_include('inc', 'crm_core_relationship_ui');
-      if (crm_core_relationship_ui_is_relationship_type($type)) {
+      if (crm_core_relationship_is_relationship_type($type)) {
         $breadcrumb = array(
           l('Home', '<front>'),
           l('Administration', 'admin'),
@@ -116,7 +116,7 @@ function crm_core_relationship_ui_form_relation_type_form_alter(&$form, &$form_s
   $type = $form['relation_type']['#default_value'];
   $alter_edit = $alter_add = false;
 
-  if (crm_core_relationship_ui_is_relationship_type($type)) {
+  if (crm_core_relationship_is_relationship_type($type)) {
     $alter_edit = true;
   }
 
@@ -171,7 +171,7 @@ function crm_core_relationship_ui_form_relation_type_form_submit($form, &$form_s
 function crm_core_relationship_ui_form_relation_type_delete_confirm_alter(&$form, &$form_state) {
   module_load_include('inc', 'crm_core_relationship_ui');
 
-  if (crm_core_relationship_ui_is_relationship_type($form['relation_type']['#value'])) {
+  if (crm_core_relationship_is_relationship_type($form['relation_type']['#value'])) {
     $form['#submit'][] = 'crm_core_relationship_ui_form_relation_type_delete_confirm_submit';
   }
 }
