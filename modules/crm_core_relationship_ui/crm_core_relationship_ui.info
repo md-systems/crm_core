@@ -1,11 +1,21 @@
-name = CRM Core Relationships UI
+name = CRM Core Relationship UI
 description = User Interface for relationships between contacts. Back end is Relation module.
 package = CRM
 version = VERSION
 core = 7.x
 
+
+; =======================
+; Dependencies
+; =======================
+
+; Core Dependencies
 dependencies[] = crm
+dependencies[] = crm_core_relationship
+
+; Contrib Dependencies
 dependencies[] = relation
+
 
 ; =======================
 ; Module Files

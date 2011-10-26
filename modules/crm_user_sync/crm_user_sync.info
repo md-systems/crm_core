@@ -1,14 +1,22 @@
-; $Id$
-name = User Synchronization
+name = CRM User Synchronization
 description = Synchronizes users from selected roles with contacts.
 package = CRM
 version = VERSION
 core = 7.x
 configure = crm/admin/user-sync
 
+
+; =======================
 ; Dependencies
-dependencies[] = crm 
+; =======================
+
+; Core Dependencies
+dependencies[] = crm
+dependencies[] = crm_core_contact
+
+; Contrib Dependencies
 dependencies[] = relation
+
 
 ; =======================
 ; Module Files
@@ -17,4 +25,3 @@ dependencies[] = relation
 ; Base Files
 files[] = crm_user_sync.module
 files[] = crm_user_sync.admin.inc
-

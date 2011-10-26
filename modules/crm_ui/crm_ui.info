@@ -1,12 +1,19 @@
-; $Id$
 name = DropCRM UI
 description = User Interface for DropCRM.
 package = CRM
 version = VERSION
 core = 7.x
 
+
+; =======================
+; Dependencies
+; =======================
+
+; Core Dependencies
 dependencies[] = crm
+dependencies[] = crm_core_contact
 dependencies[] = crm_core_activity
+
 
 ; =======================
 ; Module Files

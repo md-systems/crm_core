@@ -1,4 +1,3 @@
-; $Id$
 name = CRM Core Activity
 description = Provide activity entity.
 package = CRM
@@ -6,17 +5,27 @@ version = VERSION
 core = 7.x
 configure = crm/admin/activity_types
 
+
+; =======================
 ; Dependencies
-dependencies[] = field_ui
+; =======================
+
+; Core Dependencies
+dependencies[] = crm
+dependencies[] = crm_core_contact
+
+; Contrib Dependencies
 dependencies[] = entity
+dependencies[] = field_ui
+dependencies[] = views
 
 ; Field Dependencies
-dependencies[] = entity
 dependencies[] = entityreference
 dependencies[] = date_api
 dependencies[] = date
 dependencies[] = date_popup
 dependencies[] = date_views
+
 
 ; =======================
 ; Module Files

@@ -1,12 +1,21 @@
-; $Id$
 name = CRM Core Relationship
 description = Provide relationship between contacts
 package = CRM
 version = VERSION
 core = 7.x
 
+
+; =======================
+; Dependencies
+; =======================
+
+; Core Dependencies
 dependencies[] = crm
+dependencies[] = crm_core_contact
+
+; Contrib Dependencies
 dependencies[] = relation
+
 
 ; =======================
 ; Module Files
