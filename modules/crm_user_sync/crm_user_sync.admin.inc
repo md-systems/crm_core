@@ -70,7 +70,7 @@ function crm_user_sync_admin_submit($form, &$form_state) {
           $query->condition('rid', $rid);
         }
         $result = $query->execute();
-        $ops = array()
+        $ops = array();
         foreach (array_keys($result->fetchAllKeyed()) as $uid) {
           $ops[] = array(
             'crm_user_sync_sync' => array(user_load($uid)),
