@@ -41,7 +41,7 @@ class crm_contact_handler_field_contact_revert extends views_handler_field {
   function render_link($data, $values) {
     
     // do a db check to get the highest version for this contact
-    $max_vid = db_query("SELECT max(vid) FROM {crm_contact_revision} WHERE contact_id = :contact_id", 
+    $max_vid = db_query("SELECT max(vid) FROM {crm_core_contact_revision} WHERE contact_id = :contact_id", 
     array(':contact_id' => $values->{$this->aliases['contact_id']}))->fetchField();
     
     if ($values->{$this->aliases['vid']} == $max_vid) {

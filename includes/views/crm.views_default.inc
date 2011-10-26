@@ -13,7 +13,7 @@ function crm_views_default_views() {
   $view->name = 'crm_contacts';
   $view->description = 'A list of all contacts in the system';
   $view->tag = '';
-  $view->base_table = 'crm_contact';
+  $view->base_table = 'crm_core_contact';
   $view->human_name = '';
   $view->core = 0;
   $view->api_version = '3.0-alpha1';
@@ -81,7 +81,7 @@ function crm_views_default_views() {
   $handler->display->display_options['empty']['area']['tokenize'] = 0;
   /* Field: CRM Contact: Contact ID */
   $handler->display->display_options['fields']['contact_id']['id'] = 'contact_id';
-  $handler->display->display_options['fields']['contact_id']['table'] = 'crm_contact';
+  $handler->display->display_options['fields']['contact_id']['table'] = 'crm_core_contact';
   $handler->display->display_options['fields']['contact_id']['field'] = 'contact_id';
   $handler->display->display_options['fields']['contact_id']['exclude'] = TRUE;
   $handler->display->display_options['fields']['contact_id']['alter']['alter_text'] = 0;
@@ -139,7 +139,7 @@ function crm_views_default_views() {
   $handler->display->display_options['fields']['entity_id']['empty_zero'] = 0;
   /* Field: CRM Contact: Contact Type */
   $handler->display->display_options['fields']['type']['id'] = 'type';
-  $handler->display->display_options['fields']['type']['table'] = 'crm_contact';
+  $handler->display->display_options['fields']['type']['table'] = 'crm_core_contact';
   $handler->display->display_options['fields']['type']['field'] = 'type';
   $handler->display->display_options['fields']['type']['alter']['alter_text'] = 0;
   $handler->display->display_options['fields']['type']['alter']['make_link'] = 0;
@@ -161,7 +161,7 @@ function crm_views_default_views() {
   $handler->display->display_options['fields']['type']['link_to_contact'] = 0;
   /* Field: CRM Contact: Created date */
   $handler->display->display_options['fields']['created']['id'] = 'created';
-  $handler->display->display_options['fields']['created']['table'] = 'crm_contact';
+  $handler->display->display_options['fields']['created']['table'] = 'crm_core_contact';
   $handler->display->display_options['fields']['created']['field'] = 'created';
   $handler->display->display_options['fields']['created']['label'] = 'Added';
   $handler->display->display_options['fields']['created']['alter']['alter_text'] = 0;
@@ -176,7 +176,7 @@ function crm_views_default_views() {
   $handler->display->display_options['fields']['created']['empty_zero'] = 0;
   /* Sort criterion: CRM Contact: Updated date */
   $handler->display->display_options['sorts']['changed']['id'] = 'changed';
-  $handler->display->display_options['sorts']['changed']['table'] = 'crm_contact';
+  $handler->display->display_options['sorts']['changed']['table'] = 'crm_core_contact';
   $handler->display->display_options['sorts']['changed']['field'] = 'changed';
   $handler->display->display_options['sorts']['changed']['order'] = 'DESC';
 
@@ -193,7 +193,7 @@ function crm_views_default_views() {
   $view->name = 'crm_contacts_revisions';
   $view->description = '';
   $view->tag = 'default';
-  $view->base_table = 'crm_contact_revision';
+  $view->base_table = 'crm_core_contact_revision';
   $view->human_name = 'CRM Contact Revisions';
   $view->core = 7;
   $view->api_version = '3.0-alpha1';
@@ -248,12 +248,12 @@ function crm_views_default_views() {
   $handler->display->display_options['style_options']['empty_table'] = 0;
   /* Relationship: CRM Contacts Revisions: Creator */
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
-  $handler->display->display_options['relationships']['uid']['table'] = 'crm_contact_revision';
+  $handler->display->display_options['relationships']['uid']['table'] = 'crm_core_contact_revision';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
   $handler->display->display_options['relationships']['uid']['required'] = 0;
   /* Field: CRM Contacts Revisions: Contact revision ID */
   $handler->display->display_options['fields']['vid']['id'] = 'vid';
-  $handler->display->display_options['fields']['vid']['table'] = 'crm_contact_revision';
+  $handler->display->display_options['fields']['vid']['table'] = 'crm_core_contact_revision';
   $handler->display->display_options['fields']['vid']['field'] = 'vid';
   $handler->display->display_options['fields']['vid']['label'] = 'Revision ID';
   $handler->display->display_options['fields']['vid']['alter']['alter_text'] = 0;
@@ -275,7 +275,7 @@ function crm_views_default_views() {
   $handler->display->display_options['fields']['vid']['hide_alter_empty'] = 0;
   /* Field: CRM Contacts Revisions: Updated date */
   $handler->display->display_options['fields']['changed']['id'] = 'changed';
-  $handler->display->display_options['fields']['changed']['table'] = 'crm_contact_revision';
+  $handler->display->display_options['fields']['changed']['table'] = 'crm_core_contact_revision';
   $handler->display->display_options['fields']['changed']['field'] = 'changed';
   $handler->display->display_options['fields']['changed']['alter']['alter_text'] = 0;
   $handler->display->display_options['fields']['changed']['alter']['make_link'] = 0;
@@ -322,7 +322,7 @@ function crm_views_default_views() {
   $handler->display->display_options['fields']['name']['overwrite_anonymous'] = 0;
   /* Field: CRM Contacts Revisions: Contact revision ID */
   $handler->display->display_options['fields']['vid_1']['id'] = 'vid_1';
-  $handler->display->display_options['fields']['vid_1']['table'] = 'crm_contact_revision';
+  $handler->display->display_options['fields']['vid_1']['table'] = 'crm_core_contact_revision';
   $handler->display->display_options['fields']['vid_1']['field'] = 'vid';
   $handler->display->display_options['fields']['vid_1']['label'] = 'Revert';
   $handler->display->display_options['fields']['vid_1']['alter']['alter_text'] = 1;
@@ -346,12 +346,12 @@ function crm_views_default_views() {
   $handler->display->display_options['fields']['vid_1']['link_to_revision'] = 1;
   /* Sort criterion: CRM Contacts Revisions: Updated date */
   $handler->display->display_options['sorts']['changed']['id'] = 'changed';
-  $handler->display->display_options['sorts']['changed']['table'] = 'crm_contact_revision';
+  $handler->display->display_options['sorts']['changed']['table'] = 'crm_core_contact_revision';
   $handler->display->display_options['sorts']['changed']['field'] = 'changed';
   $handler->display->display_options['sorts']['changed']['order'] = 'DESC';
   /* Contextual filter: CRM Contacts Revisions: Contact ID */
   $handler->display->display_options['arguments']['contact_id']['id'] = 'contact_id';
-  $handler->display->display_options['arguments']['contact_id']['table'] = 'crm_contact_revision';
+  $handler->display->display_options['arguments']['contact_id']['table'] = 'crm_core_contact_revision';
   $handler->display->display_options['arguments']['contact_id']['field'] = 'contact_id';
   $handler->display->display_options['arguments']['contact_id']['default_action'] = 'empty';
   $handler->display->display_options['arguments']['contact_id']['title'] = '%1 - Revisions';
@@ -372,6 +372,6 @@ function crm_views_default_views() {
   $handler->display->display_options['menu']['description'] = 'A list of revisions or this contact.';
   $handler->display->display_options['menu']['weight'] = '0';
 
-  $views['crm_contact_revisions'] = $view; 
+  $views['crm_core_contact_revision'] = $view; 
   return $views;
 }
