@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * CRM Core Relationship, handles relationship logic and API.
@@ -6,6 +7,28 @@
  * CRM Core relationship is built on relation and CRM Core, it allows
  * creation of relationship between contacts
  */
+
+
+/**
+ * Implements hook_permission().
+ */
+function crm_core_relationship_permission() {
+  return array(
+    'view contact relationships' => array(
+      'title' => t('View Contact Relationships'),
+      'description' => t('Allows user to view list of CRM relationship.'),
+    ),      
+    'add contact relationships' => array(
+      'title' => t('Add Contact Relationships'),
+      'description' => t('Allows user to add relationship to the CRM contact.'),
+    ),
+    'edit contact relationships' => array(
+      'title' => t('Edit Contact Relationships'),
+      'description' => t('Allows user to edit relationship of the CRM contact.'),
+    ),
+  );
+}
+
 
 /**
  * Return contact types available for specific relationship type.

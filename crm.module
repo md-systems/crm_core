@@ -7,27 +7,6 @@
 
 
 /**
- * Implements hook_permission().
- */
-function crm_permission() {
-  return array(
-    'view contact relationships' => array(
-      'title' => t('View Contact Relationships'),
-      'description' => t('Allows user to view list of CRM relationship.'),
-    ),      
-    'add contact relationships' => array(
-      'title' => t('Add Contact Relationships'),
-      'description' => t('Allows user to add relationship to the CRM contact.'),
-    ),
-    'edit contact relationships' => array(
-      'title' => t('Edit Contact Relationships'),
-      'description' => t('Allows user to edit relationship of the CRM contact.'),
-    ),
-  );
-}
-
-
-/**
  * Return permission names for a given entity type.
  *
  * Copied from commerce_entity_access_permissions().
