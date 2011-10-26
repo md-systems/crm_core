@@ -20,7 +20,6 @@ class crm_core_contact_handler_field_contact_revision extends views_handler_fiel
     return $options;
   }
 
-
   /**
    * Provide the link to contact option.
    */

@@ -10,8 +10,7 @@ class crm_core_contact_handler_field_contact_revert extends views_handler_field 
       $this->additional_fields['vid'] = 'vid';
   }
  
- 
- function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
 
     $options['text'] = array('default' => '', 'translatable' => TRUE);

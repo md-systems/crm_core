@@ -1,0 +1,181 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the contact module.
+ */
+
+
+/**
+ * Implements hook_install().
+ */
+function crm_core_contact_install() {
+  // Add default contact type for an Individual person
+  $individual = crm_core_contact_type_new();
+  $individual->type = 'individual';
+  $individual->name = t('Individual');
+  $individual->description = t('A single individual.');
+  $individual->is_new = TRUE;
+  crm_core_contact_type_save($individual);
+
+  // Add default contact type for an organization
+  $organization = crm_core_contact_type_new();
+  $organization->type = 'organization';
+  $organization->name = t('Organization');
+  $organization->description = t('A collection of individuals or other organizations that has additional contact data.');
+  $organization->is_new = TRUE;
+  crm_core_contact_type_save($organization);
+
+  // Add default contact type for a household
+  $household = crm_core_contact_type_new();
+  $household->type = 'household';
+  $household->name = t('Household');
+  $household->description = t('A collection of individuals generally located at the same residence.');
+  $household->is_new = TRUE;
+  crm_core_contact_type_save($household);
+}
+
+
+/**
+ * Implements hook_schema().
+ */
+function crm_core_contact_schema() {
+  $schema['crm_core_contact'] = array(
+    'description' => 'Stores contact data.',
+    'fields' => array(
+      'contact_id' => array(
+        'description' => 'The primary identifer for a contact.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'vid' => array(
+        'description' => 'The current {crm_core_contact_revision}.vid of this contact.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'type' => array(
+        'description' => 'The {crm_core_contact_type}.type of contact.',
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'created' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Timestamp for when contact was created.',
+      ),
+      'changed' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Timestamp for when contact was last changed',
+      ),
+    ),
+    'indexes' => array(
+      'created' => array('created'),
+      'changed' => array('changed'),
+    ),
+    'foreign keys' => array(
+      'contact_revision' => array(
+        'table' => 'crm_core_contact_revision',
+        'columns' => array('vid' => 'vid'),
+      ),
+    ),
+    'primary key' => array('contact_id'),
+  );
+
+  $schema['crm_core_contact_revision'] = array(
+    'description' => 'Saves information about each saved revision of a {crm_core_contact}',
+    'fields' => array(
+      'vid' => array(
+        'description' => 'The primary identifier of this {crm_core_contact_revision}.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'contact_id' => array(
+        'description' => 'The {crm_core_contact}.contact_id for this revision.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'log' => array(
+        'description' => 'The log entry explaining the changes in this version.',
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'big',
+      ),
+      'created' => array(
+        'description' => 'The unix timestamp for when this revision was created.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'changed' => array(
+        'description' => 'The unix timestamp for when this revision was last changed.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+        'description' => 'The {users}.uid that created this version.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'foreign keys' => array(
+      'versioned_contact' => array(
+        'table' => 'crm_core_contact',
+        'columns' => array('contact_id' => 'contact_id'),
+      ),
+      'version_creator' => array(
+        'table' => 'user',
+        'columns' => array('uid' => 'uid'),
+      ),
+    ),
+    'primary key' => array('vid'),
+  );
+
+  $schema['crm_core_contact_type'] = array(
+    'description' => 'Stores information about all defined contact types.',
+    'fields' => array(
+      'type' => array(
+        'description' => 'The machine-readable name of this type.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+      ),
+      'name' => array(
+        'description' => 'The human-readable name of this type.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'translatable' => TRUE,
+      ),
+      'description' => array(
+        'description' => 'A brief description of this type.',
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'medium',
+        'translatable' => TRUE,
+      ),
+      'custom' => array(
+        'description' => 'A boolean indicating whether this type is defined by a module (FALSE) or by a user via Add content type (TRUE).',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+      ),
+    ),
+    'primary key' => array('type'),
+  );
+
+  return $schema;
+}

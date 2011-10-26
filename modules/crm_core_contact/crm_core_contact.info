@@ -1,0 +1,51 @@
+name = CRM Core Contact
+description = Provide contact entity.
+package = CRM
+version = VERSION
+core = 7.x
+configure = admin/structure/crm/contact-types
+
+
+; =======================
+; Dependencies
+; =======================
+
+; Core Dependencies
+dependencies[] = crm
+
+; Contrib Dependencies
+dependencies[] = entity
+dependencies[] = field_ui
+dependencies[] = views
+
+; Field Dependencies
+dependencies[] = image
+dependencies[] = image
+dependencies[] = addressfield
+dependencies[] = email
+dependencies[] = link
+dependencies[] = cck_phone
+dependencies[] = field_group
+dependencies[] = name
+
+
+; =======================
+; Module Files
+; =======================
+
+; Base Files
+files[] = crm_core_contact.module
+files[] = crm_core_contact.install
+
+; Module includes
+files[] = includes/crm_core_contact.controller.inc
+
+; Views include
+files[] = includes/views/crm_core_contact.views.inc
+
+; Views handlers
+files[] = includes/views/handlers/crm_core_contact_handler_field_contact.inc
+files[] = includes/views/handlers/crm_core_contact_handler_field_contact_revision.inc
+files[] = includes/views/handlers/crm_core_contact_handler_field_contact_revert.inc
+files[] = includes/views/handlers/crm_core_contact_handler_field_contact_type.inc
+;files[] = includes/views/handlers/crm_core_contact_handler_field_contact_link.inc

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * A link to a CRM contact.
+ * A link to a CRM Core Contact.
  */
 class crm_core_contact_handler_field_contact extends views_handler_field {
   function construct() {

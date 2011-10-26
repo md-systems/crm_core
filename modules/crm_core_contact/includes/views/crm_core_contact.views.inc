@@ -2,13 +2,13 @@
 
 /**
  * @file
- * Export CRM data to views.
+ * Export CRM Core Contact to views.
  */
 
 /**
  * Implements hook_views_data().
  */
-function crm_views_data() {
+function crm_core_contact_views_data() {
   $data = array();
 
   $data['crm_core_contact']['table']['group'] = t('CRM Contact');

@@ -1,27 +1,18 @@
-; $Id$
 name = DropCRM
-description = Manages contacts.
+description = Drupal CRM basic functionality
 package = CRM
 version = VERSION
 core = 7.x
 configure = admin/config/crm
 
-; Core Dependencies
-dependencies[] = field_ui
-dependencies[] = image
 
-; Field Dependencies
-dependencies[] = addressfield
-dependencies[] = email
-dependencies[] = link
-dependencies[] = cck_phone
-dependencies[] = field_group
-dependencies[] = name
+; =======================
+; Dependencies
+; =======================
 
 ; Contrib Dependencies
-dependencies[] = entity
-dependencies[] = views
 dependencies[] = relation
+
 
 ; =======================
 ; Module Files
@@ -30,17 +21,3 @@ dependencies[] = relation
 ; Base Files
 files[] = crm.module
 files[] = crm.install
-
-; Module includes
-files[] = includes/crm_contact.controller.inc
-
-; Views include
-files[] = includes/views/crm.views.inc
-
-; Views handlers
-files[] = includes/views/handlers/crm_contact_handler_field_contact.inc
-files[] = includes/views/handlers/crm_contact_handler_field_contact_revision.inc
-files[] = includes/views/handlers/crm_contact_handler_field_contact_revert.inc
-files[] = includes/views/handlers/crm_contact_handler_field_contact_type.inc
-;files[] = includes/views/handlers/crm_contact_handler_field_contact_link.inc
-

@@ -7,7 +7,7 @@
  * This extends the DrupalDefaultEntityController class, adding required
  * special handling for contact objects.
  */
-class CRMContactController extends DrupalDefaultEntityController {
+class CRMCoreContactController extends DrupalDefaultEntityController {
   public $revisionKey = 'vid';
   public $revisionTable = 'crm_core_contact_revision';
   
