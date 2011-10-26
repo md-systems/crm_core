@@ -1,0 +1,8 @@
+<?php
+
+/**
+ * Implements hook_menu()
+ */
+function crm_code_activity_ui_menu() {
+
+}
