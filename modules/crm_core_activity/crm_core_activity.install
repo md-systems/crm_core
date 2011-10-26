@@ -3,32 +3,32 @@
 /**
  * Implements hook_install()
  */ 
-function crm_activity_install() {
+function crm_core_activity_install() {
   
   // create a default meeting activity type
-  $meeting = crm_activity_type_new();
+  $meeting = crm_core_activity_type_new();
   $meeting->type = 'meeting';
   $meeting->label = t('Meeting');
   $meeting->description = t('A meeting between 2 or more contacts');
   $meeting->is_new = TRUE;
-  crm_activity_type_save($meeting);
+  crm_core_activity_type_save($meeting);
   
   // create a phone call activity type
-  $phone_call = crm_activity_type_new();
+  $phone_call = crm_core_activity_type_new();
   $phone_call->type = 'phone_call';
   $phone_call->label = t('Phone call');
   $phone_call->description = t('A phone call between 2 or more contacts');
   $phone_call->is_new = TRUE;
-  crm_activity_type_save($phone_call);
+  crm_core_activity_type_save($phone_call);
 }
 
-function crm_activity_uninstall() {
+function crm_core_activity_uninstall() {
 
   // delete all the fields
   // right now we only have the default fields, what if we can add more fields to the 
   // activities? (we will need to go through the field array and idenfity activity fields?)
-  module_load_include('inc', 'crm_activity', 'crm_activity.fields');
-  foreach (_crm_activity_type_default_fields() as $field) {
+  module_load_include('inc', 'crm_core_activity', 'crm_core_activity.fields');
+  foreach (_crm_core_activity_type_default_fields() as $field) {
     field_delete_field($field['field_name']);
   }
   
@@ -37,10 +37,10 @@ function crm_activity_uninstall() {
 /**
  * Implements hook_schema().
  */
-function crm_activity_schema() {
+function crm_core_activity_schema() {
   $schema = array();
 
-  $schema['crm_activity'] = array(
+  $schema['crm_core_activity'] = array(
     'description' => 'The base table for activities.',
     'fields' => array(
       'activity_id' => array(
@@ -50,7 +50,7 @@ function crm_activity_schema() {
         'not null' => TRUE,
       ),
 //      'revision_id' => array(
-//        'description' => 'The current {crm_activity_revision}.revision_id version identifier.',
+//        'description' => 'The current {crm_core_activity_revision}.revision_id version identifier.',
 //        'type' => 'int',
 //        'unsigned' => TRUE,
 //        'not null' => TRUE,
@@ -94,16 +94,16 @@ function crm_activity_schema() {
 //    ),
 //    'foreign keys' => array(
 //      'current_revision' => array(
-//        'table' => 'crm_activity_revision',
+//        'table' => 'crm_core_activity_revision',
 //        'columns'=> array('revision_id' => 'revision_id'),
 //      ),
 //    ),
   );
-//  $schema['crm_activity_revision'] = array(
-//    'description' => 'Saves information about each saved revision of a {crm_activity}.',
+//  $schema['crm_core_activity_revision'] = array(
+//    'description' => 'Saves information about each saved revision of a {crm_core_activity}.',
 //    'fields' => array(
 //      'revision_id' => array(
-//        'description' => 'The current {crm_activity_revision}.revision_id version identifier.',
+//        'description' => 'The current {crm_core_activity_revision}.revision_id version identifier.',
 //        'type' => 'serial',
 //        'unsigned' => TRUE,
 //        'not null' => TRUE,
@@ -149,7 +149,7 @@ function crm_activity_schema() {
 //    ),
 //    'foreign keys' => array(
 //      'versioned_contact' => array(
-//        'table' => 'crm_activity',
+//        'table' => 'crm_core_activity',
 //        'columns' => array('activity_id' => 'activity_id'),
 //      ),
 //      'version_creator' => array(
@@ -160,7 +160,7 @@ function crm_activity_schema() {
 //    'primary key' => array('revision_id'),
 //  );
 
-  $schema['crm_activity_type'] = array(
+  $schema['crm_core_activity_type'] = array(
     'description' => 'Stores information about all defined activity types.',
     'fields' => array(
       'id' => array(

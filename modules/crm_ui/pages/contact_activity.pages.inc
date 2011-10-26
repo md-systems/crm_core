@@ -30,9 +30,9 @@ function crm_activity_entity_ui_get_form_wrapper($contact, $type) {
     ),
     'title' => '',
   );
-  $activity = crm_activity_create($values);
+  $activity = crm_core_activity_create($values);
 
-  return entity_ui_get_form('crm_activity', $activity, 'add');
+  return entity_ui_get_form('crm_core_activity', $activity, 'add');
 }
 
 /**
@@ -54,7 +54,7 @@ function crm_activity_form($form, &$form_state, $activity) {
     '#value' => $activity->uid,
   );
 
-  field_attach_form('crm_activity', $activity, $form, $form_state);
+  field_attach_form('crm_core_activity', $activity, $form, $form_state);
 
   $form['actions'] = array(
     '#type' => 'container',
@@ -73,7 +73,7 @@ function crm_activity_form($form, &$form_state, $activity) {
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save Activity'),
-    '#submit' => $submit + array('crm_activity_form_submit'),
+    '#submit' => $submit + array('crm_core_activity_form_submit'),
   );
 
   // Show Delete button if we edit activity.
@@ -81,18 +81,18 @@ function crm_activity_form($form, &$form_state, $activity) {
     $form['actions']['delete'] = array(
       '#type' => 'submit',
       '#value' => t('Delete'),
-      '#submit' => array('crm_activity_form_submit_delete'),
+      '#submit' => array('crm_core_activity_form_submit_delete'),
     );
   }
 
   // We append the validate handler to #validate in case a form callback_wrapper
   // is used to add validate handlers earlier.
-  $form['#validate'][] = 'crm_activity_form_validate';
+  $form['#validate'][] = 'crm_core_activity_form_validate';
 
   // Add after build to set proper page Title as it
   // got set by entity_ui_main_form_defaults
   // @see entity_ui_get_form().
-  $form['#after_build'][] = 'crm_activity_form_after_build';
+  $form['#after_build'][] = 'crm_core_activity_form_after_build';
 
   return $form;
 }
@@ -101,7 +101,7 @@ function crm_activity_form($form, &$form_state, $activity) {
  * Validation callback for crm_activity_form.
  */
 function crm_activity_form_validate($form, &$form_state) {
-  $activity = $form_state['crm_activity'];
+  $activity = $form_state['crm_core_activity'];
 
   // Ensure that contact set in $activity is present in values. We create activity
   // from the page of the contact. So we ensure that this contact is added in
@@ -123,14 +123,14 @@ function crm_activity_form_validate($form, &$form_state) {
   }
 
   // Notify field widgets to validate their data.
-  field_attach_form_validate('crm_activity', $activity, $form, $form_state);
+  field_attach_form_validate('crm_core_activity', $activity, $form, $form_state);
 }
 
 /**
  * Submit callback for crm_activity_form.
  */
 function crm_activity_form_submit($form, &$form_state) {
-  $activity = $form_state['crm_activity'];
+  $activity = $form_state['crm_core_activity'];
 
   $activity->title = $form_state['values']['title'];
   $activity->uid = $form_state['values']['uid'];
@@ -142,9 +142,9 @@ function crm_activity_form_submit($form, &$form_state) {
   $activity->changed = REQUEST_TIME;
 
   // Notify field widgets.
-  field_attach_submit('crm_activity', $activity, $form, $form_state);
+  field_attach_submit('crm_core_activity', $activity, $form, $form_state);
 
-  crm_activity_save($activity);
+  crm_core_activity_save($activity);
 
   // Show message to user.
   if ($form_state['op'] == 'add') {
@@ -168,7 +168,7 @@ function crm_activity_form_submit_delete($form, &$form_state) {
     $destination = drupal_get_destination();
     unset($_GET['destination']);
   }
-  $activity = $form_state['crm_activity'];
+  $activity = $form_state['crm_core_activity'];
   $form_state['redirect'] = array('crm/activity/' . $activity->activity_id . '/delete', array('query' => $destination));
 }
 
@@ -191,9 +191,9 @@ function crm_activity_form_delete_confirm($form, &$form_state, $activity) {
 function crm_activity_form_delete_confirm_submit($form, &$form_state) {
   if ($form_state['values']['confirm']) {
     $activity = $form_state['activity'];
-    crm_activity_delete($activity);
+    crm_core_activity_delete($activity);
 
-    watchdog('crm_activity', '@type: deleted %title.', array('@type' => $activity->type, '%title' => $activity->title));
+    watchdog('crm_core_activity', '@type: deleted %title.', array('@type' => $activity->type, '%title' => $activity->title));
     drupal_set_message(t('@type %title has been deleted.', array('@type' => crm_activity_type_name($activity->type), '%title' => $activity->title)));
   }
 
@@ -206,7 +206,7 @@ function crm_activity_form_delete_confirm_submit($form, &$form_state) {
  * Set proper page title.
  */
 function crm_activity_form_after_build(&$form, &$form_state) {
-  $crm_activity_type = crm_activity_types($form_state['crm_activity']->type);
+  $crm_activity_type = crm_core_activity_types($form_state['crm_core_activity']->type);
   if ($form_state['op'] == 'add') {
     drupal_set_title(t('Add new activity @label', array('@label' => $crm_activity_type->label)));
   }
@@ -217,12 +217,12 @@ function crm_activity_form_after_build(&$form, &$form_state) {
  * Activity view callback.
  */
 function crm_activity_view($activity) {
-  $content = entity_get_controller('crm_activity')->view(array($activity->activity_id => $activity), 'full');
+  $content = entity_get_controller('crm_core_activity')->view(array($activity->activity_id => $activity), 'full');
 
   // We don't want to run output through entity theming function.
   // To avoid this hack apply patch from http://drupal.org/node/1259916
   // Then we can load content in following way
-  // $content = entity_build_content('crm_activity', $activity);
-  unset($content['crm_activity'][$activity->activity_id]['#theme']);
+  // $content = entity_build_content('crm_core_activity', $activity);
+  unset($content['crm_core_activity'][$activity->activity_id]['#theme']);
   return $content;
 }

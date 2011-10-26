@@ -1,5 +1,5 @@
 ; $Id$
-name = Activity
+name = CRM Core Activity
 description = Provide activity entity.
 package = CRM
 version = VERSION
@@ -23,18 +23,18 @@ dependencies[] = date_views
 ; =======================
 
 ; Base Files
-files[] = crm_activity.module
-files[] = crm_activity.install
-files[] = crm_activity.admin.inc
+files[] = crm_core_activity.module
+files[] = crm_core_activity.install
+files[] = crm_core_activity.admin.inc
 
 ; Fields
-files[] = crm_activity.fields.inc
+files[] = crm_core_activity.fields.inc
 
 ; Module includes
 ;files[] = includes/crm_contact.controller.inc
 
 ; Views include
-;files[] = views/crm_activity.views.inc
+;files[] = views/crm_core_activity.views.inc
 
 ; Views handlers
-files[] = views/handlers/crm_activity_handler_field_links.inc
+files[] = views/handlers/crm_core_activity_handler_field_links.inc

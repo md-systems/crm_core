@@ -4,7 +4,7 @@
  * Provides views handlers for View, Edit, Delete links.
  */
 
-class crm_activity_handler_field_link extends views_handler_field {
+class crm_core_activity_handler_field_link extends views_handler_field {
   function construct() {
     parent::construct();
 
@@ -42,7 +42,7 @@ class crm_activity_handler_field_link extends views_handler_field {
   }
 }
 
-class crm_activity_handler_field_link_edit extends crm_activity_handler_field_link {
+class crm_core_activity_handler_field_link_edit extends crm_core_activity_handler_field_link {
   function option_definition() {
     $options = parent::option_definition();
 
@@ -75,7 +75,7 @@ class crm_activity_handler_field_link_edit extends crm_activity_handler_field_li
   }
 }
 
-class crm_activity_handler_field_link_delete extends crm_activity_handler_field_link_edit {
+class crm_core_activity_handler_field_link_delete extends crm_core_activity_handler_field_link_edit {
   function render($values) {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('view');
     $activity_id = $this->get_value($values, 'activity_id');

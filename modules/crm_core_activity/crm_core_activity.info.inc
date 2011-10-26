@@ -3,11 +3,11 @@
 /**
  * Implements hook_property_info().
  */
-function crm_activity_entity_property_info() {
+function crm_core_activity_entity_property_info() {
   $info = array();
 
   // Add meta-data about crm_activity properties.
-  $properties = &$info['crm_activity']['properties'];
+  $properties = &$info['crm_core_activity']['properties'];
 
   $properties['activity_id'] = array(
     'label' => t('Activity ID'),
@@ -21,7 +21,7 @@ function crm_activity_entity_property_info() {
     'type' => 'token',
     'setter callback' => 'entity_property_verbatim_set',
     'setter permission' => 'administer site configuration',
-    'options list' => 'crm_activity_type_name',
+    'options list' => 'crm_core_activity_type_name',
     'required' => TRUE,
     'schema field' => 'type',
   );
@@ -55,13 +55,13 @@ function crm_activity_entity_property_info() {
     'description' => t('The date the product was last updated.'),
     'type' => 'date',
     'setter callback' => 'entity_property_verbatim_set',
-    'setter permission' => 'dminister site configuration',
+    'setter permission' => 'Administer site configuration',
     'schema field' => 'changed',
   );
 
 
   // Metadata of Activity Type.
-  $properties = &$info['crm_activity_type']['properties'];
+  $properties = &$info['crm_core_activity_type']['properties'];
 
   $properties['id'] = array(
     'label' => t('Activity Type ID'),
