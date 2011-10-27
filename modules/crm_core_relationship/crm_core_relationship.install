@@ -38,7 +38,7 @@ function crm_core_relationship_install() {
   );
   foreach ($relation_types_info as $relation_type_info) {
     $relation_type = relation_type_create($relation_type_info);
-    // relation_type_save($relation_type);
+    relation_type_save($relation_type);
   }
 }
 

@@ -6,9 +6,21 @@
  * @param $crm_core_contact
  *   Entity object of crm_core_contact type.
  */
-function crm_core_relationship_ui_contact_relationships($crm_core_contact) {
-  return "This is a stub";
-}
+function crm_core_relationship_ui_contact_relationships($crm_contact) {
+  
+  // query all existing relation for contact entity
+  $query = relation_query('crm_core_contact', $crm_contact->contact_id);
+  $results = $query->execute();
+  foreach ($results as $_relationship) {
+    // load the relation entity and attach it to the view
+    $relationship = relation_load($_relationship->rid, $_relationship->vid);
+    
+    // we have the relation entity loaded, we want to alter how it is viewed.
+    $relationships[] = field_attach_view('relation', $relationship, 'full');
+  }
+  
+  return (isset($relationships)) ? $relationships : 'No relationships';
+} 
 
 /**
  * Return a list of links to add relationship for specific CRM contact.

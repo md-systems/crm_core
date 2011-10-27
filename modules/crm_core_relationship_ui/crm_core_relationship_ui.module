@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Implements hook_menu()
  */
@@ -72,6 +71,50 @@ function crm_core_relationship_ui_menu() {
   );
 
   return $items;
+}
+
+/**
+ * Implements hook_field_formatter_info_alter
+ */
+function crm_core_relationship_ui_field_formatter_info_alter(&$info) {
+  // we will add our own field formatter
+  // for display relationships
+  $info['contact_relationship'] = array(
+    'label' => t('Related Contact'),
+    'field types' => array('relation_endpoint'),
+    'module' => 'crm_core_relationship_ui',
+  );
+}
+
+/**
+ * Implements hook_field_formatter_view
+ */
+function crm_core_relationship_ui_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+   switch ($display['type']) {
+    case 'contact_relationship':
+    default:
+    // getting the contact id from the url
+    $current_contact_id = arg(2);
+    $related_contact_id = ($items[1]['entity_id'] == $current_contact_id) ? $items[0]['entity_id'] : $items[1]['entity_id'];
+    $related_contact = crm_core_contact_load($related_contact_id);
+    $contact_label = entity_label('crm_core_contact', $related_contact);
+    $relationship_type = ($items[1]['entity_id'] == $current_contact_id) ? crm_core_relationship_get_type_label($entity, TRUE) : crm_core_relationship_get_type_label($entity);
+    $created = date('Y-m-d H:i:s', $entity->created);
+    $related_contact_uri = entity_uri('crm_core_contact', $related_contact); 
+    
+    $rows[] = array(
+      l($contact_label, $related_contact_uri['path'], $related_contact_uri['options']),
+      $relationship_type,
+      $created,
+    );
+      $headers = array('Related Contact', 'Relationship Type', 'Created');
+      return array(
+        '#theme' => 'table',
+        '#header' => $headers,
+        '#rows' => $rows,
+      );
+    break;  
+  }
 }
 
 /**

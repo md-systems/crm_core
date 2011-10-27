@@ -29,7 +29,6 @@ function crm_core_relationship_permission() {
   );
 }
 
-
 /**
  * Return contact types available for specific relationship type.
  *
@@ -141,4 +140,24 @@ function crm_core_relationship_is_contact_bundles($bundles) {
     }
   }
   return true;
+}
+
+/**
+ * Return a list of relatinships for this contact.
+ *
+ * @param $crm_core_contact
+ *   Entity object of crm_core_contact type.
+ */
+/**
+ * http://drupal.org/node/1318856
+ */
+function crm_core_relationship_get_type_label($relation, $reverse = FALSE) {
+  $type = relation_type_load($relation->relation_type);
+  
+  if ($type->directional == 0) {
+     return $type->label; 
+  } 
+  else {
+    return (!$reverse) ? $type->label : $type->reverse_label; 
+  }
 }
