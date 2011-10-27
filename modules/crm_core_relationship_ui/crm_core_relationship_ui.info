@@ -10,12 +10,7 @@ core = 7.x
 ; =======================
 
 ; Core Dependencies
-dependencies[] = crm
 dependencies[] = crm_core_relationship
-
-; Contrib Dependencies
-dependencies[] = relation
-
 
 ; =======================
 ; Module Files
