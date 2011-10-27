@@ -9,7 +9,8 @@
  * Implements hook_install().
  */
 function crm_install() {
-  if (!field_info_field('endpoints')) {
+  $existing = field_read_field('endpoints', array('include_inactive' => TRUE));
+  if (empty($existing)) {
     $field = array(
       'field_name' => 'endpoints',
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
