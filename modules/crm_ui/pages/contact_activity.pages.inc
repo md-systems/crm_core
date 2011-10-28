@@ -15,7 +15,7 @@ function crm_core_contact_activity() {
  * @param type $contact
  * @param type $type
  */
-function crm_activity_entity_ui_get_form_wrapper($contact, $type) {
+function crm_core_activity_entity_ui_get_form_wrapper($contact, $type) {
   global $user;
   // Default empty Activity.
   $values = array(
@@ -100,7 +100,7 @@ function crm_core_activity_form($form, &$form_state, $activity) {
 /**
  * Validation callback for crm_activity_form.
  */
-function crm_activity_form_validate($form, &$form_state) {
+function crm_core_activity_form_validate($form, &$form_state) {
   $activity = $form_state['crm_core_activity'];
 
   // Ensure that contact set in $activity is present in values. We create activity
@@ -129,7 +129,7 @@ function crm_activity_form_validate($form, &$form_state) {
 /**
  * Submit callback for crm_activity_form.
  */
-function crm_activity_form_submit($form, &$form_state) {
+function crm_core_activity_form_submit($form, &$form_state) {
   $activity = $form_state['crm_core_activity'];
 
   $activity->title = $form_state['values']['title'];
@@ -162,7 +162,7 @@ function crm_activity_form_submit($form, &$form_state) {
  *
  * Redirect to delete confirmation page.
  */
-function crm_activity_form_submit_delete($form, &$form_state) {
+function crm_core_activity_form_submit_delete($form, &$form_state) {
   $destination = array();
   if (isset($_GET['destination'])) {
     $destination = drupal_get_destination();
@@ -172,7 +172,7 @@ function crm_activity_form_submit_delete($form, &$form_state) {
   $form_state['redirect'] = array('crm/activity/' . $activity->activity_id . '/delete', array('query' => $destination));
 }
 
-function crm_activity_form_delete_confirm($form, &$form_state, $activity) {
+function crm_core_activity_form_delete_confirm($form, &$form_state, $activity) {
   $form_state['activity'] = $activity;
   // Always provide entity id in the same form key as in the entity edit form.
   $form['activity_id'] = array('#type' => 'value', '#value' => $activity->activity_id);

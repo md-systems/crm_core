@@ -154,7 +154,7 @@ function crm_ui_menu() {
     $items['crm/contact/%crm_core_contact/activity/add/' . $type] = array(
       'title' => 'Add Activity',
       'description' => 'Add an activity to this contact',
-      'page callback' => 'crm_activity_entity_ui_get_form_wrapper',
+      'page callback' => 'crm_core_activity_entity_ui_get_form_wrapper',
       'page arguments' => array(2, 5),
       'access callback' => 'crm_core_activity_create_access',
       'access arguments' => array(2, 5),
