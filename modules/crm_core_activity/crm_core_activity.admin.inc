@@ -27,7 +27,7 @@ function crm_core_activity_type_form($form, &$form_state, $crm_activity_type, $o
     '#maxlength' => 32,
     '#disabled' => $crm_activity_type->isLocked() && $op != 'clone',
     '#machine_name' => array(
-      'exists' => 'crm_activity_types',
+      'exists' => 'crm_core_activity_types',
       'source' => array('label'),
     ),
     '#description' => t('A unique machine-readable name for this profile type. It must only contain lowercase letters, numbers, and underscores.'),

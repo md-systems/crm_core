@@ -225,7 +225,7 @@ function crm_core_activity_type_name($type_name = NULL) {
  *
  * @see entity_ui_get_form().
  */
-function crm_ore_activity_forms($form_id, $args) {
+function crm_core_activity_forms($form_id, $args) {
   $forms = array();
 
   // Check whether it is crm_activity form.

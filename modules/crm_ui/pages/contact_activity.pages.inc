@@ -38,7 +38,7 @@ function crm_activity_entity_ui_get_form_wrapper($contact, $type) {
 /**
  * Form builder for CRM Activity forms.
  */
-function crm_activity_form($form, &$form_state, $activity) {
+function crm_core_activity_form($form, &$form_state, $activity) {
   // Ensure this include file is loaded when the form is rebuilt from the cache.
   $form_state['build_info']['file'] = drupal_get_path('module', 'crm_ui') . '/pages/contact_activity.pages.inc';
 
@@ -188,13 +188,13 @@ function crm_activity_form_delete_confirm($form, &$form_state, $activity) {
 /**
  * Execute node deletion.
  */
-function crm_activity_form_delete_confirm_submit($form, &$form_state) {
+function crm_core_activity_form_delete_confirm_submit($form, &$form_state) {
   if ($form_state['values']['confirm']) {
     $activity = $form_state['activity'];
     crm_core_activity_delete($activity);
 
     watchdog('crm_core_activity', '@type: deleted %title.', array('@type' => $activity->type, '%title' => $activity->title));
-    drupal_set_message(t('@type %title has been deleted.', array('@type' => crm_activity_type_name($activity->type), '%title' => $activity->title)));
+    drupal_set_message(t('@type %title has been deleted.', array('@type' => crm_core_activity_type_name($activity->type), '%title' => $activity->title)));
   }
 
   $form_state['redirect'] = 'crm/contact';
@@ -205,7 +205,7 @@ function crm_activity_form_delete_confirm_submit($form, &$form_state) {
  *
  * Set proper page title.
  */
-function crm_activity_form_after_build(&$form, &$form_state) {
+function crm_core_activity_form_after_build(&$form, &$form_state) {
   $crm_activity_type = crm_core_activity_types($form_state['crm_core_activity']->type);
   if ($form_state['op'] == 'add') {
     drupal_set_title(t('Add new activity @label', array('@label' => $crm_activity_type->label)));
@@ -216,7 +216,7 @@ function crm_activity_form_after_build(&$form, &$form_state) {
 /**
  * Activity view callback.
  */
-function crm_activity_view($activity) {
+function crm_core_activity_view($activity) {
   $content = entity_get_controller('crm_core_activity')->view(array($activity->activity_id => $activity), 'full');
 
   // We don't want to run output through entity theming function.
