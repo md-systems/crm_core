@@ -30,6 +30,20 @@ function crm_core_relationship_permission() {
 }
 
 /**
+ * Implements hook crm_core_contact_delete
+ */
+function crm_core_relationship_crm_core_contact_delete($crm_core_contact) {
+  // delete the relationship for a contact when the contact is deleted
+  $query = relation_query('crm_core_contact', $crm_core_contact->contact_id);
+  $results = $query->execute();    
+  
+  // delete each relationship
+  foreach ($results as $relation) {
+      relation_delete($relation->rid);
+  }
+}
+
+/**
  * Return contact types available for specific relationship type.
  *
  * @param $relation_type
