@@ -92,6 +92,29 @@ function crm_core_activity_entity_info_alter(&$entity_info) {
 }
 
 /**
+ * Implements hook_crm_core_contact_delete.
+ */
+function crm_core_activity_crm_core_contact_delete($crm_core_contact) {
+
+  // query the activities that belongs to the contact
+  // @todo for activities involving other contacts, it might be wise to just 
+  // delete the contact from the participant list?
+  $query = new EntityFieldQuery;
+  $results = $query
+    ->entityCondition('entity_type', 'crm_core_activity')
+    ->fieldCondition('field_activity_participants', 'target_id', $crm_core_contact->contact_id, '=')
+    ->fieldCondition('field_activity_participants', 'target_type', 'crm_core_contact', '=')
+    ->execute();
+  
+  if(empty($results)) {
+    return; 
+  } 
+  foreach($results['crm_core_activity'] as $crm_core_activity) {
+    crm_core_activity_delete($crm_core_activity); 
+  }
+}
+
+/**
  * Implements hook_permission().
  */
 function crm_core_activity_permission() {
@@ -167,6 +190,9 @@ function crm_core_activity_save($activity) {
 
 function crm_core_activity_delete($activity) {
   crm_core_activity_delete_multiple(array($activity->activity_id));
+  // create a hook for deleting an activity
+  module_invoke_all('crm_core_activity_delete', $activity);
+  field_attach_delete('crm_core_activity', $activity);
 }
 
 function crm_core_activity_delete_multiple($activity_ids) {
