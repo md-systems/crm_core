@@ -12,10 +12,11 @@ function crm_core_contact_ui_menu() {
    */
   $items['admin/structure/crm/contact-types'] = array(
     'title' => 'Contact Types',
+    'description' => 'Manage contact types.',
     'page callback' => 'crm_core_contact_ui_types_overview',
     'access arguments' => array('administer contact types'),
     'file' => 'crm_core_contact_ui.admin.inc',
-    //'type' => MENU_LOCAL_TASK,
+    'type' => MENU_LOCAL_TASK,
     'weight' => -10,
   );
   $items['admin/structure/crm/contact-types/add'] = array(
