@@ -5,7 +5,6 @@ version = VERSION
 core = 7.x
 configure = admin/config/crm
 
-
 ; =======================
 ; Dependencies
 ; =======================
@@ -13,11 +12,9 @@ configure = admin/config/crm
 ; Contrib Dependencies
 dependencies[] = relation
 
-
 ; =======================
 ; Module Files
 ; =======================
 
-; Base Files
-files[] = crm.module
-files[] = crm.install
+; Test
+files[] = tests/crm_base.test

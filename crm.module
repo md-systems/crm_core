@@ -13,7 +13,7 @@
  *
  * @param string $entity_type
  *
- * @return 
+ * @return
  *   An associative array of entity permissions
  */
 function crm_entity_access_permissions($entity_type) {

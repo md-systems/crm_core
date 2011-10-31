@@ -180,7 +180,7 @@ function crm_ui_menu() {
     'access arguments' => array(4, 'edit'),
 
   );
-  
+
   $items['admin/structure/crm/contact-types/%crm_core_contact_type/disable'] = array(
     'title' => 'Disable',
     'page callback' => 'drupal_get_form',
@@ -192,7 +192,7 @@ function crm_ui_menu() {
     'file' => 'pages/contact_types.pages.inc',
     'weight' => 8,
   );
-  
+
   $items['admin/structure/crm/contact-types/%crm_core_contact_type/enable'] = array(
     'title' => 'Enable',
     'page callback' => 'drupal_get_form',
@@ -238,6 +238,18 @@ function crm_ui_menu_alter(&$items) {
   $items['crm/contact/%/activity']['title'] = t('Activity');
   $items['crm/contact/%/activity']['type'] = MENU_LOCAL_TASK;
   $items['crm/contact/%/activity']['context'] = MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function crm_ui_permission() {
+  return array(
+    'view crm dashboard' => array(
+      'title' => t('View CRM dashboard'),
+      'description' => t('Use dashboard.'),
+    ),
+  );
 }
 
 /**
