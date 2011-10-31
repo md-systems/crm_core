@@ -3,8 +3,6 @@ description = Drupal CRM basic functionality
 package = CRM
 version = VERSION
 core = 7.x
-configure = admin/config/crm
-
 
 ; =======================
 ; Dependencies

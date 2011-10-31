@@ -3,6 +3,7 @@ description = User Interface for DropCRM.
 package = CRM
 version = VERSION
 core = 7.x
+configure = admin/config/crm
 
 
 ; =======================
@@ -11,7 +12,6 @@ core = 7.x
 
 ; Core Dependencies
 dependencies[] = crm
-dependencies[] = crm_core_contact
 dependencies[] = crm_core_activity
 
 
