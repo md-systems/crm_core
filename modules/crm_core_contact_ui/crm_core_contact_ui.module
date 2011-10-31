@@ -193,3 +193,49 @@ function crm_ui_menu() {
 
   return $items;
 }
+
+
+/**
+ * Implements hook_menu_alter().
+ */
+function crm_core_contact_ui_menu_alter(&$items) {
+  // Transform the field UI tabs into contextual links.
+  $items['admin/structure/crm/contact-types/%crm_core_contact_type/fields']['context'] = MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE;
+  $items['admin/structure/crm/contact-types/%crm_core_contact_type/display']['context'] = MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE;
+}
+
+
+/**
+ * Implements hook_admin_paths().
+ */
+function crm_core_contact_ui_admin_paths() {
+  $paths = array(
+    'crm/admin/contact/types' => TRUE,
+    'crm/admin/contact/types/*' => TRUE,
+  );
+
+  return $paths;
+}
+
+
+/**
+ * Implemenets hook_theme().
+ */
+function crm_core_contact_ui_theme() {
+  $theme = array(
+    'crm_core_contact_ui_type_overview' => array(
+      'variables' => array('contact_type' => NULL),
+      'file' => 'theme/crm_core_contact_ui_type.theme.inc',
+    ),
+    'crm_core_contact_ui_add_list' => array(
+      'variables' => array('content' => array()),
+      'file' => 'theme/crm_core_contact_ui.theme.inc',
+    ),
+    'crm_core_contact_ui_revsions' => array(
+      'variables' => array('contact_revisions' => array()),
+      'file' => 'theme/crm_core_contact_ui.theme.inc',
+    ),
+  );
+
+  return $theme;
+}
