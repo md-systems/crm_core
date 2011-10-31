@@ -7,7 +7,8 @@
  *   Entity object of crm_core_contact type.
  */
 function crm_core_relationship_ui_contact_relationships($crm_contact) {
-  
+  drupal_set_title(t('Relationships of !contact', array('!contact' => crm_core_contact_title($crm_contact))));
+
   // query all existing relation for contact entity
   $query = relation_query('crm_core_contact', $crm_contact->contact_id);
   $results = $query->execute();

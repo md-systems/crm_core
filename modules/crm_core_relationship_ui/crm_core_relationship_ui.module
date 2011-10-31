@@ -20,7 +20,7 @@ function crm_core_relationship_ui_menu() {
   );
 
   $items['crm/contact/%crm_core_contact/relationships/add'] = array(
-    'title' => 'Add Contact Relationship',
+    'title' => 'Add Relationship',
     'description' => 'Add a relationship to this contact',
     'page callback' => 'crm_core_relationship_ui_add_relationship',
     'page arguments' => array(2),
@@ -54,6 +54,7 @@ function crm_core_relationship_ui_menu() {
    */
   $items['admin/structure/crm/relationship-types'] = array(
     'title' => 'Relationship types',
+    'description' => 'Manage relationship types.',
     'page callback' => 'crm_core_relationship_ui_types_overview',
     'access arguments' => array('administer relation types'),
     'file' => 'crm_core_relationship_ui.admin.inc',
