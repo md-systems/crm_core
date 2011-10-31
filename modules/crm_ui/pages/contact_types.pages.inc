@@ -267,7 +267,7 @@ function crm_core_contact_type_delete_confirm($form, &$form_state, $contact_type
  */
 function crm_core_contact_type_delete_confirm_validate($form, &$form_state) {
   
-  $crm_core_contact = $form_state['contact_type'];
+  $crm_core_contact_type = $form_state['contact_type'];
   // check one more time to see if the contact type can be deleted
   $error = null;
   
