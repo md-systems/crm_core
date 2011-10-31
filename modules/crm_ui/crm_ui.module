@@ -27,9 +27,9 @@ function crm_ui_menu() {
   $items['admin/structure/crm'] = array(
     'title' => 'CRM',
     'description' => 'Manage contact types, activity types, and contact relationship types.',
-    'page callback' => 'crm_core_contact_types_overview',
-    'access arguments' => array('administer contact types'),
-    'file' => 'pages/contact_types.pages.inc',
+		'page callback' => 'crm_ui_admin_dashboard',
+		'access arguments' => array('access administration pages'),
+    'file' => 'pages/crm_ui.pages.inc',
   );
 
   return $items;
@@ -40,6 +40,7 @@ function crm_ui_menu() {
  */
 function crm_ui_menu_alter(&$items) {
   // Transform the field UI tabs into contextual links.
+  
   $items['admin/structure/crm/activity-types']['type'] = MENU_LOCAL_TASK;
 
   // Make Views menu item local task.
@@ -50,6 +51,7 @@ function crm_ui_menu_alter(&$items) {
   $items['crm/contact/%/activity']['title'] = t('Activity');
   $items['crm/contact/%/activity']['type'] = MENU_LOCAL_TASK;
   $items['crm/contact/%/activity']['context'] = MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE;
+
 }
 
 /**

@@ -14,38 +14,17 @@ function crm_dashboard() {
  * Page callback for CRM Administration dashboard.
  */
 function crm_ui_admin_dashboard() {
-  $build['contacts'] = array(
-    '#theme' => 'item_list__crm_ui_admin_dashboard',
-    '#title' => t('Contacts'),
-    '#items' => array(
-      'contact_types' => array(
-        'data' => l(t('Contact Types'), 'crm/admin/contact/types'),
-        'class' => array('admin-dashboard', 'contact-types'),
-        ),
-      ),
-  );
+  $local_tasks = menu_local_tasks();
+  $content = array();
+  foreach ($local_tasks['tabs']['output'] as $task) {
+    $content[] = $task['#link'];
+  }
 
-  $build['activities'] = array(
-    '#theme' => 'item_list__crm_ui_admin_dashboard',
-    '#title' => t('Activities'),
-    '#items' => array(
-      'activity_types' => array(
-        'data' => l(t('Activity Types'), 'crm/admin/activity/types'),
-        'class' => array('admin-dashboard', 'activity-types'),
-        ),
-      ),
-  );
-
-  $build['relationships'] = array(
-    '#theme' => 'item_list__crm_ui_admin_dashboard',
-    '#title' => t('Relationships'),
-    '#items' => array(
-      'contact_types' => array(
-        'data' => l(t('Relationship Types'), 'crm/admin/relationship/types'),
-        'class' => array('admin-dashboard', 'relationship-types'),
-        ),
-      ),
-  );
-  
-  return $build;
+  if ($content) {
+    $output = theme('admin_block_content', array('content' => $content));
+  }
+  else {
+    $output = t('You do not have any CRM Core items.');
+  }
+  return $output;
 }
