@@ -4,7 +4,7 @@
 /**
  * Implements hook_menu().
  */
-function crm_ui_menu() {
+function crm_core_contact_ui_menu() {
   $items = array();
 
   /*
@@ -15,7 +15,7 @@ function crm_ui_menu() {
     'page callback' => 'crm_core_contact_ui_types_overview',
     'access arguments' => array('administer contact types'),
     'file' => 'crm_core_contact_ui.admin.inc',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
+    //'type' => MENU_LOCAL_TASK,
     'weight' => -10,
   );
   $items['admin/structure/crm/contact-types/add'] = array(
@@ -85,13 +85,12 @@ function crm_ui_menu() {
    */
   $items['crm/contact/%crm_core_contact'] = array(
     'title' => 'Contact',
-    'page callback' => 'crm_core_contact_ui_view',
+    'page callback' => 'crm_core_contact_view',
     'page arguments' => array(2),
     'title callback' => 'crm_core_contact_title',
     'title arguments' => array(2),
     'access arguments' => array('view contacts'),
     'type' => MENU_NORMAL_ITEM,
-    'file' => 'crm_core_contact_ui.pages.inc',
   );
 
   $items['crm/contact/%crm_core_contact/view'] = array(
@@ -162,7 +161,6 @@ function crm_ui_menu() {
     );
   }
 
-
   /*
    * Contact Debug
    */
@@ -190,7 +188,7 @@ function crm_ui_menu() {
       'weight' => 100,
     );
   }
-
+  
   return $items;
 }
 
