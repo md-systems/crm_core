@@ -3,7 +3,6 @@ description = Provide contact entity.
 package = CRM
 version = VERSION
 core = 7.x
-configure = admin/structure/crm/contact-types
 
 
 ; =======================
