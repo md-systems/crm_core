@@ -101,7 +101,8 @@ function crm_ui_menu() {
       'description' => $contact_type->description,
       'page callback' => 'drupal_get_form',
       'page arguments' => array('crm_core_contact_form', crm_core_contact_type_new($type)),
-      'access arguments' => array('add contacts'),
+      'access callback' => 'crm_core_contact_access',
+      'access arguments' => array($contact_type, 'add'),
       'file' => 'pages/contact.pages.inc',
     );
   }

@@ -18,9 +18,10 @@ function crm_core_contact_views_default_views() {
   $view->core = 0;
   $view->api_version = '3.0-alpha1';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
+  
   /* Display: Defaults */
   $handler = $view->new_display('default', 'Defaults', 'default');
+  $handler->display->display_options['title'] = 'CRM Contact';
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
@@ -179,7 +180,12 @@ function crm_core_contact_views_default_views() {
   $handler->display->display_options['sorts']['changed']['table'] = 'crm_core_contact';
   $handler->display->display_options['sorts']['changed']['field'] = 'changed';
   $handler->display->display_options['sorts']['changed']['order'] = 'DESC';
-
+  /* Filter criterion: CRM Contact Types: Disabled contact type */
+  $handler->display->display_options['filters']['disabled']['id'] = 'disabled';
+  $handler->display->display_options['filters']['disabled']['table'] = 'crm_core_contact_type';
+  $handler->display->display_options['filters']['disabled']['field'] = 'disabled';
+  $handler->display->display_options['filters']['disabled']['value']['value'] = '0';
+  
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page_1');
   $handler->display->display_options['path'] = 'crm/contact';
