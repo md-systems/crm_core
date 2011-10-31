@@ -3,6 +3,7 @@ description = User Interface for relationships between contacts. Back end is Rel
 package = CRM
 version = VERSION
 core = 7.x
+configure = admin/structure/crm/relationship-types
 
 
 ; =======================
@@ -11,6 +12,7 @@ core = 7.x
 
 ; Core Dependencies
 dependencies[] = crm_core_relationship
+dependencies[] = crm_ui
 
 ; =======================
 ; Module Files
