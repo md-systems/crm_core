@@ -11,10 +11,13 @@ function crm_core_contact_types_overview() {
     t('Operations'),
   );
   $rows = array();
-
   foreach (crm_core_contact_types() as $type => $contact_type) {
     $links = menu_contextual_links('crm', 'admin/structure/crm/contact-types', array($type));
-
+    
+    // @todo: this might not be the best place to hide these
+    if ((bool) $contact_type->disabled) {
+      unset($links['crm-fields'], $links['crm-display']);  
+    }
     $rows[] = array(
       theme('crm_core_contact_type_overview', array('contact_type' => $contact_type)),
       theme('links', array('links' => $links, 'attributes' => array('class' => 'links operations'))),
@@ -27,6 +30,7 @@ function crm_core_contact_types_overview() {
     '#rows' => $rows,
     '#empty' => t('The are no contact types. <a href="@link">Add contact type</a>.', array('@link' => url('crm/admin/contact-types/manage'))),
   );
+  
 
   return $build;
 }
@@ -167,6 +171,58 @@ function crm_core_contact_type_form_submit($form, &$form_state) {
 }
 
 /**
+ * Given a contact type, present a form prompting for disabling of the contact type.
+ *
+ * @param $form
+ *  The confirmation form.
+ * @param $form_state
+ *  The state of the form.
+ * @param $contact_type
+ *  The machine readable name of the contact type to be deleted.
+ */
+function crm_core_contact_type_toggle_form($form, &$form_state, $contact_type, $toggle = 'disable') {
+  $form_state['contact_type'] = $contact_type;
+  
+  $form['op'] = array(
+    '#type' => 'value',
+    '#value' => check_plain($toggle),
+  );
+    
+  $question = t('Are you sure you want to @toggle this contact type?', array('@toggle' => $toggle));
+  $path = 'admin/structure/crm/contact-types';
+  
+  $description = '';
+  if($toggle == 'disable') {
+    $description = t('When a contact type is disabled, you cannot add any contacts to this contact type. You will also not be able to search for contacts of disabled contact type.');
+  }
+  
+  return confirm_form($form, $question, $path, $description, check_plain($toggle), 'Cancel', 'toggle_confirm');
+}
+
+/**
+ * Form submit handler: enable or disable a contact type
+ */
+function crm_core_contact_type_toggle_form_submit($form, &$form_state) {
+  
+  $crm_core_contact_type = $form_state['contact_type'];
+  
+  switch($form_state['values']['op']) {
+    case 'enable':
+      $crm_core_contact_type->disabled = 0;
+    break;
+    
+    case 'disable':
+    default:
+      $crm_core_contact_type->disabled = 1;
+    break;  
+  }
+  
+  crm_core_contact_type_save($crm_core_contact_type);
+  $form_state['redirect'] = 'admin/structure/crm/contact-types';
+  drupal_set_message(t('Contact type saved'));
+}
+
+/**
  * Given a contact type, present a form prompting for deletion of the contact type.
  *
  * @param $form
@@ -203,19 +259,45 @@ function crm_core_contact_type_delete_confirm($form, &$form_state, $contact_type
     '#submit' => $submit + array('crm_core_contact_type_delete_confirm_submit'),
   );
 
-  $form['#validate'][] = 'crm_core_contact_type_delete_confirm_validate';
-
   return $form;
 }
 
 /**
- * 
+ * Form validation callback
  */
- function crm_core_contact_type_delete_confirm_validate($form, &$form_state) {
-  $contact_type = $form_state['contact_type'];
-  if (!crm_core_contact_type_validate_unique($contact_type->type)) {
-    form_set_error('submit', t('This contact type does not exist'));
+function crm_core_contact_type_delete_confirm_validate($form, &$form_state) {
+  
+  $crm_core_contact = $form_state['contact_type'];
+  // check one more time to see if the contact type can be deleted
+  $error = null;
+  
+  if((bool) $crm_core_contact->locked) {
+    $error = t('The contact type is locked');  
   }
- }
+  
+  $count = db_query("SELECT count(*) FROM {crm_core_contact} WHERE `type` = :type", 
+  array(':type' => $crm_core_contact_type->type))->fetchField();
+  
+  if($count > 0) {
+    $error = t('Contacts of this type exists');
+  }
+  
+  if(isset($error)) {
+    form_set_error('message', t('Error: you cannot delete this contact type because @msg', array('@msg' => $error)));  
+  } 
+}
+
+
+/**
+ * Submission callback for contact type delete
+ */
+function crm_core_contact_type_delete_confirm_submit($form, &$form_state) {
+  $crm_core_contact_type = $form_state['contact_type'];
+  crm_core_contact_type_delete($crm_core_contact_type);
+  
+  $form_state['redirect'] = 'admin/structure/crm/contact-types';
+  drupal_set_message(t('Contact type deleted'));
+     
+}
 
 

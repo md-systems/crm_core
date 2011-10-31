@@ -15,6 +15,7 @@ function crm_core_contact_install() {
   $individual->type = 'individual';
   $individual->name = t('Individual');
   $individual->description = t('A single individual.');
+  $individual->locked = 1;
   $individual->is_new = TRUE;
   crm_core_contact_type_save($individual);
 
@@ -23,6 +24,7 @@ function crm_core_contact_install() {
   $organization->type = 'organization';
   $organization->name = t('Organization');
   $organization->description = t('A collection of individuals or other organizations that has additional contact data.');
+  $organization->locked = 1;
   $organization->is_new = TRUE;
   crm_core_contact_type_save($organization);
 
@@ -31,6 +33,7 @@ function crm_core_contact_install() {
   $household->type = 'household';
   $household->name = t('Household');
   $household->description = t('A collection of individuals generally located at the same residence.');
+  $household->locked = 1;
   $household->is_new = TRUE;
   crm_core_contact_type_save($household);
 }
@@ -181,6 +184,20 @@ function crm_core_contact_schema() {
       ),
       'custom' => array(
         'description' => 'A boolean indicating whether this type is defined by a module (FALSE) or by a user via Add content type (TRUE).',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+      ),
+      'disabled' => array(
+        'description' => 'A boolean indicating whether this type is disabled or not, disabled contact type contacts will not show up in the list of contacts',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+      ),
+      'locked' => array(
+        'description' => 'A boolean indicating whether this type is locked or not, locked contact type cannot be edited or disabled/deleted',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,

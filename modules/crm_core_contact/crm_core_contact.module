@@ -107,6 +107,75 @@ function crm_core_contact_label($entity) {
   return render($build_info['contact_name'][0]);
 }
 
+/**
+ * Check to see if a contact type is locked, can be disabled/deleted
+ *
+ * @param
+ * stdClass $crm_core_contact_type
+ * A fully loaded $crm_core_contact_type object
+ *
+ * string $op
+ * The operation being performed on the contact type to check for
+ * can be edit, delete
+ *
+ * @return
+ * bool TRUE if permission given/FALSE if permission denied
+ */
+function crm_core_contact_type_permission($crm_core_contact_type, $op = 'edit') {
+  
+  // first check drupal permission
+  if (!user_access('administer contact types')) {
+    return FALSE;  
+  }
+  
+  switch($op) {
+    case 'enable':
+      // only disabled contact type can be enabled
+      if ((bool) $crm_core_contact_type->disabled) {
+        return TRUE;  
+      }
+      else {
+        return FALSE;  
+      }
+    break;
+    case 'disable':
+      // locked contact type cannot be disabled
+      if ((bool) $crm_core_contact_type->locked) {
+        return FALSE;  
+      }
+      if ((bool) $crm_core_contact_type->disabled) {
+        return FALSE;  
+      }
+    break;
+    case 'delete':
+      // if contact type is locked, you can't delete it
+      if ((bool) $crm_core_contact_type->locked) {
+        return FALSE;  
+      }
+      // if contact instance of this contact type exist, you can't delete it
+      $count = db_query("SELECT count(*) FROM {crm_core_contact} WHERE `type` = :type", 
+      array(':type' => $crm_core_contact_type->type))->fetchField();
+      if ($count > 0) {
+        return FALSE;      
+      }
+    break;
+    case 'edit':
+    default:
+      // if the contact type is locked, you can't edit it.
+      if ((bool) $crm_core_contact_type->locked) {
+        return FALSE;  
+      }
+      
+      if ((bool) $crm_core_contact_type->disabled) {
+        return FALSE;  
+      }
+      
+    break;
+  }
+  
+  return TRUE;
+  
+}
 
 /**
  * Returns an array of contact type objects keyed by type.
@@ -219,6 +288,23 @@ function crm_core_contact_type_save($contact_type) {
   return $op;
 }
 
+/**
+ * Delete a contact type
+ *
+ * @param stdClass $crm_core_contact_type
+ * A loaded $crm_core_contact_type object
+ *
+ */
+function crm_core_contact_type_delete($crm_core_contact_type) {
+  
+  // delete all the field instance of the bundle
+  field_attach_delete_bundle('crm_core_contact', $crm_core_contact_type->type);
+  
+  db_delete('crm_core_contact_type')
+  ->condition('type', check_plain($crm_core_contact_type->type))
+  ->execute();
+}
+
 
 /** 
  * Sets the default contact type
@@ -244,6 +330,8 @@ function crm_core_contact_type_set_defaults($info = array()) {
     $type->name = '';
     $type->description = '';
     $type->custom = 0;
+    $type->disabled = 0;
+    $type->locked = 0;
     $type->modified = 0;
     $type->is_new = 1;
   }
@@ -257,7 +345,6 @@ function crm_core_contact_type_set_defaults($info = array()) {
 
   return $new_type;
 }
-
 
 /**
  * Initialize new contact type with basic fields.
