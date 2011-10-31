@@ -3,7 +3,7 @@ description = User Interface for DropCRM.
 package = CRM
 version = VERSION
 core = 7.x
-configure = admin/config/crm
+configure = admin/structure/crm
 
 
 ; =======================
