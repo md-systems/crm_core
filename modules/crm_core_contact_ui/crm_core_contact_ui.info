@@ -1,0 +1,21 @@
+name = CRM Core Contact UI
+description = User Interface for CRM Core contacts.
+package = CRM
+version = VERSION
+core = 7.x
+
+
+; =======================
+; Dependencies
+; =======================
+
+; Core Dependencies
+dependencies[] = crm_core_contact
+
+
+; =======================
+; Module Files
+; =======================
+
+; Base Files
+files[] = crm_core_contact.module
