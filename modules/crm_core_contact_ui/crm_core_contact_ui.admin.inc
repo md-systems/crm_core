@@ -105,13 +105,13 @@ function crm_core_contact_ui_type_form($form, &$form_state, $contact_type) {
     '#rows' => 3,
   );
 
-  $form['contact_type']['help'] = array(
-    '#type' => 'textarea',
-    '#title' => t('Explanation or submission guidelines'),
-    '#description' => t('This text will be displayed at the top of the page when creating or editing contacts of this type.'),
-    '#default_value' => (isset($contact_type->help)) ? $contact_type->help : '',
-    '#rows' => 3,
-  );
+//  $form['contact_type']['help'] = array(
+//    '#type' => 'textarea',
+//    '#title' => t('Explanation or submission guidelines'),
+//    '#description' => t('This text will be displayed at the top of the page when creating or editing contacts of this type.'),
+//    '#default_value' => (isset($contact_type->help)) ? $contact_type->help : '',
+//    '#rows' => 3,
+//  );
 
   $form['actions'] = array(
     '#type' => 'container',
@@ -140,7 +140,7 @@ function crm_core_contact_ui_type_form($form, &$form_state, $contact_type) {
 
 
 /**
- * Validation callback for commerce_product_product_type_form().
+ * Validation callback
  */
 function crm_core_contact_ui_type_form_validate($form, &$form_state) {
   $contact_type = $form_state['contact_type'];
@@ -170,6 +170,7 @@ function crm_core_contact_ui_type_form_submit($form, &$form_state) {
   crm_core_contact_type_save($contact_type);
 
   // Redirect based on the button clicked.
+  $form_state['redirect'] = 'admin/structure/crm/contact-types/';
   drupal_set_message(t('Contact type saved.'));
 }
 
@@ -274,7 +275,7 @@ function crm_core_contact_ui_type_delete_confirm($form, &$form_state, $contact_t
  */
 function crm_core_contact_ui_type_delete_confirm_validate($form, &$form_state) {
   
-  $crm_core_contact = $form_state['contact_type'];
+  $crm_core_contact_type = $form_state['contact_type'];
   // check one more time to see if the contact type can be deleted
   $error = null;
   

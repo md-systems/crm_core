@@ -97,6 +97,35 @@ function crm_core_contact_views_data() {
       'handler' => 'views_handler_filter_date',
     ),
   );
+  
+  $data['crm_core_contact_type']['table']['group'] = t('CRM Contact Types');
+
+  $data['crm_core_contact_type']['table']['base'] = array(
+    'field' => 'type',
+    'title' => t('CRM Contact Type'),
+    'help' => t('CRM Contact Types'),
+  );
+
+  // contact type table join for filtering purposes
+  $data['crm_core_contact_type']['table']['join']['crm_core_contact'] = array(
+      'left_field' => 'type',
+      'field' => 'type',
+  );
+  
+  $data['crm_core_contact_type']['disabled'] = array(
+  'title' => t('Disabled contact type'),
+    'help' => t('If the contact type is disabled, mainly for filtering purposes'),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),  
+  );
+  
 
   $data['crm_core_contact_revision']['table']['group'] = t('CRM Contacts Revisions');
 

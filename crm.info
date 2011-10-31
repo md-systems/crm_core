@@ -11,11 +11,9 @@ core = 7.x
 ; Contrib Dependencies
 dependencies[] = relation
 
-
 ; =======================
 ; Module Files
 ; =======================
 
-; Base Files
-files[] = crm.module
-files[] = crm.install
+; Test
+files[] = tests/crm_base.test

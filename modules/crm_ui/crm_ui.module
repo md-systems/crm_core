@@ -55,6 +55,18 @@ function crm_ui_menu_alter(&$items) {
 }
 
 /**
+ * Implements hook_permission().
+ */
+function crm_ui_permission() {
+  return array(
+    'view crm dashboard' => array(
+      'title' => t('View CRM dashboard'),
+      'description' => t('Use dashboard.'),
+    ),
+  );
+}
+
+/**
  * Implements hook_admin_paths().
  */
 function crm_ui_admin_paths() {

@@ -14,7 +14,7 @@ function crm_core_contact_ui_form_wrapper($contact) {
 function crm_core_contact_ui_add_page() {
   $item = menu_get_item();
   
-  $types = crm_core_contact_types();
+  $types = crm_core_contact_types(TRUE);
   $content = array();
   foreach ($types as $type) {
     $content[] = menu_get_item($item['href'] . '/' . $type->type);

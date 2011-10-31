@@ -77,6 +77,34 @@ function crm_core_contact_permission() {
   );
 }
 
+/**
+ * Check permission for various contact operations
+ * 
+ * @param stdClass $crm_core_contact_type
+ * A crm_core_contact_type object
+ *
+ * @return
+ * bool TRUE if access is granted/FALSE is access is denied
+ */
+function crm_core_contact_access($crm_core_contact_type, $op = 'add') {
+  switch($op) {
+    case 'add':
+    default:
+     // when adding a contact, check to see if the contact type is disabled
+      if (!user_access('add contacts')) {
+        return FALSE;
+      }
+      if ((bool) $crm_core_contact_type->disabled) {
+        return FALSE;  
+      }
+    break;
+  }
+  
+  return TRUE;
+  
+}
+
+
 
 /**
  * Implements hook_views_api().
@@ -179,14 +207,27 @@ function crm_core_contact_type_permission($crm_core_contact_type, $op = 'edit') 
 
 /**
  * Returns an array of contact type objects keyed by type.
+ *
+ * @param 
+ * bool $active
+ * TRUE if we only want to select active contact types
+ * FALSE if we want to select all contact types
+ *
+ * @return 
+ * array $contact_types
+ * An numeric index array of contact types (machine names)
  */
-function crm_core_contact_types() {
+function crm_core_contact_types($active = FALSE) {
   // First check the static cache for a contact types array.
   $contact_types = &drupal_static(__FUNCTION__);
 
   // If it did not exist, fetch the types now.
   if (!isset($contact_types)) {
-    $contact_types = db_query('SELECT * FROM {crm_core_contact_type}')->fetchAllAssoc('type');
+    if ($active) {
+      $contact_types = db_query('SELECT * FROM {crm_core_contact_type} WHERE disabled = 0')->fetchAllAssoc('type');
+    } else {
+      $contact_types = db_query('SELECT * FROM {crm_core_contact_type}')->fetchAllAssoc('type');
+    }
   }
 
   return $contact_types;
