@@ -40,6 +40,8 @@ function crm_ui_menu() {
  */
 function crm_ui_menu_alter(&$items) {
   // Transform the field UI tabs into contextual links.
+  
+  $items['admin/structure/crm/activity-types']['type'] = MENU_LOCAL_TASK;
 
   // Make Views menu item local task.
   $items['crm/contact/%/activity/add']['type'] = MENU_LOCAL_ACTION;
@@ -104,16 +106,6 @@ function crm_ui_block_view($delta) {
   return array(
     'subject' => $sub_func(),
     'content' => $con_func(),
-  );
-}
-
-/**
- * Implements hook_views_api().
- */
-function crm_ui_views_api() {
-  return array(
-    'api' => 3,
-    'path' => drupal_get_path('module', 'crm_ui') . '/includes/views',
   );
 }
 

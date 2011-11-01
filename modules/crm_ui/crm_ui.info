@@ -12,7 +12,6 @@ configure = admin/structure/crm
 
 ; Core Dependencies
 dependencies[] = crm
-dependencies[] = crm_core_activity
 
 
 ; =======================
@@ -21,6 +20,3 @@ dependencies[] = crm_core_activity
 
 ; Base Files
 files[] = crm_ui.module
-
-; Views Handlers
-files[] = includes/views/handlers/views_handler_field_activity_type.inc

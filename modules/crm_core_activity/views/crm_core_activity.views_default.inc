@@ -3,7 +3,7 @@
 /**
  * Implements hook_views_default_views().
  */
-function crm_ui_views_default_views() {
+function crm_core_activity_views_default_views() {
   $view = new view;
   $view->name = 'crm_activity_types';
   $view->description = '';
