@@ -66,6 +66,10 @@ function crm_core_contact_permission() {
       'title' => t('View Contacts'),
       'description' => t('Allows the user to view list of CRM contacts.'),
     ),
+    'view disabled contact types' => array(
+      'title' => t('View Disabled Contact Types'),
+      'description' => t('Allows the user to view disabled contact types'),
+    ),
     'add contacts' => array(
       'title' => t('Add Contacts'),
       'description' => t('Allows the user to add contact to the CRM.'),
