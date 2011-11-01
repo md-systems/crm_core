@@ -144,7 +144,7 @@ function crm_ui_views_default_views() {
   $view->core = 7;
   $view->api_version = '3.0-alpha1';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
+  
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
   $handler->display->display_options['title'] = 'Activities by contact';
@@ -209,6 +209,35 @@ function crm_ui_views_default_views() {
   $handler->display->display_options['fields']['activity_id']['empty_zero'] = 0;
   $handler->display->display_options['fields']['activity_id']['hide_alter_empty'] = 0;
   $handler->display->display_options['fields']['activity_id']['format_plural'] = 0;
+  /* Field: Activity: Participants */
+  $handler->display->display_options['fields']['field_activity_participants']['id'] = 'field_activity_participants';
+  $handler->display->display_options['fields']['field_activity_participants']['table'] = 'field_data_field_activity_participants';
+  $handler->display->display_options['fields']['field_activity_participants']['field'] = 'field_activity_participants';
+  $handler->display->display_options['fields']['field_activity_participants']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['field_activity_participants']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['field_activity_participants']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['field_activity_participants']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['field_activity_participants']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['field_activity_participants']['alter']['trim_whitespace'] = 0;
+  $handler->display->display_options['fields']['field_activity_participants']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['field_activity_participants']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['field_activity_participants']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['field_activity_participants']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['field_activity_participants']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['field_activity_participants']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['field_activity_participants']['element_label_colon'] = 1;
+  $handler->display->display_options['fields']['field_activity_participants']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['field_activity_participants']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['field_activity_participants']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['field_activity_participants']['hide_alter_empty'] = 0;
+  $handler->display->display_options['fields']['field_activity_participants']['click_sort_column'] = 'target_id';
+  $handler->display->display_options['fields']['field_activity_participants']['settings'] = array(
+    'link' => 0,
+  );
+  $handler->display->display_options['fields']['field_activity_participants']['group_rows'] = 1;
+  $handler->display->display_options['fields']['field_activity_participants']['delta_offset'] = '0';
+  $handler->display->display_options['fields']['field_activity_participants']['delta_reversed'] = 0;
+  $handler->display->display_options['fields']['field_activity_participants']['field_api_classes'] = 0;
   /* Field: Activity: Link */
   $handler->display->display_options['fields']['view_crm_activity']['id'] = 'view_crm_activity';
   $handler->display->display_options['fields']['view_crm_activity']['table'] = 'crm_core_activity';
@@ -289,10 +318,10 @@ function crm_ui_views_default_views() {
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = 'Operations';
   $handler->display->display_options['fields']['nothing']['alter']['text'] = '<ul>
-      <li>[view_crm_activity]</li>
-      <li>[edit_crm_activity]</li>
-      <li>[delete_crm_activity]</li>
-      </ul>';
+        <li>[view_crm_activity]</li>
+        <li>[edit_crm_activity]</li>
+        <li>[delete_crm_activity]</li>
+        </ul>';
   $handler->display->display_options['fields']['nothing']['alter']['make_link'] = 0;
   $handler->display->display_options['fields']['nothing']['alter']['absolute'] = 0;
   $handler->display->display_options['fields']['nothing']['alter']['external'] = 0;
@@ -309,7 +338,19 @@ function crm_ui_views_default_views() {
   $handler->display->display_options['fields']['nothing']['hide_empty'] = 0;
   $handler->display->display_options['fields']['nothing']['empty_zero'] = 0;
   $handler->display->display_options['fields']['nothing']['hide_alter_empty'] = 0;
-
+  /* Contextual filter: Activity: Participants (field_activity_participants:target_id) */
+  $handler->display->display_options['arguments']['field_activity_participants_target_id']['id'] = 'field_activity_participants_target_id';
+  $handler->display->display_options['arguments']['field_activity_participants_target_id']['table'] = 'field_data_field_activity_participants';
+  $handler->display->display_options['arguments']['field_activity_participants_target_id']['field'] = 'field_activity_participants_target_id';
+  $handler->display->display_options['arguments']['field_activity_participants_target_id']['default_action'] = 'not found';
+  $handler->display->display_options['arguments']['field_activity_participants_target_id']['default_argument_type'] = 'fixed';
+  $handler->display->display_options['arguments']['field_activity_participants_target_id']['default_argument_skip_url'] = 0;
+  $handler->display->display_options['arguments']['field_activity_participants_target_id']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['field_activity_participants_target_id']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_activity_participants_target_id']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['field_activity_participants_target_id']['break_phrase'] = 0;
+  $handler->display->display_options['arguments']['field_activity_participants_target_id']['not'] = 0;
+  
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
   $handler->display->display_options['path'] = 'crm/contact/%/activity';
