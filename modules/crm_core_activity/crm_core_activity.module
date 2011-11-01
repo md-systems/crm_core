@@ -80,9 +80,9 @@ function crm_core_activity_entity_info_alter(&$entity_info) {
     $entity_info['crm_core_activity']['bundles'][$type] = array(
       'label' => $info->label,
       'admin' => array(
-        'path' => 'admin/structure/crm/activity-types/%crm_core_activity_type',
-        'real path' => 'admin/structure/crm/activity-types/' . $type,
-        'bundle argument' => 4,
+        'path' => 'admin/structure/crm/activity-types/manage/%crm_core_activity_type',
+        'real path' => 'admin/structure/crm/activity-types/manage/' . $type,
+        'bundle argument' => 5,
         // TODO write proper hook_permissions and set proper access callback here.
         'access callback' => TRUE,
         'access arguments' => array('administer crm_core_activity types'),
@@ -97,7 +97,7 @@ function crm_core_activity_entity_info_alter(&$entity_info) {
 function crm_core_activity_crm_core_contact_delete($crm_core_contact) {
 
   // query the activities that belongs to the contact
-  // @todo for activities involving other contacts, it might be wise to just 
+  // @todo for activities involving other contacts, it might be wise to just
   // delete the contact from the participant list?
   $query = new EntityFieldQuery;
   $results = $query
@@ -105,12 +105,12 @@ function crm_core_activity_crm_core_contact_delete($crm_core_contact) {
     ->fieldCondition('field_activity_participants', 'target_id', $crm_core_contact->contact_id, '=')
     ->fieldCondition('field_activity_participants', 'target_type', 'crm_core_contact', '=')
     ->execute();
-  
+
   if(empty($results)) {
-    return; 
-  } 
+    return;
+  }
   foreach($results['crm_core_activity'] as $crm_core_activity) {
-    crm_core_activity_delete($crm_core_activity); 
+    crm_core_activity_delete($crm_core_activity);
   }
 }
 
@@ -318,15 +318,15 @@ function crm_core_activity_edit_access($activity) {
 
 /**
  * Creates or Saves an activity type
- * 
+ *
  * @param stdClass $activity_type
- *   The activity type info to be saved 
+ *   The activity type info to be saved
  *
  */
 function crm_core_activity_type_save($activity_type) {
 
   $op = drupal_write_record('crm_core_activity_type', $activity_type, (!$activity_type->is_new) ? 'id' : array());
-  
+
   menu_rebuild();
 
  // If this is a new activity type and the insert did not fail...
