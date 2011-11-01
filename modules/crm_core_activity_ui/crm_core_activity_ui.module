@@ -5,7 +5,7 @@
  */
 function crm_core_activity_ui_menu() {
   $items = array();
-  
+
   /*
    * Contact Activities
    */
@@ -73,6 +73,40 @@ function crm_core_activity_ui_menu() {
     'type' => MENU_LOCAL_TASK,
     'file' => 'crm_core_activity_ui.pages.inc',
   );
-  
+
+  $items['admin/structure/crm/activity-types/list'] = array(
+    'title' => 'List',
+    'weight' => -10,
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+
   return $items;
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function crm_core_activity_ui_menu_alter(&$items) {
+  $items['admin/structure/crm/activity-types']['type'] = MENU_LOCAL_TASK;
+}
+
+/**
+ * Implements hook_admin_menu_map().
+ */
+function crm_core_activity_ui_admin_menu_map() {
+  $map['admin/structure/crm/activity-types/manage/%crm_core_activity_type'] = array(
+    // Link generated items directly to the "Activity Types" item.
+    'parent' => 'admin/structure/crm/activity-types',
+    // Hide the "List" item, as this expansion will expose all available
+    // options.
+    'hide' => 'admin/structure/crm/activity-types/list',
+    // Create expansion arguments for the '%crm_core_activity_type' placeholder.
+    'arguments' => array(
+      array(
+        '%crm_core_activity_type' => array_keys(crm_core_activity_types()),
+        '%entity_object' => array_keys(crm_core_activity_types()),
+      ),
+    ),
+  );
+  return $map;
 }

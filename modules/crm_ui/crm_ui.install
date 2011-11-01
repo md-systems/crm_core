@@ -5,4 +5,9 @@
  */
 function crm_ui_install() {
   db_query("UPDATE {system} SET weight = 15 WHERE name = 'crm_ui'");
+
+  // Rebuild menu so Activity Types menu element will be placed under CRM.
+  menu_cache_clear_all();
+  db_query('DELETE FROM {menu_links}');
+  menu_rebuild();
 }
