@@ -279,7 +279,7 @@ function crm_core_contact_ui_type_delete_confirm_validate($form, &$form_state) {
   // check one more time to see if the contact type can be deleted
   $error = null;
   
-  if((bool) $crm_core_contact->locked) {
+  if((bool) $crm_core_contact_type->locked) {
     $error = t('The contact type is locked');  
   }
   
