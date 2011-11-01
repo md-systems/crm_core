@@ -41,6 +41,12 @@ function crm_core_activity_entity_ui_get_form_wrapper($contact, $type) {
 function crm_core_activity_form($form, &$form_state, $activity) {
   // Ensure this include file is loaded when the form is rebuilt from the cache.
   $form_state['build_info']['file'] = drupal_get_path('module', 'crm_ui') . '/pages/contact_activity.pages.inc';
+  
+  // get the contact id of who is trying to add the activity
+  $form['contact_id'] = array(
+    '#type' => 'value',
+    '#value' => arg(2),
+  );
 
   $form['title'] = array(
     '#type' => 'textfield',
@@ -101,6 +107,7 @@ function crm_core_activity_form($form, &$form_state, $activity) {
  * Validation callback for crm_activity_form.
  */
 function crm_core_activity_form_validate($form, &$form_state) {
+
   $activity = $form_state['crm_core_activity'];
 
   // Ensure that contact set in $activity is present in values. We create activity
@@ -124,6 +131,7 @@ function crm_core_activity_form_validate($form, &$form_state) {
 
   // Notify field widgets to validate their data.
   field_attach_form_validate('crm_core_activity', $activity, $form, $form_state);
+  
 }
 
 /**
@@ -154,7 +162,7 @@ function crm_core_activity_form_submit($form, &$form_state) {
     drupal_set_message(t('Activity @title edited.', array('@title' => $activity->title)));
   }
 
-  $form_state['redirect'] = 'crm/activity/' . $activity->activity_id;
+  $form_state['redirect'] = 'crm/contact/' . $form_state['values']['contact_id'] . '/activity';
 }
 
 /**
