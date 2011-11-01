@@ -5,13 +5,6 @@ version = VERSION
 core = 7.x
 
 ; =======================
-; Dependencies
-; =======================
-
-; Contrib Dependencies
-dependencies[] = relation
-
-; =======================
 ; Module Files
 ; =======================
 

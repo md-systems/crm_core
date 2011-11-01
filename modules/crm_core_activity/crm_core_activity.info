@@ -11,13 +11,7 @@ configure = crm/admin/activity_types
 ; =======================
 
 ; Core Dependencies
-dependencies[] = crm
 dependencies[] = crm_core_contact
-
-; Contrib Dependencies
-dependencies[] = entity
-dependencies[] = field_ui
-dependencies[] = views
 
 ; Field Dependencies
 dependencies[] = entityreference

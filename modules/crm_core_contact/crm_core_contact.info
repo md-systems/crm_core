@@ -19,7 +19,6 @@ dependencies[] = views
 
 ; Field Dependencies
 dependencies[] = image
-dependencies[] = image
 dependencies[] = addressfield
 dependencies[] = email
 dependencies[] = link
