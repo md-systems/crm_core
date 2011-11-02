@@ -12,6 +12,10 @@
 function crm_core_contact_entity_info() {
   $return = array(
     'crm_core_contact' => array(
+      'permission labels' => array(
+      'singular' => t('contact'),
+      'plural' => t('contacts'),
+       ),
       'label' => t('Contact'),
       'label callback' => 'crm_core_contact_label',
       'controller class' => 'CRMCoreContactController',
@@ -57,15 +61,15 @@ function crm_core_contact_entity_info() {
  * Implements hook_permission().
  */
 function crm_core_contact_permission() {
-  return array(
+  $permissions = array(
     'administer contact types' => array(
       'title' => t('Administer Contact Types'),
       'description' => t('Allows the user to edit the types of contact such as Individual, Organization, etc.'),
     ),
-    'view contacts' => array(
-      'title' => t('View Contacts'),
-      'description' => t('Allows the user to view list of CRM contacts.'),
-    ),
+//    'view contacts' => array(
+//      'title' => t('View Contacts'),
+//      'description' => t('Allows the user to view list of CRM contacts.'),
+//    ),
     'view disabled contact types' => array(
       'title' => t('View Disabled Contact Types'),
       'description' => t('Allows the user to view disabled contact types'),
@@ -74,15 +78,20 @@ function crm_core_contact_permission() {
       'title' => ('Revert Contact Record'),
       'description' => t('Allows the user to have ability to revert contacts'),
     ),
-    'add contacts' => array(
-      'title' => t('Add Contacts'),
-      'description' => t('Allows the user to add contact to the CRM.'),
-    ),
-    'edit contacts' => array(
-      'title' => t('Edit Contacts'),
-      'description' => t('Allows the user to edit contacts that have already been added to the CRM.'),
-    ),
+//    'add contacts' => array(
+//      'title' => t('Add Contacts'),
+//      'description' => t('Allows the user to add contact to the CRM.'),
+//    ),
+//    'edit contacts' => array(
+//      'title' => t('Edit Contacts'),
+//      'description' => t('Allows the user to edit contacts that have already been added to the CRM.'),
+//    ),
   );
+  
+  $permissions += crm_entity_access_permissions('crm_core_contact');
+  
+  return $permissions;
+  
 }
 
 /**
@@ -94,22 +103,52 @@ function crm_core_contact_permission() {
  * @return
  * bool TRUE if access is granted/FALSE is access is denied
  */
-function crm_core_contact_access($crm_core_contact_type, $op = 'add') {
-  switch($op) {
-    case 'add':
+function crm_core_contact_access($crm_core_contact, $op = 'create') {
+  
+  $administer_contact = user_access('administer crm_core_contact entities');
+
+  switch ($op) {
+    case 'view':
+      $view_any_contact = user_access('view any crm_core_contact entity');
+      $view_type_contact = user_access('view any crm_core_contact entity of bundle ' . $crm_core_contact->type);
+      return ($administer_contact || $view_any_contact || $view_type_contact);
+    break;
+    case 'edit':
+    case 'delete':
+      $edit_any_contact = user_access('edit any crm_core_contact entity');
+      $edit_type_contact = user_access('edit any crm_core_contact entity of bundle ' . $crm_core_contact->type);
+      return ($administer_contact || $edit_any_contact || $edit_type_contact);
+    break;
+    case 'revert':
+      // @todo: more fine grained will be adjusting dynamic permission generation for reverting bundles of contact
+      $revert_any_contact = user_access('revert contact record');
+      return ($administer_contact || $revert_any_contact);
+    break;
+    case 'create_view':
+      // we just need any of the create permissions
+      $create_any_contact = user_access('create crm_core_contact entities');
+      $crm_core_contact_types = array_keys(crm_core_contact_types(TRUE));
+      foreach($crm_core_contact_types as $crm_core_contact_type) {
+        $create_type_contact[] = user_access('create crm_core_contact entities of bundle ' . $crm_core_contact_type);
+      }
+      // they just need any type of contact type create permission
+      $create_type_contact_flag = in_array(TRUE, $create_type_contact);
+      return ($administer_contact || $create_any_contact || $create_type_contact_flag);
+    break;
+    case 'create':
     default:
-     // when adding a contact, check to see if the contact type is disabled
-      if (!user_access('add contacts')) {
-        return FALSE;
-      }
-      if ((bool) $crm_core_contact_type->disabled) {
-        return FALSE;  
-      }
+      // must be able to create contact of any type (OR) specific type
+      // (AND) have an active contact type
+      // IMPORTANT, here $crm_core_contact is padded in as a string of the contact type
+      $type = $crm_core_contact;
+      $create_any_contact = user_access('create crm_core_contact entities');
+      $create_type_contact = user_access('create crm_core_contact entities of bundle ' . $type);
+      // load the contact type
+      $crm_core_contact_type = crm_core_contact_type_load($type);
+      $contact_type_is_active = (!(bool) $crm_core_contact_type->disabled);
+      return (($administer_contact || $create_any_contact || $create_type_contact) && $contact_type_is_active);    
     break;
   }
-  
-  return TRUE;
-  
 }
 
 

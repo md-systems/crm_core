@@ -17,10 +17,13 @@ function crm_core_contact_ui_add_page() {
   $types = crm_core_contact_types(TRUE);
   $content = array();
   foreach ($types as $type) {
-    $content[] = menu_get_item($item['href'] . '/' . $type->type);
+    $_content = menu_get_item($item['href'] . '/' . $type->type);
+    // access check
+    if ($_content['access']) {
+      $content[] = $_content;  
+    }
   }
-
-
+  
   // If there is only one contact type addition page we go straight to it
   if (count($content) == 1) {
     $item = array_shift($content);
