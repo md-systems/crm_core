@@ -178,16 +178,38 @@ function crm_core_activity_load_multiple($activity_ids = array(), $conditions = 
   return entity_load('crm_core_activity', $activity_ids, $conditions, $reset);
 }
 
-
+/**
+ * Create new activity object.
+ *   Wrapper for controller.
+ *
+ * @param array $values
+ *   Keyed array of new object attribures.
+ *
+ * @return object crm_core_activity entity
+ *
+ * @see entity_create()
+ */
 function crm_core_activity_create($values) {
   return new Entity($values, 'crm_core_activity');
 }
 
-
+/**
+ * Save single activity object to db.
+ *   Wrapper for controller.
+ *
+ * @param object $activity
+ *   Entity object of crm_core_activity type.
+ */
 function crm_core_activity_save($activity) {
   return entity_get_controller('crm_core_activity')->save($activity);
 }
 
+/**
+ * Delete single activity.
+ *
+ * @param object $activity
+ *   Entity object of crm_core_activity type.
+ */
 function crm_core_activity_delete($activity) {
   crm_core_activity_delete_multiple(array($activity->activity_id));
   // create a hook for deleting an activity
@@ -195,6 +217,13 @@ function crm_core_activity_delete($activity) {
   field_attach_delete('crm_core_activity', $activity);
 }
 
+/**
+ * Delete multiple activities.
+ *   Wrapper for controller.
+ *
+ * @param array $activity_ids
+ *   array of entity ids that should be deleted.
+ */
 function crm_core_activity_delete_multiple($activity_ids) {
   entity_get_controller('crm_core_activity')->delete($activity_ids);
 }

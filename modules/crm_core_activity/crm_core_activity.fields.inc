@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * @return
+ *   Return default fields definition that have to be attached to newly created activity type.
+ *
+ * @see field_create_field()
+ */
 function _crm_core_activity_type_default_fields() {
 
   $fields = array();
