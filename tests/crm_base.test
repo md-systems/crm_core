@@ -184,17 +184,24 @@ abstract class CRMBase extends DrupalWebTestCase {
 class InstallationProfileCRMBase extends CRMBase {
   public static function getInfo() {
     return array(
-      'name' => t('CRM base'),
-      'description' => t('Test the functionality of the base test class.'),
+      'name' => t('CRM install profile'),
+      'description' => t('Check whether we have any errors after installation of the profile.'),
       'group' => t('Drupal CRM'),
     );
   }
 
+  /**
+   * Basic test to ensure we don't have any errors after installation.
+   */
   public function testInstall() {
+    $this->drupalGet('');
+    $this->assertNoRaw('<div class="messages error">', t('No errors on frontpage.'));
+
     $user = $this->drupalCreateUser(array('access content', 'view crm dashboard'));
     $this->drupalLogin($user);
+    $this->assertNoRaw('<div class="messages error">', t('No errors after login.'));
 
     $this->drupalGet('crm');
-    $this->assertText('This is a placeholder.', t('Dashboard accessible'));
+    $this->assertNoRaw('<div class="messages error">', t('No errors on CRM page.'));
   }
 }
