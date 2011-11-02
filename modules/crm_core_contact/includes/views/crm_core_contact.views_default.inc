@@ -22,7 +22,8 @@ function crm_core_contact_views_default_views() {
   /* Display: Defaults */
   $handler = $view->new_display('default', 'Defaults', 'default');
   $handler->display->display_options['title'] = 'CRM Contact';
-  $handler->display->display_options['access']['type'] = 'none';
+  $handler->display->display_options['access']['type'] = 'perm';
+  $handler->display->display_options['access']['perm'] = 'view any crm_core_contact entity';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['query']['options']['query_comment'] = FALSE;
@@ -123,7 +124,7 @@ function crm_core_contact_views_default_views() {
     'image_link' => 'content',
   );
   $handler->display->display_options['fields']['contact_image']['field_api_classes'] = 0;
-  /* Field: Contact: Name */
+  /* Field: Contact: Organization name */
   $handler->display->display_options['fields']['entity_id']['id'] = 'entity_id';
   $handler->display->display_options['fields']['entity_id']['table'] = 'field_data_contact_name';
   $handler->display->display_options['fields']['entity_id']['field'] = 'contact_name';
