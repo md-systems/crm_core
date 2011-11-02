@@ -10,6 +10,10 @@ class crm_core_contact_handler_field_contact_revert extends views_handler_field 
       $this->additional_fields['vid'] = 'vid';
   }
  
+  function access() {
+    return user_access('administer contact types') || user_access('revert contact record');
+  }
+ 
   function option_definition() {
     $options = parent::option_definition();
 

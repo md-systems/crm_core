@@ -115,7 +115,7 @@ function crm_core_contact_ui_menu() {
     'title' => 'Contact',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('crm_core_contact_ui_revert_form', 2, 4),
-    'access arguments' => array('add contacts'),
+    'access arguments' => array('revert contact record'),
     'type' => MENU_CALLBACK,
     'file' => 'crm_core_contact_ui.pages.inc',
   );

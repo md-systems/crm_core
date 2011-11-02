@@ -70,6 +70,10 @@ function crm_core_contact_permission() {
       'title' => t('View Disabled Contact Types'),
       'description' => t('Allows the user to view disabled contact types'),
     ),
+    'revert contact record' => array(
+      'title' => ('Revert Contact Record'),
+      'description' => t('Allows the user to have ability to revert contacts'),
+    ),
     'add contacts' => array(
       'title' => t('Add Contacts'),
       'description' => t('Allows the user to add contact to the CRM.'),
