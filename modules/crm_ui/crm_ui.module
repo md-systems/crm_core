@@ -40,18 +40,22 @@ function crm_ui_menu() {
  */
 function crm_ui_menu_alter(&$items) {
   // Transform the field UI tabs into contextual links.
-  
+
   $items['admin/structure/crm/activity-types']['type'] = MENU_LOCAL_TASK;
 
   // Make Views menu item local task.
   $items['crm/contact/%/activity/add']['type'] = MENU_LOCAL_ACTION;
   $items['crm/contact/%/activity/add']['title'] = t('Add Activity');
+  $items['crm/contact/%/activity/add']['tab_root'] = 'crm/contact/%/activity';
+
+  // Set tab_root for views local actions.
+  $items['crm/contact/%/activity']['tab_root'] = 'crm/contact/%';
+  $items['crm/contact/%/revisions']['tab_root'] = 'crm/contact/%';
 
   // Alter Views menu item.
   $items['crm/contact/%/activity']['title'] = t('Activity');
   $items['crm/contact/%/activity']['type'] = MENU_LOCAL_TASK;
   $items['crm/contact/%/activity']['context'] = MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE;
-
 }
 
 /**
