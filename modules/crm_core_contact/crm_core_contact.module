@@ -66,10 +66,10 @@ function crm_core_contact_permission() {
       'title' => t('Administer Contact Types'),
       'description' => t('Allows the user to edit the types of contact such as Individual, Organization, etc.'),
     ),
-//    'view contacts' => array(
+//    'view contachook_permits' => array(
 //      'title' => t('View Contacts'),
 //      'description' => t('Allows the user to view list of CRM contacts.'),
-//    ),
+//    ),hook_permi
     'view disabled contact types' => array(
       'title' => t('View Disabled Contact Types'),
       'description' => t('Allows the user to view disabled contact types'),

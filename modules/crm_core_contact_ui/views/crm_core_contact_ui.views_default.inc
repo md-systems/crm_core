@@ -8,7 +8,7 @@
 /**
  * Implements hook_views_default_views().
  */
-function crm_core_contact_views_default_views() {
+function crm_core_contact_ui_views_default_views() {
   $view = new view;
   $view->name = 'crm_core_contacts';
   $view->description = 'A list of all contacts in the system';
