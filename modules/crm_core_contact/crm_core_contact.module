@@ -96,7 +96,7 @@ function crm_core_contact_permission() {
 
 /**
  * Check permission for various contact operations
- * 
+ *
  * @param stdClass $crm_core_contact_type
  * A crm_core_contact_type object
  *
@@ -104,7 +104,7 @@ function crm_core_contact_permission() {
  * bool TRUE if access is granted/FALSE is access is denied
  */
 function crm_core_contact_access($crm_core_contact, $op = 'create') {
-  
+
   $administer_contact = user_access('administer crm_core_contact entities');
 
   switch ($op) {
@@ -146,12 +146,10 @@ function crm_core_contact_access($crm_core_contact, $op = 'create') {
       // load the contact type
       $crm_core_contact_type = crm_core_contact_type_load($type);
       $contact_type_is_active = (!(bool) $crm_core_contact_type->disabled);
-      return (($administer_contact || $create_any_contact || $create_type_contact) && $contact_type_is_active);    
+      return (($administer_contact || $create_any_contact || $create_type_contact) && $contact_type_is_active);
     break;
   }
 }
-
-
 
 /**
  * Implements hook_views_api().
@@ -197,70 +195,70 @@ function crm_core_contact_label($entity) {
  * bool TRUE if permission given/FALSE if permission denied
  */
 function crm_core_contact_type_permission($crm_core_contact_type, $op = 'edit') {
-  
+
   // first check drupal permission
   if (!user_access('administer contact types')) {
-    return FALSE;  
+    return FALSE;
   }
-  
+
   switch($op) {
     case 'enable':
       // only disabled contact type can be enabled
       if ((bool) $crm_core_contact_type->disabled) {
-        return TRUE;  
+        return TRUE;
       }
       else {
-        return FALSE;  
+        return FALSE;
       }
     break;
     case 'disable':
       // locked contact type cannot be disabled
       if ((bool) $crm_core_contact_type->locked) {
-        return FALSE;  
+        return FALSE;
       }
       if ((bool) $crm_core_contact_type->disabled) {
-        return FALSE;  
+        return FALSE;
       }
     break;
     case 'delete':
       // if contact type is locked, you can't delete it
       if ((bool) $crm_core_contact_type->locked) {
-        return FALSE;  
+        return FALSE;
       }
       // if contact instance of this contact type exist, you can't delete it
-      $count = db_query("SELECT count(*) FROM {crm_core_contact} WHERE `type` = :type", 
+      $count = db_query("SELECT count(*) FROM {crm_core_contact} WHERE `type` = :type",
       array(':type' => $crm_core_contact_type->type))->fetchField();
       if ($count > 0) {
-        return FALSE;      
+        return FALSE;
       }
     break;
     case 'edit':
     default:
       // if the contact type is locked, you can't edit it.
       if ((bool) $crm_core_contact_type->locked) {
-        return FALSE;  
+        return FALSE;
       }
-      
+
       if ((bool) $crm_core_contact_type->disabled) {
-        return FALSE;  
+        return FALSE;
       }
-      
+
     break;
   }
-  
+
   return TRUE;
-  
+
 }
 
 /**
  * Returns an array of contact type objects keyed by type.
  *
- * @param 
+ * @param
  * bool $active
  * TRUE if we only want to select active contact types
  * FALSE if we want to select all contact types
  *
- * @return 
+ * @return
  * array $contact_types
  * An numeric index array of contact types (machine names)
  */
@@ -349,7 +347,7 @@ function crm_core_contact_type_load($type) {
  *
  * @param $contact_type object
  *
- * @return 
+ * @return
  *   FALSE if the insert fails and SAVED_NEW or SAVED_UPDATED
  *   based on the operation performed
  */
@@ -384,17 +382,17 @@ function crm_core_contact_type_save($contact_type) {
  *
  */
 function crm_core_contact_type_delete($crm_core_contact_type) {
-  
+
   // delete all the field instance of the bundle
   field_attach_delete_bundle('crm_core_contact', $crm_core_contact_type->type);
-  
+
   db_delete('crm_core_contact_type')
   ->condition('type', check_plain($crm_core_contact_type->type))
   ->execute();
 }
 
 
-/** 
+/**
  * Sets the default contact type
  * @param arary $info
  *   an associative array of contact type information
@@ -404,10 +402,10 @@ function crm_core_contact_type_delete($crm_core_contact_type) {
  *     - description
  *     - custom
  *     - modified
- *     - is_new 
+ *     - is_new
  *
- * @return 
- * A default contact type  
+ * @return
+ * A default contact type
  */
 function crm_core_contact_type_set_defaults($info = array()) {
   $type = &drupal_static(__FUNCTION__);
@@ -436,10 +434,10 @@ function crm_core_contact_type_set_defaults($info = array()) {
 
 /**
  * Initialize new contact type with basic fields.
- * 
+ *
  * @param string $type
  *   The contact type (machine readable name) going to be
- *   stored in the field instance 
+ *   stored in the field instance
  */
 function crm_core_contact_type_initialize($type) {
   $fields = array();
@@ -452,14 +450,14 @@ function crm_core_contact_type_initialize($type) {
     'translatable' => FALSE,
     'locked' => TRUE,
     'settings' => array(
-      // work around, all contact_name field requires at least 
+      // work around, all contact_name field requires at least
       // given, household, organizations just need one name field/component
       'minimum_components' => array('given' => 'given'),
     ),
   );
-  
 
-  
+
+
   // Image field
   $fields[] = array(
     'field_name' => 'contact_image',
@@ -489,13 +487,13 @@ function crm_core_contact_type_initialize($type) {
     'widget' => array(
       'type' => 'name_widget',
     ),
-    'display' => array(),  
+    'display' => array(),
   );
-    
+
   // For household or organizations, the label should be reflected
   if ($type == 'organization' || $type == 'household') {
     $instances[0]['label'] = t('@type name', array('@type' => ucwords($type)));
-    
+
     // work around, using inline css to hide the rest of the name components
     // this is due to http://drupal.org/node/1324054
     $instances[0]['settings']['inline_css'] = array(
@@ -522,13 +520,13 @@ function crm_core_contact_type_initialize($type) {
         'label' => 'hidden',
         'type' => 'image',
         'weight' => '1',
-        'settings' => 
+        'settings' =>
         array (
           'image_style' => 'medium',
           'image_link' => '',
         ),
         'module' => 'image',
-      ), 
+      ),
     ),
   );
 
@@ -666,7 +664,7 @@ function crm_core_contact_title($contact) {
  * @param stdClass $contact
  *
  * @return
- *   An associative array of revision information for 
+ *   An associative array of revision information for
  *   a given contact (keys below)
  *     - vid
  *     - log
