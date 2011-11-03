@@ -21,3 +21,6 @@ dependencies[] = crm_ui
 
 ; Base Files
 files[] = crm_core_contact_ui.module
+
+; Views include
+files[] = views/crm_core_contact_ui.views.inc
