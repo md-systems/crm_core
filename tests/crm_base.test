@@ -3,7 +3,7 @@
 /**
  * Abstract class for CRM tests. All tests should extend this class.
  */
-abstract class CRMBase extends DrupalWebTestCase {
+abstract class CRMBaseTestCase extends DrupalWebTestCase {
   protected function setUp() {
     $this->profile = 'drupalcrmdev';
 
@@ -181,7 +181,7 @@ abstract class CRMBase extends DrupalWebTestCase {
  *
  * This is example for tests.
  */
-class InstallationProfileCRMBase extends CRMBase {
+class CRMInstallationProfileTestCase extends CRMBaseTestCase {
   public static function getInfo() {
     return array(
       'name' => t('CRM install profile'),

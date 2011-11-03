@@ -1,0 +1,158 @@
+<?php
+
+class CRMCoreContactUITestCase extends CRMBaseTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => t('Contact UI'),
+      'description' => t('Test create/edit/delete contacts.'),
+      'group' => t('Drupal CRM'),
+    );
+  }
+
+  /**
+   * User with permissions 'administer crm_core_contact entities'
+   * should be able to create/edit/delete contacts of any contact type.
+   */
+  public function testContactOperations() {
+    // Create user and login.
+    $user = $this->drupalCreateUser(array('administer crm_core_contact entities', 'view any crm_core_contact entity'));
+    $this->drupalLogin($user);
+
+    // There should be no contacts available after fresh installation and
+    // there is link to create new contacts.
+    $this->drupalGet('crm/contact');
+    $this->assertText(t('There are no contacts in the CRM.  Add one by clicking above.'), t('No contacts available after fresh installation.'));
+    $this->assertLink(t('Add a contact'));
+
+    // Open page crm/contact/add and assert standard contact types available.
+    $this->drupalGet('crm/contact/add');
+    $this->assertLink(t('Add Household'));
+    $this->assertLink(t('Add Individual'));
+    $this->assertLink(t('Add Organization'));
+
+    // Load test images.
+    $image_files = $this->drupalGetTestFiles('image');
+
+    // Create Household contact.
+    $file = $image_files[rand(0, count($image_files))];
+    $household_node = array(
+      'contact_name[und][0][given]' => $this->randomName(),
+      'files[contact_image_und_0]' => drupal_realpath($file->uri),
+    );
+    $this->drupalPost('crm/contact/add/household', $household_node, t('Save Contact'));
+
+    // Assert we were redirected back to the list of contacts.
+    $this->assertUrl('crm/contact');
+
+    $this->assertLink($household_node['contact_name[und][0][given]'], 0, t('Newly created contact title listed.'));
+    $this->assertText(t('Household'), t('Newly created contact type listed.'));
+
+    // Create individual contact.
+    $individual_node = array(
+      'contact_name[und][0][title]' => 'Mr.',
+      'contact_name[und][0][given]' => $this->randomName(),
+      'contact_name[und][0][middle]' => $this->randomName(),
+      'contact_name[und][0][family]' => $this->randomName(),
+      'contact_name[und][0][generational]' => 'IV',
+      'contact_name[und][0][credentials]' => $this->randomName(),
+      'files[contact_image_und_0]' => drupal_realpath($file->uri),
+    );
+    $this->drupalPost('crm/contact/add/individual', $individual_node, t('Save Contact'));
+
+    // Assert we were redirected back to the list of contacts.
+    $this->assertUrl('crm/contact');
+
+    $link_label = $this->getIndividualContactTitle($individual_node);
+    $this->assertLink($link_label, 0, t('Newly created contact title listed.'));
+    $this->assertText(t('Individual'), t('Newly created contact type listed.'));
+
+    // Create Organization contact.
+    $organization_node = array(
+      'contact_name[und][0][given]' => $this->randomName(),
+      'files[contact_image_und_0]' => drupal_realpath($file->uri),
+    );
+    $this->drupalPost('crm/contact/add/organization', $organization_node, t('Save Contact'));
+
+    // Assert we were redirected back to the list of contacts.
+    $this->assertUrl('crm/contact');
+
+    $this->assertLink($organization_node['contact_name[und][0][given]'], 0, t('Newly created contact title listed.'));
+    $this->assertText(t('Organization'), t('Newly created contact type listed.'));
+
+    // Edit operations.
+    // We know that created nodes houshold is id 1, individual is no 2,
+    // organization is no 3. But we should have better API to find contact by name.
+    $household_node = array(
+      'contact_name[und][0][given]' => $this->randomName(),
+    );
+    $this->drupalPost('crm/contact/1/edit', $household_node, t('Save Contact'));
+
+    // Assert we were redirected back to the list of contacts.
+    $this->assertUrl('crm/contact/1');
+    $this->assertText($household_node['contact_name[und][0][given]'], 0, t('Contact updated.'));
+
+    // Check listing page.
+    $this->drupalGet('crm/contact');
+    $this->assertLink($household_node['contact_name[und][0][given]'], 0, t('Updated contact title listed.'));
+
+    // Delete household contact.
+    $this->drupalPost('crm/contact/1/delete', array(), t('Yes'));
+    $this->assertUrl('crm/contact');
+    $this->assertNoLink($household_node['contact_name[und][0][given]'], 0, t('Deleted contact title no more listed.'));
+
+    // Edit individual contact.
+    $individual_node = array(
+      'contact_name[und][0][title]' => 'Ms.',
+      'contact_name[und][0][given]' => $this->randomName(),
+      'contact_name[und][0][middle]' => $this->randomName(),
+      'contact_name[und][0][family]' => $this->randomName(),
+      'contact_name[und][0][generational]' => 'Jr.',
+      'contact_name[und][0][credentials]' => $this->randomName(),
+    );
+    $this->drupalPost('crm/contact/2/edit', $individual_node, t('Save Contact'));
+
+    // Assert we were redirected back to the list of contacts.
+    $this->assertUrl('crm/contact/2');
+
+    // Check listing page.
+    $this->drupalGet('crm/contact');
+    $link_label = $this->getIndividualContactTitle($individual_node);
+    $this->assertLink($link_label, 0, t('Updated individual contact title listed.'));
+
+    // Delete individual contact.
+    $this->drupalPost('crm/contact/2/delete', array(), t('Yes'));
+    $this->assertUrl('crm/contact');
+    $this->assertNoLink($link_label, 0, t('Deleted individual contact title no more listed.'));
+
+    // Edit organization contact.
+    $organization_node = array(
+      'contact_name[und][0][given]' => $this->randomName(),
+    );
+    $this->drupalPost('crm/contact/3/edit', $organization_node, t('Save Contact'));
+
+    // Assert we were redirected back to the list of contacts.
+    $this->assertUrl('crm/contact/3');
+    $this->assertText($organization_node['contact_name[und][0][given]'], 0, t('Contact updated.'));
+
+    // Check listing page.
+    $this->drupalGet('crm/contact');
+    $this->assertLink($organization_node['contact_name[und][0][given]'], 0, t('Updated contact title listed.'));
+
+    // Delete organization contact.
+    $this->drupalPost('crm/contact/3/delete', array(), t('Yes'));
+    $this->assertUrl('crm/contact');
+    $this->assertNoLink($organization_node['contact_name[und][0][given]'], 0, t('Deleted contact title no more listed.'));
+
+    // Assert that there are no contacts left.
+    $this->assertText(t('There are no contacts in the CRM.  Add one by clicking above.'), t('No contacts available after fresh installation.'));
+  }
+
+  /**
+   * Return title of the Individual Contact node.
+   */
+  protected function getIndividualContactTitle($post_array) {
+    return $post_array['contact_name[und][0][title]'] . ' ' . $post_array['contact_name[und][0][given]'] . ' '
+         . $post_array['contact_name[und][0][middle]'] . ' ' . $post_array['contact_name[und][0][family]']. ' '
+         . $post_array['contact_name[und][0][generational]'] . ', ' . $post_array['contact_name[und][0][credentials]'];
+  }
+}

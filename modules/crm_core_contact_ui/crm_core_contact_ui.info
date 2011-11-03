@@ -5,7 +5,6 @@ version = VERSION
 core = 7.x
 configure = admin/structure/crm/contact-types
 
-
 ; =======================
 ; Dependencies
 ; =======================
@@ -24,3 +23,7 @@ files[] = crm_core_contact_ui.module
 
 ; Views include
 files[] = views/crm_core_contact_ui.views.inc
+
+; Tests
+files[] = crm_core_contact_ui.test
+
