@@ -1,0 +1,11 @@
+<?php
+
+/**
+ * Implements hook_install().
+ *
+ * Set weight of the module to 20. It should be more than
+ * of views module for hook_menu_alter().
+ */
+function crm_core_activity_ui_install() {
+  db_query("UPDATE {system} SET weight = 20 WHERE name = 'crm_core_activity_ui'");
+}

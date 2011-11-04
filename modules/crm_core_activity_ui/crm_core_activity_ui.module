@@ -88,6 +88,10 @@ function crm_core_activity_ui_menu() {
  */
 function crm_core_activity_ui_menu_alter(&$items) {
   $items['admin/structure/crm/activity-types']['type'] = MENU_LOCAL_TASK;
+  // Set "Add activity" as local action.
+  $items['crm/contact/%/activity/add']['type'] = MENU_LOCAL_ACTION;
+  $items['crm/contact/%/activity/add']['context'] = MENU_CONTEXT_PAGE;
+  unset($items['crm/contact/%/activity/add']['tab_root']);
 }
 
 /**

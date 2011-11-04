@@ -17,3 +17,6 @@ dependencies[] = crm_core_activity
 ; Module Files
 ; =======================
 files[] = crm_core_activity_ui.module
+
+; Test
+files[] = crm_core_activity_ui.test

@@ -254,7 +254,7 @@ function crm_core_activity_types($type_name = NULL) {
  * @return type
  */
 function crm_core_activity_type_name($type_name = NULL) {
-  $types = crm_core_activity_types($type_name);
+  $types = crm_core_activity_types();
 
   $names = array();
   foreach ($types as $type) {

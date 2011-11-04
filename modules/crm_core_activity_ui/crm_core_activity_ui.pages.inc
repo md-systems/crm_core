@@ -41,7 +41,7 @@ function crm_core_activity_entity_ui_get_form_wrapper($contact, $type) {
 function crm_core_activity_form($form, &$form_state, $activity) {
   // Ensure this include file is loaded when the form is rebuilt from the cache.
   $form_state['build_info']['file'] = drupal_get_path('module', 'crm_ui') . '/pages/contact_activity.pages.inc';
-  
+
   // get the contact id of who is trying to add the activity
   $form['contact_id'] = array(
     '#type' => 'value',
@@ -131,7 +131,7 @@ function crm_core_activity_form_validate($form, &$form_state) {
 
   // Notify field widgets to validate their data.
   field_attach_form_validate('crm_core_activity', $activity, $form, $form_state);
-  
+
 }
 
 /**
@@ -197,15 +197,23 @@ function crm_core_activity_form_delete_confirm($form, &$form_state, $activity) {
  * Execute node deletion.
  */
 function crm_core_activity_form_delete_confirm_submit($form, &$form_state) {
+  $contact_id = 0;
   if ($form_state['values']['confirm']) {
     $activity = $form_state['activity'];
+    $contact_id = $activity->field_activity_participants[LANGUAGE_NONE][0]['target_id'];
     crm_core_activity_delete($activity);
 
     watchdog('crm_core_activity', '@type: deleted %title.', array('@type' => $activity->type, '%title' => $activity->title));
     drupal_set_message(t('@type %title has been deleted.', array('@type' => crm_core_activity_type_name($activity->type), '%title' => $activity->title)));
   }
 
-  $form_state['redirect'] = 'crm/contact';
+  // Redirect user to activity page of the first participants contact.
+  if (empty($contact_id)) {
+    $form_state['redirect'] = 'crm/contact';
+  }
+  else {
+    $form_state['redirect'] = 'crm/contact/' . $contact_id . '/activity';
+  }
 }
 
 /**
@@ -224,7 +232,7 @@ function crm_core_activity_form_after_build(&$form, &$form_state) {
 /**
  * Activity view callback.
  */
-function crm_core_activity_view($activity) { 
+function crm_core_activity_view($activity) {
   $content = entity_get_controller('crm_core_activity')->view(array($activity->activity_id => $activity), 'full');
 
   // We don't want to run output through entity theming function.
