@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Implements hook_menu()
  */
@@ -19,7 +18,6 @@ function crm_user_sync_menu() {
   return $items;
 }
 
-
 /**
  * Implements hook_permission()
  */
@@ -32,14 +30,12 @@ function crm_user_sync_permission() {
   );
 }
 
-
 /**
  * Implements hook_user_insert()
  */
 function crm_user_sync_user_insert(&$edit, $account, $category) {
   crm_user_sync_sync($account);
 }
-
 
 /**
  * Implements hook_user_delete()
@@ -61,7 +57,6 @@ function crm_user_sync_user_delete($account) {
     relation_multiple_delete($relation_ids);
   }
 }
-
 
 /**
  * Synchronizes user.
