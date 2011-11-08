@@ -7,8 +7,7 @@
  * CRM Core relationship is built on relation and CRM Core, it allows
  * creation of relationship between contacts
  */
-
-
+ 
 /**
  * Implements hook_permission().
  */

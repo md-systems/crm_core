@@ -53,7 +53,7 @@ function crm_core_relationship_ui_menu() {
    * CRM Relationship types
    */
   $items['admin/structure/crm/relationship-types'] = array(
-    'title' => 'Relationship types',
+    'title' => 'Relationship Types',
     'description' => 'Manage relationship types.',
     'page callback' => 'crm_core_relationship_ui_types_overview',
     'access arguments' => array('administer relation types'),
@@ -63,38 +63,64 @@ function crm_core_relationship_ui_menu() {
 
 
   $items['admin/structure/crm/relationship-types/add'] = array(
-    'title' => 'Add relationship type',
+    'title' => 'Add Relationship Type',
     'access arguments' => array('administer relationship types'),
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('crm_core_relationship_type_form'),
+    'page arguments' => array('crm_core_relationship_ui_type_form'),
     'type' => MENU_LOCAL_ACTION,
-    'file path' => drupal_get_path('module', 'crm_core_relationship'),
-    'file' => 'crm_core_relationship.admin.inc',
+    'file' => 'crm_core_relationship_ui.admin.inc',
   );
   
   $items['admin/structure/crm/relationship-types/manage/%crm_core_relationship_ui_relationship_type'] = array(
     'title' => 'Edit relationship type',
     'access arguments' => array('administer relationship types'),
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('crm_core_relationship_type_form', 5),
-    'file path' => drupal_get_path('module', 'crm_core_relationship'),
-    'file' => 'crm_core_relationship.admin.inc',
+    'page arguments' => array('crm_core_relationship_ui_type_form', 5),
+    'file' => 'crm_core_relationship_ui.admin.inc',
     'type' => MENU_CALLBACK,
   );
   
   $items['admin/structure/crm/relationship-types/manage/%crm_core_relationship_ui_relationship_type/delete'] = array(
-    'title' => 'Edit relationship type',
     'access arguments' => array('administer relationship types'),
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('crm_core_relationship_type_delete_confirm', 5),
-    'file path' => drupal_get_path('module', 'crm_core_relationship'),
-    'file' => 'crm_core_relationship.admin.inc',
+    'page arguments' => array('crm_core_relationship_ui_type_delete_confirm', 5),
+    'file' => 'crm_core_relationship_ui.admin.inc',
     'type' => MENU_CALLBACK,
   );
 
 
   return $items;
 }
+
+/**
+ * Implements hook_menu_alter
+ */
+function crm_core_relationship_ui_menu_alter(&$items) {
+  // we are simply hiding crm relationships from other types of relations
+  $items['admin/structure/relation']['page callback'] = 'crm_core_relationship_ui_types_overview';
+  $items['admin/structure/relation']['file path'] = drupal_get_path('module', 'crm_core_relationship_ui');
+  $items['admin/structure/relation']['file'] = 'crm_core_relationship_ui.admin.inc';
+  $items['admin/structure/relation']['page arguments'] = array(1);
+}
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function crm_core_relationship_entity_info_alter(&$entity_info) {
+  // we are only altering the admin path for CRM relationship types
+  foreach (relation_get_types() as $type => $info) {
+    if (crm_core_relationship_is_relationship_type($type)) {
+      $entity_info['relation']['bundles'][$type]['label'] = $type;
+      $entity_info['relation']['bundles'][$type]['admin'] = array(
+        'path' => 'admin/structure/crm/relationship-types/manage/%relation_type',
+        'real path' => 'admin/structure/crm/relationship-types/manage/' . $type,
+        'bundle argument' => 5,
+        'access arguments' => array('administer relationship types'),      
+      );
+    }    
+  }
+}
+
 
 /**
  * Argument loading function
@@ -150,38 +176,5 @@ function crm_core_relationship_ui_field_formatter_view($entity_type, $entity, $f
         '#rows' => $rows,
       );
     break;  
-  }
-}
-
-/**
- * Implements hook_form_alter.
- * Set breadcrumb.
- */
-function crm_core_relationship_ui_form_alter(&$form, &$form_state, $form_id) {
-  $type = '';
-  
-  switch ($form_id) {
-    case 'relation_type_form':
-    case 'field_ui_field_overview_form':
-    case 'field_ui_display_overview_form':
-    case 'relation_export_relation_type':
-    case 'relation_type_delete_confirm':  
-      $type = arg(4);
-      module_load_include('inc', 'crm_core_relationship_ui');
-      if (crm_core_relationship_is_relationship_type($type)) {
-        $breadcrumb = array(
-          l('Home', '<front>'),
-          l('Administration', 'admin'),
-          l('Structure', 'admin/structure'),
-          l('CRM', 'admin/structure/crm'),
-          l('Relationship types', 'admin/structure/crm/relationship-types')
-        );
-        if ($form_id != 'relation_type_form') {
-          $type_obj = relation_type_load($type);
-          $breadcrumb[] = l($type_obj->label, 'admin/structure/relation/manage/' . $type);
-        }
-        drupal_set_breadcrumb($breadcrumb);   
-      }
-      break;
   }
 }
