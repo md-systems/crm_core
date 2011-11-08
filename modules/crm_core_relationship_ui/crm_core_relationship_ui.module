@@ -61,17 +61,52 @@ function crm_core_relationship_ui_menu() {
     'type' => MENU_LOCAL_TASK,
   );
 
+
   $items['admin/structure/crm/relationship-types/add'] = array(
     'title' => 'Add relationship type',
-    'access arguments' => array('administer relation types'),
+    'access arguments' => array('administer relationship types'),
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('relation_type_form'),
+    'page arguments' => array('crm_core_relationship_type_form'),
     'type' => MENU_LOCAL_ACTION,
-    'file path' => drupal_get_path('module', 'relation'),
-    'file' => '/relation.admin.inc',
+    'file path' => drupal_get_path('module', 'crm_core_relationship'),
+    'file' => 'crm_core_relationship.admin.inc',
+  );
+  
+  $items['admin/structure/crm/relationship-types/manage/%crm_core_relationship_ui_relationship_type'] = array(
+    'title' => 'Edit relationship type',
+    'access arguments' => array('administer relationship types'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_core_relationship_type_form', 5),
+    'file path' => drupal_get_path('module', 'crm_core_relationship'),
+    'file' => 'crm_core_relationship.admin.inc',
+    'type' => MENU_CALLBACK,
+  );
+  
+  $items['admin/structure/crm/relationship-types/manage/%crm_core_relationship_ui_relationship_type/delete'] = array(
+    'title' => 'Edit relationship type',
+    'access arguments' => array('administer relationship types'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_core_relationship_type_delete_confirm', 5),
+    'file path' => drupal_get_path('module', 'crm_core_relationship'),
+    'file' => 'crm_core_relationship.admin.inc',
+    'type' => MENU_CALLBACK,
   );
 
+
   return $items;
+}
+
+/**
+ * Argument loading function
+ *
+ * @param string $relationship_type
+ * machine readable name of the relationship type
+ *
+ * @return object $relation_type
+ * A loaded relation type object
+ */
+function crm_core_relationship_ui_relationship_type_load($relationship_type) {
+  return relation_type_load($relationship_type);
 }
 
 /**
@@ -149,80 +184,4 @@ function crm_core_relationship_ui_form_alter(&$form, &$form_state, $form_id) {
       }
       break;
   }
-}
-
-/**
- * Implements hook_form_FORM_ID_alter.
- */
-function crm_core_relationship_ui_form_relation_type_form_alter(&$form, &$form_state) {
-  module_load_include('inc', 'crm_core_relationship_ui');
-
-  $type = $form['relation_type']['#default_value'];
-  $alter_edit = $alter_add = false;
-
-  if (crm_core_relationship_is_relationship_type($type)) {
-    $alter_edit = true;
-  }
-
-  if (implode('/', arg()) == 'admin/structure/crm/relationship-types/add') {
-    $alter_add = true;
-  }
-
-  if ($alter_edit || $alter_add) {
-    // Hide unused fields and set defalt values
-    $form['transitive']['#type'] = 'value';
-    $form['transitive']['#default_value'] = 0;
-
-    $form['r_unique']['#type'] = 'value';
-    $form['r_unique']['#default_value'] = 0;
-
-    $form['min_arity']['#type'] = 'value';
-    $form['r_unique']['#default_value'] = 2;
-
-    $form['max_arity']['#type'] = 'value';
-    $form['r_unique']['#default_value'] = 2;
-
-    $contact_types = crm_core_contact_types();
-
-    $options = array('crm_core_contact:*' => t('Any'));
-    foreach ($contact_types as $contact_type) {
-      $options['crm_core_contact:' . $contact_type->type] = t($contact_type->name);
-    }
-
-    $form['source_bundles']['#options'] = $options;
-    $form['source_bundles']['#size'] = count ($options);
-    $form['source_bundles']['#title'] = t('Source contacts types');
-
-    $form['target_bundles']['#options'] = $options;
-    $form['target_bundles']['#size'] = count ($options);
-    $form['target_bundles']['#title'] = t('Destination contact types');
-
-    $form['#submit'][] = 'crm_core_relationship_ui_form_relation_type_form_submit';
-  }
-
-}
-
-/**
- * Submit handler for relation_type_form.
- */
-function crm_core_relationship_ui_form_relation_type_form_submit($form, &$form_state) {
-  $form_state['redirect'] = 'admin/structure/crm/relationship-types';
-}
-
-/**
- * Implements hook_form_FORM_ID_alter.
- */
-function crm_core_relationship_ui_form_relation_type_delete_confirm_alter(&$form, &$form_state) {
-  module_load_include('inc', 'crm_core_relationship_ui');
-
-  if (crm_core_relationship_is_relationship_type($form['relation_type']['#value'])) {
-    $form['#submit'][] = 'crm_core_relationship_ui_form_relation_type_delete_confirm_submit';
-  }
-}
-
-/**
- * Submit handler for relation_type_delete_confirm.
- */
-function crm_core_relationship_ui_form_relation_type_delete_confirm_submit($form, &$form_state) {
-  $form_state['redirect'] = 'admin/structure/crm/relationship-types';
 }
