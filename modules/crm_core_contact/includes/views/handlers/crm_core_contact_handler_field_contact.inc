@@ -4,7 +4,7 @@
  * Field handler to provide simple renderer that allows linking to a contact.
  */
 class crm_core_contact_handler_field_contact extends views_handler_field {
-  function init(&$view, $options) {
+  function init(&$view, &$options) {
     parent::init($view, $options);
 
     if (!empty($this->options['link_to_contact'])) {
