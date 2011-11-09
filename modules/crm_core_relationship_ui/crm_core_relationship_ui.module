@@ -104,6 +104,19 @@ function crm_core_relationship_ui_menu_alter(&$items) {
 }
 
 /**
+ * Implements hook_form_alter
+ */
+function crm_core_relationship_ui_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'field_ui_field_overview_form' || $form_id == 'field_ui_display_overview_form') {
+    // we only care about crm contact types (bundles)
+    // setting title to the fields form
+    if (crm_core_relationship_is_relationship_type($form['#bundle'])) {
+      drupal_set_title($form['#bundle']);  
+    }
+  }  
+}
+
+/**
  * Implements hook_entity_info_alter().
  */
 function crm_core_relationship_entity_info_alter(&$entity_info) {
