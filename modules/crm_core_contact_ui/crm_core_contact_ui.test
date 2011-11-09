@@ -82,9 +82,7 @@ class CRMCoreContactUITestCase extends CRMBaseTestCase {
     // Edit operations.
     // We know that created nodes houshold is id 1, individual is no 2,
     // organization is no 3. But we should have better API to find contact by name.
-    $household_node = array(
-      'contact_name[und][0][given]' => $this->randomName(),
-    );
+    $household_node = $this->householdContactValues();
     $this->drupalPost('crm/contact/1/edit', $household_node, t('Save Contact'));
 
     // Assert we were redirected back to the list of contacts.
@@ -101,14 +99,7 @@ class CRMCoreContactUITestCase extends CRMBaseTestCase {
     $this->assertNoLink($household_node['contact_name[und][0][given]'], 0, t('Deleted contact title no more listed.'));
 
     // Edit individual contact.
-    $individual_node = array(
-      'contact_name[und][0][title]' => 'Ms.',
-      'contact_name[und][0][given]' => $this->randomName(),
-      'contact_name[und][0][middle]' => $this->randomName(),
-      'contact_name[und][0][family]' => $this->randomName(),
-      'contact_name[und][0][generational]' => 'Jr.',
-      'contact_name[und][0][credentials]' => $this->randomName(),
-    );
+    $individual_node = $this->individualContactValues();
     $this->drupalPost('crm/contact/2/edit', $individual_node, t('Save Contact'));
 
     // Assert we were redirected back to the list of contacts.
@@ -125,9 +116,7 @@ class CRMCoreContactUITestCase extends CRMBaseTestCase {
     $this->assertNoLink($link_label, 0, t('Deleted individual contact title no more listed.'));
 
     // Edit organization contact.
-    $organization_node = array(
-      'contact_name[und][0][given]' => $this->randomName(),
-    );
+    $organization_node = $this->organizationContactValues();
     $this->drupalPost('crm/contact/3/edit', $organization_node, t('Save Contact'));
 
     // Assert we were redirected back to the list of contacts.
@@ -150,9 +139,36 @@ class CRMCoreContactUITestCase extends CRMBaseTestCase {
   /**
    * Return title of the Individual Contact node.
    */
-  protected function getIndividualContactTitle($post_array) {
+  public static function getIndividualContactTitle($post_array) {
     return $post_array['contact_name[und][0][title]'] . ' ' . $post_array['contact_name[und][0][given]'] . ' '
          . $post_array['contact_name[und][0][middle]'] . ' ' . $post_array['contact_name[und][0][family]']. ' '
          . $post_array['contact_name[und][0][generational]'] . ', ' . $post_array['contact_name[und][0][credentials]'];
+  }
+
+  public static function individualContactValues() {
+    return array(
+      'contact_name[und][0][title]' => 'Ms.',
+      'contact_name[und][0][given]' => DrupalTestCase::randomName(),
+      'contact_name[und][0][middle]' => DrupalTestCase::randomName(),
+      'contact_name[und][0][family]' => DrupalTestCase::randomName(),
+      'contact_name[und][0][generational]' => 'Jr.',
+      'contact_name[und][0][credentials]' => DrupalTestCase::randomName(),
+    );
+  }
+
+  public static function householdContactValues() {
+    return array(
+      'contact_name[und][0][given]' => DrupalTestCase::randomName(),
+    );
+  }
+
+  public static function getOrganizationContactTitle($organization_values) {
+    return $organization_values['contact_name[und][0][given]'];
+  }
+
+  public static function organizationContactValues() {
+    return array(
+      'contact_name[und][0][given]' => DrupalTestCase::randomName(),
+    );
   }
 }
