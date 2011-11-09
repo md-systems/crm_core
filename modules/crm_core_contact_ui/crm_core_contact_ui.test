@@ -34,7 +34,7 @@ class CRMCoreContactUITestCase extends CRMBaseTestCase {
     $image_files = $this->drupalGetTestFiles('image');
 
     // Create Household contact.
-    $file = $image_files[rand(0, count($image_files))];
+    $file = $image_files[rand(0, count($image_files) - 1)];
     $household_node = array(
       'contact_name[und][0][given]' => $this->randomName(),
       'files[contact_image_und_0]' => drupal_realpath($file->uri),
