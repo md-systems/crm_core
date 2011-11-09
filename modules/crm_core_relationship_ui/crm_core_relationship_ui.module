@@ -4,7 +4,7 @@
  */
 function crm_core_relationship_ui_menu() {
   $items = array();
-  
+
   /*
    * CRM Contact Relationships
    */
@@ -24,7 +24,7 @@ function crm_core_relationship_ui_menu() {
     'description' => 'Add a relationship to this contact',
     'page callback' => 'crm_core_relationship_ui_add_relationship',
     'page arguments' => array(2),
-    'access arguments' => array('add crm relationship'),
+    'access arguments' => array('add contact relationships'),
     'type' => MENU_LOCAL_ACTION,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'file' => 'crm_core_relationship_ui.pages.inc',
@@ -70,7 +70,7 @@ function crm_core_relationship_ui_menu() {
     'type' => MENU_LOCAL_ACTION,
     'file' => 'crm_core_relationship_ui.admin.inc',
   );
-  
+
   $items['admin/structure/crm/relationship-types/manage/%crm_core_relationship_ui_relationship_type'] = array(
     'title' => 'Edit relationship type',
     'access arguments' => array('administer relationship types'),
@@ -79,7 +79,7 @@ function crm_core_relationship_ui_menu() {
     'file' => 'crm_core_relationship_ui.admin.inc',
     'type' => MENU_CALLBACK,
   );
-  
+
   $items['admin/structure/crm/relationship-types/manage/%crm_core_relationship_ui_relationship_type/delete'] = array(
     'access arguments' => array('administer relationship types'),
     'page callback' => 'drupal_get_form',
@@ -115,9 +115,9 @@ function crm_core_relationship_entity_info_alter(&$entity_info) {
         'path' => 'admin/structure/crm/relationship-types/manage/%relation_type',
         'real path' => 'admin/structure/crm/relationship-types/manage/' . $type,
         'bundle argument' => 5,
-        'access arguments' => array('administer relationship types'),      
+        'access arguments' => array('administer relationship types'),
       );
-    }    
+    }
   }
 }
 
@@ -162,8 +162,8 @@ function crm_core_relationship_ui_field_formatter_view($entity_type, $entity, $f
     $contact_label = entity_label('crm_core_contact', $related_contact);
     $relationship_type = ($items[1]['entity_id'] == $current_contact_id) ? crm_core_relationship_get_type_label($entity, TRUE) : crm_core_relationship_get_type_label($entity);
     $created = date('Y-m-d H:i:s', $entity->created);
-    $related_contact_uri = entity_uri('crm_core_contact', $related_contact); 
-    
+    $related_contact_uri = entity_uri('crm_core_contact', $related_contact);
+
     $rows[] = array(
       l($contact_label, $related_contact_uri['path'], $related_contact_uri['options']),
       $relationship_type,
@@ -175,6 +175,6 @@ function crm_core_relationship_ui_field_formatter_view($entity_type, $entity, $f
         '#header' => $headers,
         '#rows' => $rows,
       );
-    break;  
+    break;
   }
 }

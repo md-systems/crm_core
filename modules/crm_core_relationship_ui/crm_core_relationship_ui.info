@@ -19,3 +19,6 @@ dependencies[] = crm_ui
 ; =======================
 
 files[] = crm_core_relationship_ui.module
+
+; Test
+files[] = crm_core_relationship_ui.test
