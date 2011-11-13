@@ -1,0 +1,8 @@
+/* @group Tables */
+
+table td,
+table th {
+  vertical-align: top !important;
+}
+
+/* @end */

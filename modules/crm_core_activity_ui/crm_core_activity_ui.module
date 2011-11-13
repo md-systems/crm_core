@@ -114,3 +114,42 @@ function crm_core_activity_ui_admin_menu_map() {
   );
   return $map;
 }
+
+function crm_core_activity_ui_form_alter(&$form, &$form_state, $form_id) {
+  if($form_id == 'crm_core_activity_type_overview_form') {
+    $ops_count = $form['table']['#header'][2]['colspan'];  
+    $form['table']['#header'][2] = t('Operations');
+    
+    // Add needed files    
+    ctools_add_js('dropbutton');
+    ctools_add_css('dropbutton');    
+    ctools_add_css('button');
+
+    // Add views & seven files
+    drupal_add_css(drupal_get_path('module', 'crm_core_activity_ui') . '/css/activity.admin.css');
+    views_add_css('views-admin');
+    views_add_css('views-admin.ctools');
+    views_add_css('views-admin.seven');
+    
+    $class = 'ctools-no-js ctools-dropbutton ctools-button';    
+
+    foreach($form['table']['#rows'] as $key => $row) {      
+      $output = '';
+      $links = array();  
+      for($i = count($row) - $ops_count; $i < count($row); $i++) {        
+        $links['items'][] = $row[$i];
+      }      
+
+      $output .= '<div class="' . $class . '" id="ctools-button-' . $key . '">';
+        $output .= '<div class="ctools-link">';
+        $output .= '<a href="#" class="ctools-twisty ctools-text">open</a>';
+        $output .= '</div>'; 
+        $output .= '<div class="ctools-content">';
+        $output .= theme('item_list', $links);      
+        $output .= '</div>';
+      $output .= '</div>';
+
+      $form['table']['#rows'][$key] = array_merge(array_slice($row, 0, count($row) - $ops_count), array($output));
+    }
+  }
+}
