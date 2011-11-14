@@ -23,11 +23,14 @@ function crm_core_relationship_ui_types_overview($reverse = FALSE) {
   $field_ui = module_exists('field_ui');
   $headers = array(
     array('data' => t('Name'), 'width' => '40%'),
-    array('data' => t('Operations'), 'colspan' => $field_ui ? '4' : '2')
+    array('data' => t('Operations'))
   );
   $rows = array();
 
-  foreach ($relation_types as $type => $label) {   
+  
+  crm_ui_ctools_add_dropbutton_files();
+  foreach ($relation_types as $type => $label) {
+    $links = array();
     if ($reverse) {
       if (crm_core_relationship_is_relationship_type($type)) continue;
       $url = 'admin/structure/relation/manage/' . $type;     
@@ -37,12 +40,17 @@ function crm_core_relationship_ui_types_overview($reverse = FALSE) {
       $url = 'admin/structure/crm/relationship-types/manage/' . $type;
     }
     $row = array(l($type, $url));
-    $row[] = l(t('edit'), $url . '/edit');
+    $links[] = l(t('edit'), $url . '/edit');
     if ($field_ui) {
-      $row[] =  l(t('manage fields'), $url . '/fields');
-      $row[] =  l(t('display fields'), $url . '/display');
+      $links[] =  l(t('manage fields'), $url . '/fields');
+      $links[] =  l(t('display fields'), $url . '/display');
     }
-    $row[] =  l(t('delete'), $url . '/delete');
+    $links[] =  l(t('delete'), $url . '/delete');
+    $row[] = theme('crm_ui_ctools_dropbutton', array(
+        'ops_count' => count($links), 
+        'links' => $links,
+        'index' => $type,
+      ));
     $rows[] = $row;
   }
 

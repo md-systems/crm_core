@@ -19,12 +19,22 @@ function crm_core_contact_ui_types_overview() {
     if ((bool) $contact_type->disabled) {
       unset($links['crm-fields'], $links['crm-display']);  
     }
+        
+    $ops = array();
+    foreach($links as $key => $link) {
+      $ops['links'][$key] = array(
+        'title' => $link['title'],
+        'href' => $link['href'],        
+      );    
+    }
+    
     $rows[] = array(
       theme('crm_core_contact_ui_type_overview', array('contact_type' => $contact_type)),
-      theme('links', array('links' => $links, 'attributes' => array('class' => 'links operations'))),
+      theme('links__ctools_dropbutton', $ops),
     );
   }
 
+  crm_ui_ctools_add_dropbutton_files();
   $build['contact_type_table'] = array(
     '#theme' => 'table',
     '#header' => $header,
@@ -32,7 +42,6 @@ function crm_core_contact_ui_types_overview() {
     '#empty' => t('The are no contact types. <a href="@link">Add contact type</a>.', array('@link' => url('crm/admin/contact-types/manage'))),
   );
   
-
   return $build;
 }
 
