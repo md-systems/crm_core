@@ -144,7 +144,7 @@ function crm_core_activity_views_default_views() {
   $view->core = 7;
   $view->api_version = '3.0-alpha1';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-  
+
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
   $handler->display->display_options['title'] = 'Activities by contact';
@@ -164,6 +164,30 @@ function crm_core_activity_views_default_views() {
   $handler->display->display_options['empty']['area']['content'] = 'This contact has no activity, add an activity above.';
   $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
   $handler->display->display_options['empty']['area']['tokenize'] = 0;
+  /* Field: Global: View result counter */
+  $handler->display->display_options['fields']['counter']['id'] = 'counter';
+  $handler->display->display_options['fields']['counter']['table'] = 'views';
+  $handler->display->display_options['fields']['counter']['field'] = 'counter';
+  $handler->display->display_options['fields']['counter']['label'] = '';
+  $handler->display->display_options['fields']['counter']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['counter']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['counter']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['counter']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['counter']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['counter']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['counter']['alter']['trim_whitespace'] = 0;
+  $handler->display->display_options['fields']['counter']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['counter']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['counter']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['counter']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['counter']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['counter']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['counter']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['counter']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['counter']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['counter']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['counter']['hide_alter_empty'] = 0;
+  $handler->display->display_options['fields']['counter']['counter_start'] = '1';
   /* Field: Activity: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'crm_core_activity';
@@ -317,11 +341,16 @@ function crm_core_activity_views_default_views() {
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = 'Operations';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<ul>
-        <li>[view_crm_activity]</li>
-        <li>[edit_crm_activity]</li>
-        <li>[delete_crm_activity]</li>
-        </ul>';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<div class="ctools-no-js ctools-dropbutton ctools-button" id="ctools-button-[counter]">
+  <div class="ctools-link"><a href="#" class="ctools-twisty ctools-text">open</a></div>
+  <div class="ctools-content">
+  <ul>
+          <li>[view_crm_activity]</li>
+          <li>[edit_crm_activity]</li>
+          <li>[delete_crm_activity]</li>
+  </ul>
+  </div>
+  </div>';
   $handler->display->display_options['fields']['nothing']['alter']['make_link'] = 0;
   $handler->display->display_options['fields']['nothing']['alter']['absolute'] = 0;
   $handler->display->display_options['fields']['nothing']['alter']['external'] = 0;
@@ -350,11 +379,11 @@ function crm_core_activity_views_default_views() {
   $handler->display->display_options['arguments']['field_activity_participants_target_id']['summary_options']['items_per_page'] = '25';
   $handler->display->display_options['arguments']['field_activity_participants_target_id']['break_phrase'] = 0;
   $handler->display->display_options['arguments']['field_activity_participants_target_id']['not'] = 0;
-  
+
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
   $handler->display->display_options['path'] = 'crm/contact/%/activity';
-
+  
   $views['crm_activities_by_contact'] = $view;
 
   return $views;

@@ -131,7 +131,18 @@ function crm_ui_block_view($delta) {
   return "This is a placeholder.";
  }
 
+/**
+ * Implements hook_views_pre_render()
+ */
+function crm_ui_views_pre_render($view) {
+  if($view->name == 'crm_activities_by_contact') {
+    crm_ui_ctools_add_dropbutton_files();
+  } 
+}
  
+/**
+ * Additional function that adds special CSS/JS files for dropbuttons
+ */
 function crm_ui_ctools_add_dropbutton_files() {
   // Add needed files    
   ctools_add_js('dropbutton');
@@ -146,7 +157,7 @@ function crm_ui_ctools_add_dropbutton_files() {
 }
  
  /**
-  * 
+  * Theme function for operation links
   */
 function theme_crm_ui_ctools_dropbutton($variables) {
   $output = '';
