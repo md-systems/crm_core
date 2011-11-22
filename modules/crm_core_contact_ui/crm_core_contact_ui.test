@@ -31,13 +31,13 @@ class CRMCoreContactUITestCase extends CRMBaseTestCase {
     $this->assertLink(t('Add Organization'));
 
     // Load test images.
-    $image_files = $this->drupalGetTestFiles('image');
+//    $image_files = $this->drupalGetTestFiles('image');
 
     // Create Household contact.
-    $file = $image_files[rand(0, count($image_files) - 1)];
+//    $file = $image_files[rand(0, count($image_files) - 1)];
     $household_node = array(
       'contact_name[und][0][given]' => $this->randomName(),
-      'files[contact_image_und_0]' => drupal_realpath($file->uri),
+//      'files[contact_image_und_0]' => drupal_realpath($file->uri),
     );
     $this->drupalPost('crm/contact/add/household', $household_node, t('Save Contact'));
 
@@ -55,7 +55,7 @@ class CRMCoreContactUITestCase extends CRMBaseTestCase {
       'contact_name[und][0][family]' => $this->randomName(),
       'contact_name[und][0][generational]' => 'IV',
       'contact_name[und][0][credentials]' => $this->randomName(),
-      'files[contact_image_und_0]' => drupal_realpath($file->uri),
+//      'files[contact_image_und_0]' => drupal_realpath($file->uri),
     );
     $this->drupalPost('crm/contact/add/individual', $individual_node, t('Save Contact'));
 
@@ -69,7 +69,7 @@ class CRMCoreContactUITestCase extends CRMBaseTestCase {
     // Create Organization contact.
     $organization_node = array(
       'contact_name[und][0][given]' => $this->randomName(),
-      'files[contact_image_und_0]' => drupal_realpath($file->uri),
+//      'files[contact_image_und_0]' => drupal_realpath($file->uri),
     );
     $this->drupalPost('crm/contact/add/organization', $organization_node, t('Save Contact'));
 
