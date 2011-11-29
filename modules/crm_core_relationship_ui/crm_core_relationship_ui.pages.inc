@@ -41,10 +41,12 @@ function crm_core_relationship_ui_add_relationship($crm_core_contact) {
     $relationship_type_links = array();
 
     foreach ($relationship_types as $relationship_type) {
-      $relationship_type_links[$relationship_type->relation_type] = array(
-        'href' => 'crm/contact/' . $crm_core_contact->contact_id . '/relationships/add/' . $relationship_type->relation_type . '/' . $reverse, 
-        'title' => $reverse ? $relationship_type->reverse_label : $relationship_type->label,
-      );
+      if (user_access('create relation entities of bundle ' . $relationship_type->relation_type)) {      
+        $relationship_type_links[$relationship_type->relation_type] = array(
+          'href' => 'crm/contact/' . $crm_core_contact->contact_id . '/relationships/add/' . $relationship_type->relation_type . '/' . $reverse, 
+          'title' => $reverse ? $relationship_type->reverse_label : $relationship_type->label,
+        );
+      }
     }
     
     if (!empty($relationship_type_links)) {

@@ -12,20 +12,40 @@
  * Implements hook_permission().
  */
 function crm_core_relationship_permission() {
-  return array(
-    'view contact relationships' => array(
-      'title' => t('View Contact Relationships'),
-      'description' => t('Allows user to view list of CRM relationship.'),
-    ),      
-    'add contact relationships' => array(
-      'title' => t('Add Contact Relationships'),
-      'description' => t('Allows user to add relationship to the CRM contact.'),
-    ),
-    'edit contact relationships' => array(
-      'title' => t('Edit Contact Relationships'),
-      'description' => t('Allows user to edit relationship of the CRM contact.'),
-    ),
+  $permissions = array();
+  
+  // static permissions
+  $permissions['create relation entities of any contact relationship'] = array(
+    'title' => t('Create Any Contact Relationships'),
+    'description' => t('Allows user to create any CRM relationship.'),  
   );
+  
+  $permissions['view relation entities of any contact relationship'] = array(
+    'title' => t('View Any Contact Relationships'),
+    'description' => t('Allows user to view any CRM relationship'),
+  );
+  
+  $permissions['edit relation entities of any contact relationship'] = array(
+    'title' => t('Edit Any Contact Relationships'),
+    'description' => t('Allows user to edit any CRM relationship'),
+  );  
+  
+  // per bundle permissions
+  $relationships = crm_core_relationship_get_relationships();
+  
+  $entity_info = array(
+    'permission labels' => array(
+    'singular' => t('relationship'),
+    'plural' => t('relationships'),
+    ),  
+  );
+  
+  foreach($relationships as $type => $info) {
+    $info = (array) $info;
+    $permissions += crm_bundle_access_permissions($type, $info, 'relation', $entity_info);
+  }
+  
+  return $permissions; 
 }
 
 /**
@@ -41,6 +61,57 @@ function crm_core_relationship_crm_core_contact_delete($crm_core_contact) {
       relation_delete($relation->rid);
   }
 }
+
+/**
+ * Access callback for all relationship permissions
+ *
+ * @return array $permissions
+ */
+function crm_core_relationship_access_permissions($relation_type, $op = 'create') {
+  $administer_relation_types = user_access('administer relation types');
+  if (is_object($relation_type)) {
+    $bundle = $relation_type->relation_type;
+  }
+  else {
+    $bundle = $relation_type;  
+  }
+  
+  switch ($op) {
+    // We are just viewing the list of relationships a contact has here
+    case 'view_list':
+      $view_any_relationship = user_access('view relation entities of any contact relationship');
+      return ($administer_relation_types || $view_any_relationship);
+    break;
+    case 'view':
+      // view a single relationship
+      $view_any_relationship = user_access('view relation entities of any contact relationship');
+      $view_type_relationship = user_access('view relation entities of bundle ' . $bundle);
+      return ($administer_relation_types || $view_any_relationship || $view_type_relationship);
+    break;
+    case 'create_view':
+      // we just need any of the create permissions
+      $create_any_relationship = user_access('create relation entities of any contact relationship');
+      $relationships = crm_core_relationship_get_relationships();
+      $relationship_types = array_keys($relationships);
+      foreach($relationship_types as $type) {
+        $create_type_relationship[] = user_access('create relation entities of bundle ' . $type);
+      }
+      // they just need any type of contact type create permission
+      $create_type_relationship_flag = in_array(TRUE, $create_type_relationship);
+      return ($administer_relation_types || $create_any_relationship || $create_type_relationship_flag);    
+    break; 
+    case 'create':
+    default:
+      $create_any_relationship = user_access('create relation entities of any contact relationship');
+      $create_type_relationship = user_access('create relation entities of bundle ' . $bundle);
+      return ($administer_relation_types || $create_any_relationship || $create_type_relationship);
+    break;  
+  }
+  
+  return FALSE;
+   
+}
+
 
 /**
  * Return contact types available for specific relationship type.
@@ -154,6 +225,24 @@ function crm_core_relationship_is_contact_bundles($bundles) {
   }
   return true;
 }
+
+
+/**
+ * Return a list of relation bundle that are crm_core_relationship
+ * 
+ * @return array $relationships  
+ * an array of relation bundle of relationships keyed by relationship type
+ */
+function crm_core_relationship_get_relationships() {
+  $relationships = array();
+  foreach (relation_get_types() as $type => $info) {
+    if (crm_core_relationship_is_relationship_type($type)) {
+       $relationships[$type] = $info;
+    }
+  }
+  return $relationships;  
+}
+
 
 /**
  * Return a list of relatinships for this contact.
