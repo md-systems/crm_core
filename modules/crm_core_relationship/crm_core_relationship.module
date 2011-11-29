@@ -14,6 +14,13 @@
 function crm_core_relationship_permission() {
   $permissions = array();
   
+  // administration permission
+  $permissions['administer contact relationship types'] = array(
+    'title' => t('Administer contact relationship types'),
+    'description' => t('Allows user to create/edit/delete any contact relationship types'),
+    'restrict access' => TRUE,
+  );
+  
   // static permissions
   $permissions['create relation entities of any contact relationship'] = array(
     'title' => t('Create Any Contact Relationships'),
@@ -68,7 +75,9 @@ function crm_core_relationship_crm_core_contact_delete($crm_core_contact) {
  * @return array $permissions
  */
 function crm_core_relationship_access_permissions($relation_type, $op = 'create') {
-  $administer_relation_types = user_access('administer relation types');
+  // $administer_relation_types = user_access('administer relation types');
+  $administer_relationship_types = user_access('administer contact relationship types');
+  
   if (is_object($relation_type)) {
     $bundle = $relation_type->relation_type;
   }
@@ -77,16 +86,19 @@ function crm_core_relationship_access_permissions($relation_type, $op = 'create'
   }
   
   switch ($op) {
+    case 'admin':
+      return $administer_relationship_types;
+    break;
     // We are just viewing the list of relationships a contact has here
     case 'view_list':
       $view_any_relationship = user_access('view relation entities of any contact relationship');
-      return ($administer_relation_types || $view_any_relationship);
+      return ($administer_relationship_types || $view_any_relationship);
     break;
     case 'view':
       // view a single relationship
       $view_any_relationship = user_access('view relation entities of any contact relationship');
       $view_type_relationship = user_access('view relation entities of bundle ' . $bundle);
-      return ($administer_relation_types || $view_any_relationship || $view_type_relationship);
+      return ($administer_relationship_types || $view_any_relationship || $view_type_relationship);
     break;
     case 'create_view':
       // we just need any of the create permissions
@@ -98,18 +110,17 @@ function crm_core_relationship_access_permissions($relation_type, $op = 'create'
       }
       // they just need any type of contact type create permission
       $create_type_relationship_flag = in_array(TRUE, $create_type_relationship);
-      return ($administer_relation_types || $create_any_relationship || $create_type_relationship_flag);    
+      return ($administer_relationship_types || $create_any_relationship || $create_type_relationship_flag);    
     break; 
     case 'create':
     default:
       $create_any_relationship = user_access('create relation entities of any contact relationship');
       $create_type_relationship = user_access('create relation entities of bundle ' . $bundle);
-      return ($administer_relation_types || $create_any_relationship || $create_type_relationship);
+      return ($administer_relationship_types || $create_any_relationship || $create_type_relationship);
     break;  
   }
   
-  return FALSE;
-   
+  return FALSE;   
 }
 
 
