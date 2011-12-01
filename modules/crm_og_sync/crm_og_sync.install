@@ -6,19 +6,30 @@
  */
 function crm_og_sync_install() {
   // Add relation type
-//  $relation_type_info = array(
-//    'relation_type' => 'crm_user_sync',
-//    'label' => t('Contact'),
-//    'reverse_label' => t('User'),
-//    'source_bundles' => array('user:user'),
-//    'target_bundles' => array('crm_core_contact:*'),
-//    'r_unique' => true,
-//    'directional' => true,
-//  );
-//  $relation_type = relation_type_create($relation_type_info);
-//  relation_type_save($relation_type);
+  // future: this should include more entity type to be synced
+  $relation_type_info = array(
+    'relation_type' => 'crm_og_sync',
+    'label' => t('Contact'),
+    'reverse_label' => t('Organic Group: Node'),
+    'source_bundles' => array('node:*'),
+    'target_bundles' => array('crm_core_contact:*'),
+    'r_unique' => true,
+    'directional' => true,
+  );
+  $relation_type = relation_type_create($relation_type_info);
+  relation_type_save($relation_type);
 }
 
+/**
+ * Implements hook_install()
+ */
+function crm_og_sync_uninstall() {
+  relation_type_delete('crm_og_sync');
+}
+
+/**
+ * Implements hook_schema()
+ */
 function crm_og_sync_schema() {
   $schema['crm_og_sync_settings'] = array(
     'description' => 'Stores configuration setting information about og sync',
