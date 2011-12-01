@@ -1,0 +1,65 @@
+<?php
+
+
+/**
+ * Implements hook_install()
+ */
+function crm_og_sync_install() {
+  // Add relation type
+//  $relation_type_info = array(
+//    'relation_type' => 'crm_user_sync',
+//    'label' => t('Contact'),
+//    'reverse_label' => t('User'),
+//    'source_bundles' => array('user:user'),
+//    'target_bundles' => array('crm_core_contact:*'),
+//    'r_unique' => true,
+//    'directional' => true,
+//  );
+//  $relation_type = relation_type_create($relation_type_info);
+//  relation_type_save($relation_type);
+}
+
+function crm_og_sync_schema() {
+  $schema['crm_og_sync_settings'] = array(
+    'description' => 'Stores configuration setting information about og sync',
+    'fields' => array(
+      'og_bundle_type' => array(
+        'description' => 'The machine-readable name of this bundle_type.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+      ),
+      'og_entity_type' => array(
+        'description' => 'The machine-readable name of the og entity type',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => 'node',
+      ),
+      'crm_contact_type' => array(
+        'description' => 'The desitnation contact type this syncs to',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => 'organization',
+      ),
+      'status' => array(
+        'description' => 'If the sync is enabled between the og entity bundle and the crm contact type',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+      ),
+      'field_mapping' => array(
+        'type' => 'blob',
+        'not null' => FALSE,
+        'size' => 'big',
+        'serialize' => TRUE,
+        'description' => 'A serialized array of field mapping between the entity bundle and the crm contact type',
+    ),
+  ),
+    'primary key' => array('og_bundle_type', 'og_entity_type'),
+  );
+
+  return $schema;
+}

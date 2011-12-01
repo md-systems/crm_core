@@ -1,0 +1,69 @@
+<?php
+
+/**
+ * Implements hook_menu()
+ */
+function crm_og_sync_menu() {
+  $items = array();
+
+  $items['admin/structure/crm/og_sync'] = array(
+    'title' => t('Organic Group Synchronization'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_og_sync_admin_form'),
+    'access arguments' => array('administer og-sync'),
+    'file' => 'crm_og_sync.admin.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_permission()
+ */
+function crm_og_sync_permission() {
+  return array(
+    'administer og-sync' => array(
+      'title' => t('Administer Organic Group Synchronization'),
+      'description' => t('Access to configuration pages for Organic Group Synchronization'),
+    ),
+  );
+}
+
+/**
+ * Return og node types
+ */
+function _crm_og_sync_og_types() {
+  $og_type = array();
+  $node_types = _node_types_build()->types;
+  $node_types = array_keys($node_types);
+  
+  foreach($node_types as $node_type) {
+    if (og_is_group_type('node', $node_type)) {
+       $og_type[$node_type] = $node_type;   
+    }  
+  }
+  return $og_type; 
+}
+
+/*
+ * Return contact fields associated with a contact type
+ */
+function _crm_og_sync_contact_fields($contact_type = 'organization', $return_mode = 'options') {
+  $return = array();
+  $contact_type_fields = field_info_instances('crm_core_contact', $contact_type);
+  switch($return_mode) {
+    case 'options':
+    default:
+      foreach($contact_type_fields as $field_name => $field) {
+        $return[$field_name] = $field['label'];  
+      }
+    break;  
+  }
+  return $return; 
+}
+
+
+
+function crm_og_sync_init() {
+  // dpm(field_info_instances('crm_core_contact', 'organization'));  
+}
