@@ -14,14 +14,14 @@ function crm_core_relationship_ui_contact_relationships($crm_contact) {
   $results = $query->execute();
   foreach ($results as $_relationship) {
     // load the relation entity and attach it to the view
-    $relationship = relation_load($_relationship->rid, $_relationship->vid);
-    
-    // we have the relation entity loaded, we want to alter how it is viewed.
-    $relationships[] = field_attach_view('relation', $relationship, 'full');
+    if ($relationship = relation_load($_relationship->rid)) {
+      // we have the relation entity loaded, we want to alter how it is viewed.
+      $relationships[] = field_attach_view('relation', $relationship, 'full');
+    }
   }
-  
+
   return (isset($relationships)) ? $relationships : 'No relationships';
-} 
+}
 
 /**
  * Return a list of links to add relationship for specific CRM contact.
