@@ -126,7 +126,7 @@ function crm_core_activity_permission() {
     ),
   );
 
-  $permissions += crm_entity_access_permissions('crm_core_activity');
+  $permissions += crm_core_entity_access_permissions('crm_core_activity');
 
   return $permissions;
 }

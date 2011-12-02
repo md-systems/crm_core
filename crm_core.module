@@ -16,7 +16,7 @@
  * @return
  *   An associative array of entity permissions
  */
-function crm_entity_access_permissions($entity_type) {
+function crm_core_entity_access_permissions($entity_type) {
   $entity_info = entity_get_info($entity_type);
   $labels = $entity_info['permission labels'];
 
@@ -66,7 +66,7 @@ function crm_entity_access_permissions($entity_type) {
 /**
  * Define per bundle permissions
  */
-function crm_bundle_access_permissions($bundle_name, $bundle_info, $entity_type, $entity_info = array()) {
+function crm_core_bundle_access_permissions($bundle_name, $bundle_info, $entity_type, $entity_info = array()) {
   
   $labels = $entity_info['permission labels'];
   

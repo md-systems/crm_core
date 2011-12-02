@@ -10,7 +10,7 @@ core = 7.x
 ; =======================
 
 ; Core Dependencies
-dependencies[] = crm
+dependencies[] = crm_core
 
 ; Contrib Dependencies
 dependencies[] = entity

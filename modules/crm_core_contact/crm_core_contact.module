@@ -88,7 +88,7 @@ function crm_core_contact_permission() {
 //    ),
   );
   
-  $permissions += crm_entity_access_permissions('crm_core_contact');
+  $permissions += crm_core_entity_access_permissions('crm_core_contact');
   
   return $permissions;
   

@@ -49,7 +49,7 @@ function crm_core_relationship_permission() {
   
   foreach($relationships as $type => $info) {
     $info = (array) $info;
-    $permissions += crm_bundle_access_permissions($type, $info, 'relation', $entity_info);
+    $permissions += crm_core_bundle_access_permissions($type, $info, 'relation', $entity_info);
   }
   
   return $permissions; 

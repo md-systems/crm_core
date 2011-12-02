@@ -1,4 +1,4 @@
-name = DropCRM UI
+name = CRM Core UI
 description = User Interface for DropCRM.
 package = CRM
 version = VERSION
@@ -11,7 +11,7 @@ configure = admin/structure/crm
 ; =======================
 
 ; Core Dependencies
-dependencies[] = crm
+dependencies[] = crm_core
 
 
 ; =======================
