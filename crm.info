@@ -1,4 +1,4 @@
-name = DropCRM
+name = CRM Core
 description = Drupal CRM basic functionality
 package = CRM
 version = VERSION
