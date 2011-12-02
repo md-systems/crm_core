@@ -62,7 +62,7 @@ function crm_og_sync_admin_form($form, &$form_state) {
         '#title' => $field['label'],
         // need to load the options from the contact type
         '#options' => $options,
-        '#default_value' => $default_values[$field_name],
+        '#default_value' => (array_key_exists($field_name, $default_values)) ? $default_values[$field_name] : '__none',
       );    
     }  
   }
@@ -94,12 +94,7 @@ function crm_og_sync_admin_form_submit($form, &$form_state) {
        'field_mapping' => $values[$og_entity_type]['mapping'],
      );
      
-     if ($values[$og_entity_type]['is_new']) {
-       drupal_write_record('crm_og_sync_settings', $record);
-     }
-     else {
-       drupal_write_record('crm_og_sync_settings', $record, array('og_bundle_type', 'og_entity_type'));  
-     } 
+     crm_og_sync_save_config($record, $values[$og_entity_type]['is_new']);     
   }
   
   drupal_set_message('Configuration settings saved'); 

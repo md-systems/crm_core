@@ -12,6 +12,7 @@ function crm_og_sync_menu() {
     'page arguments' => array('crm_og_sync_admin_form'),
     'access arguments' => array('administer og-sync'),
     'file' => 'crm_og_sync.admin.inc',
+    'weight' => 20,
   );
 
   return $items;
@@ -44,6 +45,7 @@ function crm_og_sync_node_insert($node) {
 function crm_og_sync_node_update($node) {
   crm_og_sync_sync_node($node, 'update');  
 }
+
 /**
  * Implements hook_node_update
  * Use this hook to delete the contact and the relationship reference
@@ -52,8 +54,36 @@ function crm_og_sync_node_delete($node) {
   crm_og_sync_sync_node($node, 'delete');
 } 
 
+/**
+ * Implements hook_field_delete_instance
+ * If a field instance has been deleted from the og:node, we will delete it from the configuration
+ */
+function crm_og_sync_field_delete_instance($instance) {
+  $sync_node_types = array();
+  // all the types
+  $og_node_types = _crm_og_sync_og_types();
+  foreach($og_node_types as $node_type) {
+    $og_node_sync_settings = _crm_og_sync_settings_get($node_type);
+    if ((bool) $og_node_sync_settings['status']) {
+      $sync_node_types[] = $node_type;  
+    }  
+  }
+  
+  if ($instance['entity_type'] == 'node') {
+    if (in_array($instance['bundle'], $sync_node_types)) {
+      $settings = _crm_og_sync_settings_get($instance['bundle']);
+      $field_mapping = unserialize($settings['field_mapping']);
+      unset($field_mapping[$instance['field_name']]);
+      $settings['field_mapping'] = $field_mapping;
+      // re-save the field mapping
+      crm_og_sync_save_config($settings, FALSE);   
+    }  
+  }    
+}
 
-function crm_og_sync_node_view($node, $view_mode, $langcode) {}
+
+function crm_og_sync_node_view($node, $view_mode, $langcode) {
+}
 
 /**
  * Wrapper function for syncing nodes
@@ -144,6 +174,29 @@ function crm_og_sync_sync($og_entity, $og_entity_sync_settings, $op = 'create', 
        _crm_og_sync_create_relation($source, $target);
     break;  
   }
+}
+
+/**
+ * Save a crm_og_sync configuration setting
+ * @param
+ * array $record    A record to be saved
+ *                  keys: og_bundle_type (i.e. node type)
+ *                        og_entity_type (i.e. node)
+ *                        status (0 or 1)
+ *                        field_mapping (an array of entity to crm contact field mapping)
+ * bool $is_new     Designate if this is a new record or not
+ *
+ * @return
+ * @see drupal_write_record
+ */
+function crm_og_sync_save_config($record = array(), $is_new = TRUE) {
+   // save the record   
+   if ($is_new) {
+     drupal_write_record('crm_og_sync_settings', $record);
+   }
+   else {
+     drupal_write_record('crm_og_sync_settings', $record, array('og_bundle_type', 'og_entity_type'));  
+   }  
 }
 
 /**
