@@ -22,5 +22,5 @@ dependencies[] = og
 ; =======================
 
 ; Base Files
-;files[] = crm_og_sync.module
-;files[] = crm_og_sync.admin.inc
+files[] = crm_og_sync.module
+files[] = crm_og_sync.admin.inc
