@@ -29,6 +29,7 @@ function crm_core_activity_entity_ui_get_form_wrapper($contact, $type) {
       ),
     ),
     'title' => '',
+
   );
   $activity = crm_core_activity_create($values);
 

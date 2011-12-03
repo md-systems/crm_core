@@ -5,6 +5,7 @@
  */
 function crm_core_activity_views_data_alter(&$data) {
   $data['crm_core_activity_type']['type']['field']['handler'] = 'views_handler_field_activity_type';
+  $data['crm_core_activity']['type']['filter']['handler'] = 'views_handler_filter_activity_type';
 
   // View, Edit and Delete links of activity.
   $data['crm_core_activity']['view_crm_activity'] = array(

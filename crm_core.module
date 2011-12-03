@@ -55,7 +55,7 @@ function crm_core_entity_access_permissions($entity_type) {
   // Per-bundle create and edit permissions.
   if (!empty($entity_info['entity keys']['bundle'])) {
     foreach ($entity_info['bundles'] as $bundle_name => $bundle_info) {
-      $permissions += crm_bundle_access_permissions($bundle_name, $bundle_info, $entity_type, $entity_info);
+      $permissions += crm_core_bundle_access_permissions($bundle_name, $bundle_info, $entity_type, $entity_info);
     }
     
   }
