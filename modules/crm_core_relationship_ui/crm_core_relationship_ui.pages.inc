@@ -1,7 +1,149 @@
 <?php
 
 /**
- * Return a list of relatinships for this contact.
+ * Wrapper around entity_ui_get_form().
+ *
+ * Create new crm_activity entity and pass it to entity_ui_get_form().
+ *
+ * @param type $contact
+ * @param type $type
+ */
+function crm_core_relation_entity_ui_get_form_wrapper($contact, $type) {
+  global $user;
+  // Default empty Relation.
+  $values = array(
+    'relation_type' => $type,
+    'uid' => $user->uid,    
+    'title' => '', 
+    'reverse' => 0,
+    'directional' => 0,
+    'r_unique' => 0,
+    'source_bundles' => array(
+      'crm_core_contact:' . $contact->type
+    ),
+    'crm_core_contact' => $contact,
+  );
+  $relation = crm_core_relation_create($values);
+  
+  return entity_ui_get_form('crm_core_relationship', $relation, 'add');
+}
+
+/**
+ * Form builder for CRM Activity forms.
+ */
+function crm_core_relationship_form($form, &$form_state, $relation) {
+  // Ensure this include file is loaded when the form is rebuilt from the cache.
+  $form_state['build_info']['file'] = drupal_get_path('module', 'crm_ui') . '/pages/contact_activity.pages.inc';
+  $form_state['entity_type'] = 'relation';
+  $form_state['relation'] = $form_state['crm_core_relationship'];
+  unset($form_state['crm_core_relationship']);
+  
+  // get the contact id of who is trying to add the activity
+  $form['contact_id'] = array(
+    '#type' => 'value',
+    '#value' => arg(2),
+  );
+
+  module_load_include('inc', 'crm_core_relationship_ui');
+
+  $form = array();
+
+  $form['relationship_type'] = array(
+    '#type' => 'value',
+    '#value' => $relation,
+  );
+  $form['reverse'] = array(
+    '#type' => 'value',
+    '#value' => $relation->reverse,
+  );
+  $form['relationship_type_label'] = array(
+    '#type' => 'item',
+    '#title' => t('Relationship type') . ': ',// . $relation->label,
+    '#value' => "",
+  );
+  
+  foreach (array(0, 1) as $reverse_field) {
+    $contact_type_names = array();
+    foreach (crm_core_relationship_load_contact_types($relation, $reverse_field) as $contact_type) {
+      $contact_type_names[] = t($contact_type->name);
+    }
+    $contact_type_names = implode(', ', $contact_type_names);
+
+    $form[$reverse_field ? 'destination_contact' : 'source_contact'] = array(
+      '#title' => $reverse_field ? t('Destination contact name') : t('Source contact name'),
+      '#description' => (t('Following contact types allowed: !types.', array('!types' => $contact_type_names))),
+      '#type' => 'textfield',
+      '#default_value' => !($reverse_field ^ $relation->reverse) ? crm_core_contact_title($relation->crm_core_contact) . " [cid:{$relation->crm_core_contact->contact_id}]" : '',
+      '#disabled' => !($reverse_field ^ $relation->reverse),
+      '#required' => true,
+      '#autocomplete_path' => 'crm/contact/' . $relation->crm_core_contact->contact_id . '/relationships/add/' . $relation->relation_type . '/' . $reverse_field . '/autocomplete',
+    );
+  }    
+
+  $form['uid'] = array(
+    '#type' => 'value',
+    '#value' => $relation->uid,
+  );
+
+  field_attach_form('relation', $relation, $form, $form_state);
+  unset($form['endpoints']);
+  
+  $form['actions'] = array(
+    '#type' => 'container',
+    '#attributes' => array('class' => array('form-actions')),
+    '#weight' => 40,
+  );
+
+  // We add the form's #submit array to this button along with the actual submit
+  // handler to preserve any submit handlers added by a form callback_wrapper.
+  $submit = array();
+
+  if (!empty($form['#submit'])) {
+    $submit += $form['#submit'];
+  }
+
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save Activity'),
+    '#submit' => $submit + array('crm_core_relationship_ui_add_relationship_form_submit'),
+  );
+
+  // Show Delete button if we edit activity.
+  if ($form_state['op'] == 'edit') {
+    $form['actions']['delete'] = array(
+      '#type' => 'submit',
+      '#value' => t('Delete'),
+      '#submit' => array('crm_core_relationship_ui_add_relationship_form_delete'),
+    );
+  }
+
+  // We append the validate handler to #validate in case a form callback_wrapper
+  // is used to add validate handlers earlier.
+  $form['#validate'][] = 'crm_core_relationship_ui_add_relationship_form_validate';
+//
+  // Add after build to set proper page Title as it
+  // got set by entity_ui_main_form_defaults
+  // @see entity_ui_get_form().
+  $form['#after_build'][] = 'crm_core_relationship_form_after_build';
+
+  return $form;
+}
+
+/**
+ * After build callback for crm_activity_form
+ *
+ * Set proper page title.
+ */
+function crm_core_relationship_form_after_build(&$form, &$form_state) {  
+  if ($form_state['op'] == 'add') {
+    drupal_set_title(t('Add new relationship @label', array('@label' => crm_core_relationship_get_type_label($form_state['relation']))));
+  }
+  return $form;
+}
+
+
+/**
+ * Return a list of relationships for this contact.
  *
  * @param $crm_core_contact
  *   Entity object of crm_core_contact type.

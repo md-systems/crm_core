@@ -20,17 +20,19 @@ function crm_core_relationship_ui_menu() {
     'file' => 'crm_core_relationship_ui.pages.inc',
   );
 
-  $items['crm/contact/%crm_core_contact/relationships/add'] = array(
-    'title' => 'Add Relationship',
-    'description' => 'Add a relationship to this contact',
-    'page callback' => 'crm_core_relationship_ui_add_relationship',
-    'page arguments' => array(2),
-    'access callback' => 'crm_core_relationship_access_permissions',
-    'access arguments' => array(null, 'create_view'),
-    'type' => MENU_LOCAL_ACTION,
-    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
-    'file' => 'crm_core_relationship_ui.pages.inc',
-  );
+  foreach (crm_core_relationship_get_relationships() as $type => $info) {
+    $items['crm/contact/%crm_core_contact/relationships/add/' . $type] = array(
+      'title' => 'Add Relationship',
+      'description' => 'Add a relationship to this contact',
+      'page callback' => 'crm_core_relation_entity_ui_get_form_wrapper',
+      'page arguments' => array(2, 5),
+      'access callback' => 'crm_core_relationship_access_permissions',
+      'access arguments' => array(null, 'create_view'),
+      'type' => MENU_LOCAL_ACTION,
+      //'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+      'file' => 'crm_core_relationship_ui.pages.inc',
+    );
+  }
 
   $items['crm/contact/%crm_core_contact/relationships/add/%relation_type/%'] = array(
     'title' => 'Add Contact Relationship',
@@ -108,7 +110,7 @@ function crm_core_relationship_ui_menu_alter(&$items) {
   $items['admin/structure/relation']['page callback'] = 'crm_core_relationship_ui_types_overview';
   $items['admin/structure/relation']['file path'] = drupal_get_path('module', 'crm_core_relationship_ui');
   $items['admin/structure/relation']['file'] = 'crm_core_relationship_ui.admin.inc';
-  $items['admin/structure/relation']['page arguments'] = array(1);
+  $items['admin/structure/relation']['page arguments'] = array(1);  
 }
 
 /**

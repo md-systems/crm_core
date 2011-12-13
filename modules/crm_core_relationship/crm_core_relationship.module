@@ -256,7 +256,7 @@ function crm_core_relationship_get_relationships() {
 
 
 /**
- * Return a list of relatinships for this contact.
+ * Return a list of relationships for this contact.
  *
  * @param $crm_core_contact
  *   Entity object of crm_core_contact type.
@@ -264,7 +264,7 @@ function crm_core_relationship_get_relationships() {
 /**
  * http://drupal.org/node/1318856
  */
-function crm_core_relationship_get_type_label($relation, $reverse = FALSE) {
+function crm_core_relationship_get_type_label($relation, $reverse = FALSE) {  
   $type = relation_type_load($relation->relation_type);
   
   if ($type->directional == 0) {
@@ -273,4 +273,19 @@ function crm_core_relationship_get_type_label($relation, $reverse = FALSE) {
   else {
     return (!$reverse) ? $type->label : $type->reverse_label; 
   }
+}
+
+/**
+ * Create new relation object.
+ *   Wrapper for controller.
+ *
+ * @param array $values
+ *   Keyed array of new object attribures.
+ *
+ * @return object relation entity
+ *
+ * @see entity_create()
+ */
+function crm_core_relation_create($values) {
+  return new Entity($values, 'relation');
 }
