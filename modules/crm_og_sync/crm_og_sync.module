@@ -189,14 +189,13 @@ function crm_og_sync_crm_core_contact_update($contact) {
   }
   
   $og_node = _crm_og_sync_get_related_entity('crm_core_contact', $contact->contact_id, 'crm_og_sync');
-  
-  $node_type_config = _crm_og_sync_settings_get($og_node->type);
-  $field_mapping = unserialize($node_type_config['field_mapping']);
-  
   if (empty($og_node)) {
     return;
   }
 
+  $node_type_config = _crm_og_sync_settings_get($og_node->type);
+  $field_mapping = unserialize($node_type_config['field_mapping']);
+  
   foreach ($field_mapping as $og_entity_field => $contact_field) {
     if ($contact_field !== '__none') {
        $og_node->$og_entity_field = $contact->$contact_field; 

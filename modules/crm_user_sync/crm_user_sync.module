@@ -27,8 +27,69 @@ function crm_user_sync_permission() {
       'title' => t('Administer User Synchronization'),
       'description' => t('Access to configuration pages for User Synchronization'),
     ),
+    'edit own contact information' => array(
+      'title' => t('Edit own contact information'),
+      'description' => t('Allows user to edit his/her own contact record from the user profile form'),
+    ),
   );
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter
+ */
+function crm_user_sync_form_user_profile_form_alter(&$form, &$form_state, $form_id) {
+  global $user;
+  
+  // only attach the contact form if a corresponding contact has been found
+  $contact = _crm_user_sync_get_related_entity('user', $user->uid, 'crm_user_sync');
+  if (empty($contact)) {
+    return;  
+  }
+  if (!user_access('edit own contact information')) {
+    return;  
+  }
+  $form_state['storage']['crm_core_contact'] = $contact;
+  $form['crm_core_contact'] = array(
+    '#type' => 'fieldset',
+    '#title' => 'Profile Information',
+    '#description' => t('This information will appear on your public profile'),
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+    '#parents' => array('crm_core_contact'),
+    '#tree' => TRUE,
+  );
+  
+  field_attach_form('crm_core_contact', $contact, $form['crm_core_contact'], $form_state);
+  $form['#validate'][] = 'crm_user_sync_user_profile_form_validate';
+  $form['#submit'][] = 'crm_user_sync_user_profile_form_submit';
+  
+}
+
+/**
+ * Validation handler
+ */
+function crm_user_sync_user_profile_form_validate($form, &$form_state) {
+  $contact = $form_state['storage']['crm_core_contact'];
+ // Notify field widgets to validate their data.
+  field_attach_form_validate('crm_core_contact', $contact, $form['crm_core_contact'], $form_state);  
+}
+
+/**
+ * Submission handler
+ */
+function crm_user_sync_user_profile_form_submit($form, &$form_state) {
+  $contact = &$form_state['storage']['crm_core_contact'];
+  // Set the contact's uid if it's being created at this time.
+  if (!isset($contact->contact_id)) {
+    $create = TRUE;
+  }
+  // Notify field widgets.
+  field_attach_submit('crm_core_contact', $contact, $form['crm_core_contact'], $form_state);
+  
+  // Save the contact
+  crm_core_contact_save($contact);
+}
+
 
 /**
  * Implements hook_user_insert()
@@ -43,6 +104,10 @@ function crm_user_sync_user_insert(&$edit, $account, $category) {
 function crm_user_sync_user_update(&$edit, $account, $category) {
   // user update only ensures that for the given user it should have a corresponding
   // contact record associated with it.  
+  $related_contact = _crm_user_sync_get_related_entity('user', $account->uid, 'crm_user_sync');
+  if (empty($related_contact)) {
+    crm_user_sync_sync($account);  
+  }
 }
 
 /**
@@ -79,6 +144,9 @@ function crm_user_sync_sync($account) {
     }    
   }  
   $roles = array_intersect_key($roles_sync, $account->roles);
+  if (empty($roles)) {
+    return;  
+  }
   
   $rid = key($roles);
   $contact_type = variable_get('crm_user_sync_' . $rid . '_type', 'individual');
@@ -116,4 +184,39 @@ function crm_user_sync_sync($account) {
   );
   $relation = relation_create('crm_user_sync', $endpoints);
   relation_save($relation);
+}
+
+/**
+ * Copied from relation.module, (beta 1)
+ * gives an error if the entity id is not found, so need to fix that
+ */
+function _crm_user_sync_get_related_entity($entity_type, $entity_id, $relation_type = NULL, $r_index = NULL) {
+  $query = relation_query($entity_type, $entity_id);
+  if ($relation_type) {
+    $query->propertyCondition('relation_type', $relation_type);
+  }
+  if (isset($r_index)) {
+    $query->propertyCondition('r_index', $r_index);
+  }
+  $results = $query->execute();
+  
+  if (empty($results)) {
+    return;
+  }
+  
+  $result = reset($results);
+  $relation = relation_load($result->rid);
+  $request_key = $entity_type . ':' . $entity_id;
+  $entities = $relation->endpoints[LANGUAGE_NONE];
+  $first_entity_key = $entities[0]['entity_type'] . ':' . $entities[0]['entity_id'];
+  if (isset($r_index)) {
+    $request_key = $request_key . ':' . $r_index;
+    $first_entity_key = $first_entity_key . ':' . $entities[0]['r_index'];
+  }
+  if ($request_key == $first_entity_key) {
+    $other_endpoints = entity_load($entities[1]['entity_type'], array($entities[1]['entity_id']));
+    return reset($other_endpoints);
+  }
+  $other_endpoints = entity_load($entities[0]['entity_type'], array($entities[0]['entity_id']));
+  return reset($other_endpoints);
 }
