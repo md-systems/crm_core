@@ -88,6 +88,6 @@ function crm_user_sync_admin_submit($form, &$form_state) {
   }
 
   
-  dsm($form);
-  dsm($form_state);
+  // dsm($form);
+  // dsm($form_state);
 }
