@@ -44,10 +44,46 @@ function crm_user_sync_admin($form_state) {
   return system_settings_form($form);
 }
 
+/**
+ * Validation callback.
+ */
+function crm_user_sync_admin_validate($form, &$form_state) {
+  // we need to make sure that no single contact type is selected to match multiple roles
+  $errors = array();
+  $values = $form_state['values'];
+  foreach($values['crm_user_sync_roles'] as $rid => $status) {
+    if ($status != 0) {
+      $contact_type_sync[$rid] = $values['crm_user_sync_' . $rid . '_type'];  
+    }  
+  }
+  $value_count = array_count_values($contact_type_sync);
+  foreach($value_count as $contact_type => $count) {
+    if ($count > 1) {
+       $errors[$contact_type] = $contact_type;
+       
+    }
+  }
+  if (!empty($errors)) {
+    foreach($contact_type_sync as $rid => $contact_type) {
+      if (array_key_exists($contact_type, $errors)) {
+        form_set_error('crm_user_sync_' . $rid . '_type', t('@contact_type has been mapped to more than 1 user roles', array('@contact_type' => $contact_type)));         
+      }  
+    }       
+  }
+}
 
 /**
  * Submit callback. Handles synchronization changes.
  */
+function crm_user_sync_admin_submit($form, &$form_state) {
+  // we shouldn't use the submission handler to perform bulk operations, it can potentially be messy,
+  // instead we will let the user hooks to do the works
+}
+
+/**
+ * Submit callback. Handles synchronization changes.
+ */
+/* 
 function crm_user_sync_admin_submit($form, &$form_state) {
   // @TODO: This needs to be thinked through - There are many cases here.
   
@@ -90,4 +126,4 @@ function crm_user_sync_admin_submit($form, &$form_state) {
   
   // dsm($form);
   // dsm($form_state);
-}
+}*/

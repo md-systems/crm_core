@@ -34,6 +34,7 @@ class CRMCoreContactController extends DrupalDefaultEntityController {
 
     try {
       global $user;
+      $uid = (isset($contact->uid)) ? $contact->uid : $user->uid;
 
       // Determine if this is a new contact and set changed time
       $contact->is_new = empty($contact->contact_id);
@@ -56,7 +57,7 @@ class CRMCoreContactController extends DrupalDefaultEntityController {
         drupal_write_record('crm_core_contact', $contact);
         
         // Save the first revision
-        $this->saveRevision($contact, $user->uid);
+        $this->saveRevision($contact, $uid);
 
         // Save the fields attched to the contact
         field_attach_insert('crm_core_contact', $contact);
@@ -66,7 +67,7 @@ class CRMCoreContactController extends DrupalDefaultEntityController {
       else {
         // Always save a new revision so that we have a log of changes to the contact
         unset($contact->vid); // Unset the vid so that a new revision will be created
-        $this->saveRevision($contact, $user->uid);
+        $this->saveRevision($contact, $uid);
 
         // Update the record and its fields
         drupal_write_record('crm_core_contact', $contact, 'contact_id');

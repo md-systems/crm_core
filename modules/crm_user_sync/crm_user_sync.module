@@ -7,7 +7,7 @@ function crm_user_sync_menu() {
   $items = array();
 
   // Only setup ui if crm_ui is present
-  $items['crm/admin/user-sync'] = array(
+  $items['admin/structure/crm/user_sync'] = array(
     'title' => t('User Synchronization'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('crm_user_sync_admin'),
@@ -38,13 +38,20 @@ function crm_user_sync_user_insert(&$edit, $account, $category) {
 }
 
 /**
+ * Implements hook_user_update()
+ */
+function crm_user_sync_user_update(&$edit, $account, $category) {
+  // user update only ensures that for the given user it should have a corresponding
+  // contact record associated with it.  
+}
+
+/**
  * Implements hook_user_delete()
  */
 function crm_user_sync_user_delete($account) {
   // @TODO: For now we delete the relation only.
   // We should handle this properly in hook_user_cancel() regarding other
   // cancellation methods.
-
   $query = relation_query('user', $account->uid);
   $query->propertyCondition('relation_type', 'crm_user_sync');
   $query->propertyCondition('arity', 2);
@@ -66,7 +73,12 @@ function crm_user_sync_sync($account) {
   // @TODO: think about the logic here, what to do with multiple roles?
   // For now we just use the first that has user-sync enabled, if there is.
   $roles_sync = variable_get('crm_user_sync_roles', array());
-  $roles = array_intersect($roles_sync, $account->roles);
+  foreach($roles_sync as $rid => $sync_rid) {
+    if ($sync_rid == 0) {
+      unset($roles_sync[$rid]);
+    }    
+  }  
+  $roles = array_intersect_key($roles_sync, $account->roles);
   
   $rid = key($roles);
   $contact_type = variable_get('crm_user_sync_' . $rid . '_type', 'individual');
@@ -74,7 +86,19 @@ function crm_user_sync_sync($account) {
   // Create the contact.
   // For now we just add the name.
   $contact = crm_core_contact_type_new($contact_type);
-  $contact->contact_name['und'][0]['value'] = $account->name;
+  $contact->uid = $account->uid;
+  
+  $contact_name = field_info_instance('crm_core_contact', 'contact_name', $contact_type);
+  if (!empty($contact_name)) {
+    $contact->contact_name[LANGUAGE_NONE][0] = array(
+           'title' => '',
+           'family' => '',
+           'generational' => '',
+           'credentials' => '',
+           'given' => $account->name,
+    );
+  }
+
   crm_core_contact_save($contact);
 
   // Create the relation
