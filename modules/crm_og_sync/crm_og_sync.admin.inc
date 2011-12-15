@@ -86,18 +86,25 @@ function crm_og_sync_admin_form($form, &$form_state) {
     if (!empty($selected_contact_type)) {
        $options += _crm_og_sync_contact_fields($form_state['values'][$og_entity_type]['contact_type']);
     } else {
-      $options += _crm_og_sync_contact_fields($default_settings['crm_contact_type']);  
+      $default_contact_type = (isset($default_settings['crm_contact_type'])) ? $default_settings['crm_contact_type'] : 'organization';
+      $options += _crm_og_sync_contact_fields($default_contact_type);  
     }
     
     $default_values = unserialize($default_settings['field_mapping']);
+    
     $og_entity_type_fields = field_info_instances('node', $og_entity_type);
     foreach($og_entity_type_fields as $field_name => $field) {
+      if (empty($default_values)) {
+        $_default_value = '__none';
+      } else {
+        $_default_value = (array_key_exists($field_name, $default_values)) ? $default_values[$field_name] : '__none';
+      }
       $form[$og_entity_type]['mapping'][$field_name] = array(
         '#type' => 'select',
         '#title' => $field['label'],
         // need to load the options from the contact type
         '#options' => $options,
-        '#default_value' => (array_key_exists($field_name, $default_values)) ? $default_values[$field_name] : '__none',
+        '#default_value' => $_default_value,
       );    
     }  
   }

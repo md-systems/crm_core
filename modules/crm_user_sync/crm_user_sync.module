@@ -51,8 +51,7 @@ function crm_user_sync_form_user_profile_form_alter(&$form, &$form_state, $form_
   $form_state['storage']['crm_core_contact'] = $contact;
   $form['crm_core_contact'] = array(
     '#type' => 'fieldset',
-    '#title' => 'Profile Information',
-    '#description' => t('This information will appear on your public profile'),
+    '#title' => 'Contact Information',
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
     '#parents' => array('crm_core_contact'),
