@@ -12,7 +12,7 @@ function crm_core_relationship_ui_menu() {
     'title' => 'Relationships',
     'description' => 'View contact relationships',
     'page callback' => 'crm_core_relationship_ui_contact_relationships',
-    'page arguments' => array(2),
+    'page arguments' => array(2, NULL),
     'access callback' => 'crm_core_relationship_access_permissions',
     'access arguments' => array(null, 'view_list'),
     'type' => MENU_LOCAL_TASK,
