@@ -141,24 +141,36 @@ function crm_core_relationship_form_after_build(&$form, &$form_state) {
   return $form;
 }
 
+/**
+ * Sets relationships list page title.
+ *
+ * @param $crm_core_contact
+ *   Entity object of crm_core_contact type.
+ */
+function crm_core_relationship_ui_contact_relationships_title($crm_contact) {
+  drupal_set_title(t('Relationships of !contact', array('!contact' => crm_core_contact_title($crm_contact))));
+}
 
 /**
  * Return a list of relationships for this contact.
  *
  * @param $crm_core_contact
  *   Entity object of crm_core_contact type.
+ * @param crm_relationship_type
+ *   Entity bundle type of crm_core_contact.
  */
-function crm_core_relationship_ui_contact_relationships($crm_contact) {
-  drupal_set_title(t('Relationships of !contact', array('!contact' => crm_core_contact_title($crm_contact))));
-
+function crm_core_relationship_ui_contact_relationships($crm_contact, $crm_relationship_type = NULL) {
   // query all existing relation for contact entity
   $query = relation_query('crm_core_contact', $crm_contact->contact_id);
   $results = $query->execute();
   foreach ($results as $_relationship) {
     // load the relation entity and attach it to the view
     if ($relationship = relation_load($_relationship->rid)) {
-      // we have the relation entity loaded, we want to alter how it is viewed.
-      $relationships[] = field_attach_view('relation', $relationship, 'full');
+      $relationship = field_attach_view('relation', $relationship, 'full');
+      if ($crm_relationship_type == NULL || $crm_relationship_type == $relationship['#bundle']) {
+        // we have the relation entity loaded, we want to alter how it is viewed.
+        $relationships[] = $relationship;
+      }
     }
   }
 
