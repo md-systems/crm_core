@@ -24,3 +24,4 @@ dependencies[] = relation
 ; Base Files
 files[] = crm_user_sync.module
 files[] = crm_user_sync.admin.inc
+files[] = views/views_plugin_argument_default_contact_id.inc

@@ -35,6 +35,16 @@ function crm_user_sync_permission() {
 }
 
 /**
+ * Implements hook_views_api().
+ */
+function crm_user_sync_views_api() {
+  return array(
+    'api' => 2,
+    'path' => drupal_get_path('module', 'crm_user_sync') . '/views',
+  );
+}
+
+/**
  * Implements hook_form_FORM_ID_alter
  */
 function crm_user_sync_form_user_profile_form_alter(&$form, &$form_state, $form_id) {
@@ -195,7 +205,8 @@ function _crm_user_sync_get_related_entity($entity_type, $entity_id, $relation_t
     $query->propertyCondition('relation_type', $relation_type);
   }
   if (isset($r_index)) {
-    $query->propertyCondition('r_index', $r_index);
+    // $query->propertyCondition('r_index', $r_index);
+    $query->fieldCondition('endpoints', 'r_index', $r_index);
   }
   $results = $query->execute();
   
