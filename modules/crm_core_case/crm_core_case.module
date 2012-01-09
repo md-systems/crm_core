@@ -1,0 +1,245 @@
+<?php
+
+/**
+ * Implements hook_entity_info().
+ */
+function crm_core_case_entity_info() {
+  $return = array(
+    'crm_core_case' => array(
+      'label' => t('Case'),
+      'entity class' => 'Entity',
+      'controller class' => 'EntityAPIController',
+      'base table' => 'crm_core_case',
+      'fieldable' => TRUE,
+      'entity keys' => array(
+        'id' => 'cid',
+        'bundle' => 'type',
+      ),
+      'bundle keys' => array(
+        'bundle' => 'type',
+      ),
+      'bundles' => array(),
+      'load hook' => 'crm_core_case_load',
+      'view modes' => array(
+        'full' => array(
+          'label' => t('Default'),
+          'custom settings' => FALSE,
+        ),
+      ),
+      'label callback' => 'crm_core_case_label',
+      'uri callback' => 'entity_class_uri',
+      'module' => 'crm_core_case',
+      'permission labels' => array(
+        'singular' => t('case'),
+        'plural' => t('cases'),
+      ),
+    ),
+  );
+  $return['crm_core_case_type'] = array(
+    'label' => t('Case Type'),
+    'entity class' => 'CRMCaseType',
+    'controller class' => 'EntityAPIControllerExportable',
+    'base table' => 'crm_core_case_type',
+    'fieldable' => FALSE,
+    'bundle of' => 'crm_core_case',
+    'exportable' => TRUE,
+    'entity keys' => array(
+      'id' => 'id',
+      'name' => 'type',
+      'label' => 'label',
+    ),
+    'module' => 'crm_core_case',
+    // Enable the entity API's admin UI.
+    'admin ui' => array(
+      'path' => 'admin/structure/crm/case-types',
+      'file' => 'crm_core_case.admin.inc',
+      'controller class' => 'CRMCaseTypeUIController',
+    ),
+    'access callback' => 'crm_core_case_type_access',
+  );
+
+  return $return;
+}
+
+/**
+ * Implements hook_entity_info_alter().
+ *
+ * Use this hook to specify profile bundles to avoid a recursion, as loading
+ * the profile types needs the entity info too.
+ */
+function crm_core_case_entity_info_alter(&$entity_info) {
+  foreach (crm_core_case_types() as $type => $info) {
+    $entity_info['crm_core_case']['bundles'][$type] = array(
+      'label' => $info->label,
+      'admin' => array(
+        'path' => 'admin/structure/crm/case-types/manage/%crm_core_case_type',
+        'real path' => 'admin/structure/crm/case-types/manage/' . $type,
+        'bundle argument' => 5,
+      ),
+    );
+  }
+}
+
+function crm_core_case_type_access($op, $entity = NULL) {
+  return user_access('administer crm_core_case types');
+}
+
+/**
+ * Implements hook_permission().
+ */
+function crm_core_case_permission() {
+  $permissions = array(
+    'administer crm_core_case types' => array(
+      'title' => t('Administer case types'),
+      'description' => t('Allows users to configure case types and their fields.'),
+      'restrict access' => TRUE,
+    ),
+  );
+
+  $permissions += crm_core_entity_access_permissions('crm_core_activity');
+
+  return $permissions;
+}
+
+function crm_core_case_menu() {
+  $items = array();
+
+  $items['admin/structure/crm/case-types/%crm_core_case_type/delete'] = array(
+    'title' => 'Delete',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_core_case_type_form_delete_confirm', 4),
+    'access arguments' => array('administer crm_core_case types'),
+    'weight' => 1,
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'crm_core_case.admin.inc',
+  );
+
+  return $items;
+}
+
+//function crm_core_case_menu_alter(&$items) {
+//  dpm($items, 'menu items');
+//}
+
+/**
+ * Load a CRM Case object.
+ */
+function crm_core_case_load($cid, $reset = FALSE) {
+  $cases = crm_core_case_load_multiple(array($cid), array(), $reset);
+  return reset($cases);
+}
+
+/**
+ * Load multiple cases based on certain conditions.
+ */
+function crm_core_case_load_multiple($cids = array(), $conditions = array(), $reset = FALSE) {
+  return entity_load('crm_core_case', $cids, $conditions, $reset);
+}
+
+/**
+ * Label callback for Case.
+ *
+ * Used to set title of the view case page.
+ */
+function crm_core_case_label($case) {
+  return $case->title;
+}
+
+/**
+ * Use a separate class for profile types so we can specify some defaults
+ * modules may alter.
+ */
+class CRMCaseType extends Entity {
+  public $type;
+  public $label;
+  public $weight = 0;
+
+  public function __construct($values = array()) {
+    parent::__construct($values, 'crm_core_case_type');
+  }
+
+  function isLocked() {
+    return isset($this->status) && empty($this->is_new) && (($this->status & ENTITY_IN_CODE) || ($this->status & ENTITY_FIXED));
+  }
+}
+
+/**
+ * UI controller for CRM Activity Type.
+ */
+class CRMCaseTypeUIController extends EntityDefaultUIController {
+  /**
+   * Overrides hook_menu() defaults.
+   */
+  public function hook_menu() {
+    $items = parent::hook_menu();
+    $items[$this->path]['description'] = 'Manage Case types.';
+    return $items;
+  }
+}
+
+/**
+ * Load Case Type.
+ */
+function crm_core_case_type_load($case_type) {
+  return crm_core_case_types($case_type);
+}
+
+/**
+ * List of Case Types.
+ */
+function crm_core_case_types($type_name = NULL) {
+  $types = entity_load_multiple_by_name('crm_core_case_type', isset($type_name) ? array($type_name) : FALSE);
+  return isset($type_name) ? reset($types) : $types;
+}
+
+function crm_core_case_type_new($type = '') {
+  return (object) array(
+    'type' => $type,
+    'label' => '',
+    'description' => '',
+  );
+}
+
+/**
+ * Save Case type entity.
+ */
+function crm_core_case_type_save($case_type) {
+
+  $op = drupal_write_record('crm_core_case_type', $case_type, (isset($case_type->is_new) && $case_type->is_new) || !isset($case_type->id) ? array() : 'id');
+
+  menu_rebuild();
+
+  // If this is a new case type and the insert did not fail...
+  if (isset($case_type->is_new) && $case_type->is_new && $op != FALSE) {
+    // Notify the field API that a new bundle has been created.
+    field_attach_create_bundle('crm_core_case', $case_type->type);
+
+    // Add base fields to the contact
+    /// Bug: the function is in crm_activity_admin.inc, why file not auto included
+//    module_load_include('inc', 'crm_core_activity', 'crm_core_activity.admin');
+//    crm_core_activitycase_add_default_fields($case_type);
+
+    // Notify other modules that a new case type has been created.
+    module_invoke_all('crm_core_case_type_insert', $case_type);
+  }
+  else {
+    // Notify other modules that an existing contact type has been updated.
+    module_invoke_all('crm_core_case_type_update', $case_type);
+  }
+
+  return $op;
+}
+
+/**
+ * Delete single case type.
+ */
+function crm_core_case_type_delete($case_type) {
+  crm_core_case_type_delete_multiple(array($case_type->id));
+}
+
+/**
+ * Delete multiple case types.
+ */
+function crm_core_case_type_delete_multiple($case_type_ids) {
+  entity_get_controller('crm_core_case_type')->delete($case_type_ids);
+}
