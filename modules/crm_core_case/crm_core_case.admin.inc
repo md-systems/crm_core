@@ -86,7 +86,7 @@ function crm_core_case_type_form_delete_confirm($form, &$form_state, $case_type)
   $form['case_type_id'] = array('#type' => 'value', '#value' => $case_type->id);
   return confirm_form($form,
     t('Are you sure you want to delete Case type %title?', array('%title' => $case_type->label)),
-    'crm/activity/' . $case_type->id,
+    'crm/case/' . $case_type->id,
     t('This action cannot be undone.'),
     t('Delete'),
     t('Cancel')
@@ -104,4 +104,141 @@ function crm_core_case_type_form_delete_confirm_submit($form, &$form_state) {
   drupal_set_message(t('@type %title has been deleted.', array('@type' => $case_type->type, '%title' => $case_type->label)));
 
   $form_state['redirect'] = 'admin/structure/crm/case-types';
+}
+
+function crm_core_case_admin_page() {
+  return 'case lists';
+}
+
+function crm_core_case_admin_add_page() {
+  $items = array();
+  foreach (crm_core_case_types() as $case_type_key => $case_type) {
+    $items[] = l($case_type->label, 'admin/structure/crm/case/add/' . $case_type_key);
+  }
+  return array('list' => array('#theme' => 'item_list', '#items' => $items, '#title' => t('Select type of case to create.')));
+}
+
+/**
+ * Add new case page callback.
+ */
+function crm_core_case_add($type) {
+  $case_type = crm_core_case_types($type);
+  $case = crm_core_case_case_new($type);
+  drupal_set_title(t('Create @name', array('@name' => $case_type->label)));
+
+  $output = drupal_get_form($type . '_crm_core_case_form', $case);
+
+  return $output;
+}
+
+function crm_core_case_form($form, &$form_state, $case) {
+  $form_state['case'] = $case;
+
+  $form['title'] = array(
+    '#type' => 'textfield',
+    '#required' => TRUE,
+    '#title' => t('Name'),
+    '#default_value' => $case->title,
+  );
+
+  $form['description'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Description'),
+    '#default_value' => $case->description,
+  );
+
+  $form['status'] = array(
+    '#type' => 'select',
+    '#options' => crm_core_case_status(),
+    '#title' => t('Status'),
+    '#default_value' => $case->status,
+  );
+
+  $form['uid'] = array(
+    '#type' => 'value',
+    '#value' => $case->uid,
+  );
+
+  field_attach_form('crm_core_case', $case, $form, $form_state);
+
+  $submit = array();
+  if (!empty($form['#submit'])) {
+    $submit += $form['#submit'];
+  }
+
+  $form['actions'] = array(
+    '#weight' => 100,
+  );
+
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save Case'),
+    '#submit' => $submit + array('crm_core_case_form_submit'),
+  );
+
+  // Show Delete button if we edit case.
+  if (!empty($case->cid) && crm_core_case_edit_access($case)) {
+    $form['actions']['delete'] = array(
+      '#type' => 'submit',
+      '#value' => t('Delete'),
+      '#submit' => array('crm_core_case_form_submit_delete'),
+    );
+  }
+
+  $form['#validate'][] = 'crm_core_case_form_validate';
+
+  return $form;
+}
+
+function crm_core_case_form_validate($form, &$form_state) {
+
+}
+
+/**
+ * Case submit handler.
+ */
+function crm_core_case_form_submit($form, &$form_state) {
+  $case = $form_state['case'];
+
+  entity_form_submit_build_entity('crm_core_case', $case, $form, $form_state);
+
+  entity_save('crm_core_case', $case);
+
+  $form_state['redirect'] = crm_core_case_uri($case);
+
+  drupal_set_message(t('Case %title saved.', array('%title' => crm_core_case_label($case))));
+}
+
+
+function crm_core_case_form_submit_delete($form, &$form_state) {
+  $case = $form_state['case'];
+  $form_state['redirect'] = crm_core_case_uri($case) . '/delete';
+}
+
+/**
+ * Delete confirmation form.
+ */
+function crm_core_case_delete_form($form, &$form_state, $case) {
+  $form_state['case'] = $case;
+  // Always provide entity id in the same form key as in the entity edit form.
+  $form['case_type_id'] = array('#type' => 'value', '#value' => $case->cid);
+  return confirm_form($form,
+    t('Are you sure you want to delete Case %title?', array('%title' => crm_core_case_label($case))),
+    crm_core_case_uri($case),
+    t('This action cannot be undone.'),
+    t('Delete'),
+    t('Cancel')
+  );
+}
+
+/**
+ * Delete form submit handler.
+ */
+function crm_core_case_delete_form_submit($form, &$form_state) {
+  $case = $form_state['case'];
+  crm_core_case_delete($case);
+
+  drupal_set_message(t('Case %title deleted.', array('%title' => crm_core_case_label($case))));
+
+  $form_state['redirect'] = '<front>';
 }
