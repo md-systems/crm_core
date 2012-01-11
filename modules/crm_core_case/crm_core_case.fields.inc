@@ -97,6 +97,44 @@ function crm_core_case_entity_insert($entity, $entity_type) {
     ),
   );
 
+  $instances[] = array (
+    'label' => 'Location',
+    'widget' =>
+    array (
+      'weight' => '2',
+      'type' => 'options_select',
+      'module' => 'options',
+      'active' => 1,
+      'settings' =>
+      array (
+      ),
+    ),
+    'settings' =>
+    array (
+      'user_register_form' => false,
+    ),
+    'display' =>
+    array (
+      'default' =>
+      array (
+        'label' => 'above',
+        'type' => 'taxonomy_term_reference_link',
+        'settings' =>
+        array (
+        ),
+        'module' => 'taxonomy',
+        'weight' => 2,
+      ),
+    ),
+    'required' => 1,
+    'description' => '',
+    'default_value' => NULL,
+    'field_name' => 'field_case_location',
+    'entity_type' => 'crm_core_case',
+    'bundle' => $type,
+    'deleted' => '0',
+  );
+
   // Create field instances if they don't exist
   foreach ($instances as $instance) {
     $info_instance = field_info_instance('crm_core_case', $instance['field_name'], $type);
@@ -152,6 +190,27 @@ function _crm_core_case_type_default_fields() {
       'handler_settings' => array('target_bundles' => array()),
     ),
     'cardinality' => -1,
+  );
+
+  // Location field.
+  $fields[] = array(
+    'translatable' => 0,
+    'entity_types' => array('crm_core_case'),
+    'settings' => array(
+      'allowed_values' => array(
+        0 => array(
+          'vocabulary' => 'site_location',
+          'parent' => 0,
+        ),
+      ),
+    ),
+    'field_name' => 'field_case_location',
+    'type' => 'taxonomy_term_reference',
+    'module' => 'taxonomy',
+    'active' => 1,
+    'locked' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
   );
 
   return $fields;
