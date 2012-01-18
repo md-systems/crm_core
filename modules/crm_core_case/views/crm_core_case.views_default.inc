@@ -112,7 +112,7 @@ function crm_core_case_views_default_views() {
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
-  $handler->display->display_options['path'] = 'crm/cases';
+  $handler->display->display_options['path'] = 'crm/case';
   $handler->display->display_options['menu']['type'] = 'tab';
   $handler->display->display_options['menu']['title'] = 'Cases';
   $handler->display->display_options['menu']['weight'] = '0';

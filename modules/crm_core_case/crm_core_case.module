@@ -145,11 +145,12 @@ function crm_core_case_menu() {
 //    'file' => 'crm_core_case.admin.inc',
 //  );
 
-  $items['admin/structure/crm/case/add'] = array(
-    'title' => 'Cases',
+  $items['crm/case/add'] = array(
+    'title' => 'Add Case',
     'page callback' => 'crm_core_case_admin_add_page',
     'access arguments' => array('administer crm_core_case entities'),
     'file' => 'crm_core_case.admin.inc',
+    'type' => MENU_LOCAL_ACTION,
   );
 
   $case = new stdClass();

@@ -30,7 +30,7 @@ function crm_core_activity_entity_ui_get_form_wrapper($contact, $type) {
     ),
     'title' => '',
   );
-  
+
   $activity = crm_core_activity_create($values);
 
   return entity_ui_get_form('crm_core_activity', $activity, 'add');
@@ -110,24 +110,26 @@ function crm_core_activity_form($form, &$form_state, $activity) {
 function crm_core_activity_form_validate($form, &$form_state) {
 
   $activity = $form_state['crm_core_activity'];
+  if (isset($activity->field_activity_participants[LANGUAGE_NONE])) {
 
-  // Ensure that contact set in $activity is present in values. We create activity
-  // from the page of the contact. So we ensure that this contact is added in
-  // participants field.
-  $form_state_values = array();
-  foreach ($form_state['values']['field_activity_participants'][LANGUAGE_NONE] as $value) {
-    $form_state_values[] = $value['target_id'];
-  }
+    // Ensure that contact set in $activity is present in values. We create activity
+    // from the page of the contact. So we ensure that this contact is added in
+    // participants field.
+    $form_state_values = array();
+    foreach ($form_state['values']['field_activity_participants'][LANGUAGE_NONE] as $value) {
+      $form_state_values[] = $value['target_id'];
+    }
 
-  $activity_values = array();
-  foreach ($activity->field_activity_participants[LANGUAGE_NONE] as $value) {
-    $activity_values[] = $value['target_id'];
-  }
-  $array_intersect = array_intersect($form_state_values, $activity_values);
+    $activity_values = array();
+    foreach ($activity->field_activity_participants[LANGUAGE_NONE] as $value) {
+      $activity_values[] = $value['target_id'];
+    }
+    $array_intersect = array_intersect($form_state_values, $activity_values);
 
-  // Not all default values present in form state values.
-  if (array_values($array_intersect) != $activity_values) {
-    form_set_error('field_activity_participants', t('Original contact should be included in Participants field.'));
+    // Not all default values present in form state values.
+    if (array_values($array_intersect) != $activity_values) {
+      form_set_error('field_activity_participants', t('Original contact should be included in Participants field.'));
+    }
   }
 
   // Notify field widgets to validate their data.
