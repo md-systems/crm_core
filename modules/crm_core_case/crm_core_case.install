@@ -5,6 +5,16 @@
  * Implements hook_install()
  */
 function crm_core_case_install() {
+  // Create location taxonomy vocabulary.
+  $vocabulary = (object)array(
+    'name' => 'Site Location',
+    'machine_name' => 'site_location',
+    'description' => '',
+    'hierarchy' => '0',
+    'module' => 'crm_core_case',
+    'weight' => '0',
+  );
+  taxonomy_vocabulary_save($vocabulary);
 
   // create a default meeting case type
 //  $meeting = crm_core_case_type_new();
@@ -13,16 +23,12 @@ function crm_core_case_install() {
 //  $meeting->description = t('A meeting between 2 or more contacts');
 //  $meeting->is_new = TRUE;
 //  crm_core_case_type_save($meeting);
-//
-//  // create a phone call case type
-//  $phone_call = crm_core_case_type_new();
-//  $phone_call->type = 'phone_call';
-//  $phone_call->label = t('Phone call');
-//  $phone_call->description = t('A phone call between 2 or more contacts');
-//  $phone_call->is_new = TRUE;
-//  crm_core_case_type_save($phone_call);
+
 }
 
+/**
+ * Implements hook_uninstall().
+ */
 function crm_core_case_uninstall() {
   module_load_include('inc', 'crm_core_case', 'crm_core_case.fields');
   foreach (_crm_core_case_type_default_fields() as $field) {
@@ -75,6 +81,17 @@ function crm_core_case_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
+      ),
+      'description' => array(
+        'description' => 'Case description.',
+        'type' => 'text',
+      ),
+      'status' => array(
+        'description' => 'Case status.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
       ),
     ),
     'primary key' => array('cid'),
