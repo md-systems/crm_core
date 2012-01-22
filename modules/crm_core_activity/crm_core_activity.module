@@ -34,7 +34,7 @@ function crm_core_activity_entity_info() {
         ),
       ),
       'label callback' => 'crm_core_activity_label',
-      'uri callback' => 'entity_class_uri',
+      'uri callback' => 'crm_core_activity_uri',
       'module' => 'crm_core_activity',
       'permission labels' => array(
         'singular' => t('activity'),
@@ -300,6 +300,20 @@ function crm_core_activity_forms($form_id, $args) {
  */
 function crm_core_activity_label($activity) {
   return $activity->title;
+}
+
+/**
+ * URI callback for activity.
+ *
+ * Used to set uri of the activity.
+ */
+function crm_core_activity_uri($activity) {
+  return array(
+    'path' => 'activity/' . $activity->activity_id,
+    'options' => array(
+      'absolute' => TRUE,
+    ),
+  );
 }
 
 /**
