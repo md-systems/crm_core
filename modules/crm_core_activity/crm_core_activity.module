@@ -309,7 +309,7 @@ function crm_core_activity_label($activity) {
  */
 function crm_core_activity_uri($activity) {
   return array(
-    'path' => 'activity/' . $activity->activity_id,
+    'path' => 'crm/activity/' . $activity->activity_id,
     'options' => array(
       'absolute' => TRUE,
     ),
