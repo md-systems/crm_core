@@ -230,3 +230,23 @@ function _crm_user_sync_get_related_entity($entity_type, $entity_id, $relation_t
   $other_endpoints = entity_load($entities[0]['entity_type'], array($entities[0]['entity_id']));
   return reset($other_endpoints);
 }
+
+/**
+ * Implements hook_entity_property_info_alter().
+ *
+ * We need to extend Contact entity with related user for Rules integration.
+ */
+function crm_user_sync_entity_property_info_alter(&$info) {
+  $info['crm_core_contact']['properties']['crm_user_sync_uid'] = array(
+    'label' => t('Linked Account'),
+    'description' => t('Account related to Contact by crm_user_sync module.'),
+    'type' => 'user',
+    'getter callback' => 'crm_user_sync_contact_get_user_properties',
+  );
+}
+
+function crm_user_sync_contact_get_user_properties($entity, array $options, $name, $entity_type) {
+  if ($account = _crm_user_sync_get_related_entity('crm_core_contact', $entity->contact_id, 'crm_user_sync')) {
+    return $account->uid;
+  }
+}
