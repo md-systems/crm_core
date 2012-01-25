@@ -145,6 +145,7 @@ function crm_og_sync_sync($og_entity, $og_entity_sync_settings, $op = 'create', 
     break;
     case 'create':
     default:
+       $fields = array();
        foreach ($field_mapping as $og_entity_field_name => $contact_field_name) {
          if ($contact_field_name !== '__none') {
            $fields[$field_mapping[$og_entity_field_name]] = $og_entity->$og_entity_field_name;  
