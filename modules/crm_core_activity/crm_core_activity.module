@@ -349,14 +349,14 @@ function crm_core_activity_view_access($activity) {
   global $user;
   return (user_access('administer crm_core_activity entities')
    || user_access('view any crm_core_activity entity')
-   || user_access('view any crm_core_activity entity of bundle ' . $activity_type));
+   || user_access('view any crm_core_activity entity of bundle ' . $activity->type));
 }
 
 function crm_core_activity_edit_access($activity) {
   global $user;
   return (user_access('administer crm_core_activity entities')
    || user_access('edit any crm_core_activity entity')
-   || user_access('edit any crm_core_activity entity of bundle ' . $activity_type));
+   || user_access('edit any crm_core_activity entity of bundle ' . $activity->type));
 }
 
 /**
