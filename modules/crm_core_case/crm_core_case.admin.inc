@@ -204,7 +204,8 @@ function crm_core_case_form_submit($form, &$form_state) {
 
   entity_save('crm_core_case', $case);
 
-  $form_state['redirect'] = crm_core_case_uri($case);
+  $uri = crm_core_case_uri($case);
+  $form_state['redirect'] = $uri['path'];
 
   drupal_set_message(t('Case %title saved.', array('%title' => crm_core_case_label($case))));
 }
@@ -212,7 +213,8 @@ function crm_core_case_form_submit($form, &$form_state) {
 
 function crm_core_case_form_submit_delete($form, &$form_state) {
   $case = $form_state['case'];
-  $form_state['redirect'] = crm_core_case_uri($case) . '/delete';
+  $uri = crm_core_case_uri($case);
+  $form_state['redirect'] = $uri['path'] . '/delete';
 }
 
 /**
@@ -222,9 +224,10 @@ function crm_core_case_delete_form($form, &$form_state, $case) {
   $form_state['case'] = $case;
   // Always provide entity id in the same form key as in the entity edit form.
   $form['case_type_id'] = array('#type' => 'value', '#value' => $case->cid);
+  $uri = crm_core_case_uri($case);
   return confirm_form($form,
     t('Are you sure you want to delete Case %title?', array('%title' => crm_core_case_label($case))),
-    crm_core_case_uri($case),
+    $uri['path'],
     t('This action cannot be undone.'),
     t('Delete'),
     t('Cancel')

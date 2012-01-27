@@ -156,7 +156,7 @@ function crm_core_case_menu() {
   $case = new stdClass();
   $case->cid = '%crm_core_case';
   $case_uri = crm_core_case_uri($case);
-  $case_uri_argument_position = array_search('%crm_core_case', explode('/', $case_uri));
+  $case_uri_argument_position = array_search('%crm_core_case', explode('/', $case_uri['path']));
 
   $items[$case_uri] = array(
     'title callback' => 'crm_core_case_label',
@@ -258,11 +258,13 @@ function crm_core_case_load_multiple($cids = array(), $conditions = array(), $re
  * Used to set title of the view case page.
  */
 function crm_core_case_label($case) {
-  return $case->title;
+  if (isset($case->title)) {
+    return $case->title;
+  }
 }
 
 function crm_core_case_uri($case) {
-  return 'crm/case/' . $case->cid;
+  return array('path' => 'crm/case/' . $case->cid);
 }
 
 /**
