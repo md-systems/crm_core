@@ -156,7 +156,8 @@ function crm_core_case_menu() {
   $case = new stdClass();
   $case->cid = '%crm_core_case';
   $case_uri = crm_core_case_uri($case);
-  $case_uri_argument_position = array_search('%crm_core_case', explode('/', $case_uri['path']));
+  $case_uri = $case_uri['path'];
+  $case_uri_argument_position = array_search('%crm_core_case', explode('/', $case_uri));
 
   $items[$case_uri] = array(
     'title callback' => 'crm_core_case_label',
