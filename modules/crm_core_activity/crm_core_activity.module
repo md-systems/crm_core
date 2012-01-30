@@ -15,6 +15,7 @@ function crm_core_activity_entity_info() {
       'entity class' => 'Entity',
       'controller class' => 'EntityAPIController',
       'base table' => 'crm_core_activity',
+      'access callback' => 'crm_core_activity_access',
 //      'revision table' => 'crm_activity_revision',
       'fieldable' => TRUE,
       'entity keys' => array(
@@ -334,7 +335,34 @@ function crm_core_activity_type_access($string) {
 }
 
 /**
- * Access callback to create new activity.
+ * Access callback for activity.
+ */
+function crm_core_activity_access($op, $activity, $account = NULL, $entity_type = NULL) {
+  global $user;
+
+  if (!isset($account)) {
+    $account = $user;
+  }
+  $activity_type = $activity->type;
+  switch ($op) {
+    case 'create':
+      return (user_access('administer crm_core_activity entities', $account)
+       || user_access('create crm_core_activity entities', $account)
+       || user_access('create crm_core_activity entities of bundle ' . $activity_type, $account));
+    case 'view':
+      return (user_access('administer crm_core_activity entities', $account)
+       || user_access('view any crm_core_activity entity', $account)
+       || user_access('view any crm_core_activity entity of bundle ' . $activity_type, $account));
+    case 'edit':
+    case 'update':
+      return (user_access('administer crm_core_activity entities', $account)
+       || user_access('edit any crm_core_activity entity', $account)
+       || user_access('edit any crm_core_activity entity of bundle ' . $activity_type));
+  }
+}
+
+/**
+ * Access callback to create new activity (deprecated in favour of crm_core_activity_access).
  *
  * @param type $contact
  * @param type $activity_type

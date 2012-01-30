@@ -49,7 +49,7 @@ function crm_core_activity_ui_menu() {
   $items['crm/activity/%crm_core_activity/view'] = array(
     'title' => 'View',
     'weight' => -10,
-    'type' => MENU_NORMAL_ITEM,
+    'type' => MENU_DEFAULT_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
   );
 
@@ -59,7 +59,7 @@ function crm_core_activity_ui_menu() {
     'page arguments' => array('crm_core_activity', 2, 'edit'),
     'access callback' => 'crm_core_activity_edit_access',
     'access arguments' => array(2),
-    'type' => MENU_NORMAL_ITEM,
+    'type' => MENU_LOCAL_TASK,
     'file' => 'crm_core_activity_ui.pages.inc',
   );
 
@@ -121,16 +121,16 @@ function crm_core_activity_ui_admin_menu_map() {
 function crm_core_activity_ui_form_alter(&$form, &$form_state, $form_id) {
   // Alter the operations links so they looks like CTools dropbutton
   if($form_id == 'crm_core_activity_type_overview_form') {
-    $ops_count = $form['table']['#header'][2]['colspan'];  
+    $ops_count = $form['table']['#header'][2]['colspan'];
     $form['table']['#header'][2] = t('Operations');
 
     crm_ui_ctools_add_dropbutton_files();
-    foreach($form['table']['#rows'] as $key => $row) {      
+    foreach($form['table']['#rows'] as $key => $row) {
       $output = theme('crm_ui_ctools_dropbutton', array(
-        'ops_count' => $ops_count, 
+        'ops_count' => $ops_count,
         'links' => $row,
         'index' => $key,
-      ));          
+      ));
       $form['table']['#rows'][$key] = array_merge(array_slice($row, 0, count($row) - $ops_count), array($output));
     }
   }

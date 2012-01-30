@@ -165,7 +165,7 @@ function crm_core_activity_form_submit($form, &$form_state) {
     drupal_set_message(t('Activity @title edited.', array('@title' => $activity->title)));
   }
 
-  $form_state['redirect'] = 'crm/contact/' . $form_state['values']['contact_id'] . '/activity';
+  $form_state['redirect'] = 'crm/activity/' . $activity->activity_id;
 }
 
 /**
@@ -208,14 +208,6 @@ function crm_core_activity_form_delete_confirm_submit($form, &$form_state) {
 
     watchdog('crm_core_activity', '@type: deleted %title.', array('@type' => $activity->type, '%title' => $activity->title));
     drupal_set_message(t('@type %title has been deleted.', array('@type' => crm_core_activity_type_name($activity->type), '%title' => $activity->title)));
-  }
-
-  // Redirect user to activity page of the first participants contact.
-  if (empty($contact_id)) {
-    $form_state['redirect'] = 'crm/contact';
-  }
-  else {
-    $form_state['redirect'] = 'crm/contact/' . $contact_id . '/activity';
   }
 }
 
