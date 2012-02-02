@@ -43,7 +43,6 @@ function crm_core_activity_ui_menu() {
     'access callback' => 'crm_core_activity_view_access',
     'access arguments' => array(2),
     'type' => MENU_NORMAL_ITEM,
-    'file' => 'crm_core_activity_ui.pages.inc',
   );
 
   $items['crm/activity/%crm_core_activity/view'] = array(

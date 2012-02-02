@@ -93,6 +93,125 @@ function crm_core_activity_entity_info_alter(&$entity_info) {
 }
 
 /**
+ * Implements hook_search_info().
+ */
+function crm_core_activity_search_info() {
+  return array(
+    'title' => 'Activities', 
+    'path' => 'activity',
+  );
+}
+
+/**
+ * Implements hook_search_access().
+ */
+function crm_core_activity_search_access() {
+  return user_access('administer crm_core_activity entities') || user_access('view any crm_core_activity entity');
+}
+
+/**
+ * Implements hook_search_reset().
+ */
+function crm_core_activity_search_reset() {
+  db_update('search_dataset')
+    ->fields(array('reindex' => REQUEST_TIME))
+    ->condition('type', 'crm_core_activity')
+    ->execute();
+}
+
+/**
+ * Implements hook_search_status().
+ */
+function crm_core_activity_search_status() {
+  $total = db_query('SELECT COUNT(*) FROM {crm_core_activity}')->fetchField();
+  $remaining = db_query("SELECT COUNT(*) FROM {crm_core_activity} a LEFT JOIN {search_dataset} d ON d.type = 'crm_core_activity' AND d.sid = a.activity_id WHERE d.sid IS NULL OR d.reindex <> 0")->fetchField();
+  return array('remaining' => $remaining, 'total' => $total);
+}
+
+/**
+ * Implements hook_search_execute().
+ */
+function crm_core_activity_search_execute($keys = NULL, $conditions = NULL) {
+  // Build matching conditions
+
+  $query = db_select('search_index', 'i', array('target' => 'slave'))->extend('SearchQuery')->extend('PagerDefault');
+  $query->join('crm_core_activity', 'a', 'a.activity_id = i.sid');
+  $query->searchExpression($keys, 'crm_core_activity');
+
+  // Insert special keywords.
+  $query->setOption('type', 'a.type');
+  $query->setOption('language', 'a.language');
+
+  // Only continue if the first pass query matches.
+  if (!$query->executeFirstPass()) {
+    return array();
+  }
+
+  // Load results.
+  $find = $query
+    ->limit(10)
+    ->execute();
+  $results = array();
+  foreach ($find as $item) {
+    // Render the contact.
+    $activity = crm_core_activity_load($item->sid);
+    $build = crm_core_activity_view($activity);
+    unset($build['#theme']);
+    $activity->rendered = drupal_render($build);
+    $uri = entity_uri('crm_core_activity', $activity);
+    $results[] = array(
+      'link' => url($uri['path'], array_merge($uri['options'], array('absolute' => TRUE))),
+      'type' => check_plain(crm_core_activity_type_name($activity->type)),
+      'title' => check_plain($activity->title),
+      'user' => theme('username', array('account' => user_load($activity->uid))),
+      'date' => $activity->changed,
+      'contact' => $activity,
+      'score' => $item->calculated_score,
+      'snippet' => search_excerpt($keys, $activity->rendered),
+      'language' => (isset($activity->language)) ? $activity->language : LANGUAGE_NONE,
+    );
+  }
+  return $results;
+}
+
+/**
+ * Search condition callback.
+ */
+  function crm_core_activity_search_conditions_callback($keys) {
+  $conditions = array();
+
+  if (!empty($_REQUEST['keys'])) {
+    $conditions['keys'] = $_REQUEST['keys'];
+  }
+  if (!empty($_REQUEST['sample_search_keys'])) {
+    $conditions['sample_search_keys'] = $_REQUEST['sample_search_keys'];
+  }
+  if ($force_keys = variable_get('sample_search_force_keywords', '')) {
+    $conditions['sample_search_force_keywords'] = $force_keys;
+  }
+  return $conditions;
+}
+
+/**
+ * Implements hook_update_index().
+ */
+function crm_core_activity_update_index() {
+  $limit = (int) variable_get('search_cron_limit', 100);
+
+  $result = db_query_range("SELECT a.activity_id FROM {crm_core_activity} a LEFT JOIN {search_dataset} d ON d.type = 'crm_core_activity' AND d.sid = a.activity_id WHERE d.sid IS NULL OR d.reindex <> 0 ORDER BY d.reindex ASC, a.activity_id ASC", 0, $limit);
+
+  foreach ($result as $activity) {
+    $activity = crm_core_activity_load($activity->activity_id);
+    variable_set('crm_core_activity_cron_last', $activity->changed);
+
+    // Render the activity.
+    $text = drupal_render(crm_core_activity_view($activity));
+    // Update index
+    search_index($activity->activity_id, 'crm_core_activity', $text);
+  }
+}
+
+/**
  * Implements hook_crm_core_contact_delete.
  */
 function crm_core_activity_crm_core_contact_delete($crm_core_contact) {
@@ -292,6 +411,20 @@ function crm_core_activity_forms($form_id, $args) {
   }
 
   return $forms;
+}
+
+/**
+ * Activity view callback.
+ */
+function crm_core_activity_view($activity) {
+  $content = entity_get_controller('crm_core_activity')->view(array($activity->activity_id => $activity), 'full');
+
+  // We don't want to run output through entity theming function.
+  // To avoid this hack apply patch from http://drupal.org/node/1259916
+  // Then we can load content in following way
+  // $content = entity_build_content('crm_core_activity', $activity);
+  unset($content['crm_core_activity'][$activity->activity_id]['#theme']);
+  return $content;
 }
 
 /**

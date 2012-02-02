@@ -161,6 +161,127 @@ function crm_core_contact_views_api() {
   );
 }
 
+/**
+ * Implements hook_search_info().
+ */
+function crm_core_contact_search_info() {
+  return array(
+    'title' => 'Contacts', 
+    'path' => 'contact',
+  );
+}
+
+/**
+ * Implements hook_search_access().
+ */
+function crm_core_contact_search_access() {
+  return user_access('administer crm_core_contact entities') || user_access('view any crm_core_contact entity');
+}
+
+/**
+ * Implements hook_search_reset().
+ */
+function crm_core_contact_search_reset() {
+  db_update('search_dataset')
+    ->fields(array('reindex' => REQUEST_TIME))
+    ->condition('type', 'crm_core_contact')
+    ->execute();
+}
+
+/**
+ * Implements hook_search_status().
+ */
+function crm_core_contact_search_status() {
+  $total = db_query('SELECT COUNT(*) FROM {crm_core_contact}')->fetchField();
+  $remaining = db_query("SELECT COUNT(*) FROM {crm_core_contact} c LEFT JOIN {search_dataset} d ON d.type = 'crm_core_contact' AND d.sid = c.contact_id WHERE d.sid IS NULL OR d.reindex <> 0")->fetchField();
+  return array('remaining' => $remaining, 'total' => $total);
+}
+
+/**
+ * Implements hook_search_execute().
+ */
+function crm_core_contact_search_execute($keys = NULL, $conditions = NULL) {
+  // Build matching conditions
+
+  $query = db_select('search_index', 'i', array('target' => 'slave'))->extend('SearchQuery')->extend('PagerDefault');
+  $query->join('crm_core_contact', 'c', 'c.contact_id = i.sid');
+  $query->searchExpression($keys, 'crm_core_contact');
+
+  // Insert special keywords.
+  $query->setOption('type', 'c.type');
+  $query->setOption('language', 'c.language');
+
+  // Only continue if the first pass query matches.
+  if (!$query->executeFirstPass()) {
+    return array();
+  }
+
+  // Load results.
+  $find = $query
+    ->limit(10)
+    ->execute();
+  $results = array();
+  foreach ($find as $item) {
+    // Render the contact.
+    $contact = crm_core_contact_load($item->sid);
+    $build = crm_core_contact_view($contact);
+    unset($build['#theme']);
+    $contact->rendered = drupal_render($build);
+	$title = field_get_items('crm_core_contact', $contact, 'contact_name');
+	$title = name_format($title[0], '((((t+ig)+im)+if)+is)+jc');
+    $uri = entity_uri('crm_core_contact', $contact);
+    $results[] = array(
+      'link' => url($uri['path'], array_merge($uri['options'], array('absolute' => TRUE))),
+      'type' => check_plain(crm_core_contact_type_get_name($contact->type)),
+      'title' => $title,
+      'user' => theme('username', array('account' => user_load($contact->uid))),
+      'date' => $contact->changed,
+      'contact' => $contact,
+      'score' => $item->calculated_score,
+      'snippet' => search_excerpt($keys, $contact->rendered),
+      'language' => (isset($contact->language)) ? $contact->language : LANGUAGE_NONE,
+    );
+  }
+  return $results;
+}
+
+/**
+ * Search condition callback.
+ */
+function crm_core_contact_search_conditions_callback($keys) {
+  $conditions = array();
+
+  if (!empty($_REQUEST['keys'])) {
+    $conditions['keys'] = $_REQUEST['keys'];
+  }
+  if (!empty($_REQUEST['sample_search_keys'])) {
+    $conditions['sample_search_keys'] = $_REQUEST['sample_search_keys'];
+  }
+  if ($force_keys = variable_get('sample_search_force_keywords', '')) {
+    $conditions['sample_search_force_keywords'] = $force_keys;
+  }
+  return $conditions;
+}
+
+/**
+ * Implements hook_update_index().
+ */
+function crm_core_contact_update_index() {
+  $limit = (int) variable_get('search_cron_limit', 100);
+
+  $result = db_query_range("SELECT c.contact_id FROM {crm_core_contact} c LEFT JOIN {search_dataset} d ON d.type = 'crm_core_contact' AND d.sid = c.contact_id WHERE d.sid IS NULL OR d.reindex <> 0 ORDER BY d.reindex ASC, c.contact_id ASC", 0, $limit);
+
+  foreach ($result as $contact) {
+    $contact = crm_core_contact_load($contact->contact_id);
+    variable_set('crm_core_contact_cron_last', $contact->changed);
+
+    // Render the contact.
+    $text = drupal_render(crm_core_contact_view($contact));
+    // Update index
+    search_index($contact->contact_id, 'crm_core_contact', $text);
+  }
+}
+
 
 /**
  * Entity uri callback.

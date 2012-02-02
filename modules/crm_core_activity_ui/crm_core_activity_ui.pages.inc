@@ -223,17 +223,3 @@ function crm_core_activity_form_after_build(&$form, &$form_state) {
   }
   return $form;
 }
-
-/**
- * Activity view callback.
- */
-function crm_core_activity_view($activity) {
-  $content = entity_get_controller('crm_core_activity')->view(array($activity->activity_id => $activity), 'full');
-
-  // We don't want to run output through entity theming function.
-  // To avoid this hack apply patch from http://drupal.org/node/1259916
-  // Then we can load content in following way
-  // $content = entity_build_content('crm_core_activity', $activity);
-  unset($content['crm_core_activity'][$activity->activity_id]['#theme']);
-  return $content;
-}
