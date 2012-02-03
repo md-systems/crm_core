@@ -236,3 +236,29 @@ function crm_core_contact_views_data() {
   
   return $data;
 }
+
+
+/**
+ * Implements hook_views_data().
+ */
+function crm_core_contact_views_data_alter(&$data) {
+  // Integration with Drupal search index
+  $data['search_index']['table']['join']['crm_core_contact'] = array(
+    'left_field' => 'contact_id ',
+    'field' => 'sid',
+  );
+
+  $data['search_total']['table']['join']['crm_core_contact'] = array(
+    'left_table' => 'search_index',
+    'left_field' => 'word',
+    'field' => 'word',
+  );
+
+  $data['search_dataset']['table']['join']['crm_core_contact'] = array(
+    'left_table' => 'search_index',
+    'left_field' => 'sid',
+    'field' => 'sid',
+    'extra' => 'search_index.type = search_dataset.type',
+    'type' => 'INNER',
+  );
+}

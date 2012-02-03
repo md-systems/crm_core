@@ -32,4 +32,24 @@ function crm_core_activity_views_data_alter(&$data) {
       'handler' => 'crm_core_activity_handler_field_link_delete',
     ),
   );
+
+  // Integration with Drupal search index
+  $data['search_index']['table']['join']['crm_core_activity'] = array(
+    'left_field' => 'activity_id ',
+    'field' => 'sid',
+  );
+
+  $data['search_total']['table']['join']['crm_core_activity'] = array(
+    'left_table' => 'search_index',
+    'left_field' => 'word',
+    'field' => 'word',
+  );
+
+  $data['search_dataset']['table']['join']['crm_core_activity'] = array(
+    'left_table' => 'search_index',
+    'left_field' => 'sid',
+    'field' => 'sid',
+    'extra' => 'search_index.type = search_dataset.type',
+    'type' => 'INNER',
+  );
 }
