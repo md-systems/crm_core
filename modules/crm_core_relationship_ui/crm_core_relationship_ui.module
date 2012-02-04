@@ -24,7 +24,7 @@ function crm_core_relationship_ui_menu() {
 
   foreach (crm_core_relationship_get_relationships() as $type => $info) {
     $items['crm/contact/%crm_core_contact/relationships/add/' . $type] = array(
-      'title' => 'Add Relationship',
+      'title' => 'Add ' . $info->label,
       'description' => 'Add a relationship to this contact',
       'page callback' => 'crm_core_relation_entity_ui_get_form_wrapper',
       'page arguments' => array(2, 5),
@@ -36,6 +36,10 @@ function crm_core_relationship_ui_menu() {
     );
   }
 
+  /*
+   * TODO: what does this router item do? 
+   *       I think all it does is create notices, it does not seem to be used
+   *       
   $items['crm/contact/%crm_core_contact/relationships/add/%relation_type/%'] = array(
     'title' => 'Add Contact Relationship',
     'description' => 'Add a relationship to this contact',
@@ -47,6 +51,7 @@ function crm_core_relationship_ui_menu() {
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'file' => 'crm_core_relationship_ui.pages.inc',
   );
+  */
 
   $items['crm/contact/%crm_core_contact/relationships/add/%relation_type/%/autocomplete'] = array(
     'page callback' => 'crm_core_relationship_ui_add_relationship_autocomplete',
