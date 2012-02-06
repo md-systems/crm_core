@@ -9,6 +9,7 @@
  * Implements hook_views_default_views().
  */
 function crm_core_contact_ui_views_default_views() {
+
 $view = new view;
 $view->name = 'crm_core_contacts';
 $view->description = 'A list of all contacts in the system';
@@ -196,6 +197,16 @@ $handler->display->display_options['filters']['type']['expose']['label'] = 'Cont
 $handler->display->display_options['filters']['type']['expose']['operator'] = 'type_op';
 $handler->display->display_options['filters']['type']['expose']['identifier'] = 'type';
 $handler->display->display_options['filters']['type']['expose']['reduce'] = 0;
+/* Filter criterion: Search: Search Terms */
+$handler->display->display_options['filters']['keys']['id'] = 'keys';
+$handler->display->display_options['filters']['keys']['table'] = 'search_index';
+$handler->display->display_options['filters']['keys']['field'] = 'keys';
+$handler->display->display_options['filters']['keys']['exposed'] = TRUE;
+$handler->display->display_options['filters']['keys']['expose']['operator_id'] = 'keys_op';
+$handler->display->display_options['filters']['keys']['expose']['label'] = 'Keywords';
+$handler->display->display_options['filters']['keys']['expose']['operator'] = 'keys_op';
+$handler->display->display_options['filters']['keys']['expose']['identifier'] = 'keys';
+$handler->display->display_options['filters']['keys']['expose']['multiple'] = FALSE;
 
 /* Display: Page */
 $handler = $view->new_display('page', 'Page', 'page_1');
