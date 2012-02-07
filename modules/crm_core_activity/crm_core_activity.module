@@ -161,7 +161,7 @@ function crm_core_activity_search_execute($keys = NULL, $conditions = NULL) {
     $uri = entity_uri('crm_core_activity', $activity);
     $results[] = array(
       'link' => url($uri['path'], array_merge($uri['options'], array('absolute' => TRUE))),
-      'type' => check_plain(crm_core_activity_type_name($activity->type)),
+      'type' => check_plain(crm_core_activity_type_get_name($activity->type)),
       'title' => check_plain($activity->title),
       'user' => theme('username', array('account' => user_load($activity->uid))),
       'date' => $activity->changed,
@@ -373,7 +373,7 @@ function crm_core_activity_types($type_name = NULL) {
  * @param type $type_name
  * @return type
  */
-function crm_core_activity_type_name($type_name = NULL) {
+function crm_core_activity_type_get_name($type_name = NULL) {
   $types = crm_core_activity_types();
 
   $names = array();
