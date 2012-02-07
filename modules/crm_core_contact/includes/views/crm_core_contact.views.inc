@@ -58,32 +58,32 @@ function crm_core_contact_views_data() {
   );
 
   // Expose the creator uid.
-  $data['crm_core_contact']['uid'] = array(
-    'title' => t('Creator'),
-    'help' => t('Relate a contact to the user who created it.'),
-    'relationship' => array(
-      'handler' => 'views_handler_relationship',
-      'base' => 'users',
-      'field' => 'uid',
-      'label' => t('Contact creator'),
-    ),
-  );
-
-  // Expose the created and changed timestamps.
-//  $data['crm_core_contact']['created'] = array(
-//    'title' => t('Created date'),
-//    'help' => t('The date the contact was first added.'),
-//    'field' => array(
-//      'handler' => 'views_handler_field_date',
-//      'click sortable' => TRUE,
-//    ),
-//    'sort' => array(
-//      'handler' => 'views_handler_sort_date',
-//    ),
-//    'filter' => array(
-//      'handler' => 'views_handler_filter_date',
+//  $data['crm_core_contact']['uid'] = array(
+//    'title' => t('Creator'),
+//    'help' => t('Relate a contact to the user who created it.'),
+//    'relationship' => array(
+//      'handler' => 'views_handler_relationship',
+//      'base' => 'users',
+//      'field' => 'uid',
+//      'label' => t('Contact creator'),
 //    ),
 //  );
+
+  // Expose the created and changed timestamps.
+  $data['crm_core_contact']['created'] = array(
+    'title' => t('Created date'),
+    'help' => t('The date the contact was first added.'),
+    'field' => array(
+      'handler' => 'views_handler_field_date',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort_date',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_date',
+    ),
+  );
   
  
 
