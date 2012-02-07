@@ -70,20 +70,22 @@ function crm_core_contact_views_data() {
   );
 
   // Expose the created and changed timestamps.
-  $data['crm_core_contact']['created'] = array(
-    'title' => t('Created date'),
-    'help' => t('The date the contact was first added.'),
-    'field' => array(
-      'handler' => 'views_handler_field_date',
-      'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort_date',
-    ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_date',
-    ),
-  );
+//  $data['crm_core_contact']['created'] = array(
+//    'title' => t('Created date'),
+//    'help' => t('The date the contact was first added.'),
+//    'field' => array(
+//      'handler' => 'views_handler_field_date',
+//      'click sortable' => TRUE,
+//    ),
+//    'sort' => array(
+//      'handler' => 'views_handler_sort_date',
+//    ),
+//    'filter' => array(
+//      'handler' => 'views_handler_filter_date',
+//    ),
+//  );
+  
+ 
 
   $data['crm_core_contact']['changed'] = array(
     'title' => t('Updated date'),
@@ -191,10 +193,24 @@ function crm_core_contact_views_data() {
     ),
   );  
   
+
+  $data['crm_core_contact_revision']['table']['join'] = array(
+    'crm_core_contact' => array(
+      'left_field' => 'contact_id',
+      'field' => 'contact_id',
+       'extra' => 'crm_core_contact.vid = crm_core_contact_revision.vid',
+      // Can use AND or OR, not really needed here since it defaults to AND
+      'extra type' => 'AND',
+    ),
+  );
+  
   // Expose the creator uid.
   $data['crm_core_contact_revision']['uid'] = array(
     'title' => t('Creator'),
     'help' => t('Relate a contact to the user who created it.'),
+    'field' => array(
+      'handler' => 'views_handler_field_numeric',
+    ),
     'relationship' => array(
       'handler' => 'views_handler_relationship',
       'base' => 'users',
@@ -202,6 +218,7 @@ function crm_core_contact_views_data() {
       'label' => t('Contact creator'),
     ),
   );
+
 
   // Expose the created and changed timestamps.
   $data['crm_core_contact_revision']['created'] = array(
