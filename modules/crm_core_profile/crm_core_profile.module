@@ -1,0 +1,89 @@
+<?php
+
+/**
+ * Implements hook_menu()
+ */
+function crm_core_profile_menu() {
+  $items = array();
+
+  $items['admin/structure/crm/profile'] = array(
+    'title' => t('CRM Core Profile'),
+    'page callback' => 'crm_core_profile_main',
+    // 'page arguments' => array('crm_core_profile_new_form'),
+    'access arguments' => array('access content'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+
+  // default path for crm_core profile forms
+  $items['crm_core_profile/%crm_core_profile'] = array(
+    'title' => t('Add new profile form'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_core_profile_entry_form', 1),
+    'access arguments' => array('access crm_core_profile forms'),
+    'file' => 'crm_core_profile.forms.inc',
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['admin/structure/crm/profile/new'] = array(
+    'title' => t('Add new profile form'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_core_profile_new_form'),
+    'access arguments' => array('create new crm core profile forms'),
+    'file' => 'crm_core_profile.forms.inc',
+    'weight' => 20,
+    'type' => MENU_CALLBACK,
+  );
+  
+  return $items;
+}
+
+/**
+ * Implements hook_permission()
+ */
+function crm_core_profile_permission() {
+  return array(
+    'create new crm core profile forms' => array(
+      'title' => t('Create new CRM Core profile forms'),
+      'description' => t('Ability to create new CRM Core profile forms'),
+    ),
+    'access crm_core_profile forms' => array(
+      'title' => t('Access CRM Core profile forms'),
+      'description' => t('Allow the access to the profile form'),
+    ),
+  );
+}
+
+function crm_core_profile_main() {
+  return 'This is a stub page for now';  
+}
+
+/**
+ * Saves a profile form entry
+ */
+function crm_core_profile_save($record) {
+  $crm_core_profile = crm_core_profile_load($record['name']);
+  if (!empty($crm_core_profile)) {
+    drupal_write_record($record, 'name');  
+  } 
+  else {
+    dpm($record);
+    drupal_write_record($record);
+  } 
+}
+
+/**
+ * Loads a profile form entry
+ */
+function crm_core_profile_load($machine_name) {
+  
+  $data = array();
+  $query = db_select('crm_core_profile', 'p')
+  ->fields('p')
+  ->condition('name', $machine_name);
+  
+  $result = $query->execute();
+  $data = $result->fetchAssoc();
+
+  return $data;  
+}
