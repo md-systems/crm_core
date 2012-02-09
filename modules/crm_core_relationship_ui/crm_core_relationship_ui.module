@@ -10,7 +10,6 @@ function crm_core_relationship_ui_menu() {
    */
   $items['crm/contact/%crm_core_contact/relationships'] = array(
     'title' => 'Relationships',
-    'title callback' => 'crm_core_relationship_ui_contact_relationships_title',
     'title arguments' => array(2),
     'description' => 'View contact relationships',
     'page callback' => 'crm_core_relationship_ui_contact_relationships',
@@ -22,6 +21,18 @@ function crm_core_relationship_ui_menu() {
     'file' => 'crm_core_relationship_ui.pages.inc',
   );
 
+  $items['crm/contact/%crm_core_contact/relationships/add'] = array(
+      'title' => 'Add relationship',
+      'title callback' => 't',
+      'description' => 'Add a relationship to this contact',
+      'page callback' => 'crm_core_relationship_ui_add_relationship',
+      'page arguments' => array(2),
+      'access callback' => TRUE,
+      'type' => MENU_LOCAL_ACTION,
+      //'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+      'file' => 'crm_core_relationship_ui.pages.inc',
+    );
+
   foreach (crm_core_relationship_get_relationships() as $type => $info) {
     $items['crm/contact/%crm_core_contact/relationships/add/' . $type] = array(
       'title' => 'Add ' . $info->label,
@@ -30,16 +41,16 @@ function crm_core_relationship_ui_menu() {
       'page arguments' => array(2, 5),
       'access callback' => 'crm_core_relationship_access_permissions',
       'access arguments' => array(null, 'create_view'),
-      'type' => MENU_LOCAL_ACTION,
+      'type' => MENU_NORMAL_ITEM,
       //'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
       'file' => 'crm_core_relationship_ui.pages.inc',
     );
   }
 
   /*
-   * TODO: what does this router item do? 
+   * TODO: what does this router item do?
    *       I think all it does is create notices, it does not seem to be used
-   *       
+   *
   $items['crm/contact/%crm_core_contact/relationships/add/%relation_type/%'] = array(
     'title' => 'Add Contact Relationship',
     'description' => 'Add a relationship to this contact',
@@ -117,7 +128,7 @@ function crm_core_relationship_ui_menu_alter(&$items) {
   $items['admin/structure/relation']['page callback'] = 'crm_core_relationship_ui_types_overview';
   $items['admin/structure/relation']['file path'] = drupal_get_path('module', 'crm_core_relationship_ui');
   $items['admin/structure/relation']['file'] = 'crm_core_relationship_ui.admin.inc';
-  $items['admin/structure/relation']['page arguments'] = array(1);  
+  $items['admin/structure/relation']['page arguments'] = array(1);
 }
 
 /**
@@ -128,9 +139,9 @@ function crm_core_relationship_ui_form_alter(&$form, &$form_state, $form_id) {
     // we only care about crm contact types (bundles)
     // setting title to the fields form
     if (crm_core_relationship_is_relationship_type($form['#bundle'])) {
-      drupal_set_title($form['#bundle']);  
+      drupal_set_title($form['#bundle']);
     }
-  }  
+  }
 }
 
 /**

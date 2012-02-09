@@ -142,16 +142,6 @@ function crm_core_relationship_form_after_build(&$form, &$form_state) {
 }
 
 /**
- * Sets relationships list page title.
- *
- * @param $crm_core_contact
- *   Entity object of crm_core_contact type.
- */
-function crm_core_relationship_ui_contact_relationships_title($crm_contact) {
-  drupal_set_title(t('Relationships of !contact', array('!contact' => crm_core_contact_title($crm_contact))));
-}
-
-/**
  * Return a list of relationships for this contact.
  *
  * @param $crm_core_contact
@@ -160,6 +150,8 @@ function crm_core_relationship_ui_contact_relationships_title($crm_contact) {
  *   Entity bundle type of crm_core_contact.
  */
 function crm_core_relationship_ui_contact_relationships($crm_contact, $crm_relationship_type = NULL) {
+  // Set page title.
+  drupal_set_title(t('Relationships of !contact', array('!contact' => crm_core_contact_title($crm_contact))));
   // query all existing relation for contact entity
   $query = relation_query('crm_core_contact', $crm_contact->contact_id);
   $results = $query->execute();
