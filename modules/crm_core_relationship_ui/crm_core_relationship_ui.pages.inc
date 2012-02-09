@@ -201,7 +201,7 @@ function crm_core_relationship_ui_add_relationship($crm_core_contact) {
     $return['links'] = array(
       '#theme' => 'item_list',
       '#items' => $relationship_type_links,
-      '#attributes' => array('class' => array('links')),
+      '#attributes' => array('class' => array('links', 'type-list')),
     );
   }
 

@@ -9,7 +9,7 @@ function crm_core_activity_views_default_views() {
   $view->description = '';
   $view->tag = 'default';
   $view->base_table = 'crm_core_activity_type';
-  $view->human_name = 'crm activity types';
+  $view->human_name = 'CRM Activity types';
   $view->core = 7;
   $view->api_version = '3.0-alpha1';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
@@ -23,16 +23,9 @@ function crm_core_activity_views_default_views() {
   $handler->display->display_options['query']['options']['query_comment'] = FALSE;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'full';
-  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['style_plugin'] = 'list';
+  $handler->display->display_options['style_options']['class'] = 'links type-list';
   $handler->display->display_options['row_plugin'] = 'fields';
-  /* Header: Global: Text area */
-  $handler->display->display_options['header']['area']['id'] = 'area';
-  $handler->display->display_options['header']['area']['table'] = 'views';
-  $handler->display->display_options['header']['area']['field'] = 'area';
-  $handler->display->display_options['header']['area']['empty'] = FALSE;
-  $handler->display->display_options['header']['area']['content'] = 'Please choose type of activity to create.';
-  $handler->display->display_options['header']['area']['format'] = 'filtered_html';
-  $handler->display->display_options['header']['area']['tokenize'] = 0;
   /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['area']['id'] = 'area';
   $handler->display->display_options['empty']['area']['table'] = 'views';
@@ -41,7 +34,7 @@ function crm_core_activity_views_default_views() {
   $handler->display->display_options['empty']['area']['content'] = 'It is not possible to create Activities yet. Please create Activity Type fist.';
   $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
   $handler->display->display_options['empty']['area']['tokenize'] = 0;
-  /* Field: Activity Type: Machine-readable name */
+  /* Field: CRM Activity: Type */
   $handler->display->display_options['fields']['type']['id'] = 'type';
   $handler->display->display_options['fields']['type']['table'] = 'crm_core_activity_type';
   $handler->display->display_options['fields']['type']['field'] = 'type';
@@ -66,7 +59,7 @@ function crm_core_activity_views_default_views() {
   $handler->display->display_options['fields']['type']['hide_empty'] = 0;
   $handler->display->display_options['fields']['type']['empty_zero'] = 0;
   $handler->display->display_options['fields']['type']['hide_alter_empty'] = 0;
-  /* Field: Activity Type: Label */
+  /* Field: CRM Activity: Label */
   $handler->display->display_options['fields']['label']['id'] = 'label';
   $handler->display->display_options['fields']['label']['table'] = 'crm_core_activity_type';
   $handler->display->display_options['fields']['label']['field'] = 'label';
@@ -89,7 +82,7 @@ function crm_core_activity_views_default_views() {
   $handler->display->display_options['fields']['label']['hide_empty'] = 0;
   $handler->display->display_options['fields']['label']['empty_zero'] = 0;
   $handler->display->display_options['fields']['label']['hide_alter_empty'] = 0;
-  /* Field: Activity Type: Description */
+  /* Field: CRM Activity: Description */
   $handler->display->display_options['fields']['description']['id'] = 'description';
   $handler->display->display_options['fields']['description']['table'] = 'crm_core_activity_type';
   $handler->display->display_options['fields']['description']['field'] = 'description';
@@ -111,7 +104,7 @@ function crm_core_activity_views_default_views() {
   $handler->display->display_options['fields']['description']['hide_empty'] = 0;
   $handler->display->display_options['fields']['description']['empty_zero'] = 0;
   $handler->display->display_options['fields']['description']['hide_alter_empty'] = 0;
-  /* Sort criterion: Activity Type: Label */
+  /* Sort criterion: CRM Activity: Label */
   $handler->display->display_options['sorts']['label']['id'] = 'label';
   $handler->display->display_options['sorts']['label']['table'] = 'crm_core_activity_type';
   $handler->display->display_options['sorts']['label']['field'] = 'label';
@@ -383,7 +376,7 @@ function crm_core_activity_views_default_views() {
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
   $handler->display->display_options['path'] = 'crm/contact/%/activity';
-  
+
   $views['crm_activities_by_contact'] = $view;
 
   return $views;
