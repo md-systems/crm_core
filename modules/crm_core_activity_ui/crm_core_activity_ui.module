@@ -29,7 +29,7 @@ function crm_core_activity_ui_menu() {
       'page arguments' => array(2, 5),
       'access callback' => 'crm_core_activity_create_access',
       'access arguments' => array(2, 5),
-      'type' => MENU_LOCAL_TASK,
+      'type' => MENU_NORMAL_ITEM,
       'file' => 'crm_core_activity_ui.pages.inc',
     );
   }

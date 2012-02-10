@@ -10,7 +10,6 @@ function crm_core_relationship_ui_menu() {
    */
   $items['crm/contact/%crm_core_contact/relationships'] = array(
     'title' => 'Relationships',
-    'title callback' => 'crm_core_relationship_ui_contact_relationships_title',
     'title arguments' => array(2),
     'description' => 'View contact relationships',
     'page callback' => 'crm_core_relationship_ui_contact_relationships',
@@ -22,6 +21,18 @@ function crm_core_relationship_ui_menu() {
     'file' => 'crm_core_relationship_ui.pages.inc',
   );
 
+  $items['crm/contact/%crm_core_contact/relationships/add'] = array(
+      'title' => 'Add relationship',
+      'title callback' => 't',
+      'description' => 'Add a relationship to this contact',
+      'page callback' => 'crm_core_relationship_ui_add_relationship',
+      'page arguments' => array(2),
+      'access callback' => TRUE,
+      'type' => MENU_LOCAL_ACTION,
+      //'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+      'file' => 'crm_core_relationship_ui.pages.inc',
+    );
+
   foreach (crm_core_relationship_get_relationships() as $type => $info) {
     $items['crm/contact/%crm_core_contact/relationships/add/' . $type] = array(
       'title' => 'Add ' . $info->label,
@@ -30,16 +41,16 @@ function crm_core_relationship_ui_menu() {
       'page arguments' => array(2, 5),
       'access callback' => 'crm_core_relationship_access_permissions',
       'access arguments' => array(null, 'create_view'),
-      'type' => MENU_LOCAL_ACTION,
+      'type' => MENU_NORMAL_ITEM,
       //'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
       'file' => 'crm_core_relationship_ui.pages.inc',
     );
   }
 
   /*
-   * TODO: what does this router item do? 
+   * TODO: what does this router item do?
    *       I think all it does is create notices, it does not seem to be used
-   *       
+   *
   $items['crm/contact/%crm_core_contact/relationships/add/%relation_type/%'] = array(
     'title' => 'Add Contact Relationship',
     'description' => 'Add a relationship to this contact',
@@ -117,7 +128,7 @@ function crm_core_relationship_ui_menu_alter(&$items) {
   $items['admin/structure/relation']['page callback'] = 'crm_core_relationship_ui_types_overview';
   $items['admin/structure/relation']['file path'] = drupal_get_path('module', 'crm_core_relationship_ui');
   $items['admin/structure/relation']['file'] = 'crm_core_relationship_ui.admin.inc';
-  $items['admin/structure/relation']['page arguments'] = array(1);  
+  $items['admin/structure/relation']['page arguments'] = array(1);
 }
 
 /**
@@ -128,9 +139,9 @@ function crm_core_relationship_ui_form_alter(&$form, &$form_state, $form_id) {
     // we only care about crm contact types (bundles)
     // setting title to the fields form
     if (crm_core_relationship_is_relationship_type($form['#bundle'])) {
-      drupal_set_title($form['#bundle']);  
+      drupal_set_title($form['#bundle']);
     }
-  }  
+  }
 }
 
 /**
@@ -177,6 +188,11 @@ function crm_core_relationship_ui_field_formatter_info_alter(&$info) {
     'field types' => array('relation_endpoint'),
     'module' => 'crm_core_relationship_ui',
   );
+  $info['contact_relationship_view'] = array(
+    'label' => t('Related Contact Relashions table view'),
+    'field types' => array('relation_endpoint'),
+    'module' => 'crm_core_relationship_ui',
+  );
 }
 
 /**
@@ -185,27 +201,64 @@ function crm_core_relationship_ui_field_formatter_info_alter(&$info) {
 function crm_core_relationship_ui_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
    switch ($display['type']) {
     case 'contact_relationship':
-    default:
-    // getting the contact id from the url
-    $current_contact_id = arg(2);
-    $related_contact_id = ($items[1]['entity_id'] == $current_contact_id) ? $items[0]['entity_id'] : $items[1]['entity_id'];
-    $related_contact = crm_core_contact_load($related_contact_id);
-    $contact_label = entity_label('crm_core_contact', $related_contact);
-    $relationship_type = ($items[1]['entity_id'] == $current_contact_id) ? crm_core_relationship_get_type_label($entity, TRUE) : crm_core_relationship_get_type_label($entity);
-    $created = date('Y-m-d H:i:s', $entity->created);
-    $related_contact_uri = entity_uri('crm_core_contact', $related_contact);
+      // getting the contact id from the url
+      $current_contact_id = arg(2);
+      $related_contact_id = ($items[1]['entity_id'] == $current_contact_id) ? $items[0]['entity_id'] : $items[1]['entity_id'];
+      $related_contact = crm_core_contact_load($related_contact_id);
+      $contact_label = entity_label('crm_core_contact', $related_contact);
+      $relationship_type = ($items[1]['entity_id'] == $current_contact_id) ? crm_core_relationship_get_type_label($entity, TRUE) : crm_core_relationship_get_type_label($entity);
+      $created = date('Y-m-d H:i:s', $entity->created);
+      $related_contact_uri = entity_uri('crm_core_contact', $related_contact);
 
-    $rows[] = array(
-      l($contact_label, $related_contact_uri['path'], $related_contact_uri['options']),
-      $relationship_type,
-      $created,
-    );
-      $headers = array('Related Contact', 'Relationship Type', 'Created');
-      return array(
-        '#theme' => 'table',
-        '#header' => $headers,
-        '#rows' => $rows,
+      $rows[] = array(
+        l($contact_label, $related_contact_uri['path'], $related_contact_uri['options']),
+        $relationship_type,
+        $created,
       );
-    break;
+        $headers = array('Related Contact', 'Relationship Type', 'Created');
+        return array(
+          '#theme' => 'table',
+          '#header' => $headers,
+          '#rows' => $rows,
+        );
+      break;
+    case 'contact_relationship_view':
+      // getting the contact id from the url
+      $current_contact_id = arg(2);
+      $related_contact_id = ($items[1]['entity_id'] == $current_contact_id) ? $items[0]['entity_id'] : $items[1]['entity_id'];
+      $related_contact = crm_core_contact_load($related_contact_id);
+      $contact_label = entity_label('crm_core_contact', $related_contact);
+
+      $related_contact_uri = entity_uri('crm_core_contact', $related_contact);
+      return array(0 => array('#markup' => l($contact_label, $related_contact_uri['path'])));
+      break;
+  }
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function crm_core_relationship_ui_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'crm_core_relationship_ui'),
+  );
+}
+
+/**
+ * Alter query of view "crm_relationships_by_contact".
+ */
+function crm_core_relationship_ui_query_views_crm_relationships_by_contact_alter($query) {
+  $where =& $query->conditions();
+  $field_conditions =& $where[0]['field']->conditions();
+  $field_field_conditions =& $field_conditions[0]['field']->conditions();
+
+  // If condition is to find active relationships we also include NULL values.
+  if ($field_field_conditions[0]['operator'] == 'not in') {
+    unset($field_field_conditions[0]);
+    $or = db_or();
+    $or->condition('field_data_field_relationship_active.field_relationship_active_value', NULL, 'IS');
+    $or->condition('field_data_field_relationship_active.field_relationship_active_value', 'active', '<>');
+    $query->condition($or);
   }
 }
