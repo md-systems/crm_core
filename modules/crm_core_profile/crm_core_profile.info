@@ -3,7 +3,6 @@ description = Generates forms to collect contact information
 package = CRM
 version = VERSION
 core = 7.x
-;configure = admin/structure/crm/profile
 
 
 ; =======================
@@ -14,7 +13,7 @@ core = 7.x
 dependencies[] = crm_core_contact
 
 ; Contrib Dependencies
-;dependencies[] = relation
+dependencies[] = views
 ;dependencies[] = og
 
 ; =======================
