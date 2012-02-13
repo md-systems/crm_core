@@ -12,6 +12,8 @@ function crm_core_profile_entry_form($form, &$form_state, $profile) {
 
   drupal_set_title($profile['label']);
 
+  $form_state['profile'] = $profile;
+
   global $user;
 
   $fields = array();
@@ -55,7 +57,9 @@ function crm_core_profile_entry_form($form, &$form_state, $profile) {
      '#value' => t('Submit'),
      '#weight' => 99,
    );
-   
+      
+   dpm($form);
+    
    return $form;
 
 }
@@ -78,7 +82,7 @@ function crm_core_profile_entry_form_submit($form, &$form_state) {
   unset($values['submit'], $values['form_build_id'], $values['form_token'], $values['form_id'], $values['op']);
   
   // notify other modules about the profile form has been submitted
-  module_invoke_all('crm_core_profile_save', $values);
+  module_invoke_all('crm_core_profile_save', $form_state['profile']['name'], $values);
   
   $contact = &$form_state['contact'];
   
@@ -88,7 +92,7 @@ function crm_core_profile_entry_form_submit($form, &$form_state) {
   
   // rules integration  
   // This should be set from the form
-  // $form_state['redirect'] = '';
+  $form_state['redirect'] = (isset($form_state['profile']['redirect'])) ? $form_state['profile']['redirect'] : '';
   
 }
 

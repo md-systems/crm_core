@@ -109,6 +109,7 @@ function crm_core_profile_block_view($delta) {
 }
 
 function crm_core_profile_block_content($profile) {
+  module_load_include('inc', 'crm_core_profile', 'crm_core_profile.forms');
   // generate the profile form on a block
   return drupal_get_form('crm_core_profile_entry_form', $profile); 
 }
