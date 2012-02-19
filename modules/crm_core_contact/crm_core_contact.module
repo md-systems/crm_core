@@ -87,11 +87,11 @@ function crm_core_contact_permission() {
 //      'description' => t('Allows the user to edit contacts that have already been added to the CRM.'),
 //    ),
   );
-  
+
   $permissions += crm_core_entity_access_permissions('crm_core_contact');
-  
+
   return $permissions;
-  
+
 }
 
 /**
@@ -297,6 +297,15 @@ function crm_core_contact_uri($contact) {
  * Entity label callback.
  */
 function crm_core_contact_label($entity) {
+  // Check wheter bundle type label function exists.
+  // This is needed if we want to have different labels per contact type.
+  // For example Individual contact's label is person's Name.
+  // But for Organization -- organization's name.
+  $function = 'crm_core_contact_' . $entity->type . '_label';
+  if (function_exists($function)) {
+    return $function($entity);
+  }
+  // Default is person's name.
   $build_info = crm_core_contact_view($entity);
   return render($build_info['contact_name'][0]);
 }
@@ -777,8 +786,7 @@ function crm_core_contact_view($contact) {
  * @return title string
  */
 function crm_core_contact_title($contact) {
-  $element = field_view_value('crm_core_contact', $contact, 'contact_name', $contact->contact_name['und'][0]);
-  return drupal_render($element);
+  return entity_label('crm_core_contact', $contact);
 }
 
 
