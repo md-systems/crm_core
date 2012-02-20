@@ -84,8 +84,6 @@ function crm_core_contact_views_data() {
       'handler' => 'views_handler_filter_date',
     ),
   );
-  
- 
 
   $data['crm_core_contact']['changed'] = array(
     'title' => t('Updated date'),
@@ -101,7 +99,9 @@ function crm_core_contact_views_data() {
       'handler' => 'views_handler_filter_date',
     ),
   );
-  
+
+  $data['crm_core_contact']['table']['entity type'] = 'crm_core_contact';
+
   $data['crm_core_contact_type']['table']['group'] = t('CRM Contact Types');
 
   $data['crm_core_contact_type']['table']['base'] = array(
@@ -115,7 +115,7 @@ function crm_core_contact_views_data() {
       'left_field' => 'type',
       'field' => 'type',
   );
-  
+
   $data['crm_core_contact_type']['disabled'] = array(
   'title' => t('Disabled contact type'),
     'help' => t('If the contact type is disabled, mainly for filtering purposes'),
@@ -127,9 +127,9 @@ function crm_core_contact_views_data() {
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_numeric',
-    ),  
+    ),
   );
-  
+
 
   $data['crm_core_contact_revision']['table']['group'] = t('CRM Contacts Revisions');
 
@@ -156,7 +156,7 @@ function crm_core_contact_views_data() {
       'handler' => 'views_handler_argument_numeric',
     ),
   );
-  
+
    $data['crm_core_contact_revision']['revert_link'] = array(
    'field' => array(
      'title' => t('Revision Link'),
@@ -164,7 +164,7 @@ function crm_core_contact_views_data() {
      'handler' => 'crm_core_contact_handler_field_contact_revert',
    ),
  );
-  
+
   $data['crm_core_contact_revision']['contact_id'] = array(
     'title' => t('Contact ID'),
     'help' => t('The unqiue internal identifier for a contact revision.'),
@@ -191,8 +191,8 @@ function crm_core_contact_views_data() {
       'left_field' => 'uid',
       'field' => 'uid',
     ),
-  );  
-  
+  );
+
 
   $data['crm_core_contact_revision']['table']['join'] = array(
     'crm_core_contact' => array(
@@ -203,7 +203,7 @@ function crm_core_contact_views_data() {
       'extra type' => 'AND',
     ),
   );
-  
+
   // Expose the creator uid.
   $data['crm_core_contact_revision']['uid'] = array(
     'title' => t('Creator'),
@@ -249,8 +249,8 @@ function crm_core_contact_views_data() {
     'filter' => array(
       'handler' => 'views_handler_filter_date',
     ),
-  );  
-  
+  );
+
   return $data;
 }
 
