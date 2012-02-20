@@ -166,7 +166,7 @@ function crm_core_contact_views_api() {
  */
 function crm_core_contact_search_info() {
   return array(
-    'title' => 'Contacts', 
+    'title' => 'Contacts',
     'path' => 'contact',
   );
 }
@@ -773,8 +773,16 @@ function crm_core_contact_delete_multiple($contact_ids = array()) {
  * View a single contact record.
  */
 function crm_core_contact_view($contact) {
-  field_attach_prepare_view('crm_core_contact', array($contact->contact_id => $contact), 'full');
-  return field_attach_view('crm_core_contact', $contact, 'full');
+  $contact->content = array();
+  $view_mode = 'full';
+  $langcode = LANGUAGE_NONE;
+  field_attach_prepare_view('crm_core_contact', array($contact->contact_id => $contact), $view_mode);
+  // Add content added by fields.
+  $contact->content += field_attach_view('crm_core_contact', $contact, $view_mode);
+  module_invoke_all('entity_view', $contact, 'crm_core_contact', $view_mode, $langcode);
+  $build = $contact->content;
+  unset($contact->content);
+  return $build;
 }
 
 
