@@ -87,11 +87,11 @@ function crm_core_contact_permission() {
 //      'description' => t('Allows the user to edit contacts that have already been added to the CRM.'),
 //    ),
   );
-  
+
   $permissions += crm_core_entity_access_permissions('crm_core_contact');
-  
+
   return $permissions;
-  
+
 }
 
 /**
@@ -166,7 +166,7 @@ function crm_core_contact_views_api() {
  */
 function crm_core_contact_search_info() {
   return array(
-    'title' => 'Contacts', 
+    'title' => 'Contacts',
     'path' => 'contact',
   );
 }
@@ -297,6 +297,15 @@ function crm_core_contact_uri($contact) {
  * Entity label callback.
  */
 function crm_core_contact_label($entity) {
+  // Check wheter bundle type label function exists.
+  // This is needed if we want to have different labels per contact type.
+  // For example Individual contact's label is person's Name.
+  // But for Organization -- organization's name.
+  $function = 'crm_core_contact_' . $entity->type . '_label';
+  if (function_exists($function)) {
+    return $function($entity);
+  }
+  // Default is person's name.
   $build_info = crm_core_contact_view($entity);
   return render($build_info['contact_name'][0]);
 }
@@ -764,8 +773,16 @@ function crm_core_contact_delete_multiple($contact_ids = array()) {
  * View a single contact record.
  */
 function crm_core_contact_view($contact) {
-  field_attach_prepare_view('crm_core_contact', array($contact->contact_id => $contact), 'full');
-  return field_attach_view('crm_core_contact', $contact, 'full');
+  $contact->content = array();
+  $view_mode = 'full';
+  $langcode = LANGUAGE_NONE;
+  field_attach_prepare_view('crm_core_contact', array($contact->contact_id => $contact), $view_mode);
+  // Add content added by fields.
+  $contact->content += field_attach_view('crm_core_contact', $contact, $view_mode);
+  module_invoke_all('entity_view', $contact, 'crm_core_contact', $view_mode, $langcode);
+  $build = $contact->content;
+  unset($contact->content);
+  return $build;
 }
 
 
@@ -777,8 +794,7 @@ function crm_core_contact_view($contact) {
  * @return title string
  */
 function crm_core_contact_title($contact) {
-  $element = field_view_value('crm_core_contact', $contact, 'contact_name', $contact->contact_name['und'][0]);
-  return drupal_render($element);
+  return entity_label('crm_core_contact', $contact);
 }
 
 
