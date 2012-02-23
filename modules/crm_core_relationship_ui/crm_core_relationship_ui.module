@@ -10,7 +10,6 @@ function crm_core_relationship_ui_menu() {
    */
   $items['crm/contact/%crm_core_contact/relationships'] = array(
     'title' => 'Relationships',
-    'title arguments' => array(2),
     'description' => 'View contact relationships',
     'page callback' => 'crm_core_relationship_ui_contact_relationships',
     'page arguments' => array(2, NULL),
@@ -23,7 +22,6 @@ function crm_core_relationship_ui_menu() {
 
   $items['crm/contact/%crm_core_contact/relationships/add'] = array(
       'title' => 'Add relationship',
-      'title callback' => 't',
       'description' => 'Add a relationship to this contact',
       'page callback' => 'crm_core_relationship_ui_add_relationship',
       'page arguments' => array(2),
