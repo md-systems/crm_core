@@ -41,7 +41,7 @@ function crm_core_activity_entity_ui_get_form_wrapper($contact, $type) {
  */
 function crm_core_activity_form($form, &$form_state, $activity) {
   // Ensure this include file is loaded when the form is rebuilt from the cache.
-  $form_state['build_info']['file'] = drupal_get_path('module', 'crm_ui') . '/pages/contact_activity.pages.inc';
+  $form_state['build_info']['file'] = drupal_get_path('module', 'crm_core_activity_ui') . '/crm_core_activity_ui.pages.inc';
 
   // get the contact id of who is trying to add the activity
   $form['contact_id'] = array(
