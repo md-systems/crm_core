@@ -198,10 +198,10 @@ function crm_core_case_menu() {
   );
 
   foreach (crm_core_case_types() as $type => $info) {
-    $items['admin/structure/crm/case/add/' . $type] = array(
+    $items['crm/case/add/' . $type] = array(
       'title' => 'Add case',
       'page callback' => 'crm_core_case_add',
-      'page arguments' => array(5),
+      'page arguments' => array(3),
       'access callback' => 'crm_core_case_create_access',
       'access arguments' => array($type),
       'file' => 'crm_core_case.admin.inc',

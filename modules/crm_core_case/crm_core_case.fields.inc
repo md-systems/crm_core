@@ -27,29 +27,6 @@ function crm_core_case_entity_insert($entity, $entity_type) {
   // Create field instances for the type if they don't exist
   $instances = array();
 
-  // Participants field.
-  $instances[] = array(
-    'field_name' => 'field_case_participants',
-    'entity_type' => 'crm_core_case',
-    'bundle' => $type,
-    'label' => t('Participants'),
-    'required' => TRUE,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'type' => 'entityreference_autocomplete_tags',
-      'module' => 'entityreference',
-      'active' => 1,
-      'settings' => array(
-        'match_operator' => 'CONTAINS',
-        'size' => 60,
-        'path' => '',
-      ),
-    ),
-    'display' => array(),
-  );
-
   // Date field.
   $instances[] = array(
     'field_name' => 'field_case_date',
@@ -174,22 +151,6 @@ function _crm_core_case_type_default_fields() {
       'todate' => 'optional',
     ),
     'cardinality' => 1,
-  );
-
-  // Participants field.
-  $fields[] = array(
-    'field_name' => 'field_case_participants',
-    'type' => 'entityreference',
-    'entity_types' => array('crm_core_case'),
-    'translatable' => FALSE,
-    'locked' => TRUE,
-    'settings' => array(
-      'target_type' => 'crm_core_contact',
-      'handler' => 'base',
-      'handler_submit' => 'Change handler',
-      'handler_settings' => array('target_bundles' => array()),
-    ),
-    'cardinality' => -1,
   );
 
   // Location field.

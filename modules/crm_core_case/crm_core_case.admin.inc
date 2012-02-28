@@ -113,7 +113,7 @@ function crm_core_case_admin_page() {
 function crm_core_case_admin_add_page() {
   $items = array();
   foreach (crm_core_case_types() as $case_type_key => $case_type) {
-    $items[] = l($case_type->label, 'admin/structure/crm/case/add/' . $case_type_key);
+    $items[] = l($case_type->label, 'crm/case/add/' . $case_type_key);
   }
   return array('list' => array('#theme' => 'item_list', '#items' => $items, '#title' => t('Select type of case to create.')));
 }
