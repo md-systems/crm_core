@@ -6,6 +6,8 @@ define('CRM_CORE_CASE_STATUS', serialize(array(
       'complete' => 'Complete',
     )));
 
+define('CRM_CORE_CASE_STATUS_DEFAULT', 'created');
+
 /**
  * Implements hook_entity_info().
  */
@@ -319,7 +321,7 @@ function crm_core_case_case_new($type, $uid = NULL) {
     'type' => $type,
     'title' => '',
     'description' => '',
-    'status' => 'created',
+    'status' => variable_get('crm_core_case_status_default', CRM_CORE_CASE_STATUS_DEFAULT),
     'created' => REQUEST_TIME,
     'changed' => REQUEST_TIME,
     'uid' => $uid,
@@ -389,7 +391,7 @@ function crm_core_case_delete_multiple($case_ids) {
  * Helper. Get Case status human name.
  */
 function crm_core_case_status($status = NULL) {
-  $statuses = unserialize(CRM_CORE_CASE_STATUS);
+  $statuses = variable_get('crm_core_case_status', unserialize(CRM_CORE_CASE_STATUS));
   if (empty($status) || !isset($statuses[$status])) {
     return $statuses;
   }
