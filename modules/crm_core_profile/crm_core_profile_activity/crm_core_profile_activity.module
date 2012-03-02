@@ -1,0 +1,241 @@
+<?php
+
+/**
+ * Implements hook_form_FORM_ID_alter
+ */
+function crm_core_activity_form_crm_core_profile_entry_form_alter(&$form, &$form_state, $form_id) {
+  
+  // here we plugin the activity field information
+  $profile = $form_state['profile'];
+  
+  // load the crm_core_profile activity fields information
+  $crm_core_profile_activity = crm_core_profile_activity_load($profile['name']);
+  
+  if (empty($crm_core_profile_activity)) {
+    return;  
+  }
+  
+  $fields = unserialize($crm_core_profile_activity['fields']);
+  if (empty($fields)) {
+    return;  
+  }
+  
+  
+  // we always create new activity
+  $activity = new stdClass();
+  $activity->type = $crm_core_profile_activity['bundle_type'];
+    
+  // placing the activity form information in its own container
+  $form['activity'] = array(
+    '#type' => 'container',
+    '#tree' => TRUE,
+    '#parents' => array('activity'),
+  );
+  
+  // crm_core_activity properties
+  $form['activity']['type'] = array(
+    '#type' => 'value',
+    '#value' => $activity->type,
+  );
+  
+  // This title will later be changed
+  $form['activity']['title'] = array(
+    '#type' => 'value',
+    '#value' => $activity->type,
+  );
+  
+  $form['activity']['uid'] = array(
+    '#type' => 'value',
+    '#value' => 1,
+  );
+  
+  // attach and show the activity fields
+  $fields = unserialize($crm_core_profile_activity['fields']);  
+  field_attach_form('crm_core_activity', $activity, $form['activity'], $form_state); 
+  foreach ($fields as $field_name => $visibility) {
+    if ($visibility === 0) {
+      $form['activity'][$field_name]['#access'] = FALSE; 
+    }
+  }
+  
+  // @todo: offer an alter hook before everything to allow changes to the activity property and field data information
+  
+  // This alter function will be in the form of
+  // hook_crm_core_profile_activity_alter
+  // it will allow other modules to modify the activity form data
+    drupal_alter('crm_core_profile_activity', $form['activity'], $crm_core_profile_activity['name']);
+    // adding validation and submission handlers
+    
+  $form['#validate'][] = 'crm_core_profile_activity_entry_validate';
+  $form['#submit'][] = 'crm_core_profile_activity_entry_submit';
+}
+
+/**
+ * Validation handler
+ */
+function crm_core_profile_activity_entry_validate($form, &$form_state) {
+  $activity = (object) $form_state['values']['activity'];
+  field_attach_form_validate('crm_core_activity', $activity, $form, $form_state);
+}
+
+/**
+ * Submission handler
+ */
+function crm_core_profile_activity_entry_submit($form, &$form_state) {
+  
+  // in order to create the activity, we need to have the contact id in the reference
+  // this can be achieved in 2 ways
+  // 1. From the new contact record created from the crm_core_profile
+  // 2. From the contact record loaded from crm_core_profile
+  
+  // (actually not) debug, the activity participant from 1
+  $form_state['values']['activity']['field_activity_participants'][LANGUAGE_NONE][0]['target_id'] = $form_state['saved_contact_id']->contact_id;
+  
+  $activity = (object) $form_state['values']['activity'];
+  
+  if (!isset($activity->created)) {
+    $activity->created = REQUEST_TIME;
+  }
+  $activity->created = REQUEST_TIME;
+
+  // Notify field widgets.
+  field_attach_submit('crm_core_activity', $activity, $form, $form_state);
+  crm_core_activity_save($activity);  
+}
+
+
+
+/**
+ * Implements hook_form_FORM_ID_alter
+ */
+function crm_core_activity_form_crm_core_profile_new_form_alter(&$form, &$form_state, $form_id) {
+  
+  // if the core profile form is not new
+   $profile = $form_state['profile'];
+  
+   if (!empty($profile)) {
+     $crm_core_profile_activity = crm_core_profile_activity_load($profile['name']);
+   }
+   
+    // select bundles from the CRM
+  $options = array('' => t('--Select--'));
+  foreach(crm_core_activity_types() as $type => $activity_type) {
+    $options[$type] = $activity_type->label;  
+  }
+  
+  $form['activity'] = array(
+    '#tree' => TRUE,
+    '#title' => t('Activity Information'),
+    '#type' => 'fieldset', 
+    '#weight' => 5, 
+    '#collapsible' => TRUE, 
+    '#collapsed' => FALSE,
+  );
+  
+  if (empty($profile)) {
+    $form['activity']['created'] = array(
+      '#type' => 'value',
+      '#value' => time(),
+    );
+  }
+  
+  
+  // copy the machine name form the main name
+  $form['activity']['name'] = $form['name'];
+  
+  $form['activity']['bundle_type'] = array(
+    '#type' => 'select',
+    '#title' => t('Select the activity type below:'),
+    '#options' => $options,
+    // depends on the contact bundle chose, different fields will appear
+    '#ajax' => array(
+      'callback' => 'crm_core_profile_activity_ajax_callback',
+      'wrapper' => 'crm_core_profile_activity_bundle_fields',
+     ),
+     '#default_value' => (isset($crm_core_profile_activity)) ? $crm_core_profile_activity['bundle_type'] : '',
+  );
+
+  $field_options = array();
+  
+  if (!empty($crm_core_profile_activity)) {
+    $form_state['values']['activity']['bundle_type'] = $crm_core_profile_activity['bundle_type'];  
+  }
+    
+  if (!empty($form_state['values']['activity']['bundle_type'])) { 
+     foreach(field_info_instances('crm_core_activity', $form_state['values']['activity']['bundle_type']) as $field_name => $field) {
+      $field_options[$field_name] = $field['label'];
+    }  
+  }
+  
+  $fields_default = array();
+  if (!empty($crm_core_profile_activity)) {
+    $fields_default = unserialize($crm_core_profile_activity['fields']);  
+  }
+  
+  $form['activity']['fields'] = array(
+    '#type' => 'checkboxes',
+    '#title' => 'Field selection',
+    '#options' => $field_options,
+    '#description' => t('Check the activity fields that will appear on the profile form'),
+    '#prefix' => '<div id="crm_core_profile_activity_bundle_fields">',
+    '#suffix' => '</div>',
+    '#default_value' => (!empty($fields_default)) ? $fields_default : array(),
+  );
+
+  // adding validation and submission handlers
+  $form['#validate'][] = 'crm_core_profile_activity_form_validate';
+  $form['#submit'][] = 'crm_core_profile_activity_form_submit';
+  
+}
+
+/**
+ * Form validation handler
+ */
+function crm_core_profile_activity_form_validate($form, &$form_state) {
+}
+
+/**
+ * Form submission handler
+ */
+function crm_core_profile_activity_form_submit($form, &$form_state) {
+  $activity = $form_state['values']['activity'];
+  if ($activity != '') {
+    crm_core_profile_activity_save($activity);
+  }
+}
+
+/**
+ * Saves a profile form activity entry
+ */
+function crm_core_profile_activity_save($record) {
+  $crm_core_profile_activity = crm_core_profile_activity_load($record['name']);
+  if (!empty($crm_core_profile_activity)) {
+    drupal_write_record('crm_core_profile_activity', $record, 'name');  
+  } 
+  else {
+    drupal_write_record('crm_core_profile_activity', $record);
+  } 
+}
+
+/**
+ * Loads a profile form activity entry
+ */
+function crm_core_profile_activity_load($machine_name) {
+  
+  $data = array();
+  $query = db_select('crm_core_profile_activity', 'pa')
+  ->fields('pa')
+  ->condition('name', $machine_name);
+
+  $result = $query->execute();
+  $data = $result->fetchAssoc();
+
+  return $data;  
+}
+
+/**
+ * Ajax callback
+ */
+function crm_core_profile_activity_ajax_callback($form, &$form_state) {
+  return $form['activity']['fields'];
+}

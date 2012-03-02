@@ -1,7 +1,7 @@
 name = CRM Core Profile
 description = Generates forms to collect contact information
 package = CRM
-version = VERSION
+version = 7.x-1.0-dev
 core = 7.x
 
 

@@ -1,0 +1,47 @@
+<?php
+
+/**
+ * Implements hook_schema()
+ */
+function crm_core_profile_activity_schema() {
+  $schema['crm_core_profile_activity'] = array(
+    'description' => 'Stores CRM Core Profile Activity form information',
+    'fields' => array(
+      'name' => array(
+        'description' => 'The machine name of the profile form, primary and foreign key',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'bundle_type' => array(
+        'description' => 'The machine-readable name of this bundle_type.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+      ),
+      'fields' => array(
+        'type' => 'blob',
+        'not null' => FALSE,
+        'size' => 'big',
+        'serialize' => TRUE,
+        'description' => 'A serialized array of the fields that will be used on the form',
+    ),
+      'status' => array(
+        'description' => 'The status of the profile form, defaults to active',
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 1,
+        'size' => 'tiny',
+      ),
+      'created' => array(
+        'description' => 'Timestamp of when the profile form is created',
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 0,
+      ),
+  ),
+    'primary key' => array('name'),
+  );
+
+  return $schema;
+}

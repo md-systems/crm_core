@@ -57,9 +57,7 @@ function crm_core_profile_entry_form($form, &$form_state, $profile) {
      '#value' => t('Submit'),
      '#weight' => 99,
    );
-      
-   dpm($form);
-    
+          
    return $form;
 
 }
@@ -88,8 +86,14 @@ function crm_core_profile_entry_form_submit($form, &$form_state) {
   
   field_attach_submit('crm_core_contact', $contact, $form, $form_state);
   $saved_contact = crm_core_contact_save($contact);
-
   
+  // add this to the form_state values
+  $form_state['saved_contact_id'] = $saved_contact;
+  
+  // fire another hook that carries the saved contact (contact_id) information, this can be used
+  // by other modules to create activity or relationships   
+  module_invoke_all('crm_core_profile_save_contact', $form_state['profile']['name'], $saved_contact);
+
   // rules integration  
   // This should be set from the form
   $form_state['redirect'] = (isset($form_state['profile']['redirect'])) ? $form_state['profile']['redirect'] : '';
@@ -122,7 +126,8 @@ function crm_core_profile_new_form($form, &$form_state, $profile) {
     );  
   }
   else {
-    drupal_set_title(t('Profile settings for @profile', array('@profile' => $profile['label'])));  
+    drupal_set_title(t('Profile settings for @profile', array('@profile' => $profile['label'])));
+    $form_state['profile'] = $profile;  
   }
    
   $form['label'] = array(
@@ -222,6 +227,7 @@ function crm_core_profile_new_form($form, &$form_state, $profile) {
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => (!empty($profile)) ? t('Save') : t('Create'),
+    '#weight' => 999,
   );
   
   return $form;
