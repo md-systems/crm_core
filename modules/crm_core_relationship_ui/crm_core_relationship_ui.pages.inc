@@ -8,19 +8,20 @@
  * @param type $contact
  * @param type $type
  */
-function crm_core_relation_entity_ui_get_form_wrapper($contact, $type) {
+function crm_core_relation_entity_ui_get_form_wrapper($contact, $type, $reverse) {
   global $user;
+  $types = relation_get_types(array($type));
+  $current_type = array_pop($types);
   // Default empty Relation.
   $values = array(
     'relation_type' => $type,
     'uid' => $user->uid,
     'title' => '',
-    'reverse' => 0,
-    'directional' => 0,
-    'r_unique' => 0,
-    'source_bundles' => array(
-      'crm_core_contact:' . $contact->type
-    ),
+    'reverse' => $reverse,
+    'directional' => $current_type->directional,
+    'r_unique' => $current_type->r_unique,
+    'source_bundles' => $current_type->source_bundles,
+    'target_bundles' => $current_type->target_bundles,
     'crm_core_contact' => $contact,
   );
   $relation = crm_core_relation_create($values);
