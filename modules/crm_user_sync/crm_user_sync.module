@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 /**
  * Implements hook_menu()
@@ -218,17 +218,19 @@ function _crm_user_sync_get_related_entity($entity_type, $entity_id, $relation_t
   $relation = relation_load($result->rid);
   $request_key = $entity_type . ':' . $entity_id;
   $entities = $relation->endpoints[LANGUAGE_NONE];
-  $first_entity_key = $entities[0]['entity_type'] . ':' . $entities[0]['entity_id'];
-  if (isset($r_index)) {
-    $request_key = $request_key . ':' . $r_index;
-    $first_entity_key = $first_entity_key . ':' . $entities[0]['r_index'];
-  }
-  if ($request_key == $first_entity_key) {
-    $other_endpoints = entity_load($entities[1]['entity_type'], array($entities[1]['entity_id']));
+  if (isset($entities[0]['entity_type']) && isset($entities[0]['entity_id'])) {
+    $first_entity_key = $entities[0]['entity_type'] . ':' . $entities[0]['entity_id'];
+    if (isset($r_index)) {
+      $request_key = $request_key . ':' . $r_index;
+      $first_entity_key = $first_entity_key . ':' . $entities[0]['r_index'];
+    }
+    if ($request_key == $first_entity_key) {
+      $other_endpoints = entity_load($entities[1]['entity_type'], array($entities[1]['entity_id']));
+      return reset($other_endpoints);
+    }
+    $other_endpoints = entity_load($entities[0]['entity_type'], array($entities[0]['entity_id']));
     return reset($other_endpoints);
   }
-  $other_endpoints = entity_load($entities[0]['entity_type'], array($entities[0]['entity_id']));
-  return reset($other_endpoints);
 }
 
 /**

@@ -248,6 +248,9 @@ function crm_core_relationship_ui_views_api() {
  */
 function crm_core_relationship_ui_query_views_crm_relationships_by_contact_alter($query) {
   $where =& $query->conditions();
+  if (!isset($where[0]['field'])) {
+    return;
+  }
   $field_conditions =& $where[0]['field']->conditions();
   $field_field_conditions =& $field_conditions[0]['field']->conditions();
 
