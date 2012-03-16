@@ -8,20 +8,22 @@
  * @param type $contact
  * @param type $type
  */
-function crm_core_relation_entity_ui_get_form_wrapper($contact, $type) {
+function crm_core_relation_entity_ui_get_form_wrapper($contact, $type, $reverse) {
   global $user;
+  $types = relation_get_types(array($type));
+  $current_type = array_pop($types);
   // Default empty Relation.
   $values = array(
     'relation_type' => $type,
     'uid' => $user->uid,
     'title' => '',
-    'reverse' => 0,
-    'directional' => 0,
-    'r_unique' => 0,
-    'source_bundles' => array(
-      'crm_core_contact:' . $contact->type
-    ),
+    'reverse' => $reverse,
+    'directional' => $current_type->directional,
+    'r_unique' => $current_type->r_unique,
+    'source_bundles' => $current_type->source_bundles,
+    'target_bundles' => $current_type->target_bundles,
     'crm_core_contact' => $contact,
+    'label' => $current_type->directional && $reverse ? $current_type->reverse_label : $current_type->label,
   );
   $relation = crm_core_relation_create($values);
 
@@ -58,8 +60,8 @@ function crm_core_relationship_form($form, &$form_state, $relation) {
   );
   $form['relationship_type_label'] = array(
     '#type' => 'item',
-    '#title' => t('Relationship type') . ': ',// . $relation->label,
-    '#value' => "",
+    '#title' => t('Relationship type'),
+    '#markup' => $relation->label,
   );
 
   foreach (array(0, 1) as $reverse_field) {
@@ -104,7 +106,7 @@ function crm_core_relationship_form($form, &$form_state, $relation) {
 
   $form['actions']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Save Activity'),
+    '#value' => t('Save Relationship'),
     '#submit' => $submit + array('crm_core_relationship_ui_add_relationship_form_submit'),
   );
 
@@ -222,6 +224,7 @@ function crm_core_relationship_ui_add_relationship($crm_core_contact) {
  * @param $reverse
  *   Whether relation is reversed.
  */
+/*
 function crm_core_relationship_ui_add_relationship_form($form, &$form_state, $crm_core_contact, $relationship_type, $reverse) {
   drupal_set_title(t('Add relationship'));
 
@@ -268,6 +271,7 @@ function crm_core_relationship_ui_add_relationship_form($form, &$form_state, $cr
 
   return $form;
 }
+*/
 
 /**
  * Perform validation for add relationship form.

@@ -32,11 +32,11 @@ function crm_core_relationship_ui_menu() {
     );
 
   foreach (crm_core_relationship_get_relationships() as $type => $info) {
-    $items['crm/contact/%crm_core_contact/relationships/add/' . $type] = array(
+    $items['crm/contact/%crm_core_contact/relationships/add/' . $type . '/%'] = array(
       'title' => 'Add ' . $info->label,
       'description' => 'Add a relationship to this contact',
       'page callback' => 'crm_core_relation_entity_ui_get_form_wrapper',
-      'page arguments' => array(2, 5),
+      'page arguments' => array(2, 5, 6),
       'access callback' => 'crm_core_relationship_access_permissions',
       'access arguments' => array(null, 'create_view'),
       'type' => MENU_NORMAL_ITEM,
@@ -248,6 +248,9 @@ function crm_core_relationship_ui_views_api() {
  */
 function crm_core_relationship_ui_query_views_crm_relationships_by_contact_alter($query) {
   $where =& $query->conditions();
+  if (!isset($where[0]['field'])) {
+    return;
+  }
   $field_conditions =& $where[0]['field']->conditions();
   $field_field_conditions =& $field_conditions[0]['field']->conditions();
 
