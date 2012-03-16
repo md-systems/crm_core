@@ -27,12 +27,30 @@ function crm_core_profile_menu() {
   );
   
   $items['admin/structure/crm/profile/%crm_core_profile'] = array(
-    'title' => t('Add new profile form'),
+    'title' => t('Edit Profile Form'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('crm_core_profile_new_form', 4),
     'access arguments' => array('create new crm core profile forms'),
     'file' => 'crm_core_profile.forms.inc',
     'type' => MENU_CALLBACK,
+  );
+  
+  $items['admin/structure/crm/profile/%crm_core_profile/edit'] = array(
+    'title' => t('Edit Profile Form'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_core_profile_new_form', 4),
+    'access arguments' => array('create new crm core profile forms'),
+    'file' => 'crm_core_profile.forms.inc',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  
+  $items['admin/structure/crm/profile/%crm_core_profile/display'] = array(
+    'title' => t('Fields display'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_core_profile_weight_form', 4),
+    'access arguments' => array('create new crm core profile forms'),
+    'file' => 'crm_core_profile.forms.inc',
+    'type' => MENU_LOCAL_TASK,
   );
     
   return $items;
@@ -57,6 +75,23 @@ function crm_core_profile_permission() {
     ),
   );
 }
+
+/**
+ * Implements hook_theme
+ */
+function crm_core_profile_theme() {
+  return array(
+    'crm_core_profile_weight_form' => array(
+      'render element' => 'form',
+      'file' => 'crm_core_profile.forms.inc',
+    ),
+    'crm_core_profile_entry_form' => array(
+      'render element' => 'form',
+      'file' => 'crm_core_profile.forms.inc',
+    ),
+  );
+}
+
 
 /**
  * Implements hook_views_api().
@@ -87,8 +122,12 @@ function crm_core_profile_block_info() {
   );
   $profiles = crm_core_profile_load_all($conditions);
   foreach($profiles as $profile) {
-     $blocks['crm_core_profile_' . $profile['name']] = array(
-       'info' => t('CRM Core Profile: @profile', array('@profile' => $profile['label'])), 
+     
+     // block delta is limited to 32 characters
+     $delta = 'ccp_' . $profile['name'];
+     $blocks[$delta] = array(
+       'info' => t('CRM Core Profile: @profile', array('@profile' => $profile['label'])),
+       'cache' => DRUPAL_NO_CACHE, 
      ); 
   }   
   return $blocks;
@@ -101,7 +140,7 @@ function crm_core_profile_block_view($delta) {
   
   // extract the profile machine name from the block delta
   // theming is still needed
-  $name = substr($delta, 17);
+  $name = substr($delta, 4);
   $profile = crm_core_profile_load($name);
   $block['subject'] = $profile['label'];
   $block['content'] = crm_core_profile_block_content($profile); 
