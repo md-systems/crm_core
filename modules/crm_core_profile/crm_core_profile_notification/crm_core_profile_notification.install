@@ -1,0 +1,57 @@
+<?php
+
+/**
+ * Implements hook_schema()
+ */
+function crm_core_profile_notification_schema() {
+  $schema['crm_core_profile_notification'] = array(
+    'description' => 'Stores CRM Core Profile Notification information',
+    'fields' => array(
+      'name' => array(
+        'description' => 'The machine name of the profile form, primary and foreign key',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'recipient' => array(
+        'description' => 'The receipent of the notification',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'bcc' => array(
+        'description' => 'bcc of the notification',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+      ),
+      'subject' => array(
+        'description' => 'subject of the notification',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+      ),
+      'body' => array(
+        'description' => 'body of the notification',
+        'type' => 'text',
+        'not null' => FALSE,
+      ),
+      'status' => array(
+        'description' => 'The status of the notification, defaults to inactive',
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 1,
+        'size' => 'tiny',
+      ),
+      'created' => array(
+        'description' => 'Timestamp of when the profile form is created',
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 0,
+      ),
+  ),
+    'primary key' => array('name'),
+  );
+
+  return $schema;
+}
