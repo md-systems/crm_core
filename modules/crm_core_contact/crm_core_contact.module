@@ -46,7 +46,7 @@ function crm_core_contact_entity_info() {
       'label' => $name,
       'admin' => array(
         'path' => 'admin/structure/crm/contact-types/%crm_core_contact_type',
-        'real path' => 'admin/structure/crm/contact-types/' . str_replace('_', '-', $type),
+        'real path' => 'admin/structure/crm/contact-types/' . $type,
         'bundle argument' => 4,
         'access arguments' => array('administer contact types'),
       ),
@@ -87,11 +87,11 @@ function crm_core_contact_permission() {
 //      'description' => t('Allows the user to edit contacts that have already been added to the CRM.'),
 //    ),
   );
-  
+
   $permissions += crm_core_entity_access_permissions('crm_core_contact');
-  
+
   return $permissions;
-  
+
 }
 
 /**
@@ -161,6 +161,127 @@ function crm_core_contact_views_api() {
   );
 }
 
+/**
+ * Implements hook_search_info().
+ */
+function crm_core_contact_search_info() {
+  return array(
+    'title' => 'Contacts',
+    'path' => 'contact',
+  );
+}
+
+/**
+ * Implements hook_search_access().
+ */
+function crm_core_contact_search_access() {
+  return user_access('administer crm_core_contact entities') || user_access('view any crm_core_contact entity');
+}
+
+/**
+ * Implements hook_search_reset().
+ */
+function crm_core_contact_search_reset() {
+  db_update('search_dataset')
+    ->fields(array('reindex' => REQUEST_TIME))
+    ->condition('type', 'crm_core_contact')
+    ->execute();
+}
+
+/**
+ * Implements hook_search_status().
+ */
+function crm_core_contact_search_status() {
+  $total = db_query('SELECT COUNT(*) FROM {crm_core_contact}')->fetchField();
+  $remaining = db_query("SELECT COUNT(*) FROM {crm_core_contact} c LEFT JOIN {search_dataset} d ON d.type = 'crm_core_contact' AND d.sid = c.contact_id WHERE d.sid IS NULL OR d.reindex <> 0")->fetchField();
+  return array('remaining' => $remaining, 'total' => $total);
+}
+
+/**
+ * Implements hook_search_execute().
+ */
+function crm_core_contact_search_execute($keys = NULL, $conditions = NULL) {
+  // Build matching conditions
+
+  $query = db_select('search_index', 'i', array('target' => 'slave'))->extend('SearchQuery')->extend('PagerDefault');
+  $query->join('crm_core_contact', 'c', 'c.contact_id = i.sid');
+  $query->searchExpression($keys, 'crm_core_contact');
+
+  // Insert special keywords.
+  $query->setOption('type', 'c.type');
+  $query->setOption('language', 'c.language');
+
+  // Only continue if the first pass query matches.
+  if (!$query->executeFirstPass()) {
+    return array();
+  }
+
+  // Load results.
+  $find = $query
+    ->limit(10)
+    ->execute();
+  $results = array();
+  foreach ($find as $item) {
+    // Render the contact.
+    $contact = crm_core_contact_load($item->sid);
+    $build = crm_core_contact_view($contact);
+    unset($build['#theme']);
+    $contact->rendered = drupal_render($build);
+	$title = field_get_items('crm_core_contact', $contact, 'contact_name');
+	$title = name_format($title[0], '((((t+ig)+im)+if)+is)+jc');
+    $uri = entity_uri('crm_core_contact', $contact);
+    $results[] = array(
+      'link' => url($uri['path'], array_merge($uri['options'], array('absolute' => TRUE))),
+      'type' => check_plain(crm_core_contact_type_get_name($contact->type)),
+      'title' => $title,
+      'user' => theme('username', array('account' => user_load($contact->uid))),
+      'date' => $contact->changed,
+      'contact' => $contact,
+      'score' => $item->calculated_score,
+      'snippet' => search_excerpt($keys, $contact->rendered),
+      'language' => (isset($contact->language)) ? $contact->language : LANGUAGE_NONE,
+    );
+  }
+  return $results;
+}
+
+/**
+ * Search condition callback.
+ */
+function crm_core_contact_search_conditions_callback($keys) {
+  $conditions = array();
+
+  if (!empty($_REQUEST['keys'])) {
+    $conditions['keys'] = $_REQUEST['keys'];
+  }
+  if (!empty($_REQUEST['sample_search_keys'])) {
+    $conditions['sample_search_keys'] = $_REQUEST['sample_search_keys'];
+  }
+  if ($force_keys = variable_get('sample_search_force_keywords', '')) {
+    $conditions['sample_search_force_keywords'] = $force_keys;
+  }
+  return $conditions;
+}
+
+/**
+ * Implements hook_update_index().
+ */
+function crm_core_contact_update_index() {
+  $limit = (int) variable_get('search_cron_limit', 100);
+
+  $result = db_query_range("SELECT c.contact_id FROM {crm_core_contact} c LEFT JOIN {search_dataset} d ON d.type = 'crm_core_contact' AND d.sid = c.contact_id WHERE d.sid IS NULL OR d.reindex <> 0 ORDER BY d.reindex ASC, c.contact_id ASC", 0, $limit);
+
+  foreach ($result as $contact) {
+    $contact = crm_core_contact_load($contact->contact_id);
+    variable_set('crm_core_contact_cron_last', $contact->changed);
+
+    // Render the contact.
+    $text = drupal_render(crm_core_contact_view($contact));
+    // Update index
+    search_index($contact->contact_id, 'crm_core_contact', $text);
+  }
+}
+
 
 /**
  * Entity uri callback.
@@ -176,6 +297,15 @@ function crm_core_contact_uri($contact) {
  * Entity label callback.
  */
 function crm_core_contact_label($entity) {
+  // Check wheter bundle type label function exists.
+  // This is needed if we want to have different labels per contact type.
+  // For example Individual contact's label is person's Name.
+  // But for Organization -- organization's name.
+  $function = 'crm_core_contact_' . $entity->type . '_label';
+  if (function_exists($function)) {
+    return $function($entity);
+  }
+  // Default is person's name.
   $build_info = crm_core_contact_view($entity);
   return render($build_info['contact_name'][0]);
 }
@@ -583,7 +713,10 @@ function crm_core_contact_save($contact) {
  *   FALSE if loading fails
  */
 function crm_core_contact_load($contact_id, $conditions = array()) {
-  $contacts = crm_core_contact_load_multiple(array($contact_id), $conditions);
+  if ($contact_id !== FALSE) {
+    $contact_id = array($contact_id);
+  }
+  $contacts = crm_core_contact_load_multiple($contact_id, $conditions);
   return $contacts ? reset($contacts) : FALSE;
 }
 
@@ -640,8 +773,16 @@ function crm_core_contact_delete_multiple($contact_ids = array()) {
  * View a single contact record.
  */
 function crm_core_contact_view($contact) {
-  field_attach_prepare_view('crm_core_contact', array($contact->contact_id => $contact), 'full');
-  return field_attach_view('crm_core_contact', $contact, 'full');
+  $contact->content = array();
+  $view_mode = 'full';
+  $langcode = LANGUAGE_NONE;
+  field_attach_prepare_view('crm_core_contact', array($contact->contact_id => $contact), $view_mode);
+  // Add content added by fields.
+  $contact->content += field_attach_view('crm_core_contact', $contact, $view_mode);
+  module_invoke_all('entity_view', $contact, 'crm_core_contact', $view_mode, $langcode);
+  $build = $contact->content;
+  unset($contact->content);
+  return $build;
 }
 
 
@@ -653,8 +794,7 @@ function crm_core_contact_view($contact) {
  * @return title string
  */
 function crm_core_contact_title($contact) {
-  $element = field_view_value('crm_core_contact', $contact, 'contact_name', $contact->contact_name['und'][0]);
-  return drupal_render($element);
+  return entity_label('crm_core_contact', $contact);
 }
 
 

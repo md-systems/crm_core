@@ -1,0 +1,212 @@
+<?php
+
+/**
+ * Implements hook_menu()
+ */
+function crm_core_profile_menu() {
+  $items = array();
+
+  // default path for crm_core profile forms
+  $items['crm_core_profile/%crm_core_profile'] = array(
+    'title' => t('Add new profile form'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_core_profile_entry_form', 1),
+    'access arguments' => array('access crm_core_profile forms'),
+    'file' => 'crm_core_profile.forms.inc',
+    'type' => MENU_CALLBACK,
+  );
+
+  // create or edit a profile
+  $items['admin/structure/crm/profile/new'] = array(
+    'title' => t('Add new profile form'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_core_profile_new_form', null),
+    'access arguments' => array('create new crm core profile forms'),
+    'file' => 'crm_core_profile.forms.inc',
+    'type' => MENU_CALLBACK,
+  );
+  
+  $items['admin/structure/crm/profile/%crm_core_profile'] = array(
+    'title' => t('Edit Profile Form'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_core_profile_new_form', 4),
+    'access arguments' => array('create new crm core profile forms'),
+    'file' => 'crm_core_profile.forms.inc',
+    'type' => MENU_CALLBACK,
+  );
+  
+  $items['admin/structure/crm/profile/%crm_core_profile/edit'] = array(
+    'title' => t('Edit Profile Form'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_core_profile_new_form', 4),
+    'access arguments' => array('create new crm core profile forms'),
+    'file' => 'crm_core_profile.forms.inc',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  
+  $items['admin/structure/crm/profile/%crm_core_profile/display'] = array(
+    'title' => t('Fields display'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_core_profile_weight_form', 4),
+    'access arguments' => array('create new crm core profile forms'),
+    'file' => 'crm_core_profile.forms.inc',
+    'type' => MENU_LOCAL_TASK,
+  );
+    
+  return $items;
+}
+
+/**
+ * Implements hook_permission()
+ */
+function crm_core_profile_permission() {
+  return array(
+    'administer crm core profile forms' => array(
+      'title' => t('Administer CRM Core profile forms'),
+      'description' => t('Administer CRM Core profile forms'),
+    ),
+    'create new crm core profile forms' => array(
+      'title' => t('Create new CRM Core profile forms'),
+      'description' => t('Ability to create new CRM Core profile forms'),
+    ),
+    'access crm_core_profile forms' => array(
+      'title' => t('Access CRM Core profile forms'),
+      'description' => t('Allow the access to the profile form'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_theme
+ */
+function crm_core_profile_theme() {
+  return array(
+    'crm_core_profile_weight_form' => array(
+      'render element' => 'form',
+      'file' => 'crm_core_profile.forms.inc',
+    ),
+    'crm_core_profile_entry_form' => array(
+      'render element' => 'form',
+      'file' => 'crm_core_profile.forms.inc',
+    ),
+  );
+}
+
+
+/**
+ * Implements hook_views_api().
+ */
+function crm_core_profile_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'crm_core_profile') . '/includes/views',
+  );
+}
+
+/**
+ * hook_block_info
+ */
+function crm_core_profile_block_info() {
+  $blocks = array();
+  
+  // load all the profiles
+  $conditions = array(
+    array(
+      'field' => 'status',
+      'value' => 1,
+    ),
+    array(
+      'field' => 'block',
+      'value' => 1,
+    ),
+  );
+  $profiles = crm_core_profile_load_all($conditions);
+  foreach($profiles as $profile) {
+     
+     // block delta is limited to 32 characters
+     $delta = 'ccp_' . $profile['name'];
+     $blocks[$delta] = array(
+       'info' => t('CRM Core Profile: @profile', array('@profile' => $profile['label'])),
+       'cache' => DRUPAL_NO_CACHE, 
+     ); 
+  }   
+  return $blocks;
+}
+
+/**
+ * hook_block_view
+ */
+function crm_core_profile_block_view($delta) {
+  
+  // extract the profile machine name from the block delta
+  // theming is still needed
+  $name = substr($delta, 4);
+  $profile = crm_core_profile_load($name);
+  $block['subject'] = $profile['label'];
+  $block['content'] = crm_core_profile_block_content($profile); 
+  return $block;
+}
+
+function crm_core_profile_block_content($profile) {
+  module_load_include('inc', 'crm_core_profile', 'crm_core_profile.forms');
+  // generate the profile form on a block
+  return drupal_get_form('crm_core_profile_entry_form', $profile); 
+}
+
+
+function crm_core_profile_main() {
+  return 'This is a stub page for now';  
+}
+
+/**
+ * Saves a profile form entry
+ */
+function crm_core_profile_save($record) {
+  $crm_core_profile = crm_core_profile_load($record['name']);
+  if (!empty($crm_core_profile)) {
+    drupal_write_record('crm_core_profile', $record, 'name');  
+  } 
+  else {
+    drupal_write_record('crm_core_profile', $record);
+  } 
+}
+
+/**
+ * Loads a profile form entry
+ */
+function crm_core_profile_load($machine_name) {
+  
+  $data = array();
+  $query = db_select('crm_core_profile', 'p')
+  ->fields('p')
+  ->condition('name', $machine_name);
+
+  $result = $query->execute();
+  $data = $result->fetchAssoc();
+
+  return $data;  
+}
+
+/**
+ * Loads all profile form entry
+ */
+function crm_core_profile_load_all($conditions = array()) {
+  $data = array();
+  $query = db_select('crm_core_profile', 'p')
+  ->fields('p');
+  
+  if (!empty($conditions)) {
+    foreach($conditions as $condition) {
+      if (!array_key_exists('operator', $condition)) {
+        $condition['operator'] = '=';  
+      }
+      $query->condition($condition['field'], $condition['value'], $condition['operator']);
+    }  
+  }
+  $result = $query->execute();
+  while($record = $result->fetchAssoc()) {
+    $data[] = $record;  
+  }
+
+  return $data;    
+}

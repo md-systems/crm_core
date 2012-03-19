@@ -21,7 +21,7 @@ function crm_core_activity_entity_property_info() {
     'type' => 'token',
     'setter callback' => 'entity_property_verbatim_set',
     'setter permission' => 'administer site configuration',
-    'options list' => 'crm_core_activity_type_name',
+    'options list' => 'crm_core_activity_type_get_name',
     'required' => TRUE,
     'schema field' => 'type',
   );

@@ -1,0 +1,12 @@
+name = CRM Core Case
+description = Provide case entity.
+package = CRM
+version = VERSION
+core = 7.x
+
+dependencies[] = entity
+dependencies[] = entityreference
+dependencies[] = crm_core_contact
+dependencies[] = views
+
+files[] = crm_core_case.controller.inc

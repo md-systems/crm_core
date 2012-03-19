@@ -1,0 +1,13 @@
+name = CRM Core Profile Activity
+description = Add activity fields to CRM Core Profile 
+package = CRM
+version = 7.x-1.0-dev
+core = 7.x
+
+; =======================
+; Dependencies
+; =======================
+
+; Core Dependencies
+dependencies[] = crm_core_profile
+dependencies[] = crm_core_activity

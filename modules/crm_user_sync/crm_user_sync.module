@@ -48,15 +48,15 @@ function crm_user_sync_views_api() {
  * Implements hook_form_FORM_ID_alter
  */
 function crm_user_sync_form_user_profile_form_alter(&$form, &$form_state, $form_id) {
-  global $user;
-  
+  $account = $form['#user'];
+
   // only attach the contact form if a corresponding contact has been found
-  $contact = _crm_user_sync_get_related_entity('user', $user->uid, 'crm_user_sync');
+  $contact = _crm_user_sync_get_related_entity('user', $account->uid, 'crm_user_sync');
   if (empty($contact)) {
-    return;  
+    return;
   }
   if (!user_access('edit own contact information')) {
-    return;  
+    return;
   }
   $form_state['storage']['crm_core_contact'] = $contact;
   $form['crm_core_contact'] = array(
@@ -67,11 +67,11 @@ function crm_user_sync_form_user_profile_form_alter(&$form, &$form_state, $form_
     '#parents' => array('crm_core_contact'),
     '#tree' => TRUE,
   );
-  
+
   field_attach_form('crm_core_contact', $contact, $form['crm_core_contact'], $form_state);
   $form['#validate'][] = 'crm_user_sync_user_profile_form_validate';
   $form['#submit'][] = 'crm_user_sync_user_profile_form_submit';
-  
+
 }
 
 /**
@@ -80,7 +80,7 @@ function crm_user_sync_form_user_profile_form_alter(&$form, &$form_state, $form_
 function crm_user_sync_user_profile_form_validate($form, &$form_state) {
   $contact = $form_state['storage']['crm_core_contact'];
  // Notify field widgets to validate their data.
-  field_attach_form_validate('crm_core_contact', $contact, $form['crm_core_contact'], $form_state);  
+  field_attach_form_validate('crm_core_contact', $contact, $form['crm_core_contact'], $form_state);
 }
 
 /**
@@ -94,7 +94,7 @@ function crm_user_sync_user_profile_form_submit($form, &$form_state) {
   }
   // Notify field widgets.
   field_attach_submit('crm_core_contact', $contact, $form['crm_core_contact'], $form_state);
-  
+
   // Save the contact
   crm_core_contact_save($contact);
 }
@@ -112,10 +112,10 @@ function crm_user_sync_user_insert(&$edit, $account, $category) {
  */
 function crm_user_sync_user_update(&$edit, $account, $category) {
   // user update only ensures that for the given user it should have a corresponding
-  // contact record associated with it.  
+  // contact record associated with it.
   $related_contact = _crm_user_sync_get_related_entity('user', $account->uid, 'crm_user_sync');
   if (empty($related_contact)) {
-    crm_user_sync_sync($account);  
+    crm_user_sync_sync($account);
   }
 }
 
@@ -141,7 +141,7 @@ function crm_user_sync_user_delete($account) {
 
 /**
  * Synchronizes user.
- * @param $account to be synchronized 
+ * @param $account to be synchronized
  */
 function crm_user_sync_sync($account) {
   // @TODO: think about the logic here, what to do with multiple roles?
@@ -150,13 +150,13 @@ function crm_user_sync_sync($account) {
   foreach($roles_sync as $rid => $sync_rid) {
     if ($sync_rid == 0) {
       unset($roles_sync[$rid]);
-    }    
-  }  
+    }
+  }
   $roles = array_intersect_key($roles_sync, $account->roles);
   if (empty($roles)) {
-    return;  
+    return;
   }
-  
+
   $rid = key($roles);
   $contact_type = variable_get('crm_user_sync_' . $rid . '_type', 'individual');
 
@@ -164,7 +164,7 @@ function crm_user_sync_sync($account) {
   // For now we just add the name.
   $contact = crm_core_contact_type_new($contact_type);
   $contact->uid = $account->uid;
-  
+
   $contact_name = field_info_instance('crm_core_contact', 'contact_name', $contact_type);
   if (!empty($contact_name)) {
     $contact->contact_name[LANGUAGE_NONE][0] = array(
@@ -209,24 +209,46 @@ function _crm_user_sync_get_related_entity($entity_type, $entity_id, $relation_t
     $query->fieldCondition('endpoints', 'r_index', $r_index);
   }
   $results = $query->execute();
-  
+
   if (empty($results)) {
     return;
   }
-  
+
   $result = reset($results);
   $relation = relation_load($result->rid);
   $request_key = $entity_type . ':' . $entity_id;
   $entities = $relation->endpoints[LANGUAGE_NONE];
-  $first_entity_key = $entities[0]['entity_type'] . ':' . $entities[0]['entity_id'];
-  if (isset($r_index)) {
-    $request_key = $request_key . ':' . $r_index;
-    $first_entity_key = $first_entity_key . ':' . $entities[0]['r_index'];
-  }
-  if ($request_key == $first_entity_key) {
-    $other_endpoints = entity_load($entities[1]['entity_type'], array($entities[1]['entity_id']));
+  if (isset($entities[0]['entity_type']) && isset($entities[0]['entity_id'])) {
+    $first_entity_key = $entities[0]['entity_type'] . ':' . $entities[0]['entity_id'];
+    if (isset($r_index)) {
+      $request_key = $request_key . ':' . $r_index;
+      $first_entity_key = $first_entity_key . ':' . $entities[0]['r_index'];
+    }
+    if ($request_key == $first_entity_key) {
+      $other_endpoints = entity_load($entities[1]['entity_type'], array($entities[1]['entity_id']));
+      return reset($other_endpoints);
+    }
+    $other_endpoints = entity_load($entities[0]['entity_type'], array($entities[0]['entity_id']));
     return reset($other_endpoints);
   }
-  $other_endpoints = entity_load($entities[0]['entity_type'], array($entities[0]['entity_id']));
-  return reset($other_endpoints);
+}
+
+/**
+ * Implements hook_entity_property_info_alter().
+ *
+ * We need to extend Contact entity with related user for Rules integration.
+ */
+function crm_user_sync_entity_property_info_alter(&$info) {
+  $info['crm_core_contact']['properties']['crm_user_sync_uid'] = array(
+    'label' => t('Linked Account'),
+    'description' => t('Account related to Contact by crm_user_sync module.'),
+    'type' => 'user',
+    'getter callback' => 'crm_user_sync_contact_get_user_properties',
+  );
+}
+
+function crm_user_sync_contact_get_user_properties($entity, array $options, $name, $entity_type) {
+  if ($account = _crm_user_sync_get_related_entity('crm_core_contact', $entity->contact_id, 'crm_user_sync')) {
+    return $account->uid;
+  }
 }

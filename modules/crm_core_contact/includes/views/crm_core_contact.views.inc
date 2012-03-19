@@ -46,7 +46,8 @@ function crm_core_contact_views_data() {
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'handler' => 'views_handler_filter_in_operator',
+      'options callback' => 'crm_core_contact_type_get_name',
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
@@ -57,16 +58,16 @@ function crm_core_contact_views_data() {
   );
 
   // Expose the creator uid.
-  $data['crm_core_contact']['uid'] = array(
-    'title' => t('Creator'),
-    'help' => t('Relate a contact to the user who created it.'),
-    'relationship' => array(
-      'handler' => 'views_handler_relationship',
-      'base' => 'users',
-      'field' => 'uid',
-      'label' => t('Contact creator'),
-    ),
-  );
+//  $data['crm_core_contact']['uid'] = array(
+//    'title' => t('Creator'),
+//    'help' => t('Relate a contact to the user who created it.'),
+//    'relationship' => array(
+//      'handler' => 'views_handler_relationship',
+//      'base' => 'users',
+//      'field' => 'uid',
+//      'label' => t('Contact creator'),
+//    ),
+//  );
 
   // Expose the created and changed timestamps.
   $data['crm_core_contact']['created'] = array(
@@ -98,7 +99,9 @@ function crm_core_contact_views_data() {
       'handler' => 'views_handler_filter_date',
     ),
   );
-  
+
+  $data['crm_core_contact']['table']['entity type'] = 'crm_core_contact';
+
   $data['crm_core_contact_type']['table']['group'] = t('CRM Contact Types');
 
   $data['crm_core_contact_type']['table']['base'] = array(
@@ -112,7 +115,7 @@ function crm_core_contact_views_data() {
       'left_field' => 'type',
       'field' => 'type',
   );
-  
+
   $data['crm_core_contact_type']['disabled'] = array(
   'title' => t('Disabled contact type'),
     'help' => t('If the contact type is disabled, mainly for filtering purposes'),
@@ -124,9 +127,9 @@ function crm_core_contact_views_data() {
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_numeric',
-    ),  
+    ),
   );
-  
+
 
   $data['crm_core_contact_revision']['table']['group'] = t('CRM Contacts Revisions');
 
@@ -153,7 +156,7 @@ function crm_core_contact_views_data() {
       'handler' => 'views_handler_argument_numeric',
     ),
   );
-  
+
    $data['crm_core_contact_revision']['revert_link'] = array(
    'field' => array(
      'title' => t('Revision Link'),
@@ -161,7 +164,7 @@ function crm_core_contact_views_data() {
      'handler' => 'crm_core_contact_handler_field_contact_revert',
    ),
  );
-  
+
   $data['crm_core_contact_revision']['contact_id'] = array(
     'title' => t('Contact ID'),
     'help' => t('The unqiue internal identifier for a contact revision.'),
@@ -188,12 +191,26 @@ function crm_core_contact_views_data() {
       'left_field' => 'uid',
       'field' => 'uid',
     ),
-  );  
-  
+  );
+
+
+  $data['crm_core_contact_revision']['table']['join'] = array(
+    'crm_core_contact' => array(
+      'left_field' => 'contact_id',
+      'field' => 'contact_id',
+       'extra' => 'crm_core_contact.vid = crm_core_contact_revision.vid',
+      // Can use AND or OR, not really needed here since it defaults to AND
+      'extra type' => 'AND',
+    ),
+  );
+
   // Expose the creator uid.
   $data['crm_core_contact_revision']['uid'] = array(
     'title' => t('Creator'),
     'help' => t('Relate a contact to the user who created it.'),
+    'field' => array(
+      'handler' => 'views_handler_field_numeric',
+    ),
     'relationship' => array(
       'handler' => 'views_handler_relationship',
       'base' => 'users',
@@ -201,6 +218,7 @@ function crm_core_contact_views_data() {
       'label' => t('Contact creator'),
     ),
   );
+
 
   // Expose the created and changed timestamps.
   $data['crm_core_contact_revision']['created'] = array(
@@ -231,7 +249,33 @@ function crm_core_contact_views_data() {
     'filter' => array(
       'handler' => 'views_handler_filter_date',
     ),
-  );  
-  
+  );
+
   return $data;
+}
+
+
+/**
+ * Implements hook_views_data().
+ */
+function crm_core_contact_views_data_alter(&$data) {
+  // Integration with Drupal search index
+  $data['search_index']['table']['join']['crm_core_contact'] = array(
+    'left_field' => 'contact_id ',
+    'field' => 'sid',
+  );
+
+  $data['search_total']['table']['join']['crm_core_contact'] = array(
+    'left_table' => 'search_index',
+    'left_field' => 'word',
+    'field' => 'word',
+  );
+
+  $data['search_dataset']['table']['join']['crm_core_contact'] = array(
+    'left_table' => 'search_index',
+    'left_field' => 'sid',
+    'field' => 'sid',
+    'extra' => 'search_index.type = search_dataset.type',
+    'type' => 'INNER',
+  );
 }

@@ -30,7 +30,7 @@ function crm_core_activity_entity_ui_get_form_wrapper($contact, $type) {
     ),
     'title' => '',
   );
-  
+
   $activity = crm_core_activity_create($values);
 
   return entity_ui_get_form('crm_core_activity', $activity, 'add');
@@ -41,7 +41,7 @@ function crm_core_activity_entity_ui_get_form_wrapper($contact, $type) {
  */
 function crm_core_activity_form($form, &$form_state, $activity) {
   // Ensure this include file is loaded when the form is rebuilt from the cache.
-  $form_state['build_info']['file'] = drupal_get_path('module', 'crm_ui') . '/pages/contact_activity.pages.inc';
+  $form_state['build_info']['file'] = drupal_get_path('module', 'crm_core_activity_ui') . '/crm_core_activity_ui.pages.inc';
 
   // get the contact id of who is trying to add the activity
   $form['contact_id'] = array(
@@ -110,24 +110,26 @@ function crm_core_activity_form($form, &$form_state, $activity) {
 function crm_core_activity_form_validate($form, &$form_state) {
 
   $activity = $form_state['crm_core_activity'];
+  if (isset($activity->field_activity_participants[LANGUAGE_NONE])) {
 
-  // Ensure that contact set in $activity is present in values. We create activity
-  // from the page of the contact. So we ensure that this contact is added in
-  // participants field.
-  $form_state_values = array();
-  foreach ($form_state['values']['field_activity_participants'][LANGUAGE_NONE] as $value) {
-    $form_state_values[] = $value['target_id'];
-  }
+    // Ensure that contact set in $activity is present in values. We create activity
+    // from the page of the contact. So we ensure that this contact is added in
+    // participants field.
+    $form_state_values = array();
+    foreach ($form_state['values']['field_activity_participants'][LANGUAGE_NONE] as $value) {
+      $form_state_values[] = $value['target_id'];
+    }
 
-  $activity_values = array();
-  foreach ($activity->field_activity_participants[LANGUAGE_NONE] as $value) {
-    $activity_values[] = $value['target_id'];
-  }
-  $array_intersect = array_intersect($form_state_values, $activity_values);
+    $activity_values = array();
+    foreach ($activity->field_activity_participants[LANGUAGE_NONE] as $value) {
+      $activity_values[] = $value['target_id'];
+    }
+    $array_intersect = array_intersect($form_state_values, $activity_values);
 
-  // Not all default values present in form state values.
-  if (array_values($array_intersect) != $activity_values) {
-    form_set_error('field_activity_participants', t('Original contact should be included in Participants field.'));
+    // Not all default values present in form state values.
+    if (array_values($array_intersect) != $activity_values) {
+      form_set_error('field_activity_participants', t('Original contact should be included in Participants field.'));
+    }
   }
 
   // Notify field widgets to validate their data.
@@ -163,7 +165,7 @@ function crm_core_activity_form_submit($form, &$form_state) {
     drupal_set_message(t('Activity @title edited.', array('@title' => $activity->title)));
   }
 
-  $form_state['redirect'] = 'crm/contact/' . $form_state['values']['contact_id'] . '/activity';
+  $form_state['redirect'] = 'crm/activity/' . $activity->activity_id;
 }
 
 /**
@@ -205,15 +207,7 @@ function crm_core_activity_form_delete_confirm_submit($form, &$form_state) {
     crm_core_activity_delete($activity);
 
     watchdog('crm_core_activity', '@type: deleted %title.', array('@type' => $activity->type, '%title' => $activity->title));
-    drupal_set_message(t('@type %title has been deleted.', array('@type' => crm_core_activity_type_name($activity->type), '%title' => $activity->title)));
-  }
-
-  // Redirect user to activity page of the first participants contact.
-  if (empty($contact_id)) {
-    $form_state['redirect'] = 'crm/contact';
-  }
-  else {
-    $form_state['redirect'] = 'crm/contact/' . $contact_id . '/activity';
+    drupal_set_message(t('@type %title has been deleted.', array('@type' => crm_core_activity_type_get_name($activity->type), '%title' => $activity->title)));
   }
 }
 
@@ -228,18 +222,4 @@ function crm_core_activity_form_after_build(&$form, &$form_state) {
     drupal_set_title(t('Add new activity @label', array('@label' => $crm_activity_type->label)));
   }
   return $form;
-}
-
-/**
- * Activity view callback.
- */
-function crm_core_activity_view($activity) {
-  $content = entity_get_controller('crm_core_activity')->view(array($activity->activity_id => $activity), 'full');
-
-  // We don't want to run output through entity theming function.
-  // To avoid this hack apply patch from http://drupal.org/node/1259916
-  // Then we can load content in following way
-  // $content = entity_build_content('crm_core_activity', $activity);
-  unset($content['crm_core_activity'][$activity->activity_id]['#theme']);
-  return $content;
 }

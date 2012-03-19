@@ -1,0 +1,322 @@
+<?php
+
+/**
+ * Implements hook_menu
+ */
+function crm_core_profile_notification_menu() {
+  $items['admin/structure/crm/profile/%crm_core_profile/notification'] = array(
+    'title' => t('Notification'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_core_profile_notification_settings', 4),
+    'access arguments' => array('create new crm core profile forms'),
+    'type' => MENU_LOCAL_TASK,
+  ); 
+  
+  return $items; 
+}
+
+/**
+ * Implements hook_mail
+ */
+function crm_core_profile_notification_mail($key, &$message, $params) {
+  switch($key) {
+    case 'crm_core_profile_notification';
+      // probably the bcc should also come here
+      $message['headers']['Bcc'] = $params['bcc'];
+      $message['subject'] = $params['subject'];
+      $body = $params['body'];
+    break;  
+  }
+  
+  $message['body'][] = $body;
+}
+
+/**
+ * Implements hook_crm_core_profile_save
+ */
+function crm_core_profile_notification_crm_core_profile_save($profile, $form_state_values) {
+  // we will trigger an email in this hook as well as prepare the tokens
+  // load the notification settings for this profile
+  $notification_settings = crm_core_profile_notification_load($profile['name']);
+  if ($notification_settings['status'] == 0) {
+    return;  
+  } 
+    // tokenize data
+    $fields = unserialize($profile['fields']);
+    $data = array();
+    
+    // @feature: only fields available for tokenize are fields that are visible on the form, this means we can 
+    // only notify information submitted from the form
+    
+    // preparing contact fields to be tokenized
+    foreach($fields['toggle'] as $field_name => $toggle) {
+      if ($toggle !== 0) {    
+        if (array_key_exists($field_name, $form_state_values)) {
+          if (!empty($form_state_values[$field_name][LANGUAGE_NONE]))
+          $data[$profile['bundle_type']][$field_name] = implode(' ', $form_state_values[$field_name][LANGUAGE_NONE][0]);
+        }
+      }  
+    }
+    
+    // preparing activity fields to be tokenized
+    if (module_exists('crm_core_profile_activity')) {
+      $crm_core_profile_activity = crm_core_profile_activity_load($profile['name']);
+      if (!empty($crm_core_profile_activity)) {
+        $activity_fields = unserialize($crm_core_profile_activity['fields']);
+        
+        foreach($activity_fields['toggle'] as $field_name => $toggle) {
+          if ($toggle !== 0) {
+            if (array_key_exists($field_name, $form_state_values['activity'])) {
+              if (!empty($form_state_values['activity'][$field_name][LANGUAGE_NONE])) {
+                $data[$crm_core_profile_activity['bundle_type']][$field_name] = implode(' ', $form_state_values['activity'][$field_name][LANGUAGE_NONE][0]);  
+              }  
+            }  
+          }  
+        }   
+      }   
+    }
+
+    $to = token_replace($notification_settings['recipient'], $data);
+    if (isset($notification_settings['bcc'])) {
+      $params['bcc'] = token_replace($notification_settings['bcc'], $data);
+    }
+    $params['subject'] = token_replace($notification_settings['subject'], $data);
+    $params['body'] = token_replace($notification_settings['body'], $data);
+    
+    drupal_mail('crm_core_profile_notification', 'crm_core_profile_notification', $to, LANGUAGE_NONE, $params, variable_get('site_mail', NULL), TRUE);      
+       
+}
+
+/*
+ * Implementation of hook_form_FORM_ID_alter
+ */ 
+function crm_core_profile_notification_form_crm_core_profile_entry_form_alter(&$form, &$form_state, $form_id) {
+  // list all the submission handler of the form and move ours to the bottom so we can use it to invoke rules
+//  $submit_handlers = $form['#submit'];
+//  unset($form['#submit']);
+//  $form['#submit'] = $submit_handlers;
+//  $form['#submit'][] = 'crm_core_profile_notification_rules_submit';
+}
+
+/*
+ * custom submission handler for the profile form that will invoke rules and pass in variables
+ * @todo: passing in variable number of args to rules event
+ * @todo: rules event custom conditions
+ */
+function crm_core_profile_notification_rules_submit($form, &$form_state) {
+ $crm_core_profile = $form_state['profile'];
+ $crm_core_contact = crm_core_contact_load($form_state['saved_contact_id']);
+ if (module_exists('crm_core_profile_activity')) {
+   $crm_core_profile_activity = crm_core_profile_activity_load($crm_core_profile['name']);
+   if (!empty($crm_core_profile_activity)) {
+       $crm_core_activity = $form_state['crm_core_activity'];
+   }  
+ }
+
+ // will need to invoke rules with conditions such as which profile form this comes from, etc
+ rules_invoke_event('crm_core_profile_notification', $crm_core_profile, $crm_core_contact, $crm_core_activity);
+}
+
+
+/*
+ * Implementation of hook_token_info
+ */ 
+function crm_core_profile_notification_token_info() {
+	
+	// declare all contact field tokens
+	$contact_types = crm_core_contact_types(TRUE);
+	foreach($contact_types as $bundle => $bundle_info) {
+	  $info['types'][$bundle] = array(
+	    'name' => 'CRM Core Contact: ' . $bundle_info->name,
+	    'description' => $bundle_info->description,
+	  );
+	  
+	  // get all the fields as well
+	  foreach(field_info_instances('crm_core_contact', $bundle) as $field_name => $field) {
+	    $info['tokens'][$bundle][$field_name] = array(
+	      'name' => $field['label'],
+	      'description' => $field['description'],
+	    );
+	  }   
+	}
+  
+  // provide activity token	
+	if (module_exists('crm_core_profile_activity')) {
+    foreach(crm_core_activity_types() as $type => $activity_type) {
+      $info['types'][$type] = array(
+        'name' => 'CRM Core Activity: ' . $activity_type->label,
+        'description' => $activity_type->description,
+      );
+     
+       foreach(field_info_instances('crm_core_activity', $type) as $field_name => $field) {
+    	    $info['tokens'][$type][$field_name] = array(
+    	      'name' => $field['label'],
+    	      'description' => $field['description'],
+    	    );         
+       }
+    }
+	}
+		
+	return $info;
+}
+
+/*
+ * Implementation of hook_tokens
+ */
+function crm_core_profile_notification_tokens($type, $tokens, $data = array(), $options = array()) {
+
+ $token_types = array();
+ $replacements = array();
+  $sanitize = !empty($options['sanitize']);
+  
+  $contact_types = crm_core_contact_types(TRUE);
+  $contact_types = array_keys($contact_types);
+  
+  $token_types += $contact_types;
+  
+  if (module_exists('crm_core_profile_activity')) {
+    $activity_types = crm_core_activity_types();
+    $activity_types = array_keys($activity_types);
+    foreach($activity_types as $activity_type) {
+      $token_types[] = $activity_type;  
+    }
+  }
+  
+  if (in_array($type, $token_types)) {
+    if (!empty($data[$type])) {
+      foreach ($tokens as $name => $original) {
+        $replacements[$original] = $sanitize ? check_plain($data[$type][$name]) : $data[$type][$name];  
+      }  
+    }
+  }
+  
+  return $replacements;
+}
+
+/**
+ * Configuration form
+ */
+function crm_core_profile_notification_settings($form, &$form_state, $crm_core_profile) {
+  
+  // load the notification settings
+  $notification_settings = crm_core_profile_notification_load($crm_core_profile['name']);
+    
+  $form['notification'] = array(
+    '#type' => 'container',
+    '#tree' => TRUE,
+  );
+  
+  if (empty($notification_settings)) {
+    $form['notification']['created'] = array(
+      '#type' => 'value',
+      '#value' => time(),
+    );
+  }  
+  
+  // all should be token ready
+  $form['notification']['name'] = array(
+    '#type' => 'value',
+    '#value' => $crm_core_profile['name'],
+  );
+  
+  $form['notification']['status'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Enable notification?',
+    '#default_value' => (!empty($notification_settings['status'])) ? $notification_settings['status'] : 0,
+
+  );
+  
+  $form['notification']['recipient'] = array(
+    '#type' => 'textfield',
+    '#title' => 'The recipient (To)',
+    '#default_value' => (!empty($notification_settings['recipient'])) ? $notification_settings['recipient'] : '',
+    '#required' => TRUE,
+  );
+  
+  $form['notification']['bcc'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Bcc',
+    '#default_value' => (!empty($notification_settings['bcc'])) ? $notification_settings['bcc'] : '',
+  );
+  
+  $form['notification']['subject'] = array(
+    '#type' => 'textfield',
+    '#title' => 'subject',
+    '#default_value' => (!empty($notification_settings['subject'])) ? $notification_settings['subject'] : '',
+    '#required' => TRUE,
+  );
+  
+  $form['notification']['body'] = array(
+    '#type' => 'textarea',
+    '#title' => 'message',
+    '#default_value' => (!empty($notification_settings['body'])) ? $notification_settings['body'] : '',
+    '#required' => TRUE,
+  );
+  
+  $contact_types = crm_core_contact_types(TRUE);
+  $bundles = array_keys($contact_types);
+  
+  	$form['notification']['token_help'] = array(
+		'#title' => t('Replacement Tokens'),
+		'#token_types' => $bundles,
+		'#theme' => 'token_tree',
+	);
+  
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save settings'),
+  );
+  
+  return $form;
+    
+}
+
+/**
+ * Validation handler
+ */
+function crm_core_profile_notification_settings_validate($form, &$form_state) {
+//  dpm($form_state['values']);
+//  form_set_error('aaa', 'bbb');
+}
+
+/**
+ * Submission handler
+ */
+function crm_core_profile_notification_settings_submit($form, &$form_state) {
+  
+  $record = $form_state['values']['notification'];
+  
+  // save the notification setting for this profile
+  crm_core_profile_notification_save($record);
+  drupal_set_message('Your changes have been saved');
+  
+}
+
+/**
+ * Saves a profile form activity entry
+ */
+function crm_core_profile_notification_save($record) {
+  $crm_core_profile_notification = crm_core_profile_notification_load($record['name']);
+  if (!empty($crm_core_profile_notification)) {
+    drupal_write_record('crm_core_profile_notification', $record, 'name');  
+  } 
+  else {
+    drupal_write_record('crm_core_profile_notification', $record);
+  } 
+}
+
+/**
+ * Loads a profile form activity entry
+ */
+function crm_core_profile_notification_load($machine_name) {
+  
+  $data = array();
+  $query = db_select('crm_core_profile_notification', 'pn')
+  ->fields('pn')
+  ->condition('name', $machine_name);
+
+  $result = $query->execute();
+  $data = $result->fetchAssoc();
+
+  return $data;  
+}
