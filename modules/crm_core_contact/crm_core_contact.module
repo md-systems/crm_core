@@ -41,21 +41,59 @@ function crm_core_contact_entity_info() {
     ),
   );
 
-  foreach (crm_core_contact_type_get_name() as $type => $name) {
-    $return['crm_core_contact']['bundles'][$type] = array(
-      'label' => $name,
-      'admin' => array(
-        'path' => 'admin/structure/crm/contact-types/%crm_core_contact_type',
-        'real path' => 'admin/structure/crm/contact-types/' . $type,
-        'bundle argument' => 4,
-        'access arguments' => array('administer contact types'),
-      ),
-    );
-  }
+  $return['crm_core_contact_type'] = array(
+    'label' => t('CRM Contact Type'),
+    'entity class' => 'CRMContactType',
+    'controller class' => 'CRMContactTypeController',
+    'base table' => 'crm_core_contact_type',
+    'fieldable' => FALSE,
+    'bundle of' => 'crm_core_contact',
+    'exportable' => TRUE,
+    'entity keys' => array(
+      'id' => 'id',
+      'name' => 'type',
+      'label' => 'name',
+    ),
+    'module' => 'crm_core_contact',
+    // Enable the entity API's admin UI.
+    'admin ui' => array(
+      'path' => 'admin/structure/crm/contact-types',
+      'file' => 'crm_core_contact.admin.inc',
+      'controller class' => 'EntityDefaultUIController',
+    ),
+    'access callback' => 'crm_core_contact_type_access',
+  );
 
   return $return;
 }
 
+
+/**
+ * Implements hook_entity_info_alter().
+ *
+ * Use this hook to specify contact bundles to avoid a recursion, as loading
+ * the contact types needs the entity info too.
+ */
+function crm_core_contact_entity_info_alter(&$entity_info) {
+  foreach (crm_core_contact_type_get_name() as $type => $name) {
+    $entity_info['crm_core_contact']['bundles'][$type] = array(
+      'label' => $name,
+      'admin' => array(
+        'path' => 'admin/structure/crm/contact-types/manage/%crm_core_contact_type',
+        'real path' => 'admin/structure/crm/contact-types/manage/' . $type,
+        'bundle argument' => 5,
+        'access arguments' => array('administer contact types'),
+      ),
+    );
+  }
+}
+
+/**
+ * Access callback for crm_core_contact_type entities.
+ */
+function crm_core_contact_type_access($op, $entity, $account, $entity_type) {
+  return user_access('administer contact types', $account);
+}
 
 /**
  * Implements hook_permission().
@@ -452,12 +490,8 @@ function crm_core_contact_type_get_name($type = NULL) {
  *   A stdClass object with contact type fields
  */
 function crm_core_contact_type_new($type = '') {
-  return (object) array(
-    'type' => $type,
-    'name' => '',
-    'description' => '',
-    'help' => '',
-  );
+  $values = array('type' => $type);
+  return entity_create('crm_core_contact_type', $values);
 }
 
 
@@ -467,8 +501,8 @@ function crm_core_contact_type_new($type = '') {
  * @param string $type
  *   The machine-readable name of the contact type.
  */
-function crm_core_contact_type_load($type) {
-  return db_query("SELECT * FROM {crm_core_contact_type} WHERE type = :type", array(':type' => $type))->fetchObject();
+function crm_core_contact_type_load($type, $reset = FALSE) {
+  return reset(entity_load('crm_core_contact_type', FALSE, array('type' => $type), $reset));
 }
 
 
@@ -482,26 +516,7 @@ function crm_core_contact_type_load($type) {
  *   based on the operation performed
  */
 function crm_core_contact_type_save($contact_type) {
-  $op = drupal_write_record('crm_core_contact_type', $contact_type, empty($contact_type->is_new) ? 'type' : array());
-  menu_rebuild();
-
-  // If this is a new contact type and the insert did not fail...
-  if (!empty($contact_type->is_new) && $op !== FALSE) {
-    // Notify the field API that a new bundle has been created.
-    field_attach_create_bundle('crm_core_contact', $contact_type->type);
-
-    // Add base fields to the contact
-    crm_core_contact_type_initialize($contact_type->type);
-
-    // Notify other modules that a new contact type has been created.
-    module_invoke_all('crm_core_contact_type_insert', $contact_type);
-  }
-  else {
-    // Notify other modules that an existing contact type has been updated.
-    module_invoke_all('crm_core_contact_type_update', $contact_type);
-  }
-
-  return $op;
+  entity_save('crm_core_contact_type', $contact_type);
 }
 
 /**
@@ -512,13 +527,7 @@ function crm_core_contact_type_save($contact_type) {
  *
  */
 function crm_core_contact_type_delete($crm_core_contact_type) {
-
-  // delete all the field instance of the bundle
-  field_attach_delete_bundle('crm_core_contact', $crm_core_contact_type->type);
-
-  db_delete('crm_core_contact_type')
-  ->condition('type', check_plain($crm_core_contact_type->type))
-  ->execute();
+  entity_delete('crm_core_contact_type', $crm_core_contact_type->id);
 }
 
 
@@ -860,4 +869,22 @@ function crm_core_contact_devel_render_object($contact) {
  */
 function crm_core_contact_revert($contact, $vid) {
   return entity_get_controller('crm_core_contact')->revertContact($contact, $vid);
+}
+
+/**
+ * Use a separate class for profile types so we can specify some defaults
+ * modules may alter.
+ */
+class CRMContactType extends Entity {
+  public $type;
+  public $label;
+  public $weight = 0;
+
+  public function __construct($values = array()) {
+    parent::__construct($values, 'crm_core_contact_type');
+  }
+
+  function isLocked() {
+    return isset($this->status) && empty($this->is_new) && (($this->status & ENTITY_IN_CODE) || ($this->status & ENTITY_FIXED));
+  }
 }

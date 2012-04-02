@@ -10,7 +10,7 @@
 class CRMCoreContactController extends DrupalDefaultEntityController {
   public $revisionKey = 'vid';
   public $revisionTable = 'crm_core_contact_revision';
-  
+
   /**
    * Create a basic contact object.
    */
@@ -55,7 +55,7 @@ class CRMCoreContactController extends DrupalDefaultEntityController {
 
         // Save the new contact
         drupal_write_record('crm_core_contact', $contact);
-        
+
         // Save the first revision
         $this->saveRevision($contact, $uid);
 
@@ -89,7 +89,7 @@ class CRMCoreContactController extends DrupalDefaultEntityController {
       if (module_exists('rules')) {
         rules_invoke_event('crm_core_contact_'.$op, $contact);
       }
-      
+
       unset($contact->is_new);
       $this->resetCache();
 
@@ -118,11 +118,11 @@ class CRMCoreContactController extends DrupalDefaultEntityController {
 
     $contact->uid = $temp_uid;
   }
-  
-  
+
+
   /**
    * Reverts contact to specific revision.
-   * 
+   *
    * @param $contact
    *   The fully loaded contact object of the contact to revert.
    * @param $vid
@@ -130,27 +130,27 @@ class CRMCoreContactController extends DrupalDefaultEntityController {
    */
   public function revertContact($contact, $vid) {
     // Load the old revision
-    $contact_revision = $this->load(    
-      array($contact->contact_id), 
+    $contact_revision = $this->load(
+      array($contact->contact_id),
       array('vid' => $vid)
     );
-    
+
     // Reset and collect the specific revision, if it doesn't exist set to null
-    $contact_revision = (is_array($contact_revision)) ? reset($contact_revision) : NULL; 
-    
+    $contact_revision = (is_array($contact_revision)) ? reset($contact_revision) : NULL;
+
     // If it's a proper contact revision, we create a new revision with the old data
     // and log that information.
-    if($contact_revision) {  
-      unset($contact_revision->vid);        
-      $contact_revision->log = 'Reverted revision ' . $contact->vid . ' to revision ' . $vid . '.'; 
-      $this->save($contact_revision);  
-      return TRUE;     
+    if($contact_revision) {
+      unset($contact_revision->vid);
+      $contact_revision->log = 'Reverted revision ' . $contact->vid . ' to revision ' . $vid . '.';
+      $this->save($contact_revision);
+      return TRUE;
     }
-    
+
     return FALSE;
   }
-  
-  
+
+
   /**
    * Delete multiple contacts by contact ID.
    */
@@ -185,5 +185,18 @@ class CRMCoreContactController extends DrupalDefaultEntityController {
     }
 
     return TRUE;
+  }
+}
+
+/**
+ * Controller class of CRM Contact Type entities.
+ */
+class CRMContactTypeController extends EntityAPIControllerExportable {
+  public function create(array $values = array()) {
+    $values += array(
+      'name' => '',
+      'description' => '',
+    );
+    return parent::create($values);
   }
 }

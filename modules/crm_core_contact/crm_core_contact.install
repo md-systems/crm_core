@@ -43,11 +43,11 @@ function crm_core_contact_install() {
  */
 function crm_core_contact_uninstall() {
    // Instance field information field_info_field is not available
-   // because we have already unloaded our module   
+   // because we have already unloaded our module
    $additional_params = array('include_inactive' => TRUE);
    $instances = field_read_instances(array('entity_type' => 'crm_core_contact'), $additional_params);
    foreach($instances as $instance) {
-     field_delete_field($instance['field_name']);  
+     field_delete_field($instance['field_name']);
    }
 }
 
@@ -161,6 +161,11 @@ function crm_core_contact_schema() {
   $schema['crm_core_contact_type'] = array(
     'description' => 'Stores information about all defined contact types.',
     'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique contact type ID.',
+      ),
       'type' => array(
         'description' => 'The machine-readable name of this type.',
         'type' => 'varchar',
@@ -203,9 +208,36 @@ function crm_core_contact_schema() {
         'default' => 0,
         'size' => 'tiny',
       ),
+    ) + entity_exportable_schema_fields(),
+    'primary key' => array('id'),
+    'unique keys' => array(
+      'type' => array('type'),
     ),
-    'primary key' => array('type'),
   );
 
   return $schema;
+}
+
+/**
+ * Add database table fields 'module' and 'status' for exportability.
+ */
+function crm_core_contact_update_7001() {
+  $table = 'crm_core_contact_type';
+  // Remove old primary key.
+  db_drop_primary_key($table);
+
+  db_add_field($table, 'id', array(
+      'type' => 'serial',
+      'not null' => TRUE,
+      'description' => 'Primary Key: Unique contact type ID.',
+    ),
+    array('primary key' => array('id'))
+  );
+
+  foreach (entity_exportable_schema_fields() as $field => $spec) {
+    db_add_field($table, $field, $spec);
+  }
+
+  // Set unique key.
+  db_add_unique_key($table, 'type', array('type'));
 }
