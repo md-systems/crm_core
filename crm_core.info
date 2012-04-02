@@ -7,6 +7,3 @@ core = 7.x
 ; =======================
 ; Module Files
 ; =======================
-
-; Test
-files[] = tests/crm_base.test

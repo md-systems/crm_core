@@ -3,13 +3,20 @@
 /**
  * Activity UI test case.
  */
-class CRMCoreActivityUITestCase extends CRMBaseTestCase {
+class CRMCoreActivityUITestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => t('Activity UI'),
       'description' => t('Test create/edit/delete activities.'),
       'group' => t('Drupal CRM'),
     );
+  }
+
+  /**
+   * Enabled dependency modules.
+   */
+  public function setUp() {
+    parent::setUp(array('ctools', 'entity', 'views', 'image', 'name', 'crm_core', 'crm_ui', 'entityreference', 'date', 'date_popup', 'date_views', 'crm_core_contact', 'crm_core_contact_ui', 'crm_core_activity', 'crm_core_activity_ui'));
   }
 
   /**

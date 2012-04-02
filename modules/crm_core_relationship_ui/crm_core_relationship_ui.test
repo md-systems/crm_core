@@ -1,12 +1,19 @@
 <?php
 
-class CRMCoreRelationshipUITestCase extends CRMBaseTestCase {
+class CRMCoreRelationshipUITestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => t('Relationship UI'),
       'description' => t('Test create/edit/delete relations.'),
       'group' => t('Drupal CRM'),
     );
+  }
+
+  /**
+   * Enable dependencies.
+   */
+  public function setUp() {
+    parent::setUp(array('ctools', 'entity', 'views', 'image', 'name', 'crm_core', 'addressfield', 'email', 'link', 'cck_phone', 'field_group', 'name', 'crm_core_contact', 'crm_core_contact_ui', 'crm_core_relationship', 'crm_core_relationship_ui'));
   }
 
   public function testRelationshipOperations() {
