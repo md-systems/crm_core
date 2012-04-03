@@ -88,6 +88,7 @@ function crm_core_relationship_form($form, &$form_state, $relation) {
   );
 
   field_attach_form('relation', $relation, $form, $form_state);
+  
   unset($form['endpoints']);
 
   $form['actions'] = array(
@@ -122,7 +123,7 @@ function crm_core_relationship_form($form, &$form_state, $relation) {
   // We append the validate handler to #validate in case a form callback_wrapper
   // is used to add validate handlers earlier.
   $form['#validate'][] = 'crm_core_relationship_ui_add_relationship_form_validate';
-//
+ 
   // Add after build to set proper page Title as it
   // got set by entity_ui_main_form_defaults
   // @see entity_ui_get_form().
@@ -330,6 +331,8 @@ function crm_core_relationship_ui_add_relationship_form_validate($form, &$form_s
       return;
     }
   }
+  
+  field_attach_form_validate('relation', $relation, $form, $form_state);
 }
 
 /**
@@ -420,3 +423,4 @@ function _crm_core_relationship_ui_get_contact_from_autocomplete_field_value($st
   }
   return $contacts[$matches[1]];
 }
+
