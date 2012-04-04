@@ -13,7 +13,7 @@ class CRMCoreContactUITestCase extends DrupalWebTestCase {
    * Enable dependency modules.
    */
   public function setUp() {
-    parent::setUp(array('ctools', 'entity', 'views', 'image', 'name', 'crm_core', 'addressfield', 'email', 'link', 'cck_phone', 'field_group', 'name', 'crm_core_contact', 'crm_contact_ui'));
+    parent::setUp(array('ctools', 'entity', 'views', 'image', 'name', 'crm_core', 'addressfield', 'email', 'link', 'cck_phone', 'field_group', 'name', 'crm_core_contact', 'crm_core_contact_ui'));
   }
 
   /**

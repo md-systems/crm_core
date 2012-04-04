@@ -14,15 +14,16 @@ class CRMCoreRelationshipUITestCase extends DrupalWebTestCase {
    */
   public function setUp() {
     parent::setUp(array('ctools', 'entity', 'views', 'image', 'name', 'crm_core', 'addressfield', 'email', 'link', 'cck_phone', 'field_group', 'name', 'crm_core_contact', 'crm_core_contact_ui', 'crm_core_relationship', 'crm_core_relationship_ui'));
+    cache_clear_all();
   }
 
   public function testRelationshipOperations() {
     $user = $this->drupalCreateUser(
             array('administer crm_core_contact entities',
                   'view any crm_core_contact entity',
-                  'view contact relationships',
-                  'add contact relationships',
-                  'edit contact relationships',
+                  'create relation entities of any contact relationship',
+                  'view relation entities of any contact relationship',
+                  'edit relation entities of any contact relationship',
                   ));
     $this->drupalLogin($user);
 
@@ -40,7 +41,7 @@ class CRMCoreRelationshipUITestCase extends DrupalWebTestCase {
     $this->drupalGet('crm/contact/1/relationships');
     $this->assertNoRaw('<div class="messages error">', t('No errors on Relationships page.'));
     // Assert link "Add Relationship".
-    $this->assertLink(t('Add Relationship'));
+    $this->assertLink(t('Add relationship'));
 
     // Assert standard relationship types.
     $this->drupalGet('crm/contact/1/relationships/add');
@@ -53,7 +54,7 @@ class CRMCoreRelationshipUITestCase extends DrupalWebTestCase {
 //      'source_contact' => CRMCoreContactUITestCase::getIndividualContactTitle($individual_contact) . ' [cid:1]',
       'destination_contact' => CRMCoreContactUITestCase::getOrganizationContactTitle($organization_contact) . ' [cid:2]',
     );
-    $this->drupalPost('crm/contact/1/relationships/add/crm_employee/0', $values, t('Add relationship'));
+    $this->drupalPost('crm/contact/1/relationships/add/crm_employee/0', $values, t('Save Relationship'));
 
     // Go to relationships list of the individual and ensure that
     // Organization link is there.
