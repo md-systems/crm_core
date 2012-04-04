@@ -502,7 +502,8 @@ function crm_core_contact_type_new($type = '') {
  *   The machine-readable name of the contact type.
  */
 function crm_core_contact_type_load($type, $reset = FALSE) {
-  return reset(entity_load('crm_core_contact_type', FALSE, array('type' => $type), $reset));
+  $results = entity_load('crm_core_contact_type', FALSE, array('type' => $type), $reset);
+  return reset($results);
 }
 
 
