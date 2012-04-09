@@ -122,6 +122,6 @@ class CRMCoreActivityUITestCase extends DrupalWebTestCase {
    * Generate random Time for form element input.
    */
   function randomTime() {
-    return rand(0, 24) . ':' . rand(0, 60);
+    return rand(0, 23) . ':' . rand(0, 60);
   }
 }
