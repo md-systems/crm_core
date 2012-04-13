@@ -46,7 +46,7 @@ function crm_core_activity_form($form, &$form_state, $activity) {
   // get the contact id of who is trying to add the activity
   $form['contact_id'] = array(
     '#type' => 'value',
-    '#value' => arg(2),
+    '#value' => arg(1) == 'contact' ? arg(2) : $activity->field_activity_participants['und']['0']['target_id'],
   );
 
   $form['title'] = array(
