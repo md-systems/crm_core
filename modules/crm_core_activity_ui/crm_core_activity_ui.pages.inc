@@ -1,13 +1,6 @@
 <?php
 
 /**
- * A list of activities this contact has participated in.
- */
-function crm_core_contact_activity() {
-  return "This is a stub";
-}
-
-/**
  * Wrapper around entity_ui_get_form().
  *
  * Create new crm_activity entity and pass it to entity_ui_get_form().
@@ -16,11 +9,9 @@ function crm_core_contact_activity() {
  * @param type $type
  */
 function crm_core_activity_entity_ui_get_form_wrapper($contact, $type) {
-  global $user;
   // Default empty Activity.
   $values = array(
     'type' => $type,
-    'uid' => $user->uid,
     'field_activity_participants' => array(
       LANGUAGE_NONE => array(array(
           'target_id' => $contact->contact_id,
@@ -28,10 +19,9 @@ function crm_core_activity_entity_ui_get_form_wrapper($contact, $type) {
         ),
       ),
     ),
-    'title' => '',
   );
 
-  $activity = crm_core_activity_create($values);
+  $activity = entity_create('crm_core_activity', $values);
 
   return entity_ui_get_form('crm_core_activity', $activity, 'add');
 }
@@ -46,7 +36,7 @@ function crm_core_activity_form($form, &$form_state, $activity) {
   // get the contact id of who is trying to add the activity
   $form['contact_id'] = array(
     '#type' => 'value',
-    '#value' => arg(2),
+    '#value' => arg(1) == 'contact' ? arg(2) : $activity->field_activity_participants['und']['0']['target_id'],
   );
 
   $form['title'] = array(

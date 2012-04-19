@@ -2,36 +2,36 @@
 
 /**
  * Implements hook_install()
- */ 
+ */
 function crm_core_activity_install() {
-  
+
   // create a default meeting activity type
-  $meeting = crm_core_activity_type_new();
-  $meeting->type = 'meeting';
-  $meeting->label = t('Meeting');
-  $meeting->description = t('A meeting between 2 or more contacts');
-  $meeting->is_new = TRUE;
+  $meeting = entity_create('crm_core_activity_type', array(
+    'type' => 'meeting',
+    'label' => t('Meeting'),
+    'description' => t('A meeting between 2 or more contacts'),
+  ));
   crm_core_activity_type_save($meeting);
-  
+
   // create a phone call activity type
-  $phone_call = crm_core_activity_type_new();
-  $phone_call->type = 'phone_call';
-  $phone_call->label = t('Phone call');
-  $phone_call->description = t('A phone call between 2 or more contacts');
-  $phone_call->is_new = TRUE;
+  $phone_call = entity_create('crm_core_activity_type', array(
+    'type' => 'phone_call',
+    'label' => t('Phone call'),
+    'description' => t('A phone call between 2 or more contacts'),
+  ));
   crm_core_activity_type_save($phone_call);
 }
 
 function crm_core_activity_uninstall() {
 
   // delete all the fields
-  // right now we only have the default fields, what if we can add more fields to the 
+  // right now we only have the default fields, what if we can add more fields to the
   // activities? (we will need to go through the field array and idenfity activity fields?)
   module_load_include('inc', 'crm_core_activity', 'crm_core_activity.fields');
   foreach (_crm_core_activity_type_default_fields() as $field) {
     field_delete_field($field['field_name']);
   }
-  
+
 }
 
 /**
@@ -49,13 +49,6 @@ function crm_core_activity_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
-//      'revision_id' => array(
-//        'description' => 'The current {crm_core_activity_revision}.revision_id version identifier.',
-//        'type' => 'int',
-//        'unsigned' => TRUE,
-//        'not null' => TRUE,
-//        'default' => 0,
-//      ),
       'type' => array(
         'description' => 'The type (bundle) of this activity.',
         'type' => 'varchar',
@@ -89,76 +82,7 @@ function crm_core_activity_schema() {
       ),
     ),
     'primary key' => array('activity_id'),
-//    'unique keys' => array(
-//      'revision_id' => array('revision_id'),
-//    ),
-//    'foreign keys' => array(
-//      'current_revision' => array(
-//        'table' => 'crm_core_activity_revision',
-//        'columns'=> array('revision_id' => 'revision_id'),
-//      ),
-//    ),
   );
-//  $schema['crm_core_activity_revision'] = array(
-//    'description' => 'Saves information about each saved revision of a {crm_core_activity}.',
-//    'fields' => array(
-//      'revision_id' => array(
-//        'description' => 'The current {crm_core_activity_revision}.revision_id version identifier.',
-//        'type' => 'serial',
-//        'unsigned' => TRUE,
-//        'not null' => TRUE,
-//      ),
-//      'activity_id' => array(
-//        'description' => 'The primary identifier for an activity.',
-//        'type' => 'int',
-//        'unsigned' => TRUE,
-//        'not null' => TRUE,
-//        'default' => 0,
-//      ),
-//      'log' => array(
-//        'description' => 'The log entry explaining the changes in this version.',
-//        'type' => 'text',
-//        'not null' => TRUE,
-//        'size' => 'big',
-//      ),
-//      'uid' => array(
-//        'description' => 'The {users}.uid that owns this activity.',
-//        'type' => 'int',
-//        'not null' => TRUE,
-//        'default' => 0,
-//      ),
-//      'title' => array(
-//        'description' => 'The title of the activity.',
-//        'type' => 'varchar',
-//        'length' => 255,
-//        'not null' => TRUE,
-//        'default' => '',
-//      ),
-//      'created' => array(
-//        'description' => 'The Unix timestamp when the activity was created.',
-//        'type' => 'int',
-//        'not null' => TRUE,
-//        'default' => 0,
-//      ),
-//      'changed' => array(
-//        'description' => 'The Unix timestamp when the activity was most recently saved.',
-//        'type' => 'int',
-//        'not null' => TRUE,
-//        'default' => 0,
-//      ),
-//    ),
-//    'foreign keys' => array(
-//      'versioned_contact' => array(
-//        'table' => 'crm_core_activity',
-//        'columns' => array('activity_id' => 'activity_id'),
-//      ),
-//      'version_creator' => array(
-//        'table' => 'user',
-//        'columns' => array('uid' => 'uid'),
-//      ),
-//    ),
-//    'primary key' => array('revision_id'),
-//  );
 
   $schema['crm_core_activity_type'] = array(
     'description' => 'Stores information about all defined activity types.',

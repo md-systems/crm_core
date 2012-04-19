@@ -27,8 +27,8 @@ function crm_core_activity_ui_menu() {
       'description' => 'Add an activity to this contact',
       'page callback' => 'crm_core_activity_entity_ui_get_form_wrapper',
       'page arguments' => array(2, 5),
-      'access callback' => 'crm_core_activity_create_access',
-      'access arguments' => array(2, 5),
+      'access callback' => 'entity_access',
+      'access arguments' => array('create', 'crm_core_activity', 5),
       'type' => MENU_NORMAL_ITEM,
       'file' => 'crm_core_activity_ui.pages.inc',
     );
@@ -40,8 +40,8 @@ function crm_core_activity_ui_menu() {
     'page arguments' => array(2),
     'title callback' => 'crm_core_activity_label',
     'title arguments' => array(2),
-    'access callback' => 'crm_core_activity_view_access',
-    'access arguments' => array(2),
+    'access callback' => 'entity_access',
+    'access arguments' => array('view', 'crm_core_activity', 2),
     'type' => MENU_NORMAL_ITEM,
   );
 
@@ -56,8 +56,8 @@ function crm_core_activity_ui_menu() {
     'title' => 'Edit',
     'page callback' => 'entity_ui_get_form',
     'page arguments' => array('crm_core_activity', 2, 'edit'),
-    'access callback' => 'crm_core_activity_edit_access',
-    'access arguments' => array(2),
+    'access callback' => 'entity_access',
+    'access arguments' => array('edit', 'crm_core_activity', 2),
     'type' => MENU_LOCAL_TASK,
     'file' => 'crm_core_activity_ui.pages.inc',
   );
@@ -66,8 +66,8 @@ function crm_core_activity_ui_menu() {
     'title' => 'Delete',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('crm_core_activity_form_delete_confirm', 2),
-    'access callback' => 'crm_core_activity_edit_access',
-    'access arguments' => array(2),
+    'access callback' => 'entity_access',
+    'access arguments' => array('edit', 'crm_core_activity', 2),
     'weight' => 1,
     'type' => MENU_NORMAL_ITEM,
     'file' => 'crm_core_activity_ui.pages.inc',
@@ -119,7 +119,7 @@ function crm_core_activity_ui_admin_menu_map() {
  */
 function crm_core_activity_ui_form_alter(&$form, &$form_state, $form_id) {
   // Alter the operations links so they looks like CTools dropbutton
-  if($form_id == 'crm_core_activity_type_overview_form') {
+  if ($form_id == 'crm_core_activity_type_overview_form') {
     $ops_count = $form['table']['#header'][2]['colspan'];
     $form['table']['#header'][2] = t('Operations');
 
