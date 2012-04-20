@@ -198,7 +198,7 @@ function theme_crm_ui_ctools_dropbutton($variables) {
  * Helps to build Navigation menu.
  */
 function crm_ui_get_crm_mlid() {
-  $plid = variable_set('crm_ui_plid', -1);
+  $plid = variable_get('crm_ui_plid', -1);
 
   if (empty($plid) || $plid == -1) { 
     $crm_plid = menu_link_get_preferred('crm', 'navigation');
