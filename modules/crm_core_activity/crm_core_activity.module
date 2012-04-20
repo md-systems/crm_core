@@ -304,25 +304,55 @@ function crm_core_activity_views_api() {
 }
 
 /**
- * Implements hook_crm_core_contact_delete.
+ * Implements hook_crm_core_contact_delete().
+ *
+ * Adjusts Activities where contact is used in primary participants.
+ *
+ * @param object $crm_core_contact
+ *   A fully loaded object representing Contact being deleted.
  */
 function crm_core_activity_crm_core_contact_delete($crm_core_contact) {
-
-  // query the activities that belongs to the contact
-  // @todo for activities involving other contacts, it might be wise to just
-  // delete the contact from the participant list?
   $query = new EntityFieldQuery;
   $results = $query
     ->entityCondition('entity_type', 'crm_core_activity')
-    ->fieldCondition('field_activity_participants', 'target_id', $crm_core_contact->contact_id, '=')
-    ->fieldCondition('field_activity_participants', 'target_type', 'crm_core_contact', '=')
+    ->fieldCondition('field_activity_participants', 'target_id', $crm_core_contact->contact_id)
     ->execute();
 
-  if(empty($results)) {
+  if (empty($results)) {
+    // No related Activities.
     return;
   }
-  foreach($results['crm_core_activity'] as $crm_core_activity) {
-    crm_core_activity_delete($crm_core_activity);
+
+  // Load fully populated Activity objects to analyze/update.
+  $activity_ids = array_keys($results['crm_core_activity']);
+  $crm_core_activities = crm_core_activity_load_multiple($activity_ids);
+
+  $activities_to_remove = array();
+
+  foreach($crm_core_activities as $crm_core_activity) {
+    $wrapped_activity = entity_metadata_wrapper('crm_core_activity', $crm_core_activity);
+    $participants = $wrapped_activity->field_activity_participants->value(array('identifier' => TRUE));
+
+    // Remove Contact from participants array
+    $participants = array_diff($participants, array($crm_core_contact->contact_id));
+
+    if (empty($participants)) {
+      // Last main participant was deleted, so we should kill entire activity.
+      $activities_to_remove[] = $crm_core_activity->activity_id;
+    }
+    else {
+      // Save Activity with renewed list.
+      $wrapped_activity->field_activity_participants->set($participants);
+      crm_core_activity_save($crm_core_activity);
+    }
+  }
+
+  if (!empty($activities_to_remove)) {
+    watchdog('crm_core_activities', 'Deleted !count activities due to delection contact with id=%contact_id.',
+      array('!count' => count($activities_to_remove),
+        '%contact_id' => $crm_core_contact->contact_id),
+      WATCHDOG_INFO);
+    crm_core_activity_delete_multiple($activities_to_remove);
   }
 }
 
