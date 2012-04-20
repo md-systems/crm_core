@@ -67,4 +67,31 @@ class CRMCoreActivityTypeController extends EntityAPIControllerExportable {
 
     return parent::create($values);
   }
+
+  /**
+   * Implements EntityAPIControllerInterface.
+   *
+   * @param @ids array of IDs
+   * @param $transaction
+   *   Optionally a DatabaseTransaction object to use. Allows overrides to pass
+   *   in their transaction object.
+   */
+  public function delete($ids, DatabaseTransaction $transaction = NULL) {
+    // Delete all instances of the given type.
+    $query = new EntityFieldQuery;
+    $results = $query
+      ->entityCondition('entity_type', 'crm_core_activity')
+      ->entityCondition('bundle', $ids, 'IN')
+      ->execute();
+
+    if (!empty($results)) {
+      $activities_to_remove = array_keys($results['crm_core_activity']);
+      crm_core_activity_delete_multiple($activities_to_remove);
+      watchdog('crm_core_activity', 'Delete !count activities due to delection activity type.', array('!count' => count($activities_to_remove)), WATCHDOG_INFO);
+    }
+
+    // Finally delete the type itself.
+    return parent::delete($ids, $transaction);
+  }
+
 }

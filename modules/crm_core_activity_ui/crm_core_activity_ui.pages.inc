@@ -190,10 +190,8 @@ function crm_core_activity_form_delete_confirm($form, &$form_state, $activity) {
  * Execute node deletion.
  */
 function crm_core_activity_form_delete_confirm_submit($form, &$form_state) {
-  $contact_id = 0;
   if ($form_state['values']['confirm']) {
     $activity = $form_state['activity'];
-    $contact_id = $activity->field_activity_participants[LANGUAGE_NONE][0]['target_id'];
     crm_core_activity_delete($activity);
 
     watchdog('crm_core_activity', '@type: deleted %title.', array('@type' => $activity->type, '%title' => $activity->title));

@@ -179,7 +179,7 @@ function crm_core_contact_ui_type_delete_confirm_validate($form, &$form_state) {
  */
 function crm_core_contact_ui_type_delete_confirm_submit($form, &$form_state) {
   $crm_core_contact_type = $form_state['contact_type'];
-  crm_core_contact_type_delete($crm_core_contact_type);
+  crm_core_contact_type_delete($crm_core_contact_type->id);
 
   $form_state['redirect'] = 'admin/structure/crm/contact-types';
   drupal_set_message(t('Contact type deleted'));

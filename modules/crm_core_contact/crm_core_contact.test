@@ -38,8 +38,8 @@ class CRMCoreContactTestCase extends DrupalWebTestCase {
     $this->assertEqual($contact_type->description, $contact_type_load->description, t('Loaded contact type has same description.'));
     $this->assertTrue(!empty($contact_type_load->id), 'Loaded contact type has id.');
 
-    // crm_core_contact_type_delete().
-    crm_core_contact_type_delete($contact_type);
+    // Delete contact type.
+    crm_core_contact_type_delete($contact_type->id);
     // Avoid static cache.
     $contact_type_load = crm_core_contact_type_load($type, TRUE);
     $this->assertTrue(empty($contact_type_load), t('Contact type deleted.'));

@@ -44,7 +44,7 @@ function crm_core_contact_entity_info() {
   $return['crm_core_contact_type'] = array(
     'label' => t('CRM Contact Type'),
     'entity class' => 'CRMContactType',
-    'controller class' => 'CRMContactTypeController',
+    'controller class' => 'CRMCoreContactTypeController',
     'base table' => 'crm_core_contact_type',
     'fieldable' => FALSE,
     'bundle of' => 'crm_core_contact',
@@ -521,14 +521,14 @@ function crm_core_contact_type_save($contact_type) {
 }
 
 /**
- * Delete a contact type
+ * Delete a contact type.
  *
  * @param stdClass $crm_core_contact_type
  * A loaded $crm_core_contact_type object
  *
  */
-function crm_core_contact_type_delete($crm_core_contact_type) {
-  entity_delete('crm_core_contact_type', $crm_core_contact_type->id);
+function crm_core_contact_type_delete($type_id) {
+  entity_get_controller('crm_core_contact_type')->delete(array($type_id));
 }
 
 

@@ -62,7 +62,6 @@ function crm_core_activity_entity_info() {
       'controller class' => 'EntityDefaultUIController',
     ),
     'access callback' => 'crm_core_activity_type_access',
-    'deletion callback' => 'crm_core_activity_type_delete',
   );
 
   return $return;
@@ -141,30 +140,6 @@ function crm_core_activity_access($op, $activity, $account = NULL, $entity_type 
  */
 function crm_core_activity_type_access() {
   return user_access('administer activity types');
-}
-
-/**
- * Activity type deletion callback.
- *
- * @param string $type_id
- */
-function crm_core_activity_type_delete($type_id) {
-  // Delete all instances of the given type.
-  $query = new EntityFieldQuery;
-  $results = $query
-    ->entityCondition('entity_type', 'crm_core_activity')
-    ->entityCondition('bundle', $type_id)
-    ->execute();
-
-  if (!empty($results)) {
-    $activities_to_remove = array_keys($results['crm_core_activity']);
-    crm_core_activity_delete_multiple($activities_to_remove);
-    watchdog('crm_core_activity', 'Delete !count activities due to delection activity type.',
-      array('!count' => count($activities_to_remove)), WATCHDOG_INFO);
-  }
-
-  // Finally delete the type itself.
-  entity_get_controller('crm_core_activity_type')->delete(array($type_id));
 }
 
 /*******************************************************************************

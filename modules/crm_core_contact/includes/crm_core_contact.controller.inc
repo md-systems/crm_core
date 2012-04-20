@@ -187,16 +187,3 @@ class CRMCoreContactController extends DrupalDefaultEntityController {
     return TRUE;
   }
 }
-
-/**
- * Controller class of CRM Contact Type entities.
- */
-class CRMContactTypeController extends EntityAPIControllerExportable {
-  public function create(array $values = array()) {
-    $values += array(
-      'name' => '',
-      'description' => '',
-    );
-    return parent::create($values);
-  }
-}
