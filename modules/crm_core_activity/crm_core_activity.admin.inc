@@ -75,17 +75,20 @@ function crm_core_activity_type_form_submit(&$form, &$form_state) {
   $form_state['redirect'] = 'admin/structure/crm/activity-types';
 }
 
+/**
+ * Submit handler for deletion button for crm_activity_type.
+ */
 function crm_core_activity_type_form_submit_delete(&$form, &$form_state) {
-  $form_state['redirect'] = 'admin/structure/crm/activity-types/' . $form_state['crm_core_activity_type']->type . '/delete';
+  $form_state['redirect'] = 'admin/structure/crm/activity-types/manage/' . $form_state['crm_core_activity_type']->type . '/delete';
 }
 
 /**
  * Add default fields to newly created activity type.
  */
 function crm_core_activity_type_add_default_fields($activity_type) {
-  
+
   $type = $activity_type->type;
-  
+
   module_load_include('inc', 'crm_core_activity', 'crm_core_activity.fields');
   $fields = _crm_core_activity_type_default_fields();
 
