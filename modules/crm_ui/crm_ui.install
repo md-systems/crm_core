@@ -10,4 +10,15 @@ function crm_ui_install() {
   menu_cache_clear_all();
   db_query('DELETE FROM {menu_links}');
   menu_rebuild();
+
+  $plid = crm_ui_get_crm_mlid();
+  
+  $item = array(
+    'link_path' => 'crm/dashboard',
+    'link_title' => 'Dashboard',
+    'menu_name' => 'navigation',
+    'plid' => $plid,
+    'weight' => 1,
+  );
+  menu_link_save($item);
 }

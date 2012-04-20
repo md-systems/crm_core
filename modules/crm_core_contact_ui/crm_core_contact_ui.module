@@ -79,9 +79,9 @@ function crm_core_contact_ui_menu() {
 //    'weight' => 10,
 //  );
 
-  /*
+  /**
    * Contacts
-   */
+   */  
   $items['crm/contact/%crm_core_contact'] = array(
     'title' => 'Contact',
     'page callback' => 'crm_core_contact_view',
@@ -196,7 +196,6 @@ function crm_core_contact_ui_menu() {
 
   return $items;
 }
-
 
 /**
  * Implements hook_views_api().

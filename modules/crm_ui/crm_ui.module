@@ -27,8 +27,8 @@ function crm_ui_menu() {
   $items['admin/structure/crm'] = array(
     'title' => 'CRM',
     'description' => 'Manage contact types, activity types, and contact relationship types.',
-		'page callback' => 'crm_ui_admin_dashboard',
-		'access arguments' => array('access administration pages'),
+    'page callback' => 'crm_ui_admin_dashboard',
+    'access arguments' => array('access administration pages'),
     'file' => 'pages/crm_ui.pages.inc',
   );
 
@@ -38,9 +38,8 @@ function crm_ui_menu() {
 /**
  * Implements hook_menu_alter().
  */
-function crm_ui_menu_alter(&$items) {
+function crm_ui_menu_alter(&$items) {  
   // Transform the field UI tabs into contextual links.
-
   $items['admin/structure/crm/activity-types']['type'] = MENU_LOCAL_TASK;
 
   // Make Views menu item local task.
@@ -71,7 +70,14 @@ function crm_ui_permission() {
 }
 
 /**
- * Implements hook_theme()
+ * Implements hook_disable().
+ */
+function crm_ui_disable() {
+  variable_del('crm_ui_plid');
+}
+
+/**
+ * Implements hook_theme().
  */
 function crm_ui_theme() {
   return array(
@@ -184,4 +190,21 @@ function theme_crm_ui_ctools_dropbutton($variables) {
   }
    
   return $output;
+}
+
+/**
+ * Helper function which retrieves CRM plid.
+ *
+ * Helps to build Navigation menu.
+ */
+function crm_ui_get_crm_mlid() {
+  $plid = variable_set('crm_ui_plid', -1);
+
+  if (empty($plid) || $plid == -1) { 
+    $crm_plid = menu_link_get_preferred('crm', 'navigation');
+    $plid = $crm_plid['mlid'];
+    variable_set('crm_ui_plid', $plid);
+  }
+
+  return $plid;
 }
