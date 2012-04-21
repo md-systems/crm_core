@@ -75,7 +75,7 @@ function crm_core_relationship_ui_menu() {
    * CRM Relationship types
    */
   $items['admin/structure/crm/relationship-types'] = array(
-    'title' => 'Relationship Types',
+    'title' => 'CRM Relationship Types',
     'description' => 'Manage relationship types.',
     'page callback' => 'crm_core_relationship_ui_types_overview',
     'access callback' => 'crm_core_relationship_access_permissions',
@@ -86,7 +86,7 @@ function crm_core_relationship_ui_menu() {
 
 
   $items['admin/structure/crm/relationship-types/add'] = array(
-    'title' => 'Add Relationship Type',
+    'title' => 'Add crm relationship type',
     'access callback' => 'crm_core_relationship_access_permissions',
     'access arguments' => array(null, 'admin'),
     'page callback' => 'drupal_get_form',
@@ -96,7 +96,7 @@ function crm_core_relationship_ui_menu() {
   );
 
   $items['admin/structure/crm/relationship-types/manage/%crm_core_relationship_ui_relationship_type'] = array(
-    'title' => 'Edit relationship type',
+    'title' => 'Edit crm relationship type',
     'access callback' => 'crm_core_relationship_access_permissions',
     'access arguments' => array(null, 'admin'),
     'page callback' => 'drupal_get_form',
