@@ -16,7 +16,7 @@ function crm_core_contact_entity_info() {
       'singular' => t('contact'),
       'plural' => t('contacts'),
        ),
-      'label' => t('Contact'),
+      'label' => t('CRM Contact'),
       'label callback' => 'crm_core_contact_label',
       'controller class' => 'CRMCoreContactController',
       'base table' => 'crm_core_contact',
@@ -34,7 +34,7 @@ function crm_core_contact_entity_info() {
       'bundles' => array(),
       'view modes' => array(
         'full' => array(
-          'label' => t('Contact'),
+          'label' => t('CRM Contact'),
           'custom settings' => FALSE,
         ),
       ),
@@ -204,7 +204,7 @@ function crm_core_contact_views_api() {
  */
 function crm_core_contact_search_info() {
   return array(
-    'title' => 'Contacts',
+    'title' => 'CRM Contacts',
     'path' => 'contact',
   );
 }
