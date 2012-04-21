@@ -42,4 +42,14 @@ class CRMCoreContactTypeController extends EntityAPIControllerExportable {
     return parent::delete($ids, $transaction);
   }
 
+  /**
+   * Overrides a method of the EntityAPIControllerExportable class.
+   */
+  public function save($entity, DatabaseTransaction $transaction = NULL) {
+    parent::save($entity, $transaction);
+
+    // Reset cache entry, important for usecases like install procedure.
+    drupal_static_reset('crm_core_contact_types');
+  }
+
 }
