@@ -13,8 +13,8 @@ function crm_core_contact_entity_info() {
   $return = array(
     'crm_core_contact' => array(
       'permission labels' => array(
-      'singular' => t('contact'),
-      'plural' => t('contacts'),
+        'singular' => t('contact'),
+        'plural' => t('contacts'),
        ),
       'label' => t('CRM Contact'),
       'label callback' => 'crm_core_contact_label',
@@ -38,6 +38,7 @@ function crm_core_contact_entity_info() {
           'custom settings' => FALSE,
         ),
       ),
+      'creation callback' => 'crm_core_contact_create',
     ),
   );
 
@@ -187,6 +188,13 @@ function crm_core_contact_access($crm_core_contact, $op = 'create') {
       return (($administer_contact || $create_any_contact || $create_type_contact) && $contact_type_is_active);
     break;
   }
+}
+
+/**
+ * Create empty contact entity.
+ */
+function crm_core_contact_create($values) {
+  return entity_get_controller('crm_core_contact')->create($values);
 }
 
 /**

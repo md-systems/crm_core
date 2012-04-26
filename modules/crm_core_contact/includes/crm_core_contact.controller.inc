@@ -14,15 +14,22 @@ class CRMCoreContactController extends DrupalDefaultEntityController {
   /**
    * Create a basic contact object.
    */
-  public function create($type) {
-    return (object) array(
+  public function create($values = array()) {
+    $values += array(
       'contact_id' => '',
       'vid' => '',
-      'type' => $type,
       'uid' => '',
-      'created' => '',
-      'changed' => '',
+      'created' => REQUEST_TIME,
+      'changed' => REQUEST_TIME,
     );
+
+    // From EntityAPIController::create().
+    // Add is_new property if it is not set.
+    $values += array('is_new' => TRUE);
+    if (isset($this->entityInfo['entity class']) && $class = $this->entityInfo['entity class']) {
+      return new $class($values, $this->entityType);
+    }
+    return (object) $values;
   }
 
 
