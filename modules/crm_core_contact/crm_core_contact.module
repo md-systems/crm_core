@@ -5,6 +5,8 @@
  * Provides contact entity and integration.
  */
 
+// Integration with context.
+module_load_include('inc', 'crm_core_contact', 'crm_core_contact.context');
 
 /**
  * Implements hook_entity_info().
