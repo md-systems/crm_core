@@ -405,6 +405,6 @@ function crm_core_case_status($status = NULL) {
 function crm_core_case_views_api() {
   return array(
     'api' => 3,
-    'path' => drupal_get_path('module', 'crm_core_case') . '/views',
+    'path' => drupal_get_path('module', 'crm_core_case') . '/includes/views',
   );
 }
