@@ -408,3 +408,6 @@ function crm_core_case_views_api() {
     'path' => drupal_get_path('module', 'crm_core_case') . '/includes/views',
   );
 }
+
+// Integration with context.
+module_load_include('inc', 'crm_core_case', 'crm_core_case.context');
