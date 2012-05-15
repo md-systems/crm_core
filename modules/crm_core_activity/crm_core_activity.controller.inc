@@ -87,7 +87,7 @@ class CRMCoreActivityTypeController extends EntityAPIControllerExportable {
     if (!empty($results)) {
       $activities_to_remove = array_keys($results['crm_core_activity']);
       crm_core_activity_delete_multiple($activities_to_remove);
-      watchdog('crm_core_activity', 'Delete !count activities due to delection activity type.', array('!count' => count($activities_to_remove)), WATCHDOG_INFO);
+      watchdog('crm_core_activity', 'Delete !count activities due to deletion of activity type.', array('!count' => count($activities_to_remove)), WATCHDOG_INFO);
     }
 
     // Finally delete the type itself.

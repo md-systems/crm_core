@@ -39,7 +39,7 @@ function crm_core_contact_ui_types_overview() {
     '#theme' => 'table',
     '#header' => $header,
     '#rows' => $rows,
-    '#empty' => t('The are no contact types. <a href="@link">Add contact type</a>.', array('@link' => url('crm/admin/contact-types/manage'))),
+    '#empty' => t('There are no contact types. <a href="@link">Add contact type</a>.', array('@link' => url('crm/admin/contact-types/manage'))),
   );
 
   return $build;
@@ -121,7 +121,7 @@ function crm_core_contact_ui_type_delete_confirm($form, &$form_state, $contact_t
   $form_state['contact_type'] = $contact_type;
 
   $form['message'] = array(
-    '#markup' => t('Are you sure you want to delete this contact type?  All contacts of this type will be delted.'),
+    '#markup' => t('Are you sure you want to delete this contact type?  All contacts of this type will be deleted.'),
   );
 
   $form['actions'] = array(

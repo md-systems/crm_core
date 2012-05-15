@@ -22,7 +22,7 @@ function crm_core_contact_views_data() {
 
   $data['crm_core_contact']['contact_id'] = array(
     'title' => t('Contact ID'),
-    'help' => t('The unqiue internal identifier for a contact.'),
+    'help' => t('The unique internal identifier for a contact.'),
     'field' => array(
       'handler' => 'crm_core_contact_handler_field_contact',
       'click sortable' => TRUE,
@@ -40,7 +40,7 @@ function crm_core_contact_views_data() {
 
   $data['crm_core_contact']['type'] = array(
     'title' => t('Contact Type'),
-    'help' => t('The human-readable name of the type of a contact.'),
+    'help' => t('The human-readable name of the type of contact.'),
     'field' => array(
       'handler' => 'crm_core_contact_handler_field_contact_type',
       'click sortable' => TRUE,
@@ -141,12 +141,12 @@ function crm_core_contact_views_data() {
 
   $data['crm_core_contact_revision']['vid'] = array(
     'title' => t('Contact revision ID'),
-    'help' => t('The unqiue internal identifier for a contact revision.'),
+    'help' => t('The unique internal identifier for a contact revision.'),
     'field' => array(
       'handler' => 'crm_core_contact_handler_field_contact_revision',
       'click sortable' => TRUE,
     ),
-    'fitler' => array(
+    'filter' => array(
       'handler' => 'views_handler_filter_numeric',
     ),
     'sort' => array(
@@ -167,12 +167,12 @@ function crm_core_contact_views_data() {
 
   $data['crm_core_contact_revision']['contact_id'] = array(
     'title' => t('Contact ID'),
-    'help' => t('The unqiue internal identifier for a contact revision.'),
+    'help' => t('The unique internal identifier for a contact.'),
     'field' => array(
       'handler' => 'crm_core_contact_handler_field_contact',
       'click sortable' => TRUE,
     ),
-    'fitler' => array(
+    'filter' => array(
       'handler' => 'views_handler_filter_numeric',
     ),
     'sort' => array(
@@ -256,7 +256,7 @@ function crm_core_contact_views_data() {
 
 
 /**
- * Implements hook_views_data().
+ * Implements hook_views_data_alter().
  */
 function crm_core_contact_views_data_alter(&$data) {
   // Integration with Drupal search index
