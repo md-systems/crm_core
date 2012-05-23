@@ -233,7 +233,7 @@ function crm_core_contact_ui_admin_paths() {
 
 
 /**
- * Implemenets hook_theme().
+ * Implements hook_theme().
  */
 function crm_core_contact_ui_theme() {
   $theme = array(

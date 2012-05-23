@@ -345,7 +345,7 @@ function crm_core_contact_uri($contact) {
  * Entity label callback.
  */
 function crm_core_contact_label($entity) {
-  // Check wheter bundle type label function exists.
+  // Check whether bundle type label function exists.
   // This is needed if we want to have different labels per contact type.
   // For example Individual contact's label is person's Name.
   // But for Organization -- organization's name.
@@ -544,7 +544,7 @@ function crm_core_contact_type_delete($type_id) {
 
 /**
  * Sets the default contact type
- * @param arary $info
+ * @param array $info
  *   an associative array of contact type information
  *   possible keys:
  *     - type

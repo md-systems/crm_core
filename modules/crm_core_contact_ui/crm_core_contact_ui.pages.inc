@@ -89,7 +89,7 @@ function crm_core_contact_ui_form_validate($form, &$form_state) {
 
 
 /**
- * Submit callback for commerce_product_product_form().
+ * Submit callback for crm_core_contact_ui_form().
  */
 function crm_core_contact_ui_form_submit($form, &$form_state) {
   global $user;
@@ -118,7 +118,7 @@ function crm_core_contact_ui_form_submit($form, &$form_state) {
 
 
 /**
- * Form for deleteing a contact.
+ * Form for deleting a contact.
  */
 function crm_core_contact_ui_delete_form($form, &$form_state, $contact) {
   $form['contact_id'] = array('#type' => 'value', '#value' => $contact->contact_id);

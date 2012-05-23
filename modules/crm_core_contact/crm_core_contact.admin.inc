@@ -103,7 +103,7 @@ function crm_core_contact_type_form($form, &$form_state, $contact_type) {
 function crm_core_contact_type_form_validate($form, &$form_state) {
   $contact_type = $form_state['contact_type'];
 
-  // If saving a new product type, ensure it has a unique machine name.
+  // If saving a new contact type, ensure it has a unique machine name.
   if (empty($contact_type->type)) {
     if (!crm_core_contact_type_validate_unique($form_state['values']['contact_type']['type'])) {
       form_set_error('contact_type][type', 'The machine name specified is already in use.');

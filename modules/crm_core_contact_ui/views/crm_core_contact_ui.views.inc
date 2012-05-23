@@ -46,7 +46,7 @@ function crm_core_contact_ui_views_query_alter(&$view, &$query) {
           );
         }
         
-        // let's construct another where claus component
+        // let's construct another where clause component
         $count = (empty($query->where)) ? 0 : count($query->where);
         $query->where[$count]['type'] = 'AND';
         $query->where[$count]['args'] = array();

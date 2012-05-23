@@ -35,7 +35,7 @@ class CRMCoreContactTypeController extends EntityAPIControllerExportable {
     if (!empty($results)) {
       $contacts_to_remove = array_keys($results['crm_core_contact']);
       crm_core_contact_delete_multiple($contacts_to_remove);
-      watchdog('crm_core_contact', 'Delete !count contacts due to delection contact type.', array('!count' => count($contacts_to_remove)), WATCHDOG_INFO);
+      watchdog('crm_core_contact', 'Delete !count contacts due to deletion of contact type.', array('!count' => count($contacts_to_remove)), WATCHDOG_INFO);
     }
 
     // Finally delete the type itself.

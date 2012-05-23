@@ -90,6 +90,7 @@ function crm_user_sync_user_profile_form_submit($form, &$form_state) {
   $contact = &$form_state['storage']['crm_core_contact'];
   // Set the contact's uid if it's being created at this time.
   if (!isset($contact->contact_id)) {
+    // @TODO: Investigate how this variable should be used.
     $create = TRUE;
   }
   // Notify field widgets.

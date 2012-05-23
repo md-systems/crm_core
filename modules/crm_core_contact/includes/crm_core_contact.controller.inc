@@ -66,7 +66,7 @@ class CRMCoreContactController extends DrupalDefaultEntityController {
         // Save the first revision
         $this->saveRevision($contact, $uid);
 
-        // Save the fields attched to the contact
+        // Save the fields attached to the contact
         field_attach_insert('crm_core_contact', $contact);
 
         $op = 'insert';
