@@ -41,7 +41,7 @@ function crm_core_case_entity_info() {
         'singular' => t('case'),
         'plural' => t('cases'),
       ),
-      'access callback' => 'crm_core_case_access',
+      'access callback' => 'crm_core_case_type_access',
     ),
   );
   $return['crm_core_case_type'] = array(
