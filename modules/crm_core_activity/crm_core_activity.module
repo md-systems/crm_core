@@ -193,6 +193,27 @@ function crm_core_activity_delete_multiple($activity_ids) {
   entity_get_controller('crm_core_activity')->delete($activity_ids);
 }
 
+/**
+ * Implements hook_field_extra_fields().
+ */
+function crm_core_activity_field_extra_fields() {
+  $extra = array();
+
+  foreach (crm_core_activity_types() as $type) {
+    $extra['crm_core_activity'][$type->type] = array(
+      'form' => array(
+        'title' => array(
+          'label' => 'Title',
+          'description' => t('CRM Core Activity module element'),
+          'weight' => -5,
+        ),
+      ),
+    );
+  }
+
+  return $extra;
+}
+
 /*******************************************************************************
  ********************** CRM Activity Type helpers ******************************
  ******************************************************************************/
@@ -473,4 +494,31 @@ function crm_core_activity_update_index() {
     // Update index
     search_index($activity->activity_id, 'crm_core_activity', $text);
   }
+}
+
+
+/**
+ * Implements hook_feeds_plugins().
+ */
+function crm_core_activity_feeds_plugins() {
+  $info['CRMFeedsActivityProcessor'] = array(
+    'name' => 'CRM Activity processor',
+    'description' => 'Create and update CRM activities.',
+    'help' => 'Create and update CRM activities from parsed content.',
+    'handler' => array(
+      'parent' => 'FeedsProcessor',
+      'class' => 'CRMFeedsActivityProcessor',
+      'file' => 'CRMFeedsActivityProcessor.inc',
+      'path' => drupal_get_path('module', 'crm_core_activity') . '/includes',
+    ),
+  );
+  return $info;
+}
+
+/*
+ * Implements hook_enable().
+ */
+function crm_core_activity_enable() {
+  //clear the cache to display in Feeds as available plugin.
+  cache_clear_all('plugins:feeds:plugins', 'cache');
 }
