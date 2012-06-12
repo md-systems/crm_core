@@ -20,6 +20,7 @@ function crm_core_activity_entity_info() {
       'entity keys' => array(
         'id' => 'activity_id',
         'bundle' => 'type',
+        'label' => 'title'
       ),
       'bundle keys' => array(
         'bundle' => 'type',
