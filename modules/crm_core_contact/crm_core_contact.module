@@ -157,7 +157,20 @@ function crm_core_contact_access($op, $contact, $account = NULL, $entity_type = 
   else {
     $contact_type = $contact;
   }
-  
+
+  if ($op != 'view') {
+    // First grant access to the entity for the specified operation if no other
+    // module denies it and at least one other module says to grant access.
+    $access_results = module_invoke_all('crm_core_entity_access', $op, $contact, $account, $entity_type);
+
+    if (in_array(FALSE, $access_results, TRUE)) {
+      return FALSE;
+    }
+    elseif (in_array(TRUE, $access_results, TRUE)) {
+      return TRUE;
+    }
+  }
+
   $administer_contact = user_access('administer crm_core_contact entities', $account);
 
   switch ($op) {

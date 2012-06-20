@@ -7,6 +7,17 @@
 
 
 /**
+ * Implements hook_hook_info().
+ */
+function crm_core_hook_info() {
+  $hooks = array(
+    'crm_core_entity_access' => array(
+      'group' => 'crm_core',
+    ),
+  );
+}
+
+/**
  * Return permission names for a given entity type.
  *
  * Copied from commerce_entity_access_permissions().
