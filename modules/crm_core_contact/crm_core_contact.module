@@ -158,7 +158,7 @@ function crm_core_contact_access($op, $contact, $account = NULL, $entity_type = 
     $contact_type = $contact;
   }
 
-  if ($op != 'view') {
+  if ($op != 'view' && $op != 'create_view') {
     // First grant access to the entity for the specified operation if no other
     // module denies it and at least one other module says to grant access.
     $access_results = module_invoke_all('crm_core_entity_access', $op, $contact, $account, $entity_type);
@@ -195,7 +195,7 @@ function crm_core_contact_access($op, $contact, $account = NULL, $entity_type = 
       $create_any_contact = user_access('create crm_core_contact entities', $account);
       $contact_types = array_keys(crm_core_contact_types(TRUE));
       foreach($contact_types as $type) {
-        $create_type_contact[] = user_access('create crm_core_contact entities of bundle ' . $type, $account);
+        $create_type_contact[] = entity_access('create', 'crm_core_contact', $type, $account);
       }
       // they just need any type of contact type create permission
       $create_type_contact_flag = in_array(TRUE, $create_type_contact);
