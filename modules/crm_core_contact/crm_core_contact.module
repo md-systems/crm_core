@@ -41,6 +41,7 @@ function crm_core_contact_entity_info() {
         ),
       ),
       'creation callback' => 'crm_core_contact_create',
+      'access callback' => 'crm_core_contact_access',
     ),
   );
 
@@ -144,51 +145,59 @@ function crm_core_contact_permission() {
  * @return
  * bool TRUE if access is granted/FALSE is access is denied
  */
-function crm_core_contact_access($crm_core_contact, $op = 'create') {
+function crm_core_contact_access($op, $contact, $account = NULL, $entity_type = NULL) {
+  global $user;
 
-  $administer_contact = user_access('administer crm_core_contact entities');
+  if (!isset($account)) {
+    $account = $user;
+  }
+  if (is_object($contact)) {
+    $contact_type = $contact->type;
+  }
+  else {
+    $contact_type = $contact;
+  }
+  
+  $administer_contact = user_access('administer crm_core_contact entities', $account);
 
   switch ($op) {
     case 'view':
-      $view_any_contact = user_access('view any crm_core_contact entity');
-      $view_type_contact = user_access('view any crm_core_contact entity of bundle ' . $crm_core_contact->type);
+      $view_any_contact = user_access('view any crm_core_contact entity', $account);
+      $view_type_contact = user_access('view any crm_core_contact entity of bundle ' . $contact_type, $account);
       return ($administer_contact || $view_any_contact || $view_type_contact);
     break;
     case 'edit':
     case 'delete':
-      $edit_any_contact = user_access('edit any crm_core_contact entity');
-      $edit_type_contact = user_access('edit any crm_core_contact entity of bundle ' . $crm_core_contact->type);
+      $edit_any_contact = user_access('edit any crm_core_contact entity', $account);
+      $edit_type_contact = user_access('edit any crm_core_contact entity of bundle ' . $contact_type, $account);
       return ($administer_contact || $edit_any_contact || $edit_type_contact);
     break;
     case 'revert':
       // @todo: more fine grained will be adjusting dynamic permission generation for reverting bundles of contact
-      $revert_any_contact = user_access('revert contact record');
+      $revert_any_contact = user_access('revert contact record', $account);
       return ($administer_contact || $revert_any_contact);
     break;
     case 'create_view':
       // we just need any of the create permissions
-      $create_any_contact = user_access('create crm_core_contact entities');
-      $crm_core_contact_types = array_keys(crm_core_contact_types(TRUE));
-      foreach($crm_core_contact_types as $crm_core_contact_type) {
-        $create_type_contact[] = user_access('create crm_core_contact entities of bundle ' . $crm_core_contact_type);
+      $create_any_contact = user_access('create crm_core_contact entities', $account);
+      $contact_types = array_keys(crm_core_contact_types(TRUE));
+      foreach($contact_types as $type) {
+        $create_type_contact[] = user_access('create crm_core_contact entities of bundle ' . $type, $account);
       }
       // they just need any type of contact type create permission
       $create_type_contact_flag = in_array(TRUE, $create_type_contact);
       return ($administer_contact || $create_any_contact || $create_type_contact_flag);
-    break;
     case 'create':
     default:
       // must be able to create contact of any type (OR) specific type
       // (AND) have an active contact type
-      // IMPORTANT, here $crm_core_contact is padded in as a string of the contact type
-      $type = $crm_core_contact;
-      $create_any_contact = user_access('create crm_core_contact entities');
-      $create_type_contact = user_access('create crm_core_contact entities of bundle ' . $type);
-      // load the contact type
-      $crm_core_contact_type = crm_core_contact_type_load($type);
-      $contact_type_is_active = (!(bool) $crm_core_contact_type->disabled);
+      // IMPORTANT, here $contact is padded in as a string of the contact type
+      $create_any_contact = user_access('create crm_core_contact entities', $account);
+      $create_type_contact = user_access('create crm_core_contact entities of bundle ' . $contact_type, $account);
+      // load the contact type entity
+      $contact_type_entity = crm_core_contact_type_load($contact_type);
+      $contact_type_is_active = (!(bool) $contact_type_entity->disabled);
       return (($administer_contact || $create_any_contact || $create_type_contact) && $contact_type_is_active);
-    break;
   }
 }
 
