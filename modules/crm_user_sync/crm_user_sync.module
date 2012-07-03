@@ -140,7 +140,7 @@ function crm_user_sync_user_delete($account) {
     $relation_ids[] = $relation->rid;
   }
   if (!empty($relation_ids)) {
-    relation_multiple_delete($relation_ids);
+    relation_delete_multiple($relation_ids);
   }
 }
 
