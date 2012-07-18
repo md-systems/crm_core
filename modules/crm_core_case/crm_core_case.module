@@ -256,6 +256,17 @@ function crm_core_case_load_multiple($cids = array(), $conditions = array(), $re
 }
 
 /**
+ * Save single case object to db.
+ *   Wrapper for controller.
+ *
+ * @param object $case
+ *   Entity object of crm_core_case type.
+ */
+function crm_core_case_save($case) {
+  return entity_get_controller('crm_core_case')->save($case);
+}
+
+/**
  * Label callback for Case.
  *
  * Used to set title of the view case page.
