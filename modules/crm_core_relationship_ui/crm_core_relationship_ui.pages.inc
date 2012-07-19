@@ -88,6 +88,7 @@ function crm_core_relationship_form($form, &$form_state, $relation) {
   );
 
   field_attach_form('relation', $relation, $form, $form_state);
+
   unset($form['endpoints']);
 
   $form['actions'] = array(
@@ -122,7 +123,7 @@ function crm_core_relationship_form($form, &$form_state, $relation) {
   // We append the validate handler to #validate in case a form callback_wrapper
   // is used to add validate handlers earlier.
   $form['#validate'][] = 'crm_core_relationship_ui_add_relationship_form_validate';
-//
+
   // Add after build to set proper page Title as it
   // got set by entity_ui_main_form_defaults
   // @see entity_ui_get_form().
@@ -193,7 +194,7 @@ function crm_core_relationship_ui_add_relationship($crm_core_contact) {
     $relationship_types = crm_core_relationship_load_relationship_types($crm_core_contact->type, $reverse);
 
     foreach ($relationship_types as $relationship_type) {
-      if (user_access('create relation entities of bundle ' . $relationship_type->relation_type)) {
+      if (user_access('create relation entities of bundle ' . $relationship_type->relation_type) || user_access('create relation entities of any contact relationship')) {
         $relationship_type_links[$relationship_type->relation_type] = l(
           $reverse ? $relationship_type->reverse_label : $relationship_type->label,
           'crm/contact/' . $crm_core_contact->contact_id . '/relationships/add/' . $relationship_type->relation_type . '/' . $reverse
@@ -330,14 +331,7 @@ function crm_core_relationship_ui_add_relationship_form_validate($form, &$form_s
       return;
     }
   }
-}
 
-/**
- * Perform submit for add relationship form. Save relationship.
- */
-function crm_core_relationship_ui_add_relationship_form_submit($form, &$form_state) {
-  $relationship_type = $form_state['values']['relationship_type'];
-  $reverse = $form_state['values']['reverse'];
   $source_contact = _crm_core_relationship_ui_get_contact_from_autocomplete_field_value($form_state['values']['source_contact']);
   $destination_contact = _crm_core_relationship_ui_get_contact_from_autocomplete_field_value($form_state['values']['destination_contact']);
 
@@ -359,7 +353,26 @@ function crm_core_relationship_ui_add_relationship_form_submit($form, &$form_sta
     ),
   );
   $relation = relation_create($relationship_type->relation_type, $endpoints);
+
+  $form_state['relation'] = $relation;
+
+  field_attach_form_validate('relation', $relation, $form, $form_state);
+}
+
+/**
+ * Perform submit for add relationship form. Save relationship.
+ */
+function crm_core_relationship_ui_add_relationship_form_submit($form, &$form_state) {
+  $relationship_type = $form_state['values']['relationship_type'];
+  $reverse = $form_state['values']['reverse'];
+
+  $source_contact = _crm_core_relationship_ui_get_contact_from_autocomplete_field_value($form_state['values']['source_contact']);
+  $destination_contact = _crm_core_relationship_ui_get_contact_from_autocomplete_field_value($form_state['values']['destination_contact']);
+
+  $relation = $form_state['relation'];
   $rid = relation_save($relation);
+
+  field_attach_submit('relation', $relation, $form, $form_state);
 
   $redirect_contact = $reverse ? $destination_contact : $source_contact;
   $form_state['redirect'] = 'crm/contact/' . $redirect_contact->contact_id . '/relationships/';
@@ -420,3 +433,4 @@ function _crm_core_relationship_ui_get_contact_from_autocomplete_field_value($st
   }
   return $contacts[$matches[1]];
 }
+

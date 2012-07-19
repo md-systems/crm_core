@@ -47,7 +47,7 @@ function crm_og_sync_node_update($node) {
 }
 
 /**
- * Implements hook_node_update
+ * Implements hook_node_delete
  * Use this hook to delete the contact and the relationship reference
  */
 function crm_og_sync_node_delete($node) {

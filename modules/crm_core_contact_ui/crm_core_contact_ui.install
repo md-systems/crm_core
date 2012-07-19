@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * Implements hook_install().
+ */
+function crm_core_contact_ui_install() {
+  $plid = crm_ui_get_crm_mlid();
+
+  $item = array(
+    'link_path' => 'crm/contact',
+    'link_title' => 'Contacts',
+    'menu_name' => 'navigation',
+    'plid' => $plid,
+    'weight' => 2,
+  );
+
+  menu_link_save($item);
+}

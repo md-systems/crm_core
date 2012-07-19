@@ -13,17 +13,17 @@ function crm_core_contact_ui_form_wrapper($contact) {
  */
 function crm_core_contact_ui_add_page() {
   $item = menu_get_item();
-  
+
   $types = crm_core_contact_types(TRUE);
   $content = array();
   foreach ($types as $type) {
     $_content = menu_get_item($item['href'] . '/' . $type->type);
     // access check
     if ($_content['access']) {
-      $content[] = $_content;  
+      $content[] = $_content;
     }
   }
-  
+
   // If there is only one contact type addition page we go straight to it
   if (count($content) == 1) {
     $item = array_shift($content);
@@ -44,7 +44,7 @@ function crm_core_contact_ui_add_page() {
 function crm_core_contact_ui_form($form, &$form_state, $contact) {
   // Ensure this include file is loaded when the form is rebuilt from the cache.
   $form_state['build_info']['file'] = drupal_get_path('module', 'crm_core_contact_ui') . '/crm_core_contact_ui.pages.inc';
-  
+
   // Add the field related form elements.
   $form_state['crm_core_contact'] = $contact;
   field_attach_form('crm_core_contact', $contact, $form, $form_state);
@@ -89,13 +89,13 @@ function crm_core_contact_ui_form_validate($form, &$form_state) {
 
 
 /**
- * Submit callback for commerce_product_product_form().
+ * Submit callback for crm_core_contact_ui_form().
  */
 function crm_core_contact_ui_form_submit($form, &$form_state) {
   global $user;
-  
+
   $create = FALSE;
-  
+
   $contact = &$form_state['crm_core_contact'];
 
 
@@ -113,12 +113,12 @@ function crm_core_contact_ui_form_submit($form, &$form_state) {
 
   // Redirect based on the button clicked.
   drupal_set_message(t('Contact saved.'));
-  ($create) ? drupal_goto('crm/contact') : drupal_goto("crm/contact/{$contact->contact_id}");
+  $form_state['redirect'] = ($create) ? 'crm/contact' : "crm/contact/{$contact->contact_id}";
 }
 
 
 /**
- * Form for deleteing a contact.
+ * Form for deleting a contact.
  */
 function crm_core_contact_ui_delete_form($form, &$form_state, $contact) {
   $form['contact_id'] = array('#type' => 'value', '#value' => $contact->contact_id);
@@ -135,7 +135,7 @@ function crm_core_contact_ui_delete_form_submit($form, &$form_state) {
   if (crm_core_contact_delete($form_state['values']['contact_id'])) {
     drupal_set_message(t('Contact deleted.'));
   }
-  drupal_goto('crm/contact');
+  $form_state['redirect'] = 'crm/contact';
 }
 
 
@@ -165,25 +165,25 @@ function crm_core_contact_ui_revision_form($contact) {
  * Form for reverting a contact to a previous version.
  */
 function crm_core_contact_ui_revert_form($form, &$form_state, $contact, $vid) {
-  
+
   $form['vid'] = array(
     '#type' => 'value',
     '#value' => $vid,
   );
-  
+
   $form_state['crm_ui']['contact'] = $contact;
-  
+
   return confirm_form($form,
     t("Are you sure want to revert this contact?"),
-    'crm/contact/' . $contact->contact_id . '/revisions', 'Reverting the contact will result in a new revision being created', t('Yes'), t('Cancel')); 
+    'crm/contact/' . $contact->contact_id . '/revisions', 'Reverting the contact will result in a new revision being created', t('Yes'), t('Cancel'));
 }
 
 function crm_core_contact_ui_revert_form_submit($form, &$form_state) {
-  
+
   $contact = $form_state['crm_ui']['contact'];
-  
+
   if (crm_core_contact_revert($contact, $form_state['values']['vid'])) {
     drupal_set_message(t('Contact reverted.'));
   }
-  $form_state['redirect'] = 'crm/contact/' . $contact->contact_id . '/revisions';  
+  $form_state['redirect'] = 'crm/contact/' . $contact->contact_id . '/revisions';
 }

@@ -1,0 +1,47 @@
+<?php
+
+
+/**
+ * Tests the site-wide contact form.
+ */
+class CRMCoreContactTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Contact type',
+      'description' => 'Tests for contact types.',
+      'group' => 'Drupal CRM',
+    );
+  }
+
+  function setUp() {
+    parent::setUp(array('ctools', 'entity', 'views', 'image', 'name', 'crm_core', 'crm_core_contact', 'crm_core_contact_ui'));
+  }
+
+  function testCRUD() {
+    $type = 'dog';
+
+    // crm_core_contact_type_new().
+    $contact_type = crm_core_contact_type_new($type);
+    $this->assertTrue(isset($contact_type->description) && empty($contact_type->description), t('New contact type description exists.'));
+    $this->assertTrue(isset($contact_type->name) && empty($contact_type->name), t('New contact type name exists.'));
+    $this->assertTrue(isset($contact_type->type) && $contact_type->type == $type, t('New contact type type exists.'));
+
+    // crm_core_contact_type_save().
+    $contact_type->name = $this->randomName();
+    $contact_type->description = $this->randomString();
+    crm_core_contact_type_save($contact_type);
+
+    // crm_core_contact_type_load().
+    $contact_type_load = crm_core_contact_type_load($type);
+    $this->assertEqual($contact_type->type, $contact_type_load->type, t('Loaded contact type has same type.'));
+    $this->assertEqual($contact_type->name, $contact_type_load->name, t('Loaded contact type has same name.'));
+    $this->assertEqual($contact_type->description, $contact_type_load->description, t('Loaded contact type has same description.'));
+    $this->assertTrue(!empty($contact_type_load->id), 'Loaded contact type has id.');
+
+    // Delete contact type.
+    crm_core_contact_type_delete($contact_type->id);
+    // Avoid static cache.
+    $contact_type_load = crm_core_contact_type_load($type, TRUE);
+    $this->assertTrue(empty($contact_type_load), t('Contact type deleted.'));
+  }
+}

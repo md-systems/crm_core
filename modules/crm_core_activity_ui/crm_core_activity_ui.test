@@ -3,13 +3,22 @@
 /**
  * Activity UI test case.
  */
-class CRMCoreActivityUITestCase extends CRMBaseTestCase {
+class CRMCoreActivityUITestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => t('Activity UI'),
       'description' => t('Test create/edit/delete activities.'),
       'group' => t('Drupal CRM'),
     );
+  }
+
+  /**
+   * Enabled dependency modules.
+   */
+  public function setUp() {
+    parent::setUp(array('ctools', 'entity', 'views', 'image', 'name', 'entityreference', 'date', 'date_popup', 'date_views', 'crm_core', 'crm_ui'));
+    module_enable(array('crm_core_contact', 'crm_core_contact_ui', 'crm_core_activity', 'crm_core_activity_ui'));
+    $this->resetAll();
   }
 
   /**
@@ -49,8 +58,6 @@ class CRMCoreActivityUITestCase extends CRMBaseTestCase {
     );
     $this->drupalPost('crm/contact/1/activity/add/meeting', $meeting_activity, t('Save Activity'));
     $this->assertNoRaw('<div class="messages error">', t('No errors after adding new activity.'));
-    $this->assertUrl('crm/contact/1/activity', array(), t('Redirected back to the list of activities after creating new activity.'));
-    $this->assertRaw($meeting_activity['title'], t('Newly created activity listed.'));
 
     // Create Meeting activity. Ensure it it listed.
     $phonecall_activity = array(
@@ -61,8 +68,6 @@ class CRMCoreActivityUITestCase extends CRMBaseTestCase {
     );
     $this->drupalPost('crm/contact/1/activity/add/phone_call', $phonecall_activity, t('Save Activity'));
     $this->assertNoRaw('<div class="messages error">', t('No errors after adding new activity.'));
-    $this->assertUrl('crm/contact/1/activity', array(), t('Redirected back to the list of activities after creating new activity.'));
-    $this->assertRaw($meeting_activity['title'], t('Newly created activity listed.'));
 
     // Update activity and assert its title changed on the list.
     $meeting_activity = array(
@@ -92,17 +97,17 @@ class CRMCoreActivityUITestCase extends CRMBaseTestCase {
 
     // Delete Meeting activity.
     $this->drupalPost('crm/activity/1/delete', array(), t('Delete'));
-    $this->assertUrl('crm/contact/1/activity', array(), t('Redirected back to the list of activities after deleting new activity.'));
     $this->assertNoRaw('<div class="messages error">', t('No errors after deleting activity.'));
     $this->assertNoRaw($meeting_activity['title'] . ' </td>', t('Deleted activity is no more listed.'));
 
     // Delete Phone call activity.
     $this->drupalPost('crm/activity/2/delete', array(), t('Delete'));
-    $this->assertUrl('crm/contact/1/activity', array(), t('Redirected back to the list of activities after deleting new activity.'));
     $this->assertNoRaw('<div class="messages error">', t('No errors after deleting activity.'));
+    $this->drupalGet('crm/contact/1/activity');
     $this->assertNoRaw($phonecall_activity['title'] . ' </td>', t('Deleted activity is no more listed.'));
 
     // Assert there is no activities left.
+    $this->drupalGet('crm/contact/1/activity');
     $this->assertText(t('This contact has no activity, add an activity above.'), t('No activities listed.'));
   }
 
@@ -117,6 +122,6 @@ class CRMCoreActivityUITestCase extends CRMBaseTestCase {
    * Generate random Time for form element input.
    */
   function randomTime() {
-    return rand(0, 24) . ':' . rand(0, 60);
+    return rand(0, 23) . ':' . rand(0, 60);
   }
 }

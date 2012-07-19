@@ -10,88 +10,86 @@ function crm_core_contact_ui_menu() {
   /*
    * Contact types
    */
-  $items['admin/structure/crm/contact-types'] = array(
-    'title' => 'Contact Types',
-    'description' => 'Manage contact types.',
-    'page callback' => 'crm_core_contact_ui_types_overview',
-    'access arguments' => array('administer contact types'),
-    'file' => 'crm_core_contact_ui.admin.inc',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => -10,
-  );
-  $items['admin/structure/crm/contact-types/add'] = array(
-    'title' => 'Add contact type',
-    'page callback' => 'crm_core_contact_ui_type_form_wrapper',
-    'page arguments' => array(crm_core_contact_type_new()),
-    'access arguments' => array('administer contact types'),
-    'type' => MENU_LOCAL_ACTION | MENU_VISIBLE_IN_BREADCRUMB,
-    'file' => 'crm_core_contact_ui.admin.inc',
-  );
-  $items['admin/structure/crm/contact-types/%crm_core_contact_type'] = array(
-    'title' => 'Edit contact type',
-    'title callback' => 'crm_core_contact_type_title',
-    'title arguments' => array(4),
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('crm_core_contact_ui_type_form', 4),
-    'access arguments' => array('administer contact types'),
-    'file' => 'crm_core_contact_ui.admin.inc',
-  );
-  $items['admin/structure/crm/contact-types/%crm_core_contact_type/edit'] = array(
-    'title' => 'Edit',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
-    'access callback' => 'crm_core_contact_type_permission',
-    'access arguments' => array(4, 'edit'),
+//  $items['admin/structure/crm/contact-types'] = array(
+//    'title' => 'Contact Types',
+//    'description' => 'Manage contact types.',
+//    'page callback' => 'crm_core_contact_ui_types_overview',
+//    'access arguments' => array('administer contact types'),
+//    'file' => 'crm_core_contact_ui.admin.inc',
+//    'type' => MENU_LOCAL_TASK,
+//    'weight' => -10,
+//  );
+//  $items['admin/structure/crm/contact-types/add'] = array(
+//    'title' => 'Add contact type',
+//    'page callback' => 'crm_core_contact_ui_type_form_wrapper',
+//    'page arguments' => array(crm_core_contact_type_new()),
+//    'access arguments' => array('administer contact types'),
+//    'type' => MENU_LOCAL_ACTION | MENU_VISIBLE_IN_BREADCRUMB,
+//    'file' => 'crm_core_contact_ui.admin.inc',
+//  );
+//  $items['admin/structure/crm/contact-types/%crm_core_contact_type'] = array(
+//    'title' => 'Edit contact type',
+//    'title callback' => 'crm_core_contact_type_title',
+//    'title arguments' => array(4),
+//    'page callback' => 'drupal_get_form',
+//    'page arguments' => array('crm_core_contact_ui_type_form', 4),
+//    'access arguments' => array('administer contact types'),
+//    'file' => 'crm_core_contact_ui.admin.inc',
+//  );
+//  $items['admin/structure/crm/contact-types/%crm_core_contact_type/edit'] = array(
+//    'title' => 'Edit',
+//    'type' => MENU_DEFAULT_LOCAL_TASK,
+//    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+//    'access callback' => 'crm_core_contact_type_permission',
+//    'access arguments' => array(4, 'edit'),
+//  );
+//  $items['admin/structure/crm/contact-types/%crm_core_contact_type/disable'] = array(
+//    'title' => 'Disable',
+//    'page callback' => 'drupal_get_form',
+//    'page arguments' => array('crm_core_contact_ui_type_toggle_form', 4, 'disable'),
+//    'access callback' => 'crm_core_contact_type_permission',
+//    'access arguments' => array(4, 'disable'),
+//    'type' => MENU_LOCAL_TASK,
+//    'context' => MENU_CONTEXT_INLINE,
+//    'file' => 'crm_core_contact_ui.admin.inc',
+//    'weight' => 8,
+//  );
+//
+//  $items['admin/structure/crm/contact-types/%crm_core_contact_type/enable'] = array(
+//    'title' => 'Enable',
+//    'page callback' => 'drupal_get_form',
+//    'page arguments' => array('crm_core_contact_ui_type_toggle_form', 4, 'enable'),
+//    'access callback' => 'crm_core_contact_type_permission',
+//    'access arguments' => array(4, 'enable'),
+//    'type' => MENU_LOCAL_TASK,
+//    'context' => MENU_CONTEXT_INLINE,
+//    'file' => 'crm_core_contact_ui.admin.inc',
+//    'weight' => 9,
+//  );
+//
+//  $items['admin/structure/crm/contact-types/%crm_core_contact_type/delete'] = array(
+//    'title' => 'Delete',
+//    'page callback' => 'drupal_get_form',
+//    'page arguments' => array('crm_core_contact_ui_type_delete_confirm', 4),
+//    'access callback' => 'crm_core_contact_type_permission',
+//    'access arguments' => array(4, 'delete'),
+//    'type' => MENU_LOCAL_TASK,
+//    'context' => MENU_CONTEXT_INLINE,
+//    'file' => 'crm_core_contact_ui.admin.inc',
+//    'weight' => 10,
+//  );
 
-  );
-  
-  $items['admin/structure/crm/contact-types/%crm_core_contact_type/disable'] = array(
-    'title' => 'Disable',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('crm_core_contact_ui_type_toggle_form', 4, 'disable'),
-    'access callback' => 'crm_core_contact_type_permission',
-    'access arguments' => array(4, 'disable'),
-    'type' => MENU_LOCAL_TASK,
-    'context' => MENU_CONTEXT_INLINE,
-    'file' => 'crm_core_contact_ui.admin.inc',
-    'weight' => 8,
-  );
-  
-  $items['admin/structure/crm/contact-types/%crm_core_contact_type/enable'] = array(
-    'title' => 'Enable',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('crm_core_contact_ui_type_toggle_form', 4, 'enable'),
-    'access callback' => 'crm_core_contact_type_permission',
-    'access arguments' => array(4, 'enable'),
-    'type' => MENU_LOCAL_TASK,
-    'context' => MENU_CONTEXT_INLINE,
-    'file' => 'crm_core_contact_ui.admin.inc',
-    'weight' => 9,
-  );
-
-  $items['admin/structure/crm/contact-types/%crm_core_contact_type/delete'] = array(
-    'title' => 'Delete',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('crm_core_contact_ui_type_delete_confirm', 4),
-    'access callback' => 'crm_core_contact_type_permission',
-    'access arguments' => array(4, 'delete'),
-    'type' => MENU_LOCAL_TASK,
-    'context' => MENU_CONTEXT_INLINE,
-    'file' => 'crm_core_contact_ui.admin.inc',
-    'weight' => 10,
-  );
-  
-  /*
+  /**
    * Contacts
-   */
+   */  
   $items['crm/contact/%crm_core_contact'] = array(
     'title' => 'Contact',
     'page callback' => 'crm_core_contact_view',
     'page arguments' => array(2),
     'title callback' => 'crm_core_contact_title',
     'title arguments' => array(2),
-    'access callback' => 'crm_core_contact_access',
-    'access arguments' => array(2, 'view'),
+    'access callback' => 'entity_access',
+    'access arguments' => array('view', 'crm_core_contact', 2),
     'type' => MENU_NORMAL_ITEM,
   );
 
@@ -106,8 +104,8 @@ function crm_core_contact_ui_menu() {
     'title' => 'Edit',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('crm_core_contact_ui_form', 2),
-    'access callback' => 'crm_core_contact_access',
-    'access arguments' => array(2, 'edit'),
+    'access callback' => 'entity_access',
+    'access arguments' => array('edit', 'crm_core_contact', 2),
     'type' => MENU_LOCAL_ACTION,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'file' => 'crm_core_contact_ui.pages.inc',
@@ -117,8 +115,8 @@ function crm_core_contact_ui_menu() {
     'title' => 'Contact',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('crm_core_contact_ui_revert_form', 2, 4),
-    'access callback' => 'crm_core_contact_access',
-    'access arguments' => array(NULL, 'revert'),
+    'access callback' => 'entity_access',
+    'access arguments' => array('revert', 'crm_core_contact', 2),
     'type' => MENU_CALLBACK,
     'file' => 'crm_core_contact_ui.pages.inc',
   );
@@ -137,8 +135,8 @@ function crm_core_contact_ui_menu() {
     'title' => 'Delete',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('crm_core_contact_ui_delete_form', 2),
-    'access callback' => 'crm_core_contact_access',
-    'access arguments' => array(2, 'delete'),
+    'access callback' => 'entity_access',
+    'access arguments' => array('delete', 'crm_core_contact', 2),
     'type' => MENU_LOCAL_ACTION,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'file' => 'crm_core_contact_ui.pages.inc',
@@ -148,8 +146,8 @@ function crm_core_contact_ui_menu() {
     'title' => 'Add a contact',
     'description' => 'Add a new contact to the CRM.',
     'page callback' => 'crm_core_contact_ui_add_page',
-    'access callback' => 'crm_core_contact_access',
-    'access arguments' => array(NULL, 'create_view'),
+    'access callback' => 'entity_access',
+    'access arguments' => array('create_view', 'crm_core_contact'),
     'type' => MENU_LOCAL_ACTION,
     'context' => MENU_CONTEXT_PAGE,
     'weight' => 10,
@@ -162,8 +160,8 @@ function crm_core_contact_ui_menu() {
       'description' => $contact_type->description,
       'page callback' => 'drupal_get_form',
       'page arguments' => array('crm_core_contact_ui_form', crm_core_contact_type_new($type)),
-      'access callback' => 'crm_core_contact_access',
-      'access arguments' => array($type, 'create'),
+      'access callback' => 'entity_access',
+      'access arguments' => array('create', 'crm_core_contact', $type),
       'file' => 'crm_core_contact_ui.pages.inc',
     );
   }
@@ -195,10 +193,9 @@ function crm_core_contact_ui_menu() {
       'weight' => 100,
     );
   }
-  
+
   return $items;
 }
-
 
 /**
  * Implements hook_views_api().
@@ -236,7 +233,7 @@ function crm_core_contact_ui_admin_paths() {
 
 
 /**
- * Implemenets hook_theme().
+ * Implements hook_theme().
  */
 function crm_core_contact_ui_theme() {
   $theme = array(

@@ -90,6 +90,7 @@ function crm_user_sync_user_profile_form_submit($form, &$form_state) {
   $contact = &$form_state['storage']['crm_core_contact'];
   // Set the contact's uid if it's being created at this time.
   if (!isset($contact->contact_id)) {
+    // @TODO: Investigate how this variable should be used.
     $create = TRUE;
   }
   // Notify field widgets.
@@ -104,7 +105,9 @@ function crm_user_sync_user_profile_form_submit($form, &$form_state) {
  * Implements hook_user_insert()
  */
 function crm_user_sync_user_insert(&$edit, $account, $category) {
-  crm_user_sync_sync($account);
+  if (variable_get('crm_user_sync_auto_sync_user_create', 1)) {
+    crm_user_sync_sync($account);
+  }
 }
 
 /**
@@ -115,7 +118,9 @@ function crm_user_sync_user_update(&$edit, $account, $category) {
   // contact record associated with it.
   $related_contact = _crm_user_sync_get_related_entity('user', $account->uid, 'crm_user_sync');
   if (empty($related_contact)) {
-    crm_user_sync_sync($account);
+      if (variable_get('crm_user_sync_auto_sync_user_create', 1)) {
+        crm_user_sync_sync($account);
+      }
   }
 }
 
@@ -135,15 +140,18 @@ function crm_user_sync_user_delete($account) {
     $relation_ids[] = $relation->rid;
   }
   if (!empty($relation_ids)) {
-    relation_multiple_delete($relation_ids);
+    relation_delete_multiple($relation_ids);
   }
 }
 
 /**
  * Synchronizes user.
  * @param $account to be synchronized
+ * @param $contact to be associated with $account
+ *
+ * @return contact object
  */
-function crm_user_sync_sync($account) {
+function crm_user_sync_sync($account, $contact = NULL) {
   // @TODO: think about the logic here, what to do with multiple roles?
   // For now we just use the first that has user-sync enabled, if there is.
   $roles_sync = variable_get('crm_user_sync_roles', array());
@@ -160,23 +168,25 @@ function crm_user_sync_sync($account) {
   $rid = key($roles);
   $contact_type = variable_get('crm_user_sync_' . $rid . '_type', 'individual');
 
-  // Create the contact.
-  // For now we just add the name.
-  $contact = crm_core_contact_type_new($contact_type);
-  $contact->uid = $account->uid;
+  if (empty($contact)) {
+    // Create the contact.
+    // For now we just add the name.
+    $contact = crm_core_contact_type_new($contact_type);
+    $contact->uid = $account->uid;
 
-  $contact_name = field_info_instance('crm_core_contact', 'contact_name', $contact_type);
-  if (!empty($contact_name)) {
-    $contact->contact_name[LANGUAGE_NONE][0] = array(
-           'title' => '',
-           'family' => '',
-           'generational' => '',
-           'credentials' => '',
-           'given' => $account->name,
-    );
+    $contact_name = field_info_instance('crm_core_contact', 'contact_name', $contact_type);
+    if (!empty($contact_name)) {
+      $contact->contact_name[LANGUAGE_NONE][0] = array(
+             'title' => '',
+             'family' => '',
+             'generational' => '',
+             'credentials' => '',
+             'given' => $account->name,
+      );
+    }
+
+    crm_core_contact_save($contact);
   }
-
-  crm_core_contact_save($contact);
 
   // Create the relation
   $endpoints = array(
@@ -193,6 +203,8 @@ function crm_user_sync_sync($account) {
   );
   $relation = relation_create('crm_user_sync', $endpoints);
   relation_save($relation);
+
+  return $contact;
 }
 
 /**

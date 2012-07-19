@@ -11,7 +11,7 @@ function crm_core_relationship_ui_views_default_views() {
   $view->base_table = 'relation';
   $view->human_name = 'CRM Relationships by contact';
   $view->core = 7;
-  $view->api_version = '3.0-alpha1';
+  $view->api_version = '3.0';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
   /* Display: Master */
@@ -160,14 +160,21 @@ function crm_core_relationship_ui_views_default_views() {
   $handler->display->display_options['arguments']['endpoints_entity_id']['summary_options']['items_per_page'] = '25';
   $handler->display->display_options['arguments']['endpoints_entity_id']['break_phrase'] = 0;
   $handler->display->display_options['arguments']['endpoints_entity_id']['not'] = 0;
-  /* Filter criterion: Relation: Active (field_relationship_active) */
-  $handler->display->display_options['filters']['field_relationship_active_value']['id'] = 'field_relationship_active_value';
-  $handler->display->display_options['filters']['field_relationship_active_value']['table'] = 'field_data_field_relationship_active';
-  $handler->display->display_options['filters']['field_relationship_active_value']['field'] = 'field_relationship_active_value';
-  $handler->display->display_options['filters']['field_relationship_active_value']['operator'] = 'not in';
-  $handler->display->display_options['filters']['field_relationship_active_value']['value'] = array(
-    'inactive' => 'inactive',
-  );
+  /* Contextual filter: Relation: Relation type */
+  $handler->display->display_options['arguments']['relation_type']['id'] = 'relation_type';
+  $handler->display->display_options['arguments']['relation_type']['table'] = 'relation';
+  $handler->display->display_options['arguments']['relation_type']['field'] = 'relation_type';
+  $handler->display->display_options['arguments']['relation_type']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['relation_type']['default_argument_type'] = 'php';
+  $handler->display->display_options['arguments']['relation_type']['default_argument_options']['code'] = 'return implode(\',\',array_keys(crm_core_relationship_get_relationships()));';
+  $handler->display->display_options['arguments']['relation_type']['default_argument_skip_url'] = 0;
+  $handler->display->display_options['arguments']['relation_type']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['relation_type']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['relation_type']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['relation_type']['glossary'] = 0;
+  $handler->display->display_options['arguments']['relation_type']['limit'] = '0';
+  $handler->display->display_options['arguments']['relation_type']['transform_dash'] = 0;
+  $handler->display->display_options['arguments']['relation_type']['break_phrase'] = 1;
 
   /* Display: Block. Active Relationships. */
   $handler = $view->new_display('block', 'Block. Active Relationships.', 'block_1');
@@ -175,13 +182,6 @@ function crm_core_relationship_ui_views_default_views() {
   /* Display: Block. Inactive Relationships. */
   $handler = $view->new_display('block', 'Block. Inactive Relationships.', 'block_2');
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Filter criterion: Relation: Active (field_relationship_active) */
-  $handler->display->display_options['filters']['field_relationship_active_value']['id'] = 'field_relationship_active_value';
-  $handler->display->display_options['filters']['field_relationship_active_value']['table'] = 'field_data_field_relationship_active';
-  $handler->display->display_options['filters']['field_relationship_active_value']['field'] = 'field_relationship_active_value';
-  $handler->display->display_options['filters']['field_relationship_active_value']['value'] = array(
-    'inactive' => 'inactive',
-  );
 
   $views['crm_relationships_by_contact'] = $view;
 

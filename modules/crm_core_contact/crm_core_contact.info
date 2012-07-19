@@ -32,11 +32,11 @@ dependencies[] = name
 ; =======================
 
 ; Base Files
-files[] = crm_core_contact.module
-files[] = crm_core_contact.install
+files[] = crm_core_contact.test
 
 ; Module includes
 files[] = includes/crm_core_contact.controller.inc
+files[] = includes/crm_core_contact_type.controller.inc
 
 ; Views include
 files[] = includes/views/crm_core_contact.views.inc

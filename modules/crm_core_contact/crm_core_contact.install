@@ -18,6 +18,7 @@ function crm_core_contact_install() {
   $individual->locked = 1;
   $individual->is_new = TRUE;
   crm_core_contact_type_save($individual);
+  crm_core_contact_type_initialize('individual');
 
   // Add default contact type for an organization
   $organization = crm_core_contact_type_new();
@@ -27,6 +28,7 @@ function crm_core_contact_install() {
   $organization->locked = 1;
   $organization->is_new = TRUE;
   crm_core_contact_type_save($organization);
+  crm_core_contact_type_initialize('organization');
 
   // Add default contact type for a household
   $household = crm_core_contact_type_new();
@@ -36,6 +38,7 @@ function crm_core_contact_install() {
   $household->locked = 1;
   $household->is_new = TRUE;
   crm_core_contact_type_save($household);
+  crm_core_contact_type_initialize('household');
 }
 
 /**
@@ -43,11 +46,11 @@ function crm_core_contact_install() {
  */
 function crm_core_contact_uninstall() {
    // Instance field information field_info_field is not available
-   // because we have already unloaded our module   
+   // because we have already unloaded our module
    $additional_params = array('include_inactive' => TRUE);
    $instances = field_read_instances(array('entity_type' => 'crm_core_contact'), $additional_params);
    foreach($instances as $instance) {
-     field_delete_field($instance['field_name']);  
+     field_delete_field($instance['field_name']);
    }
 }
 
@@ -161,6 +164,11 @@ function crm_core_contact_schema() {
   $schema['crm_core_contact_type'] = array(
     'description' => 'Stores information about all defined contact types.',
     'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique contact type ID.',
+      ),
       'type' => array(
         'description' => 'The machine-readable name of this type.',
         'type' => 'varchar',
@@ -203,9 +211,143 @@ function crm_core_contact_schema() {
         'default' => 0,
         'size' => 'tiny',
       ),
+    ) + entity_exportable_schema_fields(),
+    'primary key' => array('id'),
+    'unique keys' => array(
+      'type' => array('type'),
     ),
-    'primary key' => array('type'),
   );
 
   return $schema;
+}
+
+/**
+ * Initialize new contact type with basic fields.
+ *
+ * @param string $type
+ *   The contact type (machine readable name) going to be
+ *   stored in the field instance
+ */
+function crm_core_contact_type_initialize($type) {
+  $fields = array();
+
+  // Name field
+  $fields[] = array(
+    'field_name' => 'contact_name',
+    'type' => 'name',
+    'entity_types' => array('crm_core_contact'),
+    'translatable' => FALSE,
+    'locked' => TRUE,
+    'settings' => array(
+      // work around, all contact_name field requires at least
+      // given, household, organizations just need one name field/component
+      'minimum_components' => array('given' => 'given'),
+    ),
+  );
+
+
+
+  // Image field
+  $fields[] = array(
+    'field_name' => 'contact_image',
+    'type' => 'image',
+    'entity_types' => array('crm_core_contact'),
+    'translatable' => FALSE,
+    'locked' => FALSE,
+  );
+
+  // Create the fields if they don't exist
+  foreach ($fields as $field) {
+    $info = field_info_field($field['field_name']);
+    if (empty($info)) {
+      field_create_field($field);
+    }
+  }
+
+  // Create field instances for the type if they don't exist
+  $instances = array();
+
+  $instances[] = array(
+    'field_name' => 'contact_name',
+    'entity_type' => 'crm_core_contact',
+    'bundle' => $type,
+    'label' => t('Name'),
+    'required' => TRUE,
+    'widget' => array(
+      'type' => 'name_widget',
+    ),
+    'display' => array(),
+  );
+
+  // For household or organizations, the label should be reflected
+  if ($type == 'organization' || $type == 'household') {
+    $instances[0]['label'] = t('@type name', array('@type' => ucwords($type)));
+
+    // work around, using inline css to hide the rest of the name components
+    // this is due to http://drupal.org/node/1324054
+    $instances[0]['settings']['inline_css'] = array(
+      'title' => 'display:none',
+      'middle' => 'display:none',
+      'family' => 'display:none',
+      'generational' => 'display:none',
+      'credentials' => 'display:none',
+    );
+  }
+
+  $instances[] = array(
+    'field_name' => 'contact_image',
+    'entity_type' => 'crm_core_contact',
+    'bundle' => $type,
+    'label' => t('Image'),
+    'required' => FALSE,
+    'settings' => array(),
+    'widget' => array(
+      'type' => 'image_image',
+    ),
+    'display' => array(
+      'default' => array (
+        'label' => 'hidden',
+        'type' => 'image',
+        'weight' => '1',
+        'settings' =>
+        array (
+          'image_style' => 'medium',
+          'image_link' => '',
+        ),
+        'module' => 'image',
+      ),
+    ),
+  );
+
+  // Create field instances if they don't exist
+  foreach ($instances as $instance) {
+    $info_instance = field_info_instance('crm_core_contact', $instance['field_name'], $type);
+    if (empty($info_instance)) {
+      field_create_instance($instance);
+    }
+  }
+}
+
+/**
+ * Add database table fields 'module' and 'status' for exportability.
+ */
+function crm_core_contact_update_7001() {
+  $table = 'crm_core_contact_type';
+  // Remove old primary key.
+  db_drop_primary_key($table);
+
+  db_add_field($table, 'id', array(
+      'type' => 'serial',
+      'not null' => TRUE,
+      'description' => 'Primary Key: Unique contact type ID.',
+    ),
+    array('primary key' => array('id'))
+  );
+
+  foreach (entity_exportable_schema_fields() as $field => $spec) {
+    db_add_field($table, $field, $spec);
+  }
+
+  // Set unique key.
+  db_add_unique_key($table, 'type', array('type'));
 }

@@ -39,6 +39,14 @@ function crm_user_sync_admin($form_state) {
       );
     }
   }
+
+  $form['crm_user_sync_auto_sync_user_create'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Automatically create an associated contact when account is created'),
+    '#description' => t('Disable this option if you want to manage synchronization within custom modules.'),
+    '#default_value' => variable_get('crm_user_sync_auto_sync_user_create', 1),
+  );
+
   $form['#submit'][] = 'crm_user_sync_admin_submit';
 
   return system_settings_form($form);
@@ -54,7 +62,7 @@ function crm_user_sync_admin_validate($form, &$form_state) {
   foreach($values['crm_user_sync_roles'] as $rid => $status) {
     if ($status != 0) {
       $contact_type_sync[$rid] = $values['crm_user_sync_' . $rid . '_type'];  
-    }  
+    }
   }
   $value_count = array_count_values($contact_type_sync);
   foreach($value_count as $contact_type => $count) {
