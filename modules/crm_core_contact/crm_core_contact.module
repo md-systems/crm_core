@@ -839,3 +839,39 @@ function crm_core_contact_enable() {
   //clear the cache to display in Feeds as available plugin.
   cache_clear_all('plugins:feeds:plugins', 'cache');
 }
+
+/**
+ * Implements hook_query_TAG_alter().
+ *
+ * Adds OR logic when searching contacts by name.
+ *
+ * @param QueryAlterableInterface $query
+ */
+function crm_core_contact_query_crm_core_contact_search_alter(QueryAlterableInterface $query) {
+  // TODO: get table and field names automatically
+  $table = 'field_data_contact_name';
+  $fields = array(
+    'title' => 'contact_name_title',
+    'given' => 'contact_name_given',
+    'middle' => 'contact_name_middle',
+    'family' => 'contact_name_family',
+    'generational' => 'contact_name_generational',
+    'credentials' => 'contact_name_credentials',
+  );
+
+  $value = '%' . db_like($query->alterMetaData['match']) . '%';
+  $placeholder = ':' . $table . '_fulltext';
+
+  $where_expression = "LOWER(CONCAT(' ', COALESCE({$table}.{$fields['title']}, ''), ' ', COALESCE({$table}.{$fields['given']}, ''), ' ', COALESCE({$table}.{$fields['middle']}, ''), ' ', COALESCE({$table}.{$fields['family']}, ''), ' ', COALESCE({$table}.{$fields['generational']}, ''), ' ', COALESCE({$table}.{$fields['credentials']}, ''))) LIKE $placeholder";
+  $query->innerJoin($table, $table, "crm_core_contact.contact_id = {$table}.entity_id");
+  $query->where($where_expression, array($placeholder => $value));
+
+  /*
+  Altermative way to do it.
+
+  $or = db_or()
+    ->condition('field_data_contact_name.contact_name_family', '%' . $query->alterMetaData['match'] . '%', 'LIKE')
+    ->condition('field_data_contact_name.contact_name_given', '%' . $query->alterMetaData['match'] . '%', 'LIKE');
+  $query->condition($or);
+  */
+}

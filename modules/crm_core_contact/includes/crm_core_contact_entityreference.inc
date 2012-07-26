@@ -18,9 +18,11 @@ class EntityReference_SelectionHandler_Generic_crm_core_contact extends EntityRe
       $query->entityCondition('bundle', $this->field['settings']['handler_settings']['target_bundles'], 'IN');
     }
     if (isset($match)) {
-      $group_name = 'crm_core_contact_search';
-      $query->fieldCondition('contact_name', 'family', $match, $match_operator, $group_name);
+      $query->addMetaData('match', $match);
+      $query->addMetaData('match_operator', $match_operator);
       $query->addTag('crm_core_contact_search');
+
+      // Fields are added in crm_core_contact_query_crm_core_contact_search_alter().
     }
 
     // Add a generic entity access tag to the query.
