@@ -47,3 +47,6 @@ files[] = includes/views/handlers/crm_core_contact_handler_field_contact_revisio
 files[] = includes/views/handlers/crm_core_contact_handler_field_contact_revert.inc
 files[] = includes/views/handlers/crm_core_contact_handler_field_contact_type.inc
 ;files[] = includes/views/handlers/crm_core_contact_handler_field_contact_link.inc
+
+; Other includes
+files[] = includes/crm_core_contact_entityreference.inc
