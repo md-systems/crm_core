@@ -420,5 +420,14 @@ function crm_core_case_views_api() {
   );
 }
 
+/*
+ * Implements hook_file_download_access().
+ */
+function crm_core_case_file_download_access($file_item, $entity_type, $entity) {
+  if ($entity_type == 'crm_core_case') {
+    return crm_core_case_view_access($entity);
+  }
+}
+
 // Integration with context.
 module_load_include('inc', 'crm_core_case', 'crm_core_case.context');

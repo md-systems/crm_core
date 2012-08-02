@@ -839,3 +839,12 @@ function crm_core_contact_enable() {
   //clear the cache to display in Feeds as available plugin.
   cache_clear_all('plugins:feeds:plugins', 'cache');
 }
+
+/*
+ * Implements hook_file_download_access().
+ */
+function crm_core_contact_file_download_access($file_item, $entity_type, $entity) {
+  if ($entity_type == 'crm_core_contact') {
+    return crm_core_contact_access('view', $entity);
+  }
+}
