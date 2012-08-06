@@ -217,8 +217,9 @@ function crm_core_case_form_submit_delete($form, &$form_state) {
     $destination = drupal_get_destination();
     unset($_GET['destination']);
   }
-  $activity = $form_state['crm_core_activity'];
-  $form_state['redirect'] = array('crm/activity/' . $activity->activity_id . '/delete', array('query' => $destination));
+  $case = $form_state['case'];
+  $uri = crm_core_case_uri($case);
+  $form_state['redirect'] = array($uri['path'] . '/delete', array('query' => $destination));
 }
 
 /**
