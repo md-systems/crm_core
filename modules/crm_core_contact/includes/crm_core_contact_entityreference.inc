@@ -20,9 +20,10 @@ class EntityReference_SelectionHandler_Generic_crm_core_contact extends EntityRe
     if (isset($match)) {
       $query->addMetaData('match', $match);
       $query->addMetaData('match_operator', $match_operator);
-      $query->addTag('crm_core_contact_search');
+      $query->addTag(variable_get('crm_core_contact_search_query_tag', 'crm_core_contact_search'));
 
       // Fields are added in crm_core_contact_query_crm_core_contact_search_alter().
+      // You can override variable crm_core_contact_search_query_tag to change hook name.
     }
 
     // Add a generic entity access tag to the query.
