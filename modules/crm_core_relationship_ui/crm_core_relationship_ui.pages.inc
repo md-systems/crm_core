@@ -402,10 +402,9 @@ function crm_core_relationship_ui_add_relationship_autocomplete($crm_core_contac
     ->entityCondition('entity_type', 'crm_core_contact')
     ->propertyCondition('contact_id', $crm_core_contact->contact_id, '<>')
     ->propertyCondition('type', $contact_types, 'IN')
-    //TODO: add support to search by name
-    //->fieldCondition('contact_name', 'value', $string, 'STARTS_WITH')
+    ->addMetaData('match', $string)
+    ->addTag(variable_get('crm_core_contact_search_query_tag', 'crm_core_contact_search'))
     ->execute();
-
   $contacts = entity_load('crm_core_contact', array_keys($result['crm_core_contact']));
   foreach ($contacts as $contact) {
     $matches[crm_core_contact_title($contact) . " [cid:$contact->contact_id]"] = crm_core_contact_title($contact);
