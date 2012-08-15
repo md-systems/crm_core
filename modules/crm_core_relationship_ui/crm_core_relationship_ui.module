@@ -71,6 +71,15 @@ function crm_core_relationship_ui_menu() {
     'file' => 'crm_core_relationship_ui.pages.inc',
   );
 
+  $items['crm/relationships/%relation_type/%/autocomplete'] = array(
+    'page callback' => 'crm_core_relationship_ui_add_relationship_autocomplete',
+    'page arguments' => array(NULL, 2, 3),
+    'access callback' => 'crm_core_relationship_access_permissions',
+    'access arguments' => array(5, 'create'),
+    'type' => MENU_CALLBACK,
+    'file' => 'crm_core_relationship_ui.pages.inc',
+  );
+
   /*
    * CRM Relationship types
    */
