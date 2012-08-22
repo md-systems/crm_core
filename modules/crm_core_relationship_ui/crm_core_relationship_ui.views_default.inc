@@ -115,6 +115,7 @@ function crm_core_relationship_ui_views_default_views() {
   $handler->display->display_options['fields']['rid']['alter']['nl2br'] = 0;
   $handler->display->display_options['fields']['rid']['alter']['word_boundary'] = 1;
   $handler->display->display_options['fields']['rid']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['rid']['alter']['more_link'] = 0;
   $handler->display->display_options['fields']['rid']['alter']['strip_tags'] = 0;
   $handler->display->display_options['fields']['rid']['alter']['trim'] = 0;
   $handler->display->display_options['fields']['rid']['alter']['html'] = 0;
@@ -123,6 +124,7 @@ function crm_core_relationship_ui_views_default_views() {
   $handler->display->display_options['fields']['rid']['hide_empty'] = 0;
   $handler->display->display_options['fields']['rid']['empty_zero'] = 0;
   $handler->display->display_options['fields']['rid']['hide_alter_empty'] = 0;
+  $handler->display->display_options['fields']['rid']['separator'] = '';
   $handler->display->display_options['fields']['rid']['format_plural'] = 0;
   /* Field: Global: Custom text */
   $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
@@ -139,6 +141,7 @@ function crm_core_relationship_ui_views_default_views() {
   $handler->display->display_options['fields']['nothing']['alter']['nl2br'] = 0;
   $handler->display->display_options['fields']['nothing']['alter']['word_boundary'] = 1;
   $handler->display->display_options['fields']['nothing']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['nothing']['alter']['more_link'] = 0;
   $handler->display->display_options['fields']['nothing']['alter']['strip_tags'] = 0;
   $handler->display->display_options['fields']['nothing']['alter']['trim'] = 0;
   $handler->display->display_options['fields']['nothing']['alter']['html'] = 0;
