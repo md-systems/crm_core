@@ -647,9 +647,14 @@ function crm_core_contact_save($contact) {
  *   FALSE if loading fails
  */
 function crm_core_contact_load($contact_id, $conditions = array()) {
+  if (empty($contact_id)) {
+    return array();
+  }
+
   if ($contact_id !== FALSE) {
     $contact_id = array($contact_id);
   }
+
   $contacts = crm_core_contact_load_multiple($contact_id, $conditions);
   return $contacts ? reset($contacts) : FALSE;
 }

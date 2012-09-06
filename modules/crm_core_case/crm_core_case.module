@@ -244,7 +244,15 @@ function crm_core_case_forms() {
  * Load a CRM Case object.
  */
 function crm_core_case_load($cid, $reset = FALSE) {
-  $cases = crm_core_case_load_multiple(array($cid), array(), $reset);
+  if (empty($cid)) {
+    return array();
+  }
+
+  if ($cid !== FALSE) {
+    $cid = array($cid);
+  }
+
+  $cases = crm_core_case_load_multiple($cid, array(), $reset);
   return reset($cases);
 }
 
