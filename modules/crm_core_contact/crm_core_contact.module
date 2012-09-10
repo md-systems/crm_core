@@ -376,8 +376,8 @@ function crm_core_contact_label($entity) {
     return $function($entity);
   }
   // Default is person's name.
-  $build_info = crm_core_contact_view($entity);
-  return render($build_info['contact_name'][0]);
+  $field = field_view_field('crm_core_contact', $entity, 'contact_name', 'inline');
+  return $field[0]['#markup'];
 }
 
 /**
