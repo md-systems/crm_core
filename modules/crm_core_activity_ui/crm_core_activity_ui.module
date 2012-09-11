@@ -97,6 +97,15 @@ function crm_core_activity_ui_menu_alter(&$items) {
  * Implements hook_admin_menu_map().
  */
 function crm_core_activity_ui_admin_menu_map() {
+  $arguments = array();
+  $crm_core_activity_types = array_keys(crm_core_activity_types());
+  foreach ($crm_core_activity_types as $type) {
+    $arguments[] = array(
+      '%crm_core_activity_type' => array($type),
+      '%entity_object' => array($type),
+    );
+  }
+
   $map['admin/structure/crm/activity-types/manage/%crm_core_activity_type'] = array(
     // Link generated items directly to the "Activity Types" item.
     'parent' => 'admin/structure/crm/activity-types',
@@ -104,12 +113,7 @@ function crm_core_activity_ui_admin_menu_map() {
     // options.
     'hide' => 'admin/structure/crm/activity-types/list',
     // Create expansion arguments for the '%crm_core_activity_type' placeholder.
-    'arguments' => array(
-      array(
-        '%crm_core_activity_type' => array_keys(crm_core_activity_types()),
-        '%entity_object' => array_keys(crm_core_activity_types()),
-      ),
-    ),
+    'arguments' => $arguments,
   );
   return $map;
 }

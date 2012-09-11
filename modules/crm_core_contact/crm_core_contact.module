@@ -376,8 +376,8 @@ function crm_core_contact_label($entity) {
     return $function($entity);
   }
   // Default is person's name.
-  $build_info = crm_core_contact_view($entity);
-  return render($build_info['contact_name'][0]);
+  $field = field_view_field('crm_core_contact', $entity, 'contact_name', 'inline');
+  return $field[0]['#markup'];
 }
 
 /**
@@ -647,9 +647,14 @@ function crm_core_contact_save($contact) {
  *   FALSE if loading fails
  */
 function crm_core_contact_load($contact_id, $conditions = array()) {
+  if (empty($contact_id)) {
+    return array();
+  }
+
   if ($contact_id !== FALSE) {
     $contact_id = array($contact_id);
   }
+
   $contacts = crm_core_contact_load_multiple($contact_id, $conditions);
   return $contacts ? reset($contacts) : FALSE;
 }

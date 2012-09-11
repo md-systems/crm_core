@@ -166,7 +166,15 @@ function crm_core_activity_type_access() {
  * Load a CRM Activity object.
  */
 function crm_core_activity_load($activity_id, $reset = FALSE) {
-  $activities = crm_core_activity_load_multiple(array($activity_id), array(), $reset);
+  if (empty($activity_id)) {
+    return array();
+  }
+
+  if ($activity_id !== FALSE) {
+    $activity_id = array($activity_id);
+  }
+
+  $activities = crm_core_activity_load_multiple($activity_id, array(), $reset);
   return reset($activities);
 }
 
