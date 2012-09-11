@@ -173,6 +173,7 @@ class CRMCoreContactController extends DrupalDefaultEntityController {
         db_delete('crm_core_contact')->condition('contact_id', $contact_ids, 'IN')->execute();
 
         foreach ($contacts as $contact) {
+          module_invoke_all('entity_delete', $contact, 'crm_core_contact');
           module_invoke_all('crm_core_contact_delete', $contact);
           field_attach_delete('crm_core_contact', $contact);
           // rules integration
