@@ -208,6 +208,39 @@ function crm_user_sync_sync($account, $contact = NULL) {
 }
 
 /**
+ * Loosely based on relation_rules_get_related_entities.
+ */
+function _crm_user_sync_get_related_entities($entity_type, $entity_id, $relation_type) {
+  $rids = array_keys(relation_query($entity_type, $entity_id)->entityCondition('bundle', $relation_type)->execute());
+
+  $entities_ids = array();
+  if (!$rids) {
+    return $entities_ids;
+  }
+
+  $target_entity_type = ($entity_type == 'user')?'crm_core_contact':'user';
+  $rmap = array();
+
+  foreach (relation_load_multiple($rids) as $relation) {
+    $data = array();
+    foreach ($relation->endpoints[LANGUAGE_NONE] as $endpoint) {
+      $data[$endpoint['entity_type']] = $endpoint['entity_id'];
+    }
+    $entities_ids[] = $data[$target_entity_type];
+    $rmap[$data[$target_entity_type]] = $data[$entity_type];
+  }
+
+  $entities = entity_load($target_entity_type, $entities_ids);
+
+  $targets = array();
+
+  foreach ($entities as $entity_id => $entity) {
+    $targets[$rmap[$entity_id]] = $entity;
+  }
+  return $targets;
+}
+
+/**
  * Copied from relation.module, (beta 1)
  * gives an error if the entity id is not found, so need to fix that
  */
