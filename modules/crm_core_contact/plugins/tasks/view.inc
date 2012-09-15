@@ -93,9 +93,9 @@ function crm_core_contact_view_page($crm_core_contact) {
   drupal_add_html_head_link(array('rel' => 'canonical', 'href' => url($uri['path'], $uri['options'])), TRUE);
   // Set the non-aliased path as a default shortlink.
   drupal_add_html_head_link(array('rel' => 'shortlink', 'href' => url($uri['path'], array_merge($uri['options'], array('alias' => TRUE)))), TRUE);
-  $contexts = ctools_context_handler_get_task_contexts($task, '', array(crm_core_contact));
+  $contexts = ctools_context_handler_get_task_contexts($task, '', array($crm_core_contact));
 
-  $output = ctools_context_handler_render($task, '', $contexts, array($crm_core_contact->nid));
+  $output = ctools_context_handler_render($task, '', $contexts, array($crm_core_contact->contact_id));
   if ($output != FALSE) {
     return $output;
   }
