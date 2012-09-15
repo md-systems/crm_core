@@ -890,3 +890,13 @@ function crm_core_contact_query_crm_core_contact_search_alter(QueryAlterableInte
   $query->condition($or);
   */
 }
+
+/**
+ * Implements hook_ctools_plugin_directory() to let the system know
+ * where our task and task_handler plugins are.
+ */
+function crm_core_contact_ctools_plugin_directory($owner, $plugin_type) {
+  if ($owner == 'page_manager' && $plugin_type == 'tasks') {
+    return 'plugins/' . $plugin_type;
+  }
+}
