@@ -80,7 +80,7 @@ function crm_core_contact_view_menu_alter(&$items, $task) {
  */
 function crm_core_contact_view_page($crm_core_contact) {
   // Load my task plugin
-  $task = page_manager_get_task('crm_core_contact_view');
+  $task = page_manager_get_task('view');
 
   // Load the crm_core_contact into a context.
   ctools_include('context');
