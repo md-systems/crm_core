@@ -279,6 +279,47 @@ function _crm_user_sync_get_related_entity($entity_type, $entity_id, $relation_t
 }
 
 /**
+ * Retrieves the related entity based on entity type, ids and relation type.
+ */
+function crm_user_sync_get_related_entity($entity_type, $entity_id, $relation_type = 'crm_user_sync') {
+  if (is_array($entity_id)) {
+    return _crm_user_sync_get_related_entities($entity_type, $entity_id, $relation_type);
+  }
+  else if (is_numeric($entity_id)) {
+    return _crm_user_sync_get_related_entity($entity_type, $entity_id, $relation_type);
+  }
+  return FALSE;
+}
+
+/**
+ * Retrieves the related contacts for given uid(s).
+ */
+function crm_user_sync_get_contact_from_uid($uid) {
+  return crm_user_sync_get_related_entity('user', $uid, 'crm_user_sync');
+}
+
+/**
+ * Retrieves the related contacts for given uids.
+ */
+function crm_user_sync_get_contacts_from_uids($uids) {
+  return crm_user_sync_get_related_entity('user', $uids, 'crm_user_sync');
+}
+
+/**
+ * Retrieves the related users for given contact id(s).
+ */
+function crm_user_sync_get_user_from_contact_id($contact_id) {
+  return crm_user_sync_get_related_entity('crm_core_contact', $contact_id, 'crm_user_sync');
+}
+
+/**
+ * Retrieves the related users for given contact ids.
+ */
+function crm_user_sync_get_users_from_contact_ids($contact_ids) {
+  return crm_user_sync_get_related_entity('crm_core_contact', $contact_ids, 'crm_user_sync');
+}
+
+/**
  * Implements hook_entity_property_info_alter().
  *
  * We need to extend Contact entity with related user for Rules integration.
