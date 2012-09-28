@@ -33,6 +33,24 @@ function crm_core_contact_ui_add_page() {
   return theme('crm_core_contact_ui_add_list', array('content' => $content));
 }
 
+/**
+ * Wrapper around entity_ui_get_form().
+ *
+ * Create new crm_activity entity and pass it to entity_ui_get_form().
+ *
+ * @param type $contact
+ * @param type $type
+ */
+function crm_core_contact_entity_ui_get_form_wrapper($type) {
+  // Default empty Contact
+  $values = array(
+    'type' => $type,
+  );
+
+  $contact = entity_create('crm_core_contact', $values);
+
+  return drupal_get_form('crm_core_contact_ui_form', $contact);
+}
 
 /**
  * Form callback: create or edit a contact.

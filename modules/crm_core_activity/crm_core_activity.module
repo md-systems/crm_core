@@ -15,7 +15,6 @@ function crm_core_activity_entity_info() {
       'entity class' => 'CRMCoreActivityEntity',
       'controller class' => 'CRMCoreActivityController',
       'base table' => 'crm_core_activity',
-      'access callback' => 'crm_core_activity_access',
       'fieldable' => TRUE,
       'entity keys' => array(
         'id' => 'activity_id',
@@ -29,12 +28,13 @@ function crm_core_activity_entity_info() {
       'load hook' => 'crm_core_activity_load',
       'view modes' => array(
         'full' => array(
-          'label' => t('Default'),
+          'label' => t('Full content'),
           'custom settings' => FALSE,
         ),
       ),
       'label callback' => 'entity_class_label',
       'uri callback' => 'entity_class_uri',
+      'access callback' => 'crm_core_activity_access',
       'module' => 'crm_core_activity',
       'permission labels' => array(
         'singular' => t('activity'),
