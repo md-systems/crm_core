@@ -828,8 +828,13 @@ function crm_core_contact_file_download_access($file_item, $entity_type, $entity
  * @param QueryAlterableInterface $query
  */
 function crm_core_contact_query_crm_core_contact_search_alter(QueryAlterableInterface $query) {
-  // TODO: get table and field names automatically
-  $table = 'field_data_contact_name';
+  // TODO: get field names automatically
+  $tables =& $query->getTables();
+  
+  // only dealing with 1 table (field_data_contact_name)
+  $table = current($tables);
+  $alias = $table['alias'];
+  
   $fields = array(
     'title' => 'contact_name_title',
     'given' => 'contact_name_given',
@@ -842,8 +847,8 @@ function crm_core_contact_query_crm_core_contact_search_alter(QueryAlterableInte
   $value = '%' . db_like($query->alterMetaData['match']) . '%';
   $placeholder = ':' . $table . '_fulltext';
 
-  $where_expression = "LOWER(CONCAT(' ', COALESCE({$table}.{$fields['title']}, ''), ' ', COALESCE({$table}.{$fields['given']}, ''), ' ', COALESCE({$table}.{$fields['middle']}, ''), ' ', COALESCE({$table}.{$fields['family']}, ''), ' ', COALESCE({$table}.{$fields['generational']}, ''), ' ', COALESCE({$table}.{$fields['credentials']}, ''))) LIKE $placeholder";
-  $query->innerJoin($table, $table, "crm_core_contact.contact_id = {$table}.entity_id");
+  $where_expression = "LOWER(CONCAT(' ', COALESCE({$alias}.{$fields['title']}, ''), ' ', COALESCE({$alias}.{$fields['given']}, ''), ' ', COALESCE({$alias}.{$fields['middle']}, ''), ' ', COALESCE({$alias}.{$fields['family']}, ''), ' ', COALESCE({$alias}.{$fields['generational']}, ''), ' ', COALESCE({$alias}.{$fields['credentials']}, ''))) LIKE $placeholder";
+  $query->innerJoin('crm_core_contact', 'crm_core_contact', "crm_core_contact.contact_id = {$alias}.entity_id");
   $query->where($where_expression, array($placeholder => $value));
 
   /*
