@@ -410,7 +410,8 @@ function crm_core_relationship_ui_add_relationship_autocomplete($crm_core_contac
   $result = $query->execute();
   $contacts = entity_load('crm_core_contact', array_keys($result['crm_core_contact']));
   foreach ($contacts as $contact) {
-    $matches[crm_core_contact_title($contact) . " [cid:$contact->contact_id]"] = crm_core_contact_title($contact);
+    $crm_core_contact_title = crm_core_contact_title($contact);
+    $matches[$crm_core_contact_title . " [cid:$contact->contact_id]"] = $crm_core_contact_title;
   }
 
   // return for JS
