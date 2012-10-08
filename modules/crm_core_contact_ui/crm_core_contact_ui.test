@@ -148,7 +148,7 @@ class CRMCoreContactUITestCase extends DrupalWebTestCase {
    */
   public static function getIndividualContactTitle($post_array) {
     return $post_array['contact_name[und][0][title]'] . ' ' . $post_array['contact_name[und][0][given]'] . ' '
-         . $post_array['contact_name[und][0][middle]'] . ' ' . $post_array['contact_name[und][0][family]']. ' '
+         . $post_array['contact_name[und][0][middle]'] . ' ' . $post_array['contact_name[und][0][family]'] . ' '
          . $post_array['contact_name[und][0][generational]'] . ', ' . $post_array['contact_name[und][0][credentials]'];
   }
 

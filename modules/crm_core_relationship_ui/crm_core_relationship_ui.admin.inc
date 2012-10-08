@@ -2,7 +2,7 @@
 
 /**
  * List crm relationship types
- * 
+ *
  * @param
  * bool $reverse
  * TRUE means display all relations that are not CRM relationships
@@ -13,13 +13,13 @@
  * A renderable array of table
  */
 function crm_core_relationship_ui_types_overview($reverse = FALSE) {
-  drupal_set_title('CRM Relationship Types');
+  drupal_set_title(t('CRM Relationship Types'));
   $reverse = (bool) $reverse;
-  
+
   module_load_include('inc', 'crm_core_relationship_ui');
 
   $relation_types = relation_list_types();
-  
+
   $field_ui = module_exists('field_ui');
   $headers = array(
     array('data' => t('Name'), 'width' => '40%'),
@@ -27,13 +27,13 @@ function crm_core_relationship_ui_types_overview($reverse = FALSE) {
   );
   $rows = array();
 
-  
+
   crm_ui_ctools_add_dropbutton_files();
   foreach ($relation_types as $type => $label) {
     $links = array();
     if ($reverse) {
       if (crm_core_relationship_is_relationship_type($type)) continue;
-      $url = 'admin/structure/relation/manage/' . $type;     
+      $url = 'admin/structure/relation/manage/' . $type;
     }
     else {
       if (!crm_core_relationship_is_relationship_type($type)) continue;
@@ -47,7 +47,7 @@ function crm_core_relationship_ui_types_overview($reverse = FALSE) {
     }
     $links[] =  l(t('delete'), $url . '/delete');
     $row[] = theme('crm_ui_ctools_dropbutton', array(
-        'ops_count' => count($links), 
+        'ops_count' => count($links),
         'links' => $links,
         'index' => $type,
       ));
@@ -73,11 +73,11 @@ function crm_core_relationship_ui_types_overview($reverse = FALSE) {
  * This function is originally copied from relation_type_form from relation.admin.inc
  */
 function crm_core_relationship_ui_type_form($form, &$form_state, $relation_type = array(), $op = 'edit') {
-  
-  (empty($relation_type)) ? drupal_set_title('Add New Relationship type') : drupal_set_title('Edit Relationship Type');
-  
+
+  (empty($relation_type)) ? drupal_set_title(t('Add New Relationship type')) : drupal_set_title(t('Edit Relationship Type'));
+
   _crm_core_relationship_ui_type_set_breadcrumb();
-    
+
   $form['#write_record_keys'] = array();
   if ($relation_type) {
     $relation_type = (object) $relation_type;
@@ -165,14 +165,14 @@ function crm_core_relationship_ui_type_form($form, &$form_state, $relation_type 
       }
     }
   }
-    
+
   $contact_types = crm_core_contact_types();
-  
+
   $options = array('crm_core_contact:*' => t('Any'));
   foreach ($contact_types as $contact_type) {
     $options['crm_core_contact:' . $contact_type->type] = t($contact_type->name);
   }
-  
+
   $form['source_bundles'] = array(
     '#type'          => 'select',
     '#title'         => 'Source contact types',
@@ -236,9 +236,9 @@ function crm_core_relationship_ui_type_form_submit($form, &$form_state) {
  * This function is originally copied from relation_type_delete_confirm from relation.admin.inc
  */
 function crm_core_relationship_ui_type_delete_confirm($form, &$form_state, $relation_type) {
-  
+
   _crm_core_relationship_ui_type_set_breadcrumb();
-  
+
   $form['relation_type'] = array('#type' => 'value', '#value' => $relation_type->relation_type);
   $form['label'] = array('#type' => 'value', '#value' => $relation_type->label);
 
@@ -285,14 +285,14 @@ function crm_core_relationship_ui_type_delete_confirm_submit($form, &$form_state
  */
 function _crm_core_relationship_ui_type_set_breadcrumb() {
   $breadcrumb = array(
-    l('Home', '<front>'),
-    l('Administration', 'admin'),
-    l('Structure', 'admin/structure'),
-    l('CRM', 'admin/structure/crm'),
-    l('Relationship types', 'admin/structure/crm/relationship-types')
+    l(t('Home'), '<front>'),
+    l(t('Administration'), 'admin'),
+    l(t('Structure'), 'admin/structure'),
+    l(t('CRM'), 'admin/structure/crm'),
+    l(t('Relationship types'), 'admin/structure/crm/relationship-types')
   );
-  
-  drupal_set_breadcrumb($breadcrumb);  
+
+  drupal_set_breadcrumb($breadcrumb);
 }
 
 

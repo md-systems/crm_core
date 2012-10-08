@@ -13,25 +13,25 @@ function crm_core_relationship_install() {
   $relation_types_info = array(
     array(
       'relation_type' => 'crm_friend',
-      'label' => t('Friend'),
+      'label' => st('Friend'),
       'source_bundles' => array('crm_core_contact:individual'),
-      'r_unique' => true,
+      'r_unique' => TRUE,
     ),
     array(
       'relation_type' => 'crm_employee',
-      'label' => t('Employee of'),
-      'reverse_label' => t('Employee'),
-      'directional' => true,
-      'r_unique' => true,
+      'label' => st('Employee of'),
+      'reverse_label' => st('Employee'),
+      'directional' => TRUE,
+      'r_unique' => TRUE,
       'source_bundles' => array('crm_core_contact:individual'),
       'target_bundles' => array('crm_core_contact:organization'),
     ),
     array(
       'relation_type' => 'crm_member',
-      'label' => t('Member of'),
-      'reverse_label' => t('Member'),
-      'directional' => true,
-      'r_unique' => true,
+      'label' => st('Member of'),
+      'reverse_label' => st('Member'),
+      'directional' => TRUE,
+      'r_unique' => TRUE,
       'source_bundles' => array('crm_core_contact:individual'),
       'target_bundles' => array('crm_core_contact:household'),
     ),
@@ -47,30 +47,30 @@ function crm_core_relationship_install() {
  */
 function crm_core_relationship_uninstall() {
 
-  // get all the relationship_types (bundles), find all fields 
+  // get all the relationship_types (bundles), find all fields
   // delete them
   $query = db_select('relation_bundles', 'rb')->
            fields('rb', array('relation_type'))->
            condition('rb.entity_type', 'crm_core_contact')->
            distinct()->
            execute();
-           
-   while($record = $query->fetchAssoc()) {
+
+   while ($record = $query->fetchAssoc()) {
      $relationship_type[] = $record['relation_type'];
    }
-   
-   foreach($relationship_type as $type) {
+
+   foreach ($relationship_type as $type) {
      // look into the database for each type
      $relationship_query = db_select('relation', 'r')->
            fields('r', array('rid'))->
            condition('r.relation_type', $type)->
            execute();
-       
-     while($result = $relationship_query->fetchAssoc()) {
+
+     while ($result = $relationship_query->fetchAssoc()) {
        // delete all the relationships of that type
-       relation_delete($result['rid']);  
+       relation_delete($result['rid']);
      }
      // finally delete the relationshp_type
-     relation_type_delete($type); 
+     relation_type_delete($type);
    }
 }

@@ -8,16 +8,16 @@ function crm_core_activity_install() {
   // create a default meeting activity type
   $meeting = entity_create('crm_core_activity_type', array(
     'type' => 'meeting',
-    'label' => t('Meeting'),
-    'description' => t('A meeting between 2 or more contacts'),
+    'label' => st('Meeting'),
+    'description' => st('A meeting between 2 or more contacts'),
   ));
   crm_core_activity_type_save($meeting);
 
   // create a phone call activity type
   $phone_call = entity_create('crm_core_activity_type', array(
     'type' => 'phone_call',
-    'label' => t('Phone call'),
-    'description' => t('A phone call between 2 or more contacts'),
+    'label' => st('Phone call'),
+    'description' => st('A phone call between 2 or more contacts'),
   ));
   crm_core_activity_type_save($phone_call);
 }

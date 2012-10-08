@@ -13,8 +13,8 @@ function crm_core_contact_install() {
   // Add default contact type for an Individual person
   $individual = crm_core_contact_type_new();
   $individual->type = 'individual';
-  $individual->name = t('Individual');
-  $individual->description = t('A single individual.');
+  $individual->name = st('Individual');
+  $individual->description = st('A single individual.');
   $individual->locked = 1;
   $individual->is_new = TRUE;
   crm_core_contact_type_save($individual);
@@ -23,8 +23,8 @@ function crm_core_contact_install() {
   // Add default contact type for an organization
   $organization = crm_core_contact_type_new();
   $organization->type = 'organization';
-  $organization->name = t('Organization');
-  $organization->description = t('A collection of individuals or other organizations that has additional contact data.');
+  $organization->name = st('Organization');
+  $organization->description = st('A collection of individuals or other organizations that has additional contact data.');
   $organization->locked = 1;
   $organization->is_new = TRUE;
   crm_core_contact_type_save($organization);
@@ -33,8 +33,8 @@ function crm_core_contact_install() {
   // Add default contact type for a household
   $household = crm_core_contact_type_new();
   $household->type = 'household';
-  $household->name = t('Household');
-  $household->description = t('A collection of individuals generally located at the same residence.');
+  $household->name = st('Household');
+  $household->description = st('A collection of individuals generally located at the same residence.');
   $household->locked = 1;
   $household->is_new = TRUE;
   crm_core_contact_type_save($household);
@@ -49,7 +49,7 @@ function crm_core_contact_uninstall() {
    // because we have already unloaded our module
    $additional_params = array('include_inactive' => TRUE);
    $instances = field_read_instances(array('entity_type' => 'crm_core_contact'), $additional_params);
-   foreach($instances as $instance) {
+   foreach ($instances as $instance) {
      field_delete_field($instance['field_name']);
    }
 }
@@ -271,7 +271,7 @@ function crm_core_contact_type_initialize($type) {
     'field_name' => 'contact_name',
     'entity_type' => 'crm_core_contact',
     'bundle' => $type,
-    'label' => t('Name'),
+    'label' => st('Name'),
     'required' => TRUE,
     'widget' => array(
       'type' => 'name_widget',
@@ -281,7 +281,7 @@ function crm_core_contact_type_initialize($type) {
 
   // For household or organizations, the label should be reflected
   if ($type == 'organization' || $type == 'household') {
-    $instances[0]['label'] = t('@type name', array('@type' => ucwords($type)));
+    $instances[0]['label'] = st('@type name', array('@type' => ucwords($type)));
 
     // work around, using inline css to hide the rest of the name components
     // this is due to http://drupal.org/node/1324054
@@ -298,19 +298,19 @@ function crm_core_contact_type_initialize($type) {
     'field_name' => 'contact_image',
     'entity_type' => 'crm_core_contact',
     'bundle' => $type,
-    'label' => t('Image'),
+    'label' => st('Image'),
     'required' => FALSE,
     'settings' => array(),
     'widget' => array(
       'type' => 'image_image',
     ),
     'display' => array(
-      'default' => array (
+      'default' => array(
         'label' => 'hidden',
         'type' => 'image',
         'weight' => '1',
         'settings' =>
-        array (
+        array(
           'image_style' => 'medium',
           'image_link' => '',
         ),
