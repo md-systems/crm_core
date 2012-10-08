@@ -399,7 +399,8 @@ function crm_core_relationship_ui_add_relationship_autocomplete($crm_core_contac
 
   $query = new EntityFieldQuery;
   $query->entityCondition('entity_type', 'crm_core_contact')
-    ->propertyCondition('type', $contact_types, 'IN');
+    ->propertyCondition('type', $contact_types, 'IN')
+    ->range(0, 20);
 
   if ($crm_core_contact != NULL) {
     $query->propertyCondition('contact_id', $crm_core_contact->contact_id, '<>');
