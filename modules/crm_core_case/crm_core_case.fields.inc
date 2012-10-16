@@ -74,30 +74,30 @@ function crm_core_case_entity_insert($entity, $entity_type) {
     ),
   );
 
-  $instances[] = array (
+  $instances[] = array(
     'label' => 'Location',
     'widget' =>
-    array (
+    array(
       'weight' => '2',
       'type' => 'options_select',
       'module' => 'options',
       'active' => 1,
       'settings' =>
-      array (
+      array(
       ),
     ),
     'settings' =>
-    array (
-      'user_register_form' => false,
+    array(
+      'user_register_form' => FALSE,
     ),
     'display' =>
-    array (
+    array(
       'default' =>
-      array (
+      array(
         'label' => 'above',
         'type' => 'taxonomy_term_reference_link',
         'settings' =>
-        array (
+        array(
         ),
         'module' => 'taxonomy',
         'weight' => 2,

@@ -194,7 +194,7 @@ function crm_core_contact_access($op, $contact, $account = NULL, $entity_type = 
       // we just need any of the create permissions
       $create_any_contact = user_access('create crm_core_contact entities', $account);
       $contact_types = array_keys(crm_core_contact_types(TRUE));
-      foreach($contact_types as $type) {
+      foreach ($contact_types as $type) {
         $create_type_contact[] = entity_access('create', 'crm_core_contact', $type, $account);
       }
       // they just need any type of contact type create permission
@@ -290,8 +290,8 @@ function crm_core_contact_search_execute($keys = NULL, $conditions = NULL) {
     $build = crm_core_contact_view($contact);
     unset($build['#theme']);
     $contact->rendered = drupal_render($build);
-	$title = field_get_items('crm_core_contact', $contact, 'contact_name');
-	$title = name_format($title[0], '((((t+ig)+im)+if)+is)+jc');
+    $title = field_get_items('crm_core_contact', $contact, 'contact_name');
+    $title = name_format($title[0], '((((t+ig)+im)+if)+is)+jc');
     $uri = entity_uri('crm_core_contact', $contact);
     $results[] = array(
       'link' => url($uri['path'], array_merge($uri['options'], array('absolute' => TRUE))),
@@ -383,7 +383,7 @@ function crm_core_contact_type_permission($crm_core_contact_type, $op = 'edit') 
     return FALSE;
   }
 
-  switch($op) {
+  switch ($op) {
     case 'enable':
       // only disabled contact type can be enabled
       if ((bool) $crm_core_contact_type->disabled) {
@@ -452,7 +452,8 @@ function crm_core_contact_types($active = FALSE) {
   if (!isset($contact_types)) {
     if ($active) {
       $contact_types = db_query('SELECT * FROM {crm_core_contact_type} WHERE disabled = 0')->fetchAllAssoc('type');
-    } else {
+    }
+    else {
       $contact_types = db_query('SELECT * FROM {crm_core_contact_type}')->fetchAllAssoc('type');
     }
   }
@@ -828,13 +829,9 @@ function crm_core_contact_file_download_access($file_item, $entity_type, $entity
  * @param QueryAlterableInterface $query
  */
 function crm_core_contact_query_crm_core_contact_search_alter(QueryAlterableInterface $query) {
-  // TODO: get field names automatically
-  $tables =& $query->getTables();
-  
-  // only dealing with 1 table (field_data_contact_name)
-  $table = current($tables);
-  $alias = $table['alias'];
-  
+  // TODO: get table and field names automatically.
+  $table = 'field_data_contact_name';
+
   $fields = array(
     'title' => 'contact_name_title',
     'given' => 'contact_name_given',
@@ -847,8 +844,14 @@ function crm_core_contact_query_crm_core_contact_search_alter(QueryAlterableInte
   $value = '%' . db_like($query->alterMetaData['match']) . '%';
   $placeholder = ':' . $table . '_fulltext';
 
-  $where_expression = "LOWER(CONCAT(' ', COALESCE({$alias}.{$fields['title']}, ''), ' ', COALESCE({$alias}.{$fields['given']}, ''), ' ', COALESCE({$alias}.{$fields['middle']}, ''), ' ', COALESCE({$alias}.{$fields['family']}, ''), ' ', COALESCE({$alias}.{$fields['generational']}, ''), ' ', COALESCE({$alias}.{$fields['credentials']}, ''))) LIKE $placeholder";
-  $query->innerJoin('crm_core_contact', 'crm_core_contact', "crm_core_contact.contact_id = {$alias}.entity_id");
+  $coalesce = '';
+  foreach ($fields as $field_name => $column) {
+    $coalesce[] = "COALESCE({$table}.{$column}, ''), ' '";
+  }
+  $coalesce = implode(', ', $coalesce);
+
+  $where_expression = "LOWER(CONCAT(' ', $coalesce)) LIKE $placeholder";
+  $query->innerJoin($table, $table, "crm_core_contact.contact_id = {$table}.entity_id");
   $query->where($where_expression, array($placeholder => $value));
 
   /*

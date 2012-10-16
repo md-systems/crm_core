@@ -374,7 +374,7 @@ function crm_core_activity_crm_core_contact_delete($crm_core_contact) {
 
   $activities_to_remove = array();
 
-  foreach($crm_core_activities as $crm_core_activity) {
+  foreach ($crm_core_activities as $crm_core_activity) {
     $wrapped_activity = entity_metadata_wrapper('crm_core_activity', $crm_core_activity);
     $participants = $wrapped_activity->field_activity_participants->value(array('identifier' => TRUE));
 

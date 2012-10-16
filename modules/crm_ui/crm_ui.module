@@ -121,7 +121,7 @@ function crm_ui_block_view($delta) {
   $sub_func = 'crm_ui_block_' . $delta . '_subject';
   $con_func = 'crm_ui_block_' . $delta . '_content';
 
-  if(!function_exists($sub_func) || !function_exists($con_func)) {
+  if (!function_exists($sub_func) || !function_exists($con_func)) {
     return array();
   }
 
@@ -142,7 +142,7 @@ function crm_ui_block_view($delta) {
  * Implements hook_views_pre_render()
  */
 function crm_ui_views_pre_render($view) {
-  if($view->name == 'crm_activities_by_contact') {
+  if ($view->name == 'crm_activities_by_contact') {
     crm_ui_ctools_add_dropbutton_files();
   }
 }
@@ -173,9 +173,9 @@ function theme_crm_ui_ctools_dropbutton($variables) {
   $links = $variables['links'];
   $index = $variables['index'];
 
-  if(is_array($links) && count($links)) {
+  if (is_array($links) && count($links)) {
     $item_list = array();
-    for($i = count($links) - $ops_count; $i < count($links); $i++) {
+    for ($i = count($links) - $ops_count; $i < count($links); $i++) {
        $item_list['items'][] = $links[$i];
     }
 

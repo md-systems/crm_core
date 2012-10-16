@@ -8,7 +8,7 @@ function crm_user_sync_menu() {
 
   // Only setup ui if crm_ui is present
   $items['admin/structure/crm/user_sync'] = array(
-    'title' => t('User Synchronization'),
+    'title' => 'User Synchronization',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('crm_user_sync_admin'),
     'access arguments' => array('administer user-sync'),
@@ -155,7 +155,7 @@ function crm_user_sync_sync($account, $contact = NULL) {
   // @TODO: think about the logic here, what to do with multiple roles?
   // For now we just use the first that has user-sync enabled, if there is.
   $roles_sync = variable_get('crm_user_sync_roles', array());
-  foreach($roles_sync as $rid => $sync_rid) {
+  foreach ($roles_sync as $rid => $sync_rid) {
     if ($sync_rid == 0) {
       unset($roles_sync[$rid]);
     }
@@ -285,7 +285,7 @@ function crm_user_sync_get_related_entity($entity_type, $entity_id, $relation_ty
   if (is_array($entity_id)) {
     return _crm_user_sync_get_related_entities($entity_type, $entity_id, $relation_type);
   }
-  else if (is_numeric($entity_id)) {
+  elseif (is_numeric($entity_id)) {
     return _crm_user_sync_get_related_entity($entity_type, $entity_id, $relation_type);
   }
   return FALSE;

@@ -12,8 +12,8 @@ function crm_ui_block_navigation_subject() {
  */
 function crm_ui_block_navigation_content() {
   $items = array(
-    'contacts' => l('Contacts', 'crm/contact'),
-    'add_contact' => l('Add Contact', 'crm/contact/add'),
+    'contacts' => l(t('Contacts'), 'crm/contact'),
+    'add_contact' => l(t('Add Contact'), 'crm/contact/add'),
   );
 
   return array(

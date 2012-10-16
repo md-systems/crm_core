@@ -21,7 +21,7 @@ function crm_core_contact_ui_types_overview() {
     }
 
     $ops = array();
-    foreach($links as $key => $link) {
+    foreach ($links as $key => $link) {
       $ops['links'][$key] = array(
         'title' => $link['title'],
         'href' => $link['href'],
@@ -75,7 +75,7 @@ function crm_core_contact_ui_type_toggle_form($form, &$form_state, $contact_type
   $path = 'admin/structure/crm/contact-types';
 
   $description = '';
-  if($toggle == 'disable') {
+  if ($toggle == 'disable') {
     $description = t('When a contact type is disabled, you cannot add any contacts to this contact type. You will also not be able to search for contacts of disabled contact type.');
   }
 
@@ -90,7 +90,7 @@ function crm_core_contact_ui_type_toggle_form_submit($form, &$form_state) {
 
   $crm_core_contact_type = $form_state['contact_type'];
 
-  switch($form_state['values']['op']) {
+  switch ($form_state['values']['op']) {
     case 'enable':
       $crm_core_contact_type->disabled = 0;
     break;
@@ -155,20 +155,20 @@ function crm_core_contact_ui_type_delete_confirm_validate($form, &$form_state) {
 
   $crm_core_contact_type = $form_state['contact_type'];
   // check one more time to see if the contact type can be deleted
-  $error = null;
+  $error = NULL;
 
-  if((bool) $crm_core_contact_type->locked) {
+  if ((bool) $crm_core_contact_type->locked) {
     $error = t('The contact type is locked');
   }
 
   $count = db_query("SELECT count(*) FROM {crm_core_contact} WHERE `type` = :type",
   array(':type' => $crm_core_contact_type->type))->fetchField();
 
-  if($count > 0) {
+  if ($count > 0) {
     $error = t('Contacts of this type exists');
   }
 
-  if(isset($error)) {
+  if (isset($error)) {
     form_set_error('message', t('Error: you cannot delete this contact type because @msg', array('@msg' => $error)));
   }
 }

@@ -10,7 +10,7 @@ class CRMCaseController extends EntityAPIController {
     $entity->content['description'] = array(
       '#theme' => 'field',
       '#weight' => 0,
-      '#title' =>t('Description'),
+      '#title' => t('Description'),
       '#access' => TRUE,
       '#label_display' => 'above',
       '#view_mode' => 'full',
@@ -27,7 +27,7 @@ class CRMCaseController extends EntityAPIController {
     $entity->content['status'] = array(
       '#theme' => 'field',
       '#weight' => 0,
-      '#title' =>t('Status'),
+      '#title' => t('Status'),
       '#access' => TRUE,
       '#label_display' => 'above',
       '#view_mode' => 'full',

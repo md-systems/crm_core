@@ -77,7 +77,7 @@ function crm_core_relationship_form($form, &$form_state, $relation) {
       '#type' => 'textfield',
       '#default_value' => !($reverse_field ^ $relation->reverse) ? crm_core_contact_title($relation->crm_core_contact) . " [cid:{$relation->crm_core_contact->contact_id}]" : '',
       '#disabled' => !($reverse_field ^ $relation->reverse),
-      '#required' => true,
+      '#required' => TRUE,
       '#autocomplete_path' => 'crm/contact/' . $relation->crm_core_contact->contact_id . '/relationships/add/' . $relation->relation_type . '/' . $reverse_field . '/autocomplete',
     );
   }
@@ -260,7 +260,7 @@ function crm_core_relationship_ui_add_relationship_form($form, &$form_state, $cr
       '#type' => 'textfield',
       '#default_value' => !($reverse_field ^ $reverse) ? crm_core_contact_title($crm_core_contact) . " [cid:$crm_core_contact->contact_id]" : '',
       '#disabled' => !($reverse_field ^ $reverse),
-      '#required' => true,
+      '#required' => TRUE,
       '#autocomplete_path' => 'crm/contact/' . $crm_core_contact->contact_id . '/relationships/add/' . $relationship_type->relation_type . '/' . $reverse_field . '/autocomplete',
     );
   }
@@ -320,7 +320,7 @@ function crm_core_relationship_ui_add_relationship_form_validate($form, &$form_s
   }
 
   if ($relationship_type->r_unique) {
-    if(relation_relation_exists(
+    if (relation_relation_exists(
       array(
         array('entity_type' => 'crm_core_contact', 'entity_id' => $source_contact->contact_id),
         array('entity_type' => 'crm_core_contact', 'entity_id' => $destination_contact->contact_id),
@@ -399,7 +399,8 @@ function crm_core_relationship_ui_add_relationship_autocomplete($crm_core_contac
 
   $query = new EntityFieldQuery;
   $query->entityCondition('entity_type', 'crm_core_contact')
-    ->propertyCondition('type', $contact_types, 'IN');
+    ->propertyCondition('type', $contact_types, 'IN')
+    ->range(0, 20);
 
   if ($crm_core_contact != NULL) {
     $query->propertyCondition('contact_id', $crm_core_contact->contact_id, '<>');
@@ -410,7 +411,8 @@ function crm_core_relationship_ui_add_relationship_autocomplete($crm_core_contac
   $result = $query->execute();
   $contacts = entity_load('crm_core_contact', array_keys($result['crm_core_contact']));
   foreach ($contacts as $contact) {
-    $matches[crm_core_contact_title($contact) . " [cid:$contact->contact_id]"] = crm_core_contact_title($contact);
+    $crm_core_contact_title = crm_core_contact_title($contact);
+    $matches[$crm_core_contact_title . " [cid:$contact->contact_id]"] = $crm_core_contact_title;
   }
 
   // return for JS
@@ -427,11 +429,11 @@ function _crm_core_relationship_ui_get_contact_from_autocomplete_field_value($st
   $matches = array();
   preg_match('/\[cid:([0-9]+)\]/', $string, $matches);
   if (!array_key_exists(1, $matches) || !is_numeric($matches[1])) {
-    return false;
+    return FALSE;
   }
   $contacts = entity_load('crm_core_contact', array($matches[1]));
   if (empty($contacts)) {
-    return false;
+    return FALSE;
   }
   return $contacts[$matches[1]];
 }
