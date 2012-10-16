@@ -232,12 +232,14 @@ function crm_core_relationship_ui_field_formatter_view($entity_type, $entity, $f
     case 'contact_relationship_view':
       // getting the contact id from the url
       $current_contact_id = arg(2);
-      $related_contact_id = ($items[1]['entity_id'] == $current_contact_id) ? $items[0]['entity_id'] : $items[1]['entity_id'];
-      $related_contact = crm_core_contact_load($related_contact_id);
-      $contact_label = entity_label('crm_core_contact', $related_contact);
-
-      $related_contact_uri = entity_uri('crm_core_contact', $related_contact);
-      return array(0 => array('#markup' => l($contact_label, $related_contact_uri['path'])));
+      if (isset($items[0]['entity_id']) && isset($items[1]['entity_id'])) {
+        $related_contact_id = ($items[1]['entity_id'] == $current_contact_id) ? $items[0]['entity_id'] : $items[1]['entity_id'];
+        $related_contact = crm_core_contact_load($related_contact_id);
+        $contact_label = entity_label('crm_core_contact', $related_contact);
+        $related_contact_uri = entity_uri('crm_core_contact', $related_contact);
+        return array(0 => array('#markup' => l($contact_label, $related_contact_uri['path'])));
+      }
+      return array(0 => array('#markup' => ''));
       break;
   }
 }
