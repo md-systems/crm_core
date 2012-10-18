@@ -100,6 +100,13 @@ function crm_core_contact_type_access($op, $entity, $account, $entity_type) {
 }
 
 /**
+ * Create empty contact entity.
+ */
+function crm_core_contact_create($values) {
+  return entity_get_controller('crm_core_contact')->create($values);
+}
+
+/**
  * Implements hook_permission().
  */
 function crm_core_contact_permission() {
