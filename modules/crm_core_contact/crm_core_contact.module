@@ -101,6 +101,8 @@ function crm_core_contact_type_access($op, $entity, $account, $entity_type) {
 
 /**
  * Create empty contact entity.
+ *
+ * @deprecated since contacts moved to entity api.
  */
 function crm_core_contact_create($values) {
   return entity_get_controller('crm_core_contact')->create($values);
