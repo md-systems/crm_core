@@ -46,7 +46,7 @@ class CRMCoreContactUITestCase extends DrupalWebTestCase {
       'contact_name[und][0][given]' => $this->randomName(),
 //      'files[contact_image_und_0]' => drupal_realpath($file->uri),
     );
-    $this->drupalPost('crm/contact/add/household', $household_node, t('Save Contact'));
+    $this->drupalPost('crm/contact/add/household', $household_node, crm_core_contact_ui_save_contact_button_name('household'));
 
     // Assert we were redirected back to the list of contacts.
     $this->assertUrl('crm/contact');
@@ -64,7 +64,7 @@ class CRMCoreContactUITestCase extends DrupalWebTestCase {
       'contact_name[und][0][credentials]' => $this->randomName(),
 //      'files[contact_image_und_0]' => drupal_realpath($file->uri),
     );
-    $this->drupalPost('crm/contact/add/individual', $individual_node, t('Save Contact'));
+    $this->drupalPost('crm/contact/add/individual', $individual_node, crm_core_contact_ui_save_contact_button_name('individual'));
 
     // Assert we were redirected back to the list of contacts.
     $this->assertUrl('crm/contact');
@@ -78,7 +78,7 @@ class CRMCoreContactUITestCase extends DrupalWebTestCase {
       'contact_name[und][0][given]' => $this->randomName(),
 //      'files[contact_image_und_0]' => drupal_realpath($file->uri),
     );
-    $this->drupalPost('crm/contact/add/organization', $organization_node, t('Save Contact'));
+    $this->drupalPost('crm/contact/add/organization', $organization_node, crm_core_contact_ui_save_contact_button_name('organization'));
 
     // Assert we were redirected back to the list of contacts.
     $this->assertUrl('crm/contact');
@@ -90,7 +90,7 @@ class CRMCoreContactUITestCase extends DrupalWebTestCase {
     // We know that created nodes houshold is id 1, individual is no 2,
     // organization is no 3. But we should have better API to find contact by name.
     $household_node = $this->householdContactValues();
-    $this->drupalPost('crm/contact/1/edit', $household_node, t('Save Contact'));
+    $this->drupalPost('crm/contact/1/edit', $household_node, crm_core_contact_ui_save_contact_button_name('household'));
 
     // Assert we were redirected back to the list of contacts.
     $this->assertUrl('crm/contact/1');
@@ -107,7 +107,7 @@ class CRMCoreContactUITestCase extends DrupalWebTestCase {
 
     // Edit individual contact.
     $individual_node = $this->individualContactValues();
-    $this->drupalPost('crm/contact/2/edit', $individual_node, t('Save Contact'));
+    $this->drupalPost('crm/contact/2/edit', $individual_node, crm_core_contact_ui_save_contact_button_name('individual'));
 
     // Assert we were redirected back to the list of contacts.
     $this->assertUrl('crm/contact/2');
@@ -124,7 +124,7 @@ class CRMCoreContactUITestCase extends DrupalWebTestCase {
 
     // Edit organization contact.
     $organization_node = $this->organizationContactValues();
-    $this->drupalPost('crm/contact/3/edit', $organization_node, t('Save Contact'));
+    $this->drupalPost('crm/contact/3/edit', $organization_node, crm_core_contact_ui_save_contact_button_name('organization'));
 
     // Assert we were redirected back to the list of contacts.
     $this->assertUrl('crm/contact/3');
