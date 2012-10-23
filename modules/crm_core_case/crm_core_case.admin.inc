@@ -177,7 +177,7 @@ function crm_core_case_form($form, &$form_state, $case) {
   );
 
   // Show Delete button if we edit case.
-  if (!empty($case->cid) && crm_core_case_edit_access($case)) {
+  if (!empty($case->cid) && crm_core_case_delete_access($case)) {
     $form['actions']['delete'] = array(
       '#type' => 'submit',
       '#value' => t('Delete'),
@@ -210,7 +210,9 @@ function crm_core_case_form_submit($form, &$form_state) {
   drupal_set_message(t('Case %title saved.', array('%title' => crm_core_case_label($case))));
 }
 
-
+/**
+ * Redirect user on case delete form.
+ */
 function crm_core_case_form_submit_delete($form, &$form_state) {
   $destination = array();
   if (isset($_GET['destination'])) {

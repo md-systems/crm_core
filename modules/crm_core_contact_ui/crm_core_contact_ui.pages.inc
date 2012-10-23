@@ -87,6 +87,15 @@ function crm_core_contact_ui_form($form, &$form_state, $contact) {
     '#submit' => $submit + array('crm_core_contact_ui_form_submit'),
   );
 
+  // Show delete button if entity exists and user has appropriate permission
+  if (!empty($contact->contact_id) && entity_access('delete', 'crm_core_contact', $contact->contact_id)) {
+    $form['actions']['delete'] = array(
+      '#type' => 'submit',
+      '#value' => t('Delete'),
+      '#submit' => array('crm_core_contact_ui_form_submit_delete'),
+    );
+  }
+
   // We append the validate handler to #validate in case a form callback_wrapper
   // is used to add validate handlers earlier.
   $form['#validate'][] = 'crm_core_contact_ui_form_validate';
@@ -103,7 +112,6 @@ function crm_core_contact_ui_save_contact_button_name($contact_type) {
   ));
 }
 
-
 /**
  * Validation callback for crm_core_contact_ui_form().
  */
@@ -113,7 +121,6 @@ function crm_core_contact_ui_form_validate($form, &$form_state) {
   // Notify field widgets to validate their data.
   field_attach_form_validate('crm_core_contact', $contact, $form, $form_state);
 }
-
 
 /**
  * Submit callback for crm_core_contact_ui_form().
@@ -143,6 +150,19 @@ function crm_core_contact_ui_form_submit($form, &$form_state) {
   $form_state['redirect'] = ($create) ? 'crm/contact' : "crm/contact/{$contact->contact_id}";
 }
 
+/**
+ * Redirect user on case delete form.
+ */
+function crm_core_contact_ui_form_submit_delete($form, &$form_state) {
+  $destination = array();
+  if (isset($_GET['destination'])) {
+    $destination = drupal_get_destination();
+    unset($_GET['destination']);
+  }
+  $contact = $form_state['crm_core_contact'];
+  $uri = entity_uri('crm_core_contact', $contact);
+  $form_state['redirect'] = array($uri['path'] . '/delete', array('query' => $destination));
+}
 
 /**
  * Form for deleting a contact.
@@ -154,7 +174,6 @@ function crm_core_contact_ui_delete_form($form, &$form_state, $contact) {
     'crm/contact/' . $contact->contact_id, $description = NULL, $yes = t('Yes'), $no = t('No'));
 }
 
-
 /**
  * Submit callback for crm_core_contact_ui_delete_form().
  */
@@ -164,7 +183,6 @@ function crm_core_contact_ui_delete_form_submit($form, &$form_state) {
   }
   $form_state['redirect'] = 'crm/contact';
 }
-
 
 /**
  * Validate callback for crm_core_contact_ui_delete_form().

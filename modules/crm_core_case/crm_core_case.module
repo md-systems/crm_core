@@ -120,6 +120,13 @@ function crm_core_case_edit_access($case) {
       || (user_access('edit own crm_core_case entities of bundle ' . $case->type) && ($case->uid == $case->uid));
 }
 
+function crm_core_case_delete_access($case) {
+  global $user;
+  return user_access('administer crm_core_case entities')
+      || user_access('delete any crm_core_case entity')
+      || user_access('delete any crm_core_case entity of bundle ' . $case->type)
+      || (user_access('delete own crm_core_case entities of bundle ' . $case->type) && ($case->uid == $case->uid));
+}
 /**
  * Implements hook_permission().
  */

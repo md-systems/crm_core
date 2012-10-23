@@ -144,10 +144,13 @@ function crm_core_activity_access($op, $activity, $account = NULL, $entity_type 
        || user_access('view any crm_core_activity entity of bundle ' . $activity_type, $account));
     case 'edit':
     case 'update':
-    case 'delete':
       return (user_access('administer crm_core_activity entities', $account)
        || user_access('edit any crm_core_activity entity', $account)
        || user_access('edit any crm_core_activity entity of bundle ' . $activity_type));
+    case 'delete':
+      return (user_access('administer crm_core_activity entities', $account)
+       || user_access('delete any crm_core_activity entity', $account)
+       || user_access('delete any crm_core_activity entity of bundle ' . $activity_type));
   }
 }
 

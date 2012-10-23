@@ -189,9 +189,12 @@ function crm_core_contact_access($op, $contact, $account = NULL, $entity_type = 
       return ($administer_contact || $view_any_contact || $view_type_contact);
     break;
     case 'edit':
-    case 'delete':
       $edit_any_contact = user_access('edit any crm_core_contact entity', $account);
       $edit_type_contact = user_access('edit any crm_core_contact entity of bundle ' . $contact_type, $account);
+      return ($administer_contact || $edit_any_contact || $edit_type_contact);
+    case 'delete':
+      $edit_any_contact = user_access('delete any crm_core_contact entity', $account);
+      $edit_type_contact = user_access('delete any crm_core_contact entity of bundle ' . $contact_type, $account);
       return ($administer_contact || $edit_any_contact || $edit_type_contact);
     break;
     case 'revert':

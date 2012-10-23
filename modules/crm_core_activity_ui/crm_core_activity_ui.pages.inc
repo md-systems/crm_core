@@ -75,8 +75,8 @@ function crm_core_activity_form($form, &$form_state, $activity) {
     '#submit' => $submit + array('crm_core_activity_form_submit'),
   );
 
-  // Show Delete button if we edit activity.
-  if ($form_state['op'] == 'edit') {
+  // Show delete button if entity exists and user has appropriate permission
+  if ($form_state['op'] == 'edit' && entity_access('delete', 'crm_core_activity', $activity)) {
     $form['actions']['delete'] = array(
       '#type' => 'submit',
       '#value' => t('Delete'),
