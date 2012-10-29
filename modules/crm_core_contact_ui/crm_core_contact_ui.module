@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @file
+ * Provides a user interface for CRM Core Contact.
+ */
 
 /**
  * Implements hook_menu().
@@ -81,7 +85,7 @@ function crm_core_contact_ui_menu() {
 
   /**
    * Contacts
-   */  
+   */
   $items['crm/contact/%crm_core_contact'] = array(
     'title' => 'Contact',
     'page callback' => 'crm_core_contact_view',

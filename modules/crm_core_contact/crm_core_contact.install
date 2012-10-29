@@ -2,9 +2,8 @@
 
 /**
  * @file
- * Install, update and uninstall functions for the contact module.
+ * Install, update and uninstall functions for the CRM Core Contact module.
  */
-
 
 /**
  * Implements hook_install().

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Provides contact entity and integration.
+ *  Provides default CRM Core Contact entities and the ability to create more.
  */
 
 // Integration with context.

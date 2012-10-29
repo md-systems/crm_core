@@ -1,5 +1,5 @@
 name = CRM Core Contact UI
-description = User Interface for CRM Core contacts.
+description = Provides a user interface for CRM Core Contact.
 package = CRM
 core = 7.x
 configure = admin/structure/crm/contact-types
@@ -8,7 +8,7 @@ configure = admin/structure/crm/contact-types
 ; Dependencies
 ; =======================
 
-; Core Dependencies
+; Core dependencies
 dependencies[] = crm_core_contact
 dependencies[] = crm_ui
 dependencies[] = search
@@ -17,7 +17,7 @@ dependencies[] = search
 ; Module Files
 ; =======================
 
-; Base Files
+; Base files
 files[] = crm_core_contact_ui.module
 
 ; Views include

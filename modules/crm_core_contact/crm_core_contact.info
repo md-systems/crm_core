@@ -1,5 +1,5 @@
 name = CRM Core Contact
-description = Provide contact entity.
+description = Provides default CRM Core Contact entities and the ability to create more.
 package = CRM
 core = 7.x
 
@@ -8,15 +8,15 @@ core = 7.x
 ; Dependencies
 ; =======================
 
-; Core Dependencies
+; Core dependencies
 dependencies[] = crm_core
 
-; Contrib Dependencies
+; Contrib dependencies
 dependencies[] = entity
 dependencies[] = field_ui
 dependencies[] = views
 
-; Field Dependencies
+; Field dependencies
 dependencies[] = image
 dependencies[] = addressfield
 dependencies[] = email
@@ -30,7 +30,7 @@ dependencies[] = name
 ; Module Files
 ; =======================
 
-; Base Files
+; Base files
 files[] = crm_core_contact.test
 
 ; Module includes
