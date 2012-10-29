@@ -1,7 +1,6 @@
 name = CRM Core Contact
 description = Provide contact entity.
 package = CRM
-version = VERSION
 core = 7.x
 
 

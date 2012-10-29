@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Provides basic CRM functionality.
+ * Provides basic functionality for a Drupal CRM.
  */
 
 
@@ -21,11 +21,6 @@ function crm_core_hook_info() {
  * Return permission names for a given entity type.
  *
  * Copied from commerce_entity_access_permissions().
- *
- * @param string $entity_type
- *
- * @return
- *   An associative array of entity permissions
  */
 function crm_core_entity_access_permissions($entity_type) {
   $entity_info = entity_get_info($entity_type);
@@ -68,7 +63,7 @@ function crm_core_entity_access_permissions($entity_type) {
     foreach ($entity_info['bundles'] as $bundle_name => $bundle_info) {
       $permissions += crm_core_bundle_access_permissions($bundle_name, $bundle_info, $entity_type, $entity_info);
     }
-    
+
   }
 
   return $permissions;
@@ -78,9 +73,8 @@ function crm_core_entity_access_permissions($entity_type) {
  * Define per bundle permissions
  */
 function crm_core_bundle_access_permissions($bundle_name, $bundle_info, $entity_type, $entity_info = array()) {
-  
   $labels = $entity_info['permission labels'];
-  
+
   $permissions['create ' . $entity_type . ' entities of bundle ' . $bundle_name] = array(
     'title' => t('Create %bundle @entity_type', array('@entity_type' => $labels['plural'], '%bundle' => $bundle_info['label'])),
   );
@@ -111,6 +105,6 @@ function crm_core_bundle_access_permissions($bundle_name, $bundle_info, $entity_
     'title' => t('View any %bundle @entity_type', array('@entity_type' => $labels['singular'], '%bundle' => $bundle_info['label'])),
     'restrict access' => TRUE,
   );
-  
-  return $permissions;    
+
+  return $permissions;
 }

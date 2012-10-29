@@ -1,7 +1,6 @@
 name = CRM Core Activity UI
 description = User Interface for activities.
 package = CRM
-version = VERSION
 core = 7.x
 
 

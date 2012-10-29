@@ -1,7 +1,6 @@
 name = CRM Organic Group Synchronization
 description = Synchronizes organic groups to CRM contacts
 package = CRM
-version = VERSION
 core = 7.x
 configure = admin/structure/crm/og_sync
 
