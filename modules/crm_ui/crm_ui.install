@@ -8,7 +8,6 @@ function crm_ui_install() {
 
   // Rebuild menu so Activity Types menu element will be placed under CRM.
   menu_cache_clear_all();
-  db_query('DELETE FROM {menu_links}');
   menu_rebuild();
 
   $plid = crm_ui_get_crm_mlid();
