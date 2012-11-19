@@ -32,6 +32,16 @@ function crm_ui_menu() {
     'file' => 'pages/crm_ui.pages.inc',
   );
 
+  $items['admin/crm'] = array(
+      'title' => 'CRM',
+      'description' => 'CRM Core module and feature settings.',
+      'position' => 'right',
+      'page callback' => 'system_admin_menu_block_page',
+      'access arguments' => array('access administration pages'),
+      'file' => 'system.admin.inc',
+      'file path' => drupal_get_path('module', 'system'),
+  );
+
   return $items;
 }
 
