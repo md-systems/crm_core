@@ -1,0 +1,97 @@
+<?php 
+
+/**
+ * @file
+ * Provides a simple reporting interface for CRM Core and related modules.
+ */
+
+/**
+ * Implements hook_hook_info().
+ */
+function crm_core_report_hook_info() {
+  $hooks = array(
+    // registers reports from submodules within CRM Core, for central display
+    'crm_core_report_register' => array(
+      'group' => 'crm_core_report',
+    ),
+  );
+}
+
+/**
+ * Implements hook_permission().
+ */
+function crm_core_report_permission() {
+  return array(
+    'view crm report index' => array(
+      'title' => t('View CRM Core report index'),
+      'description' => t('Use dashboard.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function crm_core_report_menu() {
+  
+  $items = array();
+
+  /**
+   * Provides a listing of all reports registered for CRM Core
+   */
+  $items['crm/report'] = array(
+    'title' => 'Reports',
+    'page callback' => 'crm_core_report_list',
+    'access arguments' => array('view crm report index'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'pages/crm_core_report.pages.inc',
+  );
+
+  return $items;
+
+}
+
+/**
+ * Implements hook_theme().
+ */
+function crm_core_report_theme() {
+  
+  // we want a themable function for 
+  // - report items
+  // - widgets
+  // - report index
+  
+  return array(
+    'crm_core_report_index' => array(
+      'template' => 'crm-core-report-index',
+      'variables' => array('report_index' => NULL),
+      'path'			=> drupal_get_path('module', 'crm_core_report') . '/templates',
+    ),
+    'crm_core_report_index_item' => array(
+      'template' => 'crm-core-report-index-item',
+      'variables' => array('title' => NULL, 'report' => NULL),
+      'path'			=> drupal_get_path('module', 'crm_core_report') . '/templates',
+    ),
+  );
+  
+}
+
+
+/**
+ * Constructs a list of registered reports and widgets for CRM Core
+ * 
+ * Reports registered via this hook will be listed on the reports page
+ * and should include appropriate access controls, unless you want
+ * everyone with access to the main reports page to see them.
+ */
+function hook_crm_core_report_register(){
+  $reports = array();
+  foreach (module_implements('crm_core_report_register') as $module) {
+    $function = $module . '_crm_core_report_register';
+    $reports = array_merge($reports, $function());
+  }
+  return $reports;
+}
+
+
+
