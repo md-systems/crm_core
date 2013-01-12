@@ -706,19 +706,62 @@ function crm_core_contact_delete_multiple($contact_ids = array()) {
 /**
  * View a single contact record.
  */
-function crm_core_contact_view($contact) {
+function crm_core_contact_view($contact, $view_mode = 'full') {
   $contact->content = array();
-  $view_mode = 'full';
   $langcode = LANGUAGE_NONE;
   field_attach_prepare_view('crm_core_contact', array($contact->contact_id => $contact), $view_mode);
   // Add content added by fields.
   $contact->content += field_attach_view('crm_core_contact', $contact, $view_mode);
   module_invoke_all('entity_view', $contact, 'crm_core_contact', $view_mode, $langcode);
+  $contact->content += array(
+    '#theme'         => 'contact',
+    '#contact'	     => $contact,
+    '#contact_data'	 => $contact->content,
+    '#cid'	         => $contact->contact_id,
+    '#type'          => $contact->type,
+    '#view_mode'     => $view_mode,
+    '#language'      => $langcode,
+  );  
   $build = $contact->content;
-  unset($contact->content);
   return $build;
+
+  return $contact->content;
 }
 
+/**
+ * Implementation of hook_theme
+ */
+function crm_core_contact_theme($existing, $type, $theme, $path) {
+  return array(
+    'contact' => array(
+      'variables' => array('contact' => null, 'type' => null, 'contact_data' => null, 'cid' => null, 'view_mode' => null),
+      'template' => 'contact'
+    ),
+  );
+}
+
+/**
+ * Process variables for contact.tpl.php
+ *
+ * This function simply adds template suggestions for various 
+ * contact types.
+ *
+ */
+function template_preprocess_contact(&$variables) {
+  
+  // hide the label on the name field, when we are looking at something
+  // besides a full view mode
+  if($variables['view_mode'] !== 'full'){
+    $variables['contact_data']['contact_name']['#label_display'] = 'hidden';
+  }
+  
+  // add classes based on the type of contact
+  $variables['classes_array'][] = 'contact-' . $variables['type'];
+  
+  // add template suggestions
+  $variables['theme_hook_suggestions'][] = 'contact__' . $variables['type'];
+  
+}
 
 /**
  * Title callback for a contact.
