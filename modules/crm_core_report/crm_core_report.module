@@ -39,7 +39,7 @@ function crm_core_report_menu() {
   /**
    * Provides a listing of all reports registered for CRM Core
    */
-  $items['crm/report'] = array(
+  $items['crm/reports'] = array(
     'title' => 'CRM Reports',
     'page callback' => 'crm_core_report_list',
     'access arguments' => array('view crm report index'),
