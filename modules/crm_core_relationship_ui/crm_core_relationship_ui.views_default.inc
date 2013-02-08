@@ -78,6 +78,7 @@ function crm_core_relationship_ui_views_default_views() {
   $handler->display->display_options['fields']['crm_core_relationship_status_1']['table'] = 'field_data_crm_core_relationship_status';
   $handler->display->display_options['fields']['crm_core_relationship_status_1']['field'] = 'crm_core_relationship_status';
   $handler->display->display_options['fields']['crm_core_relationship_status_1']['label'] = 'Status (Link)';
+  $handler->display->display_options['fields']['crm_core_relationship_status_1']['exclude'] = TRUE;
   $handler->display->display_options['fields']['crm_core_relationship_status_1']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['crm_core_relationship_status_1']['alter']['text'] = 'Toggle status';
   $handler->display->display_options['fields']['crm_core_relationship_status_1']['alter']['make_link'] = TRUE;
