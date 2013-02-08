@@ -13,7 +13,7 @@ function crm_core_relationship_install() {
   $relation_types_info = array(
     array(
       'relation_type' => 'crm_friend',
-      'label' => st('Friend'),
+      'label' => st('Friend of'),
       'source_bundles' => array('crm_core_contact:individual'),
       'r_unique' => TRUE,
     ),
@@ -73,4 +73,15 @@ function crm_core_relationship_uninstall() {
      // finally delete the relationshp_type
      relation_type_delete($type);
    }
+}
+
+/**
+ * Adding 'status' field to cmr relations.
+ */
+function crm_core_relationship_update_7000() {
+  watchdog('update', 'Starting ' . __FUNCTION__ . ' update.');
+  foreach (crm_core_relationship_get_relationships() as $crm_relation) {
+    crm_core_relationship_field_attach_create_bundle('relation', $crm_relation->relation_type);
+  }
+  watchdog('update', 'Finished ' . __FUNCTION__ . ' update.');
 }

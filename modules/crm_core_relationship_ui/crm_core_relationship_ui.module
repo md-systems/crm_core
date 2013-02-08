@@ -123,6 +123,14 @@ function crm_core_relationship_ui_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['relation/%relation/toggle_status'] = array(
+    'title' => 'Toggle relation status',
+    'access arguments' => array('edit relations'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('relation_toggle_form', 1),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'crm_core_relationship_ui.pages.inc',
+  );
 
   return $items;
 }
@@ -195,8 +203,13 @@ function crm_core_relationship_ui_field_formatter_info_alter(&$info) {
     'field types' => array('relation_endpoint'),
     'module' => 'crm_core_relationship_ui',
   );
+  $info['contact_relationship_human'] = array(
+    'label' => t('Related Contact(Human readable)'),
+    'field types' => array('relation_endpoint'),
+    'module' => 'crm_core_relationship_ui',
+  );
   $info['contact_relationship_view'] = array(
-    'label' => t('Related Contact Relashions table view'),
+    'label' => t('Related Contact(Table)'),
     'field types' => array('relation_endpoint'),
     'module' => 'crm_core_relationship_ui',
   );
@@ -207,9 +220,9 @@ function crm_core_relationship_ui_field_formatter_info_alter(&$info) {
  */
 function crm_core_relationship_ui_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
    switch ($display['type']) {
-    case 'contact_relationship':
+    case 'contact_relationship_view':
       // getting the contact id from the url
-      $current_contact_id = arg(2);
+      $current_contact_id = $display['views_view']->args[0];
       $related_contact_id = ($items[1]['entity_id'] == $current_contact_id) ? $items[0]['entity_id'] : $items[1]['entity_id'];
       $related_contact = crm_core_contact_load($related_contact_id);
       $contact_label = entity_label('crm_core_contact', $related_contact);
@@ -229,18 +242,36 @@ function crm_core_relationship_ui_field_formatter_view($entity_type, $entity, $f
           '#rows' => $rows,
         );
       break;
-    case 'contact_relationship_view':
+    case 'contact_relationship':
       // getting the contact id from the url
-      $current_contact_id = arg(2);
+      $current_contact_id = $display['views_view']->args[0];
       if (isset($items[0]['entity_id']) && isset($items[1]['entity_id'])) {
         $related_contact_id = ($items[1]['entity_id'] == $current_contact_id) ? $items[0]['entity_id'] : $items[1]['entity_id'];
         $related_contact = crm_core_contact_load($related_contact_id);
         $contact_label = entity_label('crm_core_contact', $related_contact);
         $related_contact_uri = entity_uri('crm_core_contact', $related_contact);
-        return array(0 => array('#markup' => l($contact_label, $related_contact_uri['path'])));
+        return array(array('#markup' => l($contact_label, $related_contact_uri['path'])));
       }
-      return array(0 => array('#markup' => ''));
+      return array(array('#markup' => ''));
       break;
+     case 'contact_relationship_human':
+       $relation_label = strtolower(crm_core_relationship_get_type_label($entity));
+       $current_contact_id = $display['views_view']->args[0];
+       $current_contact = crm_core_contact_load($current_contact_id);
+       $current_contact_label = entity_label('crm_core_contact', $current_contact);
+       $current_contact_uri = entity_uri('crm_core_contact', $current_contact);
+       $current_contact_link = l($current_contact_label, $current_contact_uri['path']);
+       $related_contact_id = ($items[1]['entity_id'] == $current_contact_id) ? $items[0]['entity_id'] : $items[1]['entity_id'];
+       $related_contact = crm_core_contact_load($related_contact_id);
+       $related_contact_label = entity_label('crm_core_contact', $related_contact);
+       $related_contact_uri = entity_uri('crm_core_contact', $related_contact);
+       $related_contact_link = l($related_contact_label, $related_contact_uri['path']);
+       return array(array('#markup' => t('!current_contact is a @relation !related_contact', array(
+         '!current_contact' => $current_contact_link,
+         '@relation' => $relation_label,
+         '!related_contact' => $related_contact_link,
+       ))));
+       break;
   }
 }
 

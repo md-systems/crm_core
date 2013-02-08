@@ -289,3 +289,28 @@ function crm_core_relationship_get_type_label($relation, $reverse = FALSE) {
 function crm_core_relation_create($values) {
   return new Entity($values, 'relation');
 }
+
+/**
+ * Implements hook_field_attach_create_bundle.
+ */
+function crm_core_relationship_field_attach_create_bundle($relation_type, $relation_bundle) {
+  if (crm_core_relationship_is_relationship_type($relation_bundle)) {
+    module_load_include('inc', 'crm_core_relationship', 'crm_core_relationship.fields');
+    $fields = _crm_core_relationship_field_default_fields();
+    // Create the fields if they don't exist
+    foreach ($fields as $field) {
+      $info = field_info_field($field['field_name']);
+      if (empty($info)) {
+        field_create_field($field);
+      }
+    }
+    $field_instances = _crm_core_relationship_field_status_instance($relation_bundle);
+    // Create field instances if they don't exist
+    foreach ($field_instances as $instance) {
+      $info_instance = field_info_instance('relation', $instance['field_name'], $relation_bundle);
+      if (empty($info_instance)) {
+        field_create_instance($instance);
+      }
+    }
+  }
+}
