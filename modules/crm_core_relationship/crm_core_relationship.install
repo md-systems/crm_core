@@ -76,18 +76,29 @@ function crm_core_relationship_uninstall() {
 }
 
 /**
- * Adding 'status' field to cmr relations.
+ * Adding "status" field to crm_core relationships.
  */
 function crm_core_relationship_update_7000() {
   watchdog('update', 'Starting ' . __FUNCTION__ . ' update.');
+  // Attach "status" field to existing crm_core relationships.
   foreach (crm_core_relationship_get_relationships() as $crm_relation) {
     crm_core_relationship_field_attach_create_bundle('relation', $crm_relation->relation_type);
   }
+  // Rename "Friend" relationship to "Friend of", if not renamed yet.
   $crm_friend = relation_type_load('crm_friend');
   if ($crm_friend->label == 'Friend') {
     $crm_friend->label = st('Friend of');
     $crm_friend->reverse_label = st('Friend of');
     relation_type_save($crm_friend, array('relation_type'));
+  }
+  // Fill in "status" field for existing relationships.
+  $rids = db_select('relation', 'r')->fields('r', array('rid'))->execute()->fetchCol();
+  $relations = relation_load_multiple($rids);
+  foreach ($relations as $relationship) {
+    if (crm_core_relationship_is_relationship_type($relationship->relation_type)) {
+      $relationship->crm_core_relationship_status[LANGUAGE_NONE][0]['value'] = 1;
+      field_attach_update('relation', $relationship);
+    }
   }
   watchdog('update', 'Finished ' . __FUNCTION__ . ' update.');
 }
