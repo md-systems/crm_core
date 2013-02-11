@@ -396,7 +396,7 @@ function crm_core_activity_crm_core_contact_delete($crm_core_contact) {
   }
 
   if (!empty($activities_to_remove)) {
-    watchdog('crm_core_activity', 'Deleted !count activities due to delection contact with id=%contact_id.',
+    watchdog('crm_core_activity', 'Deleted !count activities due to deleting contact id=%contact_id.',
       array('!count' => count($activities_to_remove),
         '%contact_id' => $crm_core_contact->contact_id),
       WATCHDOG_INFO);
