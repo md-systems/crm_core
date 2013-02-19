@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Default display of reports for CRM Core
@@ -17,19 +16,13 @@
  *   - widgets: A list of widgets indexed by CRM Core. These can be ignored
  *     in this template, or used if you want to be funny.
  */
-
 ?>
-<h3><?php print $title; ?></h3>
-<div class="item-info">
-	<?php 
-    $reports = array();
-    foreach($report as $item => $val){
-      $reports[] = l(t($val['title']), $val['path']) . '<br>' . t($val['description']);
-    }
-    if(sizeof($reports) > 0) {
-  	  print theme_item_list(array('items' => $reports, 'title' => NULL, 'type' => 'ul', 'attributes' => array())); 
-    }
-  ?>
+<div class="crm_core_reports">
+  <?php foreach($report_items as $item): ?>
+  <div class="item-info">
+  	<?php print $item; ?>
+  </div>
+  <?php endforeach; ?>
 </div>
 
 

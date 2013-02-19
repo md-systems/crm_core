@@ -60,22 +60,34 @@ function crm_core_report_theme() {
   // - report items
   // - widgets
   // - report index
-  
   return array(
     'crm_core_report_index' => array(
       'template' => 'crm-core-report-index',
-      'variables' => array('report_index' => NULL),
-      'path'			=> drupal_get_path('module', 'crm_core_report') . '/templates',
-    ),
-    'crm_core_report_index_item' => array(
-      'template' => 'crm-core-report-index-item',
-      'variables' => array('title' => NULL, 'report' => NULL),
+      'variables' => array('reports' => NULL, 'report_items' => array()),
       'path'			=> drupal_get_path('module', 'crm_core_report') . '/templates',
     ),
   );
-  
 }
 
+/**
+ * Preprocess report index
+ */
+function crm_core_report_preprocess_crm_core_report_index(&$variables) {
+  $report_items = array();
+  $reports = $variables['reports'];
+  if (!empty($reports)) {
+    foreach ($reports as $key => $item) {
+      $items = array();
+      foreach ($item['reports'] as $report) {
+        $items[] = l($report['title'], $report['path']) . '<br />' . $report['description'];
+      }
+      $report_items[] = theme('item_list', array('items' => $items, 'title' => $item['title']));
+       
+    }
+  }
+  
+  $variables['report_items'] = $report_items;
+}
 
 /**
  * Constructs a list of registered reports and widgets for CRM Core
