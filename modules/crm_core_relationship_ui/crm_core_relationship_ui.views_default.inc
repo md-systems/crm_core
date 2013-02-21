@@ -28,6 +28,13 @@ function crm_core_relationship_ui_views_default_views() {
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['pager']['options']['id'] = '0';
   $handler->display->display_options['style_plugin'] = 'table';
+  /* No results behavior: Global: Text area */
+  $handler->display->display_options['empty']['area']['id'] = 'area';
+  $handler->display->display_options['empty']['area']['table'] = 'views';
+  $handler->display->display_options['empty']['area']['field'] = 'area';
+  $handler->display->display_options['empty']['area']['empty'] = TRUE;
+  $handler->display->display_options['empty']['area']['content'] = 'No relations yet';
+  $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
   /* Field: Relation: endpoints */
   $handler->display->display_options['fields']['endpoints']['id'] = 'endpoints';
   $handler->display->display_options['fields']['endpoints']['table'] = 'field_data_endpoints';
@@ -80,7 +87,7 @@ function crm_core_relationship_ui_views_default_views() {
   $handler->display->display_options['fields']['crm_core_relationship_status_1']['label'] = 'Status (Link)';
   $handler->display->display_options['fields']['crm_core_relationship_status_1']['exclude'] = TRUE;
   $handler->display->display_options['fields']['crm_core_relationship_status_1']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['crm_core_relationship_status_1']['alter']['text'] = 'Toggle status';
+  $handler->display->display_options['fields']['crm_core_relationship_status_1']['alter']['text'] = 'Mark as inactive';
   $handler->display->display_options['fields']['crm_core_relationship_status_1']['alter']['make_link'] = TRUE;
   $handler->display->display_options['fields']['crm_core_relationship_status_1']['alter']['path'] = 'relation/[rid]/toggle_status?destination=crm/contact/[endpoints_1]/relationships';
   $handler->display->display_options['fields']['crm_core_relationship_status_1']['type'] = 'list_key';
@@ -128,12 +135,81 @@ function crm_core_relationship_ui_views_default_views() {
   );
 
   /* Display: Block. Active Relationships. */
-  $handler = $view->new_display('block', 'Block. Active Relationships.', 'block_1');
+  $handler = $view->new_display('block', 'Block. Active Relationships.', 'active');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
 
   /* Display: Block. Inactive Relationships. */
-  $handler = $view->new_display('block', 'Block. Inactive Relationships.', 'block_2');
+  $handler = $view->new_display('block', 'Block. Inactive Relationships.', 'inactive');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Relation: endpoints */
+  $handler->display->display_options['fields']['endpoints']['id'] = 'endpoints';
+  $handler->display->display_options['fields']['endpoints']['table'] = 'field_data_endpoints';
+  $handler->display->display_options['fields']['endpoints']['field'] = 'endpoints';
+  $handler->display->display_options['fields']['endpoints']['label'] = 'Contact';
+  $handler->display->display_options['fields']['endpoints']['hide_alter_empty'] = FALSE;
+  $handler->display->display_options['fields']['endpoints']['click_sort_column'] = 'entity_type';
+  $handler->display->display_options['fields']['endpoints']['type'] = 'contact_relationship_human';
+  $handler->display->display_options['fields']['endpoints']['delta_offset'] = '0';
+  /* Field: Relation: Create Date */
+  $handler->display->display_options['fields']['created']['id'] = 'created';
+  $handler->display->display_options['fields']['created']['table'] = 'relation';
+  $handler->display->display_options['fields']['created']['field'] = 'created';
+  $handler->display->display_options['fields']['created']['label'] = 'Created';
+  $handler->display->display_options['fields']['created']['hide_alter_empty'] = FALSE;
+  $handler->display->display_options['fields']['created']['date_format'] = 'short';
+  /* Field: Relation: Rid */
+  $handler->display->display_options['fields']['rid']['id'] = 'rid';
+  $handler->display->display_options['fields']['rid']['table'] = 'relation';
+  $handler->display->display_options['fields']['rid']['field'] = 'rid';
+  $handler->display->display_options['fields']['rid']['label'] = '';
+  $handler->display->display_options['fields']['rid']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['rid']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['rid']['hide_alter_empty'] = FALSE;
+  $handler->display->display_options['fields']['rid']['separator'] = '';
+  /* Field: Relation: endpoints */
+  $handler->display->display_options['fields']['endpoints_1']['id'] = 'endpoints_1';
+  $handler->display->display_options['fields']['endpoints_1']['table'] = 'field_data_endpoints';
+  $handler->display->display_options['fields']['endpoints_1']['field'] = 'endpoints';
+  $handler->display->display_options['fields']['endpoints_1']['label'] = 'Contact ID';
+  $handler->display->display_options['fields']['endpoints_1']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['endpoints_1']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['endpoints_1']['alter']['text'] = '[endpoints_1-entity_id]';
+  $handler->display->display_options['fields']['endpoints_1']['click_sort_column'] = 'entity_type';
+  $handler->display->display_options['fields']['endpoints_1']['type'] = 'relation_endpoint_full';
+  $handler->display->display_options['fields']['endpoints_1']['delta_offset'] = '0';
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['label'] = 'Edit';
+  $handler->display->display_options['fields']['nothing']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = 'Edit';
+  $handler->display->display_options['fields']['nothing']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['nothing']['alter']['path'] = 'relation/[rid]/edit';
+  /* Field: Relation: Status */
+  $handler->display->display_options['fields']['crm_core_relationship_status_1']['id'] = 'crm_core_relationship_status_1';
+  $handler->display->display_options['fields']['crm_core_relationship_status_1']['table'] = 'field_data_crm_core_relationship_status';
+  $handler->display->display_options['fields']['crm_core_relationship_status_1']['field'] = 'crm_core_relationship_status';
+  $handler->display->display_options['fields']['crm_core_relationship_status_1']['label'] = 'Status (Link)';
+  $handler->display->display_options['fields']['crm_core_relationship_status_1']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['crm_core_relationship_status_1']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['crm_core_relationship_status_1']['alter']['text'] = 'Mark as active';
+  $handler->display->display_options['fields']['crm_core_relationship_status_1']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['crm_core_relationship_status_1']['alter']['path'] = 'relation/[rid]/toggle_status?destination=crm/contact/[endpoints_1]/relationships';
+  $handler->display->display_options['fields']['crm_core_relationship_status_1']['type'] = 'list_key';
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing_1']['id'] = 'nothing_1';
+  $handler->display->display_options['fields']['nothing_1']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing_1']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing_1']['label'] = 'Actions';
+  $handler->display->display_options['fields']['nothing_1']['alter']['text'] = '[nothing] | [crm_core_relationship_status_1]';
+  /* Field: Relation: Status */
+  $handler->display->display_options['fields']['crm_core_relationship_status']['id'] = 'crm_core_relationship_status';
+  $handler->display->display_options['fields']['crm_core_relationship_status']['table'] = 'field_data_crm_core_relationship_status';
+  $handler->display->display_options['fields']['crm_core_relationship_status']['field'] = 'crm_core_relationship_status';
+  $handler->display->display_options['fields']['crm_core_relationship_status']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['crm_core_relationship_status']['type'] = 'list_key';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Global: Combine fields filter */

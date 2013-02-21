@@ -155,24 +155,15 @@ function crm_core_relationship_form_after_build(&$form, &$form_state) {
 function crm_core_relationship_ui_contact_relationships($crm_contact, $crm_relationship_type = NULL) {
   // Set page title.
   drupal_set_title(t('Relationships of !contact', array('!contact' => crm_core_contact_title($crm_contact))));
-
   $contact_id = entity_id('crm_core_contact', $crm_contact);
-
-  $active_content = views_embed_view('crm_relationships_by_contact', 'block_1', $contact_id);
-  $inactive_content = views_embed_view('crm_relationships_by_contact', 'block_2', $contact_id);
-
-  if (!empty($inactive_content)) {
-    $content = array(
-      'active_header' => array('#markup' => '<h3>' . t('Active Relationships') . '</h3>'),
-      'active' => array('#markup' => $active_content),
-      'inactive_header' => array('#markup' => '<h3>' . t('Inactive Relationships') . '</h3>'),
-      'inactive' => array('#markup' => $inactive_content),
-    );
-  }
-  else {
-    $content['active'] = array('#markup' => $active_content);
-  }
-
+  $active_content = views_embed_view('crm_relationships_by_contact', 'active', $contact_id);
+  $inactive_content = views_embed_view('crm_relationships_by_contact', 'inactive', $contact_id);
+  $content = array(
+    'active_header' => array('#markup' => '<h3>' . t('Active Relationships') . '</h3>'),
+    'active' => array('#markup' => $active_content),
+    'inactive_header' => array('#markup' => '<h3>' . t('Inactive Relationships') . '</h3>'),
+    'inactive' => array('#markup' => $inactive_content),
+  );
   return $content;
 }
 
