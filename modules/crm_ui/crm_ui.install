@@ -5,19 +5,42 @@
  */
 function crm_ui_install() {
   db_query("UPDATE {system} SET weight = 15 WHERE name = 'crm_ui'");
-
+  $menus = crm_core_ui_get_menus();
+  foreach($menus as $menu) {
+    menu_save($menu);
+  }
   // Rebuild menu so Activity Types menu element will be placed under CRM.
-  menu_cache_clear_all();
   menu_rebuild();
+}
 
-  $plid = crm_ui_get_crm_mlid();
-  
+/**
+ * Implements hook_enable().
+ */
+function crm_ui_enable() {
+  db_delete('block')->condition('delta', 'crm-core-menu')->execute();
+  $fields = array( 'module', 'delta', 'theme', 'status', 'weight', 'region', 'custom', 'visibility', 'pages', 'title', 'cache');
+  $values = array( 'menu', 'crm-core-menu', 'bartik', '1', '0', 'sidebar_first', '0', '0', '', '', '-1');
+  db_insert('block')->fields($fields, $values)->execute();
+
   $item = array(
-    'link_path' => 'crm/dashboard',
+    'link_path' => 'crm',
     'link_title' => 'Dashboard',
-    'menu_name' => 'navigation',
-    'plid' => $plid,
-    'weight' => 1,
+    'menu_name' => 'crm-core-menu',
+    'weight' => 0,
   );
   menu_link_save($item);
+}
+
+/**
+ * Implements hook_disable().
+ */
+function crm_ui_disable() {
+  db_delete('block')->condition('delta', 'crm-core-menu')->execute();
+  variable_del('crm_ui_plid');
+  $links = menu_load_links('crm-core-menu');
+  foreach ($links as $link) {
+    if ($link['link_path'] == 'crm') {
+      menu_link_delete($link['mlid']);
+    }
+  }
 }

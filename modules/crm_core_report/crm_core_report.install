@@ -2,12 +2,12 @@
 /**
  * Implements hook_enable().
  */
-function crm_core_contact_ui_enable() {
+function crm_core_report_enable() {
   $item = array(
-    'link_path' => 'crm/contact',
-    'link_title' => 'Contacts',
+    'link_path' => 'crm/reports',
+    'link_title' => 'Reports',
     'menu_name' => 'crm-core-menu',
-    'weight' => 1,
+    'weight' => 2,
   );
   menu_link_save($item);
 }
@@ -15,10 +15,10 @@ function crm_core_contact_ui_enable() {
 /**
  * Implements hook_disable().
  */
-function crm_core_contact_ui_disable() {
+function crm_core_report_disable() {
   $links = menu_load_links('crm-core-menu');
   foreach ($links as $link) {
-    if ($link['link_path'] == 'crm/contact') {
+    if ($link['link_path'] == 'crm/reports') {
       menu_link_delete($link['mlid']);
     }
   }

@@ -81,13 +81,6 @@ function crm_ui_permission() {
 }
 
 /**
- * Implements hook_disable().
- */
-function crm_ui_disable() {
-  variable_del('crm_ui_plid');
-}
-
-/**
  * Implements hook_theme().
  */
 function crm_ui_theme() {
@@ -218,4 +211,21 @@ function crm_ui_get_crm_mlid() {
   }
 
   return $plid;
+}
+
+/**
+ * Contains custom menu definitions of CRM Core.
+ *
+ * @return array
+ *  Assoc array of menu items, keyed by menu name.
+ */
+function crm_core_ui_get_menus() {
+  $t = get_t();
+  return array(
+    'crm-core-menu' => array(
+      'menu_name' => 'crm-core-menu',
+      'title' => $t('CRM Core Menu'),
+      'description' => $t('Provides access to various features and functions within CRM Core.'),
+    )
+  );
 }
