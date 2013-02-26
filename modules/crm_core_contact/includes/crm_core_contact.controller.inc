@@ -50,7 +50,7 @@ class CRMCoreContactController extends EntityAPIController {
    */
   protected function saveRevision($entity) {
     $entity->log = '';
-
+    $entity->is_new_revision = TRUE;
     return parent::saveRevision($entity);
   }
 }
