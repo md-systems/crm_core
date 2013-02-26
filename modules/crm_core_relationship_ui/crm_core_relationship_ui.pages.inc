@@ -145,29 +145,6 @@ function crm_core_relationship_form_after_build(&$form, &$form_state) {
 }
 
 /**
- * Return a list of relationships for this contact.
- *
- * @param $crm_core_contact
- *   Entity object of crm_core_contact type.
- * @param crm_relationship_type
- *   Entity bundle type of crm_core_contact.
- */
-function crm_core_relationship_ui_contact_relationships($crm_contact, $crm_relationship_type = NULL) {
-  // Set page title.
-  drupal_set_title(t('Relationships of !contact', array('!contact' => crm_core_contact_title($crm_contact))));
-  $contact_id = entity_id('crm_core_contact', $crm_contact);
-  $active_content = views_embed_view('crm_relationships_by_contact', 'active', $contact_id);
-  $inactive_content = views_embed_view('crm_relationships_by_contact', 'inactive', $contact_id);
-  $content = array(
-    'active_header' => array('#markup' => '<h3>' . t('Active Relationships') . '</h3>'),
-    'active' => array('#markup' => $active_content),
-    'inactive_header' => array('#markup' => '<h3>' . t('Inactive Relationships') . '</h3>'),
-    'inactive' => array('#markup' => $inactive_content),
-  );
-  return $content;
-}
-
-/**
  * Return a list of links to add relationship for specific CRM contact.
  *
  * @param $crm_core_contact
@@ -207,65 +184,6 @@ function crm_core_relationship_ui_add_relationship($crm_core_contact) {
 }
 
 /**
- * Generate add relationship form.
- *
- * @param $crm_core_contact
- *   Entity object of crm_core_contact type.
- * @param $relationship_type
- *   Relation type object.
- * @param $reverse
- *   Whether relation is reversed.
- */
-/*
-function crm_core_relationship_ui_add_relationship_form($form, &$form_state, $crm_core_contact, $relationship_type, $reverse) {
-  drupal_set_title(t('Add relationship'));
-
-  module_load_include('inc', 'crm_core_relationship_ui');
-
-  $form = array();
-
-  $form['relationship_type'] = array(
-    '#type' => 'value',
-    '#value' => $relationship_type,
-  );
-  $form['reverse'] = array(
-    '#type' => 'value',
-    '#value' => $reverse,
-  );
-  $form['relationship_type_label'] = array(
-    '#type' => 'item',
-    '#title' => t('Relationship type') . ': ' . $relationship_type->label,
-    '#value' => "",
-  );
-
-  foreach (array(0, 1) as $reverse_field) {
-    $contact_type_names = array();
-    foreach (crm_core_relationship_load_contact_types($relationship_type, $reverse_field) as $contact_type) {
-      $contact_type_names[] = t($contact_type->name);
-    }
-    $contact_type_names = implode(', ', $contact_type_names);
-
-    $form[$reverse_field ? 'destination_contact' : 'source_contact'] = array(
-      '#title' => $reverse_field ? t('Destination contact name') : t('Source contact name'),
-      '#description' => (t('Following contact types allowed: !types.', array('!types' => $contact_type_names))),
-      '#type' => 'textfield',
-      '#default_value' => !($reverse_field ^ $reverse) ? crm_core_contact_title($crm_core_contact) . " [cid:$crm_core_contact->contact_id]" : '',
-      '#disabled' => !($reverse_field ^ $reverse),
-      '#required' => TRUE,
-      '#autocomplete_path' => 'crm/contact/' . $crm_core_contact->contact_id . '/relationships/add/' . $relationship_type->relation_type . '/' . $reverse_field . '/autocomplete',
-    );
-  }
-
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Add relationship'),
-  );
-
-  return $form;
-}
-*/
-
-/**
  * Perform validation for add relationship form.
  */
 function crm_core_relationship_ui_add_relationship_form_validate($form, &$form_state) {
@@ -296,14 +214,14 @@ function crm_core_relationship_ui_add_relationship_form_validate($form, &$form_s
 
   $source_bundles = array_keys(crm_core_relationship_load_contact_types($relationship_type, 0));
   if (!in_array($source_contact->type, $source_bundles)) {
-   form_set_error('source_contact', t('Please, input source contact of proper type.'));
-   return;
+    form_set_error('source_contact', t('Please, input source contact of proper type.'));
+    return;
   }
 
   $target_bundles = array_keys(crm_core_relationship_load_contact_types($relationship_type, $relationship_type->directional));
   if (!in_array($destination_contact->type, $target_bundles)) {
-   form_set_error('destination_contact', t('Please, input destination contact of proper type.'));
-   return;
+    form_set_error('destination_contact', t('Please, input destination contact of proper type.'));
+    return;
   }
 
   if ($source_contact->contact_id == $destination_contact->contact_id) {
@@ -317,7 +235,8 @@ function crm_core_relationship_ui_add_relationship_form_validate($form, &$form_s
         array('entity_type' => 'crm_core_contact', 'entity_id' => $destination_contact->contact_id),
       ),
       $relationship_type->relation_type
-    )) {
+    )
+    ) {
       form_set_error($reverse ? 'source_contact' : 'destination_contact', t('This relationship exists. It should be unique.'));
       return;
     }

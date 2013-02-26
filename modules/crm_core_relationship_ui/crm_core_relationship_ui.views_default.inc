@@ -16,7 +16,7 @@ function crm_core_relationship_ui_views_default_views() {
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'Relationships';
+  $handler->display->display_options['title'] = 'Relationships for [endpoints_2]';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'perm';
   $handler->display->display_options['access']['perm'] = 'view relation entities of any contact relationship';
@@ -90,6 +90,12 @@ function crm_core_relationship_ui_views_default_views() {
   $handler->display->display_options['header']['result']['table'] = 'views';
   $handler->display->display_options['header']['result']['field'] = 'result';
   $handler->display->display_options['header']['result']['content'] = 'Displaying @start - @end of @total active contact relationships';
+  /* Header: Global: Text area */
+  $handler->display->display_options['header']['area']['id'] = 'area';
+  $handler->display->display_options['header']['area']['table'] = 'views';
+  $handler->display->display_options['header']['area']['field'] = 'area';
+  $handler->display->display_options['header']['area']['content'] = '<h2>Active Relationships</h2>';
+  $handler->display->display_options['header']['area']['format'] = 'full_html';
   /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['area']['id'] = 'area';
   $handler->display->display_options['empty']['area']['table'] = 'views';
@@ -151,6 +157,16 @@ function crm_core_relationship_ui_views_default_views() {
   $handler->display->display_options['fields']['nothing']['label'] = '';
   $handler->display->display_options['fields']['nothing']['alter']['text'] = '[edit] | [crm_core_relationship_status_1] | [delete]';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
+  /* Field: Relation: endpoints */
+  $handler->display->display_options['fields']['endpoints_2']['id'] = 'endpoints_2';
+  $handler->display->display_options['fields']['endpoints_2']['table'] = 'field_data_endpoints';
+  $handler->display->display_options['fields']['endpoints_2']['field'] = 'endpoints';
+  $handler->display->display_options['fields']['endpoints_2']['label'] = 'Current contact name';
+  $handler->display->display_options['fields']['endpoints_2']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['endpoints_2']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['endpoints_2']['click_sort_column'] = 'entity_type';
+  $handler->display->display_options['fields']['endpoints_2']['type'] = 'contact_relationship_current';
+  $handler->display->display_options['fields']['endpoints_2']['delta_offset'] = '0';
   /* Contextual filter: Relation: endpoints (endpoints:entity_id) */
   $handler->display->display_options['arguments']['endpoints_entity_id']['id'] = 'endpoints_entity_id';
   $handler->display->display_options['arguments']['endpoints_entity_id']['table'] = 'field_data_endpoints';
@@ -223,6 +239,12 @@ function crm_core_relationship_ui_views_default_views() {
   $handler->display->display_options['header']['result']['table'] = 'views';
   $handler->display->display_options['header']['result']['field'] = 'result';
   $handler->display->display_options['header']['result']['content'] = 'Displaying @start - @end of @total inactive contact relationships';
+  /* Header: Global: Text area */
+  $handler->display->display_options['header']['area']['id'] = 'area';
+  $handler->display->display_options['header']['area']['table'] = 'views';
+  $handler->display->display_options['header']['area']['field'] = 'area';
+  $handler->display->display_options['header']['area']['content'] = '<h2>Inactive Relationships</h2>';
+  $handler->display->display_options['header']['area']['format'] = 'full_html';
   $handler->display->display_options['defaults']['empty'] = FALSE;
   /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['area']['id'] = 'area';
@@ -281,6 +303,15 @@ function crm_core_relationship_ui_views_default_views() {
   $handler->display->display_options['fields']['nothing']['label'] = '';
   $handler->display->display_options['fields']['nothing']['alter']['text'] = '[delete] | [crm_core_relationship_status_1]';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
+  /* Field: Relation: endpoints */
+  $handler->display->display_options['fields']['endpoints_2']['id'] = 'endpoints_2';
+  $handler->display->display_options['fields']['endpoints_2']['table'] = 'field_data_endpoints';
+  $handler->display->display_options['fields']['endpoints_2']['field'] = 'endpoints';
+  $handler->display->display_options['fields']['endpoints_2']['label'] = 'Current contact';
+  $handler->display->display_options['fields']['endpoints_2']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['endpoints_2']['click_sort_column'] = 'entity_type';
+  $handler->display->display_options['fields']['endpoints_2']['type'] = 'contact_relationship_current';
+  $handler->display->display_options['fields']['endpoints_2']['delta_offset'] = '0';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Relation: Relation type */

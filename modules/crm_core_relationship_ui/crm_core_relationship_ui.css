@@ -1,0 +1,11 @@
+.view-crm-relationships-by-contact .view-filters {
+  float: right;
+}
+
+.view-crm-relationships-by-contact .view-content {
+  clear: both;
+}
+
+.view-crm-relationships-by-contact .views-field-nothing {
+  text-align: right;
+}
