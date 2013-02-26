@@ -226,7 +226,7 @@ function crm_core_relationship_ui_field_formatter_view($entity_type, $entity, $f
       $related_contact_id = ($items[1]['entity_id'] == $current_contact_id) ? $items[0]['entity_id'] : $items[1]['entity_id'];
       $related_contact = crm_core_contact_load($related_contact_id);
       $contact_label = entity_label('crm_core_contact', $related_contact);
-      $relationship_type = ($items[1]['entity_id'] == $current_contact_id) ? crm_core_relationship_get_type_label($entity, TRUE) : crm_core_relationship_get_type_label($entity);
+      $relationship_type = ($items[1]['entity_id'] == $current_contact_id) ? relation_get_type_label($entity, TRUE) : relation_get_type_label($entity);
       $created = date('Y-m-d H:i:s', $entity->created);
       $related_contact_uri = entity_uri('crm_core_contact', $related_contact);
 
@@ -255,7 +255,6 @@ function crm_core_relationship_ui_field_formatter_view($entity_type, $entity, $f
       return array(array('#markup' => ''));
       break;
      case 'contact_relationship_human':
-       $relation_label = strtolower(crm_core_relationship_get_type_label($entity));
        $current_contact_id = $display['views_view']->args[0];
        $current_contact = crm_core_contact_load($current_contact_id);
        $current_contact_label = entity_label('crm_core_contact', $current_contact);
@@ -266,6 +265,15 @@ function crm_core_relationship_ui_field_formatter_view($entity_type, $entity, $f
        $related_contact_label = entity_label('crm_core_contact', $related_contact);
        $related_contact_uri = entity_uri('crm_core_contact', $related_contact);
        $related_contact_link = l($related_contact_label, $related_contact_uri['path']);
+       $relationship_type = relation_type_load($entity->relation_type);
+       // Check if we need a reverse label.
+       $relation_label = '';
+       if ($relationship_type->directional && $items[1]['entity_id'] == $current_contact_id) {
+         $relation_label = strtolower(relation_get_type_label($entity, TRUE));
+       }
+       else {
+         $relation_label = strtolower(relation_get_type_label($entity));
+       }
        return array(array('#markup' => t('!current_contact is a @relation !related_contact', array(
          '!current_contact' => $current_contact_link,
          '@relation' => $relation_label,

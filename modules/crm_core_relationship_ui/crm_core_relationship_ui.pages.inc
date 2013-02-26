@@ -139,7 +139,7 @@ function crm_core_relationship_form($form, &$form_state, $relation) {
  */
 function crm_core_relationship_form_after_build(&$form, &$form_state) {
   if ($form_state['op'] == 'add') {
-    drupal_set_title(t('Add new relationship @label', array('@label' => crm_core_relationship_get_type_label($form_state['relation']))));
+    drupal_set_title(t('Add new relationship @label', array('@label' => relation_get_type_label($form_state['relation']))));
   }
   return $form;
 }
