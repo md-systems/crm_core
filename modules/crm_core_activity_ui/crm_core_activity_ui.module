@@ -138,3 +138,13 @@ function crm_core_activity_ui_form_alter(&$form, &$form_state, $form_id) {
     }
   }
 }
+
+/**
+ * Implements hook_views_api().
+ */
+function crm_core_activity_ui_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'crm_core_activity_ui') . '/views',
+  );
+}

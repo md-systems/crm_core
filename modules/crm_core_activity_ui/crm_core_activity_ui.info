@@ -10,7 +10,7 @@ core = 7.x
 
 ; Core Dependencies
 dependencies[] = crm_core_activity
-
+dependencies[] = crm_core_contact_ui
 
 ; =======================
 ; Module Files

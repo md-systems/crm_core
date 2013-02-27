@@ -44,7 +44,7 @@ function crm_core_activity_entity_property_info() {
   );
   $properties['created'] = array(
     'label' => t('Date created'),
-    'description' => t('The date the product was created.'),
+    'description' => t('The date the activity was created.'),
     'type' => 'date',
     'setter callback' => 'entity_property_verbatim_set',
     'setter permission' => 'dminister site configuration',
@@ -52,7 +52,7 @@ function crm_core_activity_entity_property_info() {
   );
   $properties['changed'] = array(
     'label' => t('Date updated'),
-    'description' => t('The date the product was last updated.'),
+    'description' => t('The date the activity was last updated.'),
     'type' => 'date',
     'setter callback' => 'entity_property_verbatim_set',
     'setter permission' => 'Administer site configuration',
