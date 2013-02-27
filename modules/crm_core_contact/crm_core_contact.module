@@ -517,7 +517,7 @@ function crm_core_contact_type_get_name($type = NULL) {
  *   A stdClass object with contact type fields
  */
 function crm_core_contact_type_new($type = '') {
-  $values = array('type' => $type);
+  $values = array('type' => $type, 'locked' => 1);
   return entity_create('crm_core_contact_type', $values);
 }
 

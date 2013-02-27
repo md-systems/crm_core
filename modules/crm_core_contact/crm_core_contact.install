@@ -10,32 +10,24 @@
  */
 function crm_core_contact_install() {
   // Add default contact type for an Individual person
-  $individual = crm_core_contact_type_new();
-  $individual->type = 'individual';
+  $individual = crm_core_contact_type_new('individual');
   $individual->name = st('Individual');
   $individual->description = st('A single individual.');
-  $individual->locked = 1;
   $individual->is_new = TRUE;
   crm_core_contact_type_save($individual);
   crm_core_contact_type_initialize('individual');
 
   // Add default contact type for an organization
-  $organization = crm_core_contact_type_new();
-  $organization->type = 'organization';
+  $organization = crm_core_contact_type_new('organization');
   $organization->name = st('Organization');
   $organization->description = st('A collection of individuals or other organizations that has additional contact data.');
-  $organization->locked = 1;
-  $organization->is_new = TRUE;
   crm_core_contact_type_save($organization);
   crm_core_contact_type_initialize('organization');
 
   // Add default contact type for a household
-  $household = crm_core_contact_type_new();
-  $household->type = 'household';
+  $household = crm_core_contact_type_new('household');
   $household->name = st('Household');
   $household->description = st('A collection of individuals generally located at the same residence.');
-  $household->locked = 1;
-  $household->is_new = TRUE;
   crm_core_contact_type_save($household);
   crm_core_contact_type_initialize('household');
 }
@@ -52,7 +44,6 @@ function crm_core_contact_uninstall() {
      field_delete_field($instance['field_name']);
    }
 }
-
 
 /**
  * Implements hook_schema().
@@ -229,7 +220,6 @@ function crm_core_contact_schema() {
  */
 function crm_core_contact_type_initialize($type) {
   $fields = array();
-
   // Name field
   $fields[] = array(
     'field_name' => 'contact_name',
@@ -243,18 +233,6 @@ function crm_core_contact_type_initialize($type) {
       'minimum_components' => array('given' => 'given'),
     ),
   );
-
-
-
-  // Image field
-  $fields[] = array(
-    'field_name' => 'contact_image',
-    'type' => 'image',
-    'entity_types' => array('crm_core_contact'),
-    'translatable' => FALSE,
-    'locked' => FALSE,
-  );
-
   // Create the fields if they don't exist
   foreach ($fields as $field) {
     $info = field_info_field($field['field_name']);
@@ -262,10 +240,8 @@ function crm_core_contact_type_initialize($type) {
       field_create_field($field);
     }
   }
-
   // Create field instances for the type if they don't exist
   $instances = array();
-
   $instances[] = array(
     'field_name' => 'contact_name',
     'entity_type' => 'crm_core_contact',
@@ -277,11 +253,9 @@ function crm_core_contact_type_initialize($type) {
     ),
     'display' => array(),
   );
-
   // For household or organizations, the label should be reflected
   if ($type == 'organization' || $type == 'household') {
     $instances[0]['label'] = st('@type name', array('@type' => ucwords($type)));
-
     // work around, using inline css to hide the rest of the name components
     // this is due to http://drupal.org/node/1324054
     $instances[0]['settings']['inline_css'] = array(
@@ -292,32 +266,6 @@ function crm_core_contact_type_initialize($type) {
       'credentials' => 'display:none',
     );
   }
-
-  $instances[] = array(
-    'field_name' => 'contact_image',
-    'entity_type' => 'crm_core_contact',
-    'bundle' => $type,
-    'label' => st('Image'),
-    'required' => FALSE,
-    'settings' => array(),
-    'widget' => array(
-      'type' => 'image_image',
-    ),
-    'display' => array(
-      'default' => array(
-        'label' => 'hidden',
-        'type' => 'image',
-        'weight' => '1',
-        'settings' =>
-        array(
-          'image_style' => 'medium',
-          'image_link' => '',
-        ),
-        'module' => 'image',
-      ),
-    ),
-  );
-
   // Create field instances if they don't exist
   foreach ($instances as $instance) {
     $info_instance = field_info_instance('crm_core_contact', $instance['field_name'], $type);
