@@ -45,63 +45,6 @@ function crm_user_sync_views_api() {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter
- */
-function crm_user_sync_form_user_profile_form_alter(&$form, &$form_state, $form_id) {
-  $account = $form['#user'];
-
-  // only attach the contact form if a corresponding contact has been found
-  $contact = _crm_user_sync_get_related_entity('user', $account->uid, 'crm_user_sync');
-  if (empty($contact)) {
-    return;
-  }
-  if (!user_access('edit own contact information')) {
-    return;
-  }
-  $form_state['storage']['crm_core_contact'] = $contact;
-  $form['crm_core_contact'] = array(
-    '#type' => 'fieldset',
-    '#title' => 'Contact Information',
-    '#collapsible' => TRUE,
-    '#collapsed' => FALSE,
-    '#parents' => array('crm_core_contact'),
-    '#tree' => TRUE,
-  );
-
-  field_attach_form('crm_core_contact', $contact, $form['crm_core_contact'], $form_state);
-  $form['#validate'][] = 'crm_user_sync_user_profile_form_validate';
-  $form['#submit'][] = 'crm_user_sync_user_profile_form_submit';
-
-}
-
-/**
- * Validation handler
- */
-function crm_user_sync_user_profile_form_validate($form, &$form_state) {
-  $contact = $form_state['storage']['crm_core_contact'];
- // Notify field widgets to validate their data.
-  field_attach_form_validate('crm_core_contact', $contact, $form['crm_core_contact'], $form_state);
-}
-
-/**
- * Submission handler
- */
-function crm_user_sync_user_profile_form_submit($form, &$form_state) {
-  $contact = &$form_state['storage']['crm_core_contact'];
-  // Set the contact's uid if it's being created at this time.
-  if (!isset($contact->contact_id)) {
-    // @TODO: Investigate how this variable should be used.
-    $create = TRUE;
-  }
-  // Notify field widgets.
-  field_attach_submit('crm_core_contact', $contact, $form['crm_core_contact'], $form_state);
-
-  // Save the contact
-  crm_core_contact_save($contact);
-}
-
-
-/**
  * Implements hook_user_insert()
  */
 function crm_user_sync_user_insert(&$edit, $account, $category) {
