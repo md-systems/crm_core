@@ -226,6 +226,11 @@ function crm_core_ui_get_menus() {
       'menu_name' => 'crm-core-menu',
       'title' => $t('CRM Core Menu'),
       'description' => $t('Provides access to various features and functions within CRM Core.'),
+    ),
+    'crm-core-admin-menu' => array(
+      'menu_name' => 'crm-core-admin-menu',
+      'title' => $t('CRM Core Admin Menu'),
+      'description' => $t('Provides access to various settings and configuration within CRM Core.'),
     )
   );
 }
