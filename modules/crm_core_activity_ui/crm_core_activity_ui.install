@@ -9,3 +9,32 @@
 function crm_core_activity_ui_install() {
   db_query("UPDATE {system} SET weight = 20 WHERE name = 'crm_core_activity_ui'");
 }
+
+/**
+ * Implements hook_enable().
+ */
+function crm_core_activity_ui_enable() {
+  $menu_items = array(
+    array(
+      'link_path' => 'admin/structure/crm/activity-types',
+      'link_title' => 'Administer CRM Activity Types',
+      'menu_name' => 'crm-core-admin-menu',
+    ),
+  );
+  foreach ($menu_items as $item) {
+    menu_link_save($item);
+  }
+}
+
+/**
+ * Implements hook_disable().
+ */
+function crm_core_activity_ui_disable() {
+  //Remove links from crm-core-menu and crm-core-admin-menu.
+  $conditions = array(
+    'crm-core-admin-menu' => array(
+      'admin/structure/crm/activity-types'
+    ),
+  );
+  crm_core_ui_remove_links($conditions);
+}

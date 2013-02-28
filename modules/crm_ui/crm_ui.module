@@ -197,23 +197,6 @@ function theme_crm_ui_ctools_dropbutton($variables) {
 }
 
 /**
- * Helper function which retrieves CRM plid.
- *
- * Helps to build Navigation menu.
- */
-function crm_ui_get_crm_mlid() {
-  $plid = variable_get('crm_ui_plid', -1);
-
-  if (empty($plid) || $plid == -1) {
-    $crm_plid = menu_link_get_preferred('crm', 'navigation');
-    $plid = $crm_plid['mlid'];
-    variable_set('crm_ui_plid', $plid);
-  }
-
-  return $plid;
-}
-
-/**
  * Contains custom menu definitions of CRM Core.
  *
  * @return array
@@ -233,4 +216,23 @@ function crm_core_ui_get_menus() {
       'description' => $t('Provides access to various settings and configuration within CRM Core.'),
     )
   );
+}
+
+/**
+ * Helper function to remove links by path from specified menu.
+ *
+ * @param $conditions
+ *  Assoc array keyed by menu name. Each entry is array of paths, link to which should be removed.
+ */
+function crm_core_ui_remove_links($conditions) {
+  foreach ($conditions as $menu_name => $links_path) {
+    $links = menu_load_links($menu_name);
+    foreach ($links as $link) {
+      foreach ($links_path as $link_path) {
+        if ($link['link_path'] == $link_path) {
+          menu_link_delete($link['mlid']);
+        }
+      }
+    }
+  }
 }

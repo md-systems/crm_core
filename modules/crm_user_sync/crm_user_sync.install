@@ -18,3 +18,32 @@ function crm_user_sync_install() {
   $relation_type = relation_type_create($relation_type_info);
   relation_type_save($relation_type);
 }
+
+/**
+ * Implements hook_enable().
+ */
+function crm_user_sync_enable() {
+  $menu_items = array(
+    array(
+      'link_path' => 'admin/structure/crm/user_sync',
+      'link_title' => 'Administer User Synchronization',
+      'menu_name' => 'crm-core-admin-menu',
+    ),
+  );
+  foreach ($menu_items as $item) {
+    menu_link_save($item);
+  }
+}
+
+/**
+ * Implements hook_disable().
+ */
+function crm_user_sync_disable() {
+  //Remove links from crm-core-menu and crm-core-admin-menu.
+  $conditions = array(
+    'crm-core-admin-menu' => array(
+      'admin/structure/crm/user_sync'
+    ),
+  );
+  crm_core_ui_remove_links($conditions);
+}

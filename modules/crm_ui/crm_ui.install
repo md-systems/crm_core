@@ -36,7 +36,6 @@ function crm_ui_enable() {
  */
 function crm_ui_disable() {
   db_delete('block')->condition('delta', 'crm-core-menu')->execute();
-  variable_del('crm_ui_plid');
   $links = menu_load_links('crm-core-menu');
   foreach ($links as $link) {
     if ($link['link_path'] == 'crm') {

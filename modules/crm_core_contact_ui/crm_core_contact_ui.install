@@ -3,23 +3,36 @@
  * Implements hook_enable().
  */
 function crm_core_contact_ui_enable() {
-  $item = array(
-    'link_path' => 'crm/contact',
-    'link_title' => 'Contacts',
-    'menu_name' => 'crm-core-menu',
-    'weight' => 1,
+  $menu_items = array(
+    array(
+      'link_path' => 'crm/contact',
+      'link_title' => 'Contacts',
+      'menu_name' => 'crm-core-menu',
+      'weight' => 1,
+    ),
+    array(
+      'link_path' => 'admin/structure/crm/contact-types',
+      'link_title' => 'Administer CRM Contact Types',
+      'menu_name' => 'crm-core-admin-menu',
+    ),
   );
-  menu_link_save($item);
+  foreach ($menu_items as $item) {
+    menu_link_save($item);
+  }
 }
 
 /**
  * Implements hook_disable().
  */
 function crm_core_contact_ui_disable() {
-  $links = menu_load_links('crm-core-menu');
-  foreach ($links as $link) {
-    if ($link['link_path'] == 'crm/contact') {
-      menu_link_delete($link['mlid']);
-    }
-  }
+  //Remove links from crm-core-menu and crm-core-admin-menu.
+  $conditions = array(
+    'crm-core-menu' => array(
+      'crm/contact'
+    ),
+    'crm-core-admin-menu' => array(
+      'admin/structure/crm/contact-types'
+    ),
+  );
+  crm_core_ui_remove_links($conditions);
 }
