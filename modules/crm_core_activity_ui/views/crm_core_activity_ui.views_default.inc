@@ -149,11 +149,11 @@ function crm_core_activity_ui_views_default_views() {
   $handler->display->display_options['fields']['title']['alter']['make_link'] = TRUE;
   $handler->display->display_options['fields']['title']['alter']['path'] = 'crm/activity/[activity_id]';
   $handler->display->display_options['fields']['title']['hide_alter_empty'] = FALSE;
-  /* Field: CRM Activity: Type */
-  $handler->display->display_options['fields']['type']['id'] = 'type';
-  $handler->display->display_options['fields']['type']['table'] = 'crm_core_activity';
-  $handler->display->display_options['fields']['type']['field'] = 'type';
-  $handler->display->display_options['fields']['type']['label'] = 'Activity Type';
+  /* Field: CRM Activity: Label */
+  $handler->display->display_options['fields']['label']['id'] = 'label';
+  $handler->display->display_options['fields']['label']['table'] = 'crm_core_activity_type';
+  $handler->display->display_options['fields']['label']['field'] = 'label';
+  $handler->display->display_options['fields']['label']['label'] = 'Activity Type';
   /* Field: CRM Activity: Link */
   $handler->display->display_options['fields']['view_crm_activity']['id'] = 'view_crm_activity';
   $handler->display->display_options['fields']['view_crm_activity']['table'] = 'crm_core_activity';
