@@ -2,7 +2,8 @@
   float: right;
 }
 
-.view-crm-relationships-by-contact .view-content {
+.view-crm-relationships-by-contact .view-content,
+.view-crm-relationships-by-contact .view-empty{
   clear: both;
 }
 

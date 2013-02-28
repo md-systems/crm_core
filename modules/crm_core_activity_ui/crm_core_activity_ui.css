@@ -2,6 +2,7 @@
   float: right;
 }
 
-.view-crm-activities-by-contact .view-content {
+.view-crm-activities-by-contact .view-content,
+.view-crm-activities-by-contact .view-empty{
   clear: both;
 }
