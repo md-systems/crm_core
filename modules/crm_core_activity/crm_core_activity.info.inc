@@ -58,6 +58,12 @@ function crm_core_activity_entity_property_info() {
     'setter permission' => 'Administer site configuration',
     'schema field' => 'changed',
   );
+  $properties['activity_type_id'] = array(
+    'label' => t('Activity type ID'),
+    'description' => t('The activity type ID referenced by this activity.'),
+    'type' => 'integer',
+    'schema field' => 'activity_type_id',
+  );
 
 
   // Metadata of Activity Type.
