@@ -947,8 +947,6 @@ function crm_core_contact_type_initialize($type) {
     'translatable' => FALSE,
     'locked' => TRUE,
     'settings' => array(
-      // work around, all contact_name field requires at least
-      // given, household, organizations just need one name field/component
       'minimum_components' => array('given' => 'given'),
     ),
   );
@@ -975,14 +973,21 @@ function crm_core_contact_type_initialize($type) {
   // For household or organizations, the label should be reflected
   if ($type == 'organization' || $type == 'household') {
     $instances[0]['label'] = $t('@type name', array('@type' => ucwords($type)));
-    // work around, using inline css to hide the rest of the name components
-    // this is due to http://drupal.org/node/1324054
     $instances[0]['settings']['inline_css'] = array(
-      'title' => 'display:none',
-      'middle' => 'display:none',
+      'credentials' => 'display:none',
       'family' => 'display:none',
       'generational' => 'display:none',
-      'credentials' => 'display:none',
+      'given' => '',
+      'middle' => 'display:none',
+      'title' => 'display:none',
+    );
+    $instances[0]['settings']['title_display'] = array(
+      'credentials' => 'none',
+      'family' => 'none',
+      'generational' => 'none',
+      'given' => 'none',
+      'middle' => 'none',
+      'title' => 'none',
     );
   }
   // Create field instances if they don't exist
