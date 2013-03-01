@@ -281,3 +281,35 @@ function crm_user_sync_contact_get_user_properties($entity, array $options, $nam
     return $account->uid;
   }
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function crm_user_sync_form_crm_core_admin_config_form_alter(&$form, &$form_state, $form_id) {
+  $form['contacts'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Contacts'),
+    '#weight' => 0,
+  );
+  $description = 'When checked, this will allow contact information to be loaded as part of the user entity. '
+    . 'It will create an array containing contact information associated with the current user. In certain situations,'
+    . ' loading contact data as part of a user entity can create performance issues (for instance, when there are '
+    .'hundreds of fields associated with each contact). Uncheck this box if it is creating problems with performance.';
+  $form['contacts']['crm_core_contact_load'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Load contact information as part of the user entity?'),
+    '#description' => t($description),
+    '#default_value' => variable_get('crm_core_contact_load', FALSE),
+    '#weight' => 0,
+  );
+}
+
+/**
+ * Implements hook_init().
+ */
+function crm_user_sync_init() {
+  if (variable_get('crm_core_contact_load', FALSE)) {
+    global $user;
+    $user->crm_core['contact'] = crm_user_sync_get_contact_from_uid($user->uid);
+  }
+}
