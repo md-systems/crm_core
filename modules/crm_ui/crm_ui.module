@@ -14,6 +14,7 @@ function crm_ui_menu() {
     'page callback' => 'crm_core_ui_dashboard',
     'access arguments' => array('view crm dashboard'),
     'type' => MENU_NORMAL_ITEM,
+    'theme callback' => 'crm_core_ui_get_theme',
   );
 
   $items['crm/dashboard'] = array(
@@ -265,5 +266,17 @@ function crm_core_ui_remove_links($conditions) {
         }
       }
     }
+  }
+}
+
+/**
+ * Helper function to set theme to use for CRM Core pages.
+ *
+ * @return theme_name|NULL
+ *  Machine theme name or NULL if not set.
+ */
+function crm_core_ui_get_theme() {
+  if (variable_get('crm_core_theme_enabled', FALSE)) {
+    return variable_get('crm_core_theme', '');
   }
 }
