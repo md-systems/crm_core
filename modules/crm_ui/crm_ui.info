@@ -11,7 +11,7 @@ configure = admin/structure/crm
 
 ; Core Dependencies
 dependencies[] = crm_core
-
+dependencies[] = crm_core_contact_ui
 
 ; =======================
 ; Module Files
