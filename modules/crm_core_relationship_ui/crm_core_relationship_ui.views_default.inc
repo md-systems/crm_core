@@ -221,7 +221,7 @@ function crm_core_relationship_ui_views_default_views() {
   $handler = $view->new_display('page', 'Active', 'active');
   $handler->display->display_options['display_description'] = 'Active contact relationships';
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
-  $handler->display->display_options['path'] = 'crm/contact/%/relationships/active';
+  $handler->display->display_options['path'] = 'crm-core/contact/%/relationships/active';
   $handler->display->display_options['menu']['type'] = 'default tab';
   $handler->display->display_options['menu']['title'] = 'Active Relationships';
   $handler->display->display_options['menu']['weight'] = '0';
@@ -341,7 +341,7 @@ function crm_core_relationship_ui_views_default_views() {
   $handler->display->display_options['filters']['crm_core_relationship_status_value']['value'] = array(
     0 => '0',
   );
-  $handler->display->display_options['path'] = 'crm/contact/%/relationships/inactive';
+  $handler->display->display_options['path'] = 'crm-core/contact/%/relationships/inactive';
   $handler->display->display_options['menu']['type'] = 'tab';
   $handler->display->display_options['menu']['title'] = 'Inactive Relationships';
   $handler->display->display_options['menu']['weight'] = '0';

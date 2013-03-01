@@ -76,7 +76,7 @@ function crm_core_activity_ui_views_default_views() {
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page_1');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
-  $handler->display->display_options['path'] = 'crm/contact/%/activity/add';
+  $handler->display->display_options['path'] = 'crm-core/contact/%/activity/add';
   $handler->display->display_options['menu']['title'] = 'Add Activity';
   $handler->display->display_options['menu']['weight'] = '0';
 
@@ -239,7 +239,7 @@ function crm_core_activity_ui_views_default_views() {
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
-  $handler->display->display_options['path'] = 'crm/contact/%/activity';
+  $handler->display->display_options['path'] = 'crm-core/contact/%/activity';
 
   $views['crm_activities_by_contact'] = $view;
 
