@@ -61,7 +61,7 @@ function crm_core_contact_entity_info() {
     'module' => 'crm_core_contact',
     // Enable the entity API's admin UI.
     'admin ui' => array(
-      'path' => 'admin/structure/crm/contact-types',
+      'path' => 'admin/structure/crm-core/contact-types',
       'file' => 'crm_core_contact.admin.inc',
       'controller class' => 'EntityDefaultUIController',
     ),
@@ -83,8 +83,8 @@ function crm_core_contact_entity_info_alter(&$entity_info) {
     $entity_info['crm_core_contact']['bundles'][$type] = array(
       'label' => $name,
       'admin' => array(
-        'path' => 'admin/structure/crm/contact-types/manage/%crm_core_contact_type',
-        'real path' => 'admin/structure/crm/contact-types/manage/' . $type,
+        'path' => 'admin/structure/crm-core/contact-types/manage/%crm_core_contact_type',
+        'real path' => 'admin/structure/crm-core/contact-types/manage/' . $type,
         'bundle argument' => 5,
         'access arguments' => array('administer contact types'),
       ),
@@ -241,7 +241,7 @@ function crm_core_contact_views_api() {
  */
 function crm_core_contact_search_info() {
   return array(
-    'title' => 'CRM Contacts',
+    'title' => 'CRM Core Contacts',
     'path' => 'contact',
   );
 }
@@ -721,7 +721,7 @@ function crm_core_contact_view($contact, $view_mode = 'full') {
     '#type'          => $contact->type,
     '#view_mode'     => $view_mode,
     '#language'      => $langcode,
-  );  
+  );
   $build = $contact->content;
   return $build;
 
@@ -743,24 +743,24 @@ function crm_core_contact_theme($existing, $type, $theme, $path) {
 /**
  * Process variables for contact.tpl.php
  *
- * This function simply adds template suggestions for various 
+ * This function simply adds template suggestions for various
  * contact types.
  *
  */
 function template_preprocess_contact(&$variables) {
-  
+
   // hide the label on the name field, when we are looking at something
   // besides a full view mode
   if($variables['view_mode'] !== 'full'){
     $variables['contact_data']['contact_name']['#label_display'] = 'hidden';
   }
-  
+
   // add classes based on the type of contact
   $variables['classes_array'][] = 'contact-' . $variables['type'];
-  
+
   // add template suggestions
   $variables['theme_hook_suggestions'][] = 'contact__' . $variables['type'];
-  
+
 }
 
 /**

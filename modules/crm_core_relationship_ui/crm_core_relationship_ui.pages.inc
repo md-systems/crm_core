@@ -78,7 +78,7 @@ function crm_core_relationship_form($form, &$form_state, $relation) {
       '#default_value' => !($reverse_field ^ $relation->reverse) ? crm_core_contact_title($relation->crm_core_contact) . " [cid:{$relation->crm_core_contact->contact_id}]" : '',
       '#disabled' => !($reverse_field ^ $relation->reverse),
       '#required' => TRUE,
-      '#autocomplete_path' => 'crm/contact/' . $relation->crm_core_contact->contact_id . '/relationships/add/' . $relation->relation_type . '/' . $reverse_field . '/autocomplete',
+      '#autocomplete_path' => 'crm-core/contact/' . $relation->crm_core_contact->contact_id . '/relationships/add/' . $relation->relation_type . '/' . $reverse_field . '/autocomplete',
     );
   }
 
@@ -165,7 +165,7 @@ function crm_core_relationship_ui_add_relationship($crm_core_contact) {
       if (user_access('create relation entities of bundle ' . $relationship_type->relation_type) || user_access('create relation entities of any contact relationship')) {
         $relationship_type_links[$relationship_type->relation_type] = l(
           $reverse ? $relationship_type->reverse_label : $relationship_type->label,
-          'crm/contact/' . $crm_core_contact->contact_id . '/relationships/add/' . $relationship_type->relation_type . '/' . $reverse
+          'crm-core/contact/' . $crm_core_contact->contact_id . '/relationships/add/' . $relationship_type->relation_type . '/' . $reverse
         );
         // Add description of the relationship here.
       }
@@ -285,7 +285,7 @@ function crm_core_relationship_ui_add_relationship_form_submit($form, &$form_sta
   field_attach_submit('relation', $relation, $form, $form_state);
 
   $redirect_contact = $reverse ? $destination_contact : $source_contact;
-  $form_state['redirect'] = 'crm/contact/' . $redirect_contact->contact_id . '/relationships/';
+  $form_state['redirect'] = 'crm-core/contact/' . $redirect_contact->contact_id . '/relationships/';
 }
 
 /**

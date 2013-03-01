@@ -58,7 +58,7 @@ function crm_core_activity_entity_info() {
     'module' => 'crm_core_activity',
     // Enable the entity API's admin UI.
     'admin ui' => array(
-      'path' => 'admin/structure/crm/activity-types',
+      'path' => 'admin/structure/crm-core/activity-types',
       'file' => 'crm_core_activity.admin.inc',
       'controller class' => 'EntityDefaultUIController',
     ),
@@ -79,8 +79,8 @@ function crm_core_activity_entity_info_alter(&$entity_info) {
     $entity_info['crm_core_activity']['bundles'][$type] = array(
       'label' => $info->label,
       'admin' => array(
-        'path' => 'admin/structure/crm/activity-types/manage/%crm_core_activity_type',
-        'real path' => 'admin/structure/crm/activity-types/manage/' . $type,
+        'path' => 'admin/structure/crm-core/activity-types/manage/%crm_core_activity_type',
+        'real path' => 'admin/structure/crm-core/activity-types/manage/' . $type,
         'bundle argument' => 5,
       ),
     );
@@ -409,7 +409,7 @@ function crm_core_activity_crm_core_contact_delete($crm_core_contact) {
  */
 function crm_core_activity_search_info() {
   return array(
-    'title' => 'CRM Activities',
+    'title' => 'CRM Core Activities',
     'path' => 'activity',
   );
 }

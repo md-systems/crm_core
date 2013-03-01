@@ -8,7 +8,7 @@ function crm_core_relationship_ui_menu() {
   /*
    * CRM Contact Relationships
    */
-  $items['crm/contact/%crm_core_contact/relationships/add'] = array(
+  $items['crm-core/contact/%crm_core_contact/relationships/add'] = array(
     'title' => 'Add relationship',
     'description' => 'Add a relationship to this contact',
     'page callback' => 'crm_core_relationship_ui_add_relationship',
@@ -19,7 +19,7 @@ function crm_core_relationship_ui_menu() {
   );
 
   foreach (crm_core_relationship_get_relationships() as $type => $info) {
-    $items['crm/contact/%crm_core_contact/relationships/add/' . $type . '/%'] = array(
+    $items['crm-core/contact/%crm_core_contact/relationships/add/' . $type . '/%'] = array(
       'title' => 'Add ' . $info->label,
       'description' => 'Add a relationship to this contact',
       'page callback' => 'crm_core_relation_entity_ui_get_form_wrapper',
@@ -31,7 +31,7 @@ function crm_core_relationship_ui_menu() {
     );
   }
 
-  $items['crm/contact/%crm_core_contact/relationships/add/%relation_type/%/autocomplete'] = array(
+  $items['crm-core/contact/%crm_core_contact/relationships/add/%relation_type/%/autocomplete'] = array(
     'page callback' => 'crm_core_relationship_ui_add_relationship_autocomplete',
     'page arguments' => array(2, 5, 6),
     'access callback' => 'crm_core_relationship_access_permissions',
@@ -40,7 +40,7 @@ function crm_core_relationship_ui_menu() {
     'file' => 'crm_core_relationship_ui.pages.inc',
   );
 
-  $items['crm/relationships/%relation_type/%/autocomplete'] = array(
+  $items['crm-core/relationships/%relation_type/%/autocomplete'] = array(
     'page callback' => 'crm_core_relationship_ui_add_relationship_autocomplete',
     'page arguments' => array(NULL, 2, 3),
     'access callback' => 'crm_core_relationship_access_permissions',
@@ -52,8 +52,8 @@ function crm_core_relationship_ui_menu() {
   /*
    * CRM Relationship types
    */
-  $items['admin/structure/crm/relationship-types'] = array(
-    'title' => 'CRM Relationship Types',
+  $items['admin/structure/crm-core/relationship-types'] = array(
+    'title' => 'CRM Core Relationship Types',
     'description' => 'Manage relationship types.',
     'page callback' => 'crm_core_relationship_ui_types_overview',
     'access callback' => 'crm_core_relationship_access_permissions',
@@ -62,7 +62,7 @@ function crm_core_relationship_ui_menu() {
     'type' => MENU_LOCAL_TASK,
   );
 
-  $items['admin/structure/crm/relationship-types/add'] = array(
+  $items['admin/structure/crm-core/relationship-types/add'] = array(
     'title' => 'Add crm relationship type',
     'access callback' => 'crm_core_relationship_access_permissions',
     'access arguments' => array(NULL, 'admin'),
@@ -72,7 +72,7 @@ function crm_core_relationship_ui_menu() {
     'file' => 'crm_core_relationship_ui.admin.inc',
   );
 
-  $items['admin/structure/crm/relationship-types/manage/%crm_core_relationship_ui_relationship_type'] = array(
+  $items['admin/structure/crm-core/relationship-types/manage/%crm_core_relationship_ui_relationship_type'] = array(
     'title' => 'Edit crm relationship type',
     'access callback' => 'crm_core_relationship_access_permissions',
     'access arguments' => array(NULL, 'admin'),
@@ -82,7 +82,7 @@ function crm_core_relationship_ui_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['admin/structure/crm/relationship-types/manage/%crm_core_relationship_ui_relationship_type/delete'] = array(
+  $items['admin/structure/crm-core/relationship-types/manage/%crm_core_relationship_ui_relationship_type/delete'] = array(
     'access callback' => 'crm_core_relationship_access_permissions',
     'access arguments' => array(NULL, 'admin'),
     'page callback' => 'drupal_get_form',
@@ -136,8 +136,8 @@ function crm_core_relationship_entity_info_alter(&$entity_info) {
     if (crm_core_relationship_is_relationship_type($type)) {
       $entity_info['relation']['bundles'][$type]['label'] = $type;
       $entity_info['relation']['bundles'][$type]['admin'] = array(
-        'path' => 'admin/structure/crm/relationship-types/manage/%relation_type',
-        'real path' => 'admin/structure/crm/relationship-types/manage/' . $type,
+        'path' => 'admin/structure/crm-core/relationship-types/manage/%relation_type',
+        'real path' => 'admin/structure/crm-core/relationship-types/manage/' . $type,
         'bundle argument' => 5,
         'access callback' => 'crm_core_relationship_access_permissions',
         'access arguments' => array(NULL, 'admin'),

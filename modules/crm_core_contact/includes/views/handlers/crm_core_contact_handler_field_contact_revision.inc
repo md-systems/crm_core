@@ -45,7 +45,7 @@ class crm_core_contact_handler_field_contact_revision extends views_handler_fiel
   function render_link($data, $values) {
     if (!empty($this->options['link_to_revision']) && $data !== NULL && $data !== '') {
       $this->options['alter']['make_link'] = TRUE;
-      $this->options['alter']['path'] = 'crm/contact/' . $values->{$this->aliases['contact_id']} . '/revert/' . $values->{$this->aliases['vid']};
+      $this->options['alter']['path'] = 'crm-core/contact/' . $values->{$this->aliases['contact_id']} . '/revert/' . $values->{$this->aliases['vid']};
     }
 
     return $data;

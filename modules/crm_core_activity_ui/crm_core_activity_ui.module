@@ -9,7 +9,7 @@ function crm_core_activity_ui_menu() {
   /*
    * Contact Activities
    */
-  /*$items['crm/contact/%crm_core_contact/activity'] = array(
+  /*$items['crm-core/contact/%crm_core_contact/activity'] = array(
     'title' => 'Activity',
     'description' => 'View contact activity',
     'page callback' => 'crm_core_contact_activity',
@@ -22,7 +22,7 @@ function crm_core_activity_ui_menu() {
 
   // Menu items for creation of new Activities.
   foreach (crm_core_activity_types() as $type => $info) {
-    $items['crm/contact/%crm_core_contact/activity/add/' . $type] = array(
+    $items['crm-core/contact/%crm_core_contact/activity/add/' . $type] = array(
       'title' => 'Add Activity',
       'description' => 'Add an activity to this contact',
       'page callback' => 'crm_core_activity_entity_ui_get_form_wrapper',
@@ -34,7 +34,7 @@ function crm_core_activity_ui_menu() {
     );
   }
 
-  $items['crm/activity/%crm_core_activity'] =  array(
+  $items['crm-core/activity/%crm_core_activity'] =  array(
     'title' => 'Activity',
     'page callback' => 'crm_core_activity_view',
     'page arguments' => array(2),
@@ -45,14 +45,14 @@ function crm_core_activity_ui_menu() {
     'type' => MENU_NORMAL_ITEM,
   );
 
-  $items['crm/activity/%crm_core_activity/view'] = array(
+  $items['crm-core/activity/%crm_core_activity/view'] = array(
     'title' => 'View',
     'weight' => -10,
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
   );
 
-  $items['crm/activity/%crm_core_activity/edit'] = array(
+  $items['crm-core/activity/%crm_core_activity/edit'] = array(
     'title' => 'Edit',
     'page callback' => 'entity_ui_get_form',
     'page arguments' => array('crm_core_activity', 2, 'edit'),
@@ -62,7 +62,7 @@ function crm_core_activity_ui_menu() {
     'file' => 'crm_core_activity_ui.pages.inc',
   );
 
-  $items['crm/activity/%crm_core_activity/delete'] = array(
+  $items['crm-core/activity/%crm_core_activity/delete'] = array(
     'title' => 'Delete',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('crm_core_activity_form_delete_confirm', 2),
@@ -73,7 +73,7 @@ function crm_core_activity_ui_menu() {
     'file' => 'crm_core_activity_ui.pages.inc',
   );
 
-  $items['admin/structure/crm/activity-types/list'] = array(
+  $items['admin/structure/crm-core/activity-types/list'] = array(
     'title' => 'List',
     'weight' => -10,
     'type' => MENU_DEFAULT_LOCAL_TASK,
@@ -86,11 +86,11 @@ function crm_core_activity_ui_menu() {
  * Implements hook_menu_alter().
  */
 function crm_core_activity_ui_menu_alter(&$items) {
-  $items['admin/structure/crm/activity-types']['type'] = MENU_LOCAL_TASK;
+  $items['admin/structure/crm-core/activity-types']['type'] = MENU_LOCAL_TASK;
   // Set "Add activity" as local action.
-  $items['crm/contact/%/activity/add']['type'] = MENU_LOCAL_ACTION;
-  $items['crm/contact/%/activity/add']['context'] = MENU_CONTEXT_PAGE;
-  unset($items['crm/contact/%/activity/add']['tab_root']);
+  $items['crm-core/contact/%/activity/add']['type'] = MENU_LOCAL_ACTION;
+  $items['crm-core/contact/%/activity/add']['context'] = MENU_CONTEXT_PAGE;
+  unset($items['crm-core/contact/%/activity/add']['tab_root']);
 }
 
 /**
@@ -106,12 +106,12 @@ function crm_core_activity_ui_admin_menu_map() {
     );
   }
 
-  $map['admin/structure/crm/activity-types/manage/%crm_core_activity_type'] = array(
+  $map['admin/structure/crm-core/activity-types/manage/%crm_core_activity_type'] = array(
     // Link generated items directly to the "Activity Types" item.
-    'parent' => 'admin/structure/crm/activity-types',
+    'parent' => 'admin/structure/crm-core/activity-types',
     // Hide the "List" item, as this expansion will expose all available
     // options.
-    'hide' => 'admin/structure/crm/activity-types/list',
+    'hide' => 'admin/structure/crm-core/activity-types/list',
     // Create expansion arguments for the '%crm_core_activity_type' placeholder.
     'arguments' => $arguments,
   );

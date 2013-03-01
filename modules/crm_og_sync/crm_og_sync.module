@@ -6,7 +6,7 @@
 function crm_og_sync_menu() {
   $items = array();
 
-  $items['admin/structure/crm/og_sync'] = array(
+  $items['admin/structure/crm-core/og_sync'] = array(
     'title' => 'Organic Group Synchronization',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('crm_og_sync_admin_form'),

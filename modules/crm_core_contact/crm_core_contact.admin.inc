@@ -128,6 +128,6 @@ function crm_core_contact_type_form_submit($form, &$form_state) {
   crm_core_contact_type_save($contact_type);
 
   // Redirect based on the button clicked.
-  $form_state['redirect'] = 'admin/structure/crm/contact-types/';
+  $form_state['redirect'] = 'admin/structure/crm-core/contact-types/';
   drupal_set_message(t('Contact type saved.'));
 }

@@ -52,7 +52,7 @@ class crm_core_contact_handler_field_contact_revert extends views_handler_field 
     }
     
     $this->options['alter']['make_link'] = TRUE;
-    $this->options['alter']['path'] = 'crm/contact/' . $values->{$this->aliases['contact_id']} . '/revert/' . $values->{$this->aliases['vid']};
+    $this->options['alter']['path'] = 'crm-core/contact/' . $values->{$this->aliases['contact_id']} . '/revert/' . $values->{$this->aliases['vid']};
 
     $text = !empty($this->options['text']) ? $this->options['text'] : t('revert');
     return $text;

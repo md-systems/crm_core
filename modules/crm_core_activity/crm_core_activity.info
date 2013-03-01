@@ -2,7 +2,7 @@ name = CRM Core Activity
 description = Provide activity entity.
 package = CRM
 core = 7.x
-configure = crm/admin/activity_types
+configure = admin/config/crm-core/activity_types
 
 
 ; =======================

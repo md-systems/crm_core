@@ -43,7 +43,7 @@ class crm_core_contact_handler_field_contact extends views_handler_field {
   function render_link($data, $values) {
     if (!empty($this->options['link_to_contact']) && $data !== NULL && $data !== '') {
       $this->options['alter']['make_link'] = TRUE;
-      $this->options['alter']['path'] = 'crm/contact/' . $values->{$this->aliases['contact_id']};
+      $this->options['alter']['path'] = 'crm-core/contact/' . $values->{$this->aliases['contact_id']};
     }
 
     return $data;

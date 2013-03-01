@@ -44,7 +44,7 @@ function crm_core_case_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = 'Name';
   $handler->display->display_options['fields']['title']['alter']['alter_text'] = 0;
   $handler->display->display_options['fields']['title']['alter']['make_link'] = 1;
-  $handler->display->display_options['fields']['title']['alter']['path'] = 'crm/case/[cid]';
+  $handler->display->display_options['fields']['title']['alter']['path'] = 'crm-core/case/[cid]';
   $handler->display->display_options['fields']['title']['alter']['absolute'] = 0;
   $handler->display->display_options['fields']['title']['alter']['external'] = 0;
   $handler->display->display_options['fields']['title']['alter']['replace_spaces'] = 0;
@@ -88,7 +88,7 @@ function crm_core_case_views_default_views() {
   $handler->display->display_options['fields']['nothing']['label'] = 'Edit';
   $handler->display->display_options['fields']['nothing']['alter']['text'] = 'Edit';
   $handler->display->display_options['fields']['nothing']['alter']['make_link'] = 1;
-  $handler->display->display_options['fields']['nothing']['alter']['path'] = 'crm/case/[cid]/edit';
+  $handler->display->display_options['fields']['nothing']['alter']['path'] = 'crm-core/case/[cid]/edit';
   $handler->display->display_options['fields']['nothing']['alter']['absolute'] = 0;
   $handler->display->display_options['fields']['nothing']['alter']['external'] = 0;
   $handler->display->display_options['fields']['nothing']['alter']['replace_spaces'] = 0;
@@ -112,7 +112,7 @@ function crm_core_case_views_default_views() {
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
-  $handler->display->display_options['path'] = 'crm/case';
+  $handler->display->display_options['path'] = 'crm-core/case';
   $handler->display->display_options['menu']['type'] = 'tab';
   $handler->display->display_options['menu']['title'] = 'Cases';
   $handler->display->display_options['menu']['weight'] = '0';

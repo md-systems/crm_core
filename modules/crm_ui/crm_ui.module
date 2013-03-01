@@ -9,33 +9,33 @@ function crm_ui_menu() {
   /**
    * Base CRM menu
    */
-  $items['crm'] = array(
-    'title' => 'CRM',
+  $items['crm-core'] = array(
+    'title' => 'CRM Core',
     'page callback' => 'crm_core_ui_dashboard',
     'access arguments' => array('view crm dashboard'),
     'type' => MENU_NORMAL_ITEM,
     'theme callback' => 'crm_core_ui_get_theme',
   );
 
-  $items['crm/dashboard'] = array(
+  $items['crm-core/dashboard'] = array(
     'title' => 'Dashboard',
     'weight' => -10,
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE,
   );
 
-  $items['admin/structure/crm'] = array(
-    'title' => 'CRM',
+  $items['admin/structure/crm-core'] = array(
+    'title' => 'CRM Core',
     'description' => 'Manage contact types, activity types, and contact relationship types.',
     'page callback' => 'crm_ui_admin_dashboard',
     'access arguments' => array('access administration pages'),
     'file' => 'pages/crm_ui.pages.inc',
   );
 
-  $items['admin/crm'] = array(
-      'title' => 'CRM',
+  $items['admin/config/crm-core'] = array(
+      'title' => 'CRM Core',
       'description' => 'CRM Core module and feature settings.',
-      'position' => 'right',
+      //'position' => 'right',
       'page callback' => 'system_admin_menu_block_page',
       'access arguments' => array('access administration pages'),
       'file' => 'system.admin.inc',
@@ -60,22 +60,22 @@ function crm_ui_menu() {
  */
 function crm_ui_menu_alter(&$items) {
   // Transform the field UI tabs into contextual links.
-  $items['admin/structure/crm/activity-types']['type'] = MENU_LOCAL_TASK;
-  $items['admin/structure/crm/contact-types']['type'] = MENU_LOCAL_TASK;
+  $items['admin/structure/crm-core/activity-types']['type'] = MENU_LOCAL_TASK;
+  $items['admin/structure/crm-core/contact-types']['type'] = MENU_LOCAL_TASK;
 
   // Make Views menu item local task.
-  $items['crm/contact/%/activity/add']['type'] = MENU_LOCAL_ACTION;
-  $items['crm/contact/%/activity/add']['title'] = t('Add Activity');
-  $items['crm/contact/%/activity/add']['tab_root'] = 'crm/contact/%/activity';
+  $items['crm-core/contact/%/activity/add']['type'] = MENU_LOCAL_ACTION;
+  $items['crm-core/contact/%/activity/add']['title'] = t('Add Activity');
+  $items['crm-core/contact/%/activity/add']['tab_root'] = 'crm-core/contact/%/activity';
 
   // Set tab_root for views local actions.
-  $items['crm/contact/%/activity']['tab_root'] = 'crm/contact/%';
-  $items['crm/contact/%/revisions']['tab_root'] = 'crm/contact/%';
+  $items['crm-core/contact/%/activity']['tab_root'] = 'crm-core/contact/%';
+  $items['crm-core/contact/%/revisions']['tab_root'] = 'crm-core/contact/%';
 
   // Alter Views menu item.
-  $items['crm/contact/%/activity']['title'] = t('Activity');
-  $items['crm/contact/%/activity']['type'] = MENU_LOCAL_TASK;
-  $items['crm/contact/%/activity']['context'] = MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE;
+  $items['crm-core/contact/%/activity']['title'] = t('Activity');
+  $items['crm-core/contact/%/activity']['type'] = MENU_LOCAL_TASK;
+  $items['crm-core/contact/%/activity']['context'] = MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE;
 }
 
 /**
@@ -110,8 +110,8 @@ function crm_ui_theme() {
  */
 function crm_ui_admin_paths() {
   $paths = array(
-    'crm/admin' => TRUE,
-    'crm/admin/*' => TRUE,
+    'crm-core/admin' => TRUE,
+    'crm-core/admin/*' => TRUE,
   );
 
   return $paths;

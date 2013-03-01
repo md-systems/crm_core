@@ -37,7 +37,7 @@ function crm_core_relationship_ui_types_overview($reverse = FALSE) {
     }
     else {
       if (!crm_core_relationship_is_relationship_type($type)) continue;
-      $url = 'admin/structure/crm/relationship-types/manage/' . $type;
+      $url = 'admin/structure/crm-core/relationship-types/manage/' . $type;
     }
     $row = array(l($type, $url));
     $links[] = l(t('edit'), $url . '/edit');
@@ -225,7 +225,7 @@ function crm_core_relationship_ui_type_form_submit($form, &$form_state) {
     'target_bundles' => $form_state['values']['target_bundles'],
   );
   relation_type_save($record, $form['#write_record_keys']);
-  $form_state['redirect'] = 'admin/structure/crm/relationship-types';
+  $form_state['redirect'] = 'admin/structure/crm-core/relationship-types';
 
   drupal_set_message(t('The relationship type has been saved.'));
 }
@@ -258,7 +258,7 @@ function crm_core_relationship_ui_type_delete_confirm($form, &$form_state, $rela
 
   $caption .= '<p>' . t('This action cannot be undone.') . '</p>';
 
-  return confirm_form($form, $message, 'admin/structure/crm/relationship-types', $caption, t('Delete'));
+  return confirm_form($form, $message, 'admin/structure/crm-core/relationship-types', $caption, t('Delete'));
 }
 
 /**
@@ -276,7 +276,7 @@ function crm_core_relationship_ui_type_delete_confirm_submit($form, &$form_state
   // TODO: relation_types_rebuild() ?;
   menu_rebuild();
 
-  $form_state['redirect'] = 'admin/structure/crm/relationship-types';
+  $form_state['redirect'] = 'admin/structure/crm-core/relationship-types';
   return;
 }
 
@@ -289,7 +289,7 @@ function _crm_core_relationship_ui_type_set_breadcrumb() {
     l(t('Administration'), 'admin'),
     l(t('Structure'), 'admin/structure'),
     l(t('CRM'), 'admin/structure/crm'),
-    l(t('Relationship types'), 'admin/structure/crm/relationship-types')
+    l(t('Relationship types'), 'admin/structure/crm-core/relationship-types')
   );
 
   drupal_set_breadcrumb($breadcrumb);

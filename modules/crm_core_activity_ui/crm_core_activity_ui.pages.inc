@@ -31,7 +31,7 @@ function crm_core_activity_entity_ui_get_form_wrapper($contact, $type) {
  */
 function crm_core_activity_form($form, &$form_state, $activity) {
   // Ensure this include file is loaded when the form is rebuilt from the cache.
-  $form_state['build_info']['files'][] = 
+  $form_state['build_info']['files'][] =
     drupal_get_path('module', 'crm_core_activity_ui') . '/crm_core_activity_ui.pages.inc';
   // get the contact id of who is trying to add the activity
   if (isset($activity->field_activity_participants['und']['0'])) {
@@ -157,7 +157,7 @@ function crm_core_activity_form_submit($form, &$form_state) {
     drupal_set_message(t('Activity @title edited.', array('@title' => $activity->title)));
   }
 
-  $form_state['redirect'] = 'crm/activity/' . $activity->activity_id;
+  $form_state['redirect'] = 'crm-core/activity/' . $activity->activity_id;
 }
 
 /**
@@ -172,7 +172,7 @@ function crm_core_activity_form_submit_delete($form, &$form_state) {
     unset($_GET['destination']);
   }
   $activity = $form_state['crm_core_activity'];
-  $form_state['redirect'] = array('crm/activity/' . $activity->activity_id . '/delete', array('query' => $destination));
+  $form_state['redirect'] = array('crm-core/activity/' . $activity->activity_id . '/delete', array('query' => $destination));
 }
 
 function crm_core_activity_form_delete_confirm($form, &$form_state, $activity) {
@@ -181,7 +181,7 @@ function crm_core_activity_form_delete_confirm($form, &$form_state, $activity) {
   $form['activity_id'] = array('#type' => 'value', '#value' => $activity->activity_id);
   return confirm_form($form,
     t('Are you sure you want to delete activity %title?', array('%title' => $activity->title)),
-    'crm/activity/' . $activity->activity_id,
+    'crm-core/activity/' . $activity->activity_id,
     t('This action cannot be undone.'),
     t('Delete'),
     t('Cancel')

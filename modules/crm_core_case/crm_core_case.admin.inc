@@ -70,11 +70,11 @@ function crm_core_case_type_form_submit(&$form, &$form_state) {
   }
 
   // Redirect user back to list of case types.
-  $form_state['redirect'] = 'admin/structure/crm/case-types';
+  $form_state['redirect'] = 'admin/structure/crm-core/case-types';
 }
 
 function crm_core_case_type_form_submit_delete(&$form, &$form_state) {
-  $form_state['redirect'] = 'admin/structure/crm/case-types/' . $form_state['crm_core_case_type']->type . '/delete';
+  $form_state['redirect'] = 'admin/structure/crm-core/case-types/' . $form_state['crm_core_case_type']->type . '/delete';
 }
 
 /**
@@ -86,7 +86,7 @@ function crm_core_case_type_form_delete_confirm($form, &$form_state, $case_type)
   $form['case_type_id'] = array('#type' => 'value', '#value' => $case_type->id);
   return confirm_form($form,
     t('Are you sure you want to delete Case type %title?', array('%title' => $case_type->label)),
-    'crm/case/' . $case_type->id,
+    'crm-core/case/' . $case_type->id,
     t('This action cannot be undone.'),
     t('Delete'),
     t('Cancel')
@@ -103,7 +103,7 @@ function crm_core_case_type_form_delete_confirm_submit($form, &$form_state) {
   watchdog('crm_core_case_type', '@type: deleted %title.', array('@type' => $case_type->type, '%title' => $case_type->label));
   drupal_set_message(t('@type %title has been deleted.', array('@type' => $case_type->type, '%title' => $case_type->label)));
 
-  $form_state['redirect'] = 'admin/structure/crm/case-types';
+  $form_state['redirect'] = 'admin/structure/crm-core/case-types';
 }
 
 function crm_core_case_admin_page() {
@@ -113,7 +113,7 @@ function crm_core_case_admin_page() {
 function crm_core_case_admin_add_page() {
   $items = array();
   foreach (crm_core_case_types() as $case_type_key => $case_type) {
-    $items[] = l($case_type->label, 'crm/case/add/' . $case_type_key);
+    $items[] = l($case_type->label, 'crm-core/case/add/' . $case_type_key);
   }
   return array('list' => array('#theme' => 'item_list', '#items' => $items, '#title' => t('Select type of case to create.')));
 }

@@ -5,13 +5,13 @@
 function crm_core_contact_ui_enable() {
   $menu_items = array(
     array(
-      'link_path' => 'crm/contact',
+      'link_path' => 'crm-core/contact',
       'link_title' => 'Contacts',
       'menu_name' => 'crm-core-menu',
       'weight' => 1,
     ),
     array(
-      'link_path' => 'admin/structure/crm/contact-types',
+      'link_path' => 'admin/structure/crm-core/contact-types',
       'link_title' => 'Administer CRM Contact Types',
       'menu_name' => 'crm-core-admin-menu',
     ),
@@ -28,10 +28,10 @@ function crm_core_contact_ui_disable() {
   //Remove links from crm-core-menu and crm-core-admin-menu.
   $conditions = array(
     'crm-core-menu' => array(
-      'crm/contact'
+      'crm-core/contact'
     ),
     'crm-core-admin-menu' => array(
-      'admin/structure/crm/contact-types'
+      'admin/structure/crm-core/contact-types'
     ),
   );
   crm_core_ui_remove_links($conditions);

@@ -10,7 +10,7 @@ class CRMCoreContactEntity extends Entity {
 
   protected function defaultUri() {
     return array(
-      'path' => 'crm/contact/' . $this->identifier(),
+      'path' => 'crm-core/contact/' . $this->identifier(),
       'options' => array(
         'absolute' => TRUE,
       ),

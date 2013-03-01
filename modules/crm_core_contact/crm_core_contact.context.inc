@@ -53,7 +53,7 @@ function crm_core_contact_context_page_condition() {
       }
     }
     // Also execute context on contact add page.
-    if (strpos($_GET['q'], 'crm/contact/add') !== FALSE) {
+    if (strpos($_GET['q'], 'crm-core/contact/add') !== FALSE) {
       $contact = entity_create('crm_core_contact', array('type' => arg(3)));
       $op = 'edit';
     }

@@ -5,7 +5,7 @@
  * @file
  * Handle the 'crm_core_contact view' override task.
  *
- * This plugin overrides crm/contact/%crm_core_contact and reroutes it to the page manager, where
+ * This plugin overrides crm-core/contact/%crm_core_contact and reroutes it to the page manager, where
  * a list of tasks can be used to service this request based upon criteria
  * supplied by access plugins.
  */
@@ -22,10 +22,10 @@ function crm_core_contact_view_page_manager_tasks() {
     'title' => t('Contact template'),
 
     'admin title' => t('Contact template'),
-    'admin description' => t('When enabled, this overrides the default Drupal behavior for displaying contacts at <em>crm/contact/%crm_core_contact</em>. If you add variants, you may use selection criteria such as contact type or language or user access to provide different views of contacts. If no variant is selected, the default Drupal contact view will be used. This page only affects contacts viewed as pages, it will not affect contacts viewed in lists or at other locations. Also please note that if you are using pathauto, aliases may make a contact to be somewhere else, but as far as Drupal is concerned, they are still at crm/contact/%crm_core_contact.'),
-    'admin path' => 'crm/contact/%crm_core_contact',
+    'admin description' => t('When enabled, this overrides the default Drupal behavior for displaying contacts at <em>crm-core/contact/%crm_core_contact</em>. If you add variants, you may use selection criteria such as contact type or language or user access to provide different views of contacts. If no variant is selected, the default Drupal contact view will be used. This page only affects contacts viewed as pages, it will not affect contacts viewed in lists or at other locations. Also please note that if you are using pathauto, aliases may make a contact to be somewhere else, but as far as Drupal is concerned, they are still at crm-core/contact/%crm_core_contact.'),
+    'admin path' => 'crm-core/contact/%crm_core_contact',
 
-    // Menu hooks so that we can alter the crm/contact/%crm_core_contact menu entry to point to us.
+    // Menu hooks so that we can alter the crm-core/contact/%crm_core_contact menu entry to point to us.
     'hook menu' => 'crm_core_contact_view_menu',
     'hook menu alter' => 'crm_core_contact_view_menu_alter',
 
@@ -54,17 +54,17 @@ function crm_core_contact_view_menu_alter(&$items, $task) {
   }
 
   // Override the crm_core_contact view handler for our purpose.
-  $callback = $items['crm/contact/%crm_core_contact']['page callback'];
+  $callback = $items['crm-core/contact/%crm_core_contact']['page callback'];
   if ($callback == 'crm_core_contact_view' || variable_get('page_manager_override_anyway', FALSE)) {
-    $items['crm/contact/%crm_core_contact']['page callback'] = 'crm_core_contact_view_page';
-    $items['crm/contact/%crm_core_contact']['file path'] = $task['path'];
-    $items['crm/contact/%crm_core_contact']['file'] = $task['file'];
+    $items['crm-core/contact/%crm_core_contact']['page callback'] = 'crm_core_contact_view_page';
+    $items['crm-core/contact/%crm_core_contact']['file path'] = $task['path'];
+    $items['crm-core/contact/%crm_core_contact']['file'] = $task['file'];
   }
   else {
     // automatically disable this task if it cannot be enabled.
     variable_set('page_manager_crm_core_contact_view_disabled', TRUE);
     if (!empty($GLOBALS['page_manager_enabling_crm_core_contact_view'])) {
-      drupal_set_message(t('Page manager module is unable to enable crm/contact/%crm_core_contact because some other module already has overridden with %callback.', array('%callback' => $callback)), 'error');
+      drupal_set_message(t('Page manager module is unable to enable crm-core/contact/%crm_core_contact because some other module already has overridden with %callback.', array('%callback' => $callback)), 'error');
     }
   }
 

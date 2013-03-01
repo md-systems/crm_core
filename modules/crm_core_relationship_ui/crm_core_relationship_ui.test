@@ -29,22 +29,22 @@ class CRMCoreRelationshipUITestCase extends DrupalWebTestCase {
 
     // Create organization and individual contacts.
     $individual_contact = CRMCoreContactUITestCase::individualContactValues();
-    $this->drupalPost('crm/contact/add/individual', $individual_contact, t('Save Contact'));
+    $this->drupalPost('crm-core/contact/add/individual', $individual_contact, t('Save Contact'));
 
     $organization_contact = CRMCoreContactUITestCase::organizationContactValues();
-    $this->drupalPost('crm/contact/add/organization', $organization_contact, t('Save Contact'));
+    $this->drupalPost('crm-core/contact/add/organization', $organization_contact, t('Save Contact'));
 
     // Ensure Relationships tab on contact view page.
-    $this->drupalGet('crm/contact/1');
+    $this->drupalGet('crm-core/contact/1');
     $this->assertLink(t('Relationships'));
 
-    $this->drupalGet('crm/contact/1/relationships');
+    $this->drupalGet('crm-core/contact/1/relationships');
     $this->assertNoRaw('<div class="messages error">', t('No errors on Relationships page.'));
     // Assert link "Add Relationship".
     $this->assertLink(t('Add relationship'));
 
     // Assert standard relationship types.
-    $this->drupalGet('crm/contact/1/relationships/add');
+    $this->drupalGet('crm-core/contact/1/relationships/add');
     $this->assertLink(t('Employee of'));
     $this->assertLink(t('Friend'));
     $this->assertLink(t('Member of'));
@@ -54,16 +54,16 @@ class CRMCoreRelationshipUITestCase extends DrupalWebTestCase {
 //      'source_contact' => CRMCoreContactUITestCase::getIndividualContactTitle($individual_contact) . ' [cid:1]',
       'destination_contact' => CRMCoreContactUITestCase::getOrganizationContactTitle($organization_contact) . ' [cid:2]',
     );
-    $this->drupalPost('crm/contact/1/relationships/add/crm_employee/0', $values, t('Save Relationship'));
+    $this->drupalPost('crm-core/contact/1/relationships/add/crm_employee/0', $values, t('Save Relationship'));
 
     // Go to relationships list of the individual and ensure that
     // Organization link is there.
-    $this->drupalGet('crm/contact/1/relationships');
+    $this->drupalGet('crm-core/contact/1/relationships');
     $this->assertLink(CRMCoreContactUITestCase::getOrganizationContactTitle($organization_contact));
 
     // Go to relationships list of the individual and ensure that
     // Organization link is there.
-    $this->drupalGet('crm/contact/2/relationships');
+    $this->drupalGet('crm-core/contact/2/relationships');
     $this->assertLink(CRMCoreContactUITestCase::getIndividualContactTitle($individual_contact));
   }
 }

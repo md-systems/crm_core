@@ -37,6 +37,6 @@ class crm_core_contact_handler_field_contact_revision extends views_handler_fiel
     $text = !empty($this->options['text']) ? $this->options['text'] : t('view');
     $vid = $values->{$this->aliases['vid']};
 
-    return l($text, 'crm/contact/' . $vid);
+    return l($text, 'crm-core/contact/' . $vid);
   }
 }

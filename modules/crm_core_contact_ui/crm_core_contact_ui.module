@@ -14,7 +14,7 @@ function crm_core_contact_ui_menu() {
   /*
    * Contact types
    */
-//  $items['admin/structure/crm/contact-types'] = array(
+//  $items['admin/structure/crm-core/contact-types'] = array(
 //    'title' => 'Contact Types',
 //    'description' => 'Manage contact types.',
 //    'page callback' => 'crm_core_contact_ui_types_overview',
@@ -23,7 +23,7 @@ function crm_core_contact_ui_menu() {
 //    'type' => MENU_LOCAL_TASK,
 //    'weight' => -10,
 //  );
-//  $items['admin/structure/crm/contact-types/add'] = array(
+//  $items['admin/structure/crm-core/contact-types/add'] = array(
 //    'title' => 'Add contact type',
 //    'page callback' => 'crm_core_contact_ui_type_form_wrapper',
 //    'page arguments' => array(crm_core_contact_type_new()),
@@ -31,7 +31,7 @@ function crm_core_contact_ui_menu() {
 //    'type' => MENU_LOCAL_ACTION | MENU_VISIBLE_IN_BREADCRUMB,
 //    'file' => 'crm_core_contact_ui.admin.inc',
 //  );
-//  $items['admin/structure/crm/contact-types/%crm_core_contact_type'] = array(
+//  $items['admin/structure/crm-core/contact-types/%crm_core_contact_type'] = array(
 //    'title' => 'Edit contact type',
 //    'title callback' => 'crm_core_contact_type_title',
 //    'title arguments' => array(4),
@@ -40,14 +40,14 @@ function crm_core_contact_ui_menu() {
 //    'access arguments' => array('administer contact types'),
 //    'file' => 'crm_core_contact_ui.admin.inc',
 //  );
-//  $items['admin/structure/crm/contact-types/%crm_core_contact_type/edit'] = array(
+//  $items['admin/structure/crm-core/contact-types/%crm_core_contact_type/edit'] = array(
 //    'title' => 'Edit',
 //    'type' => MENU_DEFAULT_LOCAL_TASK,
 //    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
 //    'access callback' => 'crm_core_contact_type_permission',
 //    'access arguments' => array(4, 'edit'),
 //  );
-//  $items['admin/structure/crm/contact-types/%crm_core_contact_type/disable'] = array(
+//  $items['admin/structure/crm-core/contact-types/%crm_core_contact_type/disable'] = array(
 //    'title' => 'Disable',
 //    'page callback' => 'drupal_get_form',
 //    'page arguments' => array('crm_core_contact_ui_type_toggle_form', 4, 'disable'),
@@ -59,7 +59,7 @@ function crm_core_contact_ui_menu() {
 //    'weight' => 8,
 //  );
 //
-//  $items['admin/structure/crm/contact-types/%crm_core_contact_type/enable'] = array(
+//  $items['admin/structure/crm-core/contact-types/%crm_core_contact_type/enable'] = array(
 //    'title' => 'Enable',
 //    'page callback' => 'drupal_get_form',
 //    'page arguments' => array('crm_core_contact_ui_type_toggle_form', 4, 'enable'),
@@ -71,7 +71,7 @@ function crm_core_contact_ui_menu() {
 //    'weight' => 9,
 //  );
 //
-//  $items['admin/structure/crm/contact-types/%crm_core_contact_type/delete'] = array(
+//  $items['admin/structure/crm-core/contact-types/%crm_core_contact_type/delete'] = array(
 //    'title' => 'Delete',
 //    'page callback' => 'drupal_get_form',
 //    'page arguments' => array('crm_core_contact_ui_type_delete_confirm', 4),
@@ -86,7 +86,7 @@ function crm_core_contact_ui_menu() {
   /**
    * Contacts
    */
-  $items['crm/contact/%crm_core_contact'] = array(
+  $items['crm-core/contact/%crm_core_contact'] = array(
     'title' => 'Contact',
     'page callback' => 'crm_core_contact_view',
     'page arguments' => array(2),
@@ -97,14 +97,14 @@ function crm_core_contact_ui_menu() {
     'type' => MENU_NORMAL_ITEM,
   );
 
-  $items['crm/contact/%crm_core_contact/view'] = array(
+  $items['crm-core/contact/%crm_core_contact/view'] = array(
     'title' => 'View',
     'weight' => -10,
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
   );
 
-  $items['crm/contact/%crm_core_contact/edit'] = array(
+  $items['crm-core/contact/%crm_core_contact/edit'] = array(
     'title' => 'Edit',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('crm_core_contact_ui_form', 2),
@@ -115,7 +115,7 @@ function crm_core_contact_ui_menu() {
     'file' => 'crm_core_contact_ui.pages.inc',
   );
 
-  $items['crm/contact/%crm_core_contact/revert/%'] = array(
+  $items['crm-core/contact/%crm_core_contact/revert/%'] = array(
     'title' => 'Contact',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('crm_core_contact_ui_revert_form', 2, 4),
@@ -125,7 +125,7 @@ function crm_core_contact_ui_menu() {
     'file' => 'crm_core_contact_ui.pages.inc',
   );
 
-  /* $items['crm/contact/%crm_core_contact/revisions'] = array(
+  /* $items['crm-core/contact/%crm_core_contact/revisions'] = array(
     'title' => 'Revisions',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('crm_core_contact_ui_revision_form', 2),
@@ -135,7 +135,7 @@ function crm_core_contact_ui_menu() {
     'file' => 'crm_core_contact_ui.pages.inc',
   ); */
 
-  $items['crm/contact/%crm_core_contact/delete'] = array(
+  $items['crm-core/contact/%crm_core_contact/delete'] = array(
     'title' => 'Delete',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('crm_core_contact_ui_delete_form', 2),
@@ -146,7 +146,7 @@ function crm_core_contact_ui_menu() {
     'file' => 'crm_core_contact_ui.pages.inc',
   );
 
-  $items['crm/contact/add'] = array(
+  $items['crm-core/contact/add'] = array(
     'title' => 'Add a contact',
     'description' => 'Add a new contact to the CRM.',
     'page callback' => 'crm_core_contact_ui_add_page',
@@ -158,7 +158,7 @@ function crm_core_contact_ui_menu() {
     'file' => 'crm_core_contact_ui.pages.inc',
   );
   foreach (crm_core_contact_types() as $type => $contact_type) {
-    $items['crm/contact/add/' . $type] = array(
+    $items['crm-core/contact/add/' . $type] = array(
       'title' => 'Add @type',
       'title arguments' => array('@type' => $contact_type->name),
       'description' => $contact_type->description,
@@ -174,7 +174,7 @@ function crm_core_contact_ui_menu() {
    * Contact Debug
    */
   if (module_exists('devel')) {
-    $items['crm/contact/%crm_core_contact/devel'] = array(
+    $items['crm-core/contact/%crm_core_contact/devel'] = array(
       'title' => 'Devel',
       'page_callback' => 'crm_core_contact_devel_load_object',
       'page arguments' => array(2),
@@ -183,12 +183,12 @@ function crm_core_contact_ui_menu() {
       'weight' => 100,
     );
 
-    $items['crm/contact/%crm_core_contact/devel/load'] = array(
+    $items['crm-core/contact/%crm_core_contact/devel/load'] = array(
       'title' => 'Load',
       'type' => MENU_DEFAULT_LOCAL_TASK,
     );
 
-    $items['crm/contact/%crm_core_contact/devel/render'] = array(
+    $items['crm-core/contact/%crm_core_contact/devel/render'] = array(
       'title' => 'Render',
       'page callback' => 'crm_core_contact_devel_render_object',
       'page arguments' => array(2),
@@ -218,8 +218,8 @@ function crm_core_contact_ui_views_api() {
  */
 function crm_core_contact_ui_menu_alter(&$items) {
   // Transform the field UI tabs into contextual links.
-  $items['admin/structure/crm/contact-types/%crm_core_contact_type/fields']['context'] = MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE;
-  $items['admin/structure/crm/contact-types/%crm_core_contact_type/display']['context'] = MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE;
+  $items['admin/structure/crm-core/contact-types/%crm_core_contact_type/fields']['context'] = MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE;
+  $items['admin/structure/crm-core/contact-types/%crm_core_contact_type/display']['context'] = MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE;
 }
 
 
@@ -228,8 +228,8 @@ function crm_core_contact_ui_menu_alter(&$items) {
  */
 function crm_core_contact_ui_admin_paths() {
   $paths = array(
-    'crm/admin/contact/types' => TRUE,
-    'crm/admin/contact/types/*' => TRUE,
+    'crm-core/admin/contact/types' => TRUE,
+    'crm-core/admin/contact/types/*' => TRUE,
   );
 
   return $paths;

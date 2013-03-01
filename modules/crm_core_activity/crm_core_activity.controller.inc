@@ -10,7 +10,7 @@ class CRMCoreActivityEntity extends Entity {
 
   protected function defaultUri() {
     return array(
-      'path' => 'crm/activity/' . $this->identifier(),
+      'path' => 'crm-core/activity/' . $this->identifier(),
       'options' => array(
         'absolute' => TRUE,
       ),

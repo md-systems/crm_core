@@ -23,6 +23,7 @@ function crm_ui_enable() {
   db_insert('block')->fields($fields, $values)->execute();
 
   $item = array(
+    'link_path' => 'crm-core/dashboard',
     'link_path' => 'crm',
     'link_title' => 'Dashboard',
     'menu_name' => 'crm-core-menu',

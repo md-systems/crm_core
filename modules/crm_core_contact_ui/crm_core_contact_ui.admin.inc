@@ -13,7 +13,7 @@ function crm_core_contact_ui_types_overview() {
   );
   $rows = array();
   foreach (crm_core_contact_types() as $type => $contact_type) {
-    $links = menu_contextual_links('crm', 'admin/structure/crm/contact-types', array($type));
+    $links = menu_contextual_links('crm', 'admin/structure/crm-core/contact-types', array($type));
 
     // @todo: this might not be the best place to hide these
     if ((bool) $contact_type->disabled) {
@@ -39,7 +39,7 @@ function crm_core_contact_ui_types_overview() {
     '#theme' => 'table',
     '#header' => $header,
     '#rows' => $rows,
-    '#empty' => t('There are no contact types. <a href="@link">Add contact type</a>.', array('@link' => url('crm/admin/contact-types/manage'))),
+    '#empty' => t('There are no contact types. <a href="@link">Add contact type</a>.', array('@link' => url('crm-core/admin/contact-types/manage'))),
   );
 
   return $build;
@@ -72,7 +72,7 @@ function crm_core_contact_ui_type_toggle_form($form, &$form_state, $contact_type
   );
 
   $question = t('Are you sure you want to @toggle this contact type?', array('@toggle' => $toggle));
-  $path = 'admin/structure/crm/contact-types';
+  $path = 'admin/structure/crm-core/contact-types';
 
   $description = '';
   if ($toggle == 'disable') {
@@ -102,7 +102,7 @@ function crm_core_contact_ui_type_toggle_form_submit($form, &$form_state) {
   }
 
   crm_core_contact_type_save($crm_core_contact_type);
-  $form_state['redirect'] = 'admin/structure/crm/contact-types';
+  $form_state['redirect'] = 'admin/structure/crm-core/contact-types';
   drupal_set_message(t('Contact type saved'));
 }
 
@@ -181,7 +181,7 @@ function crm_core_contact_ui_type_delete_confirm_submit($form, &$form_state) {
   $crm_core_contact_type = $form_state['contact_type'];
   crm_core_contact_type_delete($crm_core_contact_type->id);
 
-  $form_state['redirect'] = 'admin/structure/crm/contact-types';
+  $form_state['redirect'] = 'admin/structure/crm-core/contact-types';
   drupal_set_message(t('Contact type deleted'));
 
 }

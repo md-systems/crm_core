@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * @file
@@ -33,14 +33,14 @@ function crm_core_report_permission() {
  * Implements hook_menu().
  */
 function crm_core_report_menu() {
-  
+
   $items = array();
 
   /**
    * Provides a listing of all reports registered for CRM Core
    */
-  $items['crm/reports'] = array(
-    'title' => 'CRM Reports',
+  $items['crm-core/reports'] = array(
+    'title' => 'CRM Core Reports',
     'page callback' => 'crm_core_report_list',
     'access arguments' => array('view crm report index'),
     'type' => MENU_LOCAL_TASK,
@@ -55,8 +55,8 @@ function crm_core_report_menu() {
  * Implements hook_theme().
  */
 function crm_core_report_theme() {
-  
-  // we want a themable function for 
+
+  // we want a themable function for
   // - report items
   // - widgets
   // - report index
@@ -82,16 +82,16 @@ function crm_core_report_preprocess_crm_core_report_index(&$variables) {
         $items[] = l($report['title'], $report['path']) . '<br />' . $report['description'];
       }
       $report_items[] = theme('item_list', array('items' => $items, 'title' => $item['title']));
-       
+
     }
   }
-  
+
   $variables['report_items'] = $report_items;
 }
 
 /**
  * Constructs a list of registered reports and widgets for CRM Core
- * 
+ *
  * Reports registered via this hook will be listed on the reports page
  * and should include appropriate access controls, unless you want
  * everyone with access to the main reports page to see them.

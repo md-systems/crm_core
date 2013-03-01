@@ -60,7 +60,7 @@ function crm_core_case_entity_info() {
     'module' => 'crm_core_case',
     // Enable the entity API's admin UI.
     'admin ui' => array(
-      'path' => 'admin/structure/crm/case-types',
+      'path' => 'admin/structure/crm-core/case-types',
       'file' => 'crm_core_case.admin.inc',
       'controller class' => 'CRMCaseTypeUIController',
     ),
@@ -81,8 +81,8 @@ function crm_core_case_entity_info_alter(&$entity_info) {
     $entity_info['crm_core_case']['bundles'][$type] = array(
       'label' => $info->label,
       'admin' => array(
-        'path' => 'admin/structure/crm/case-types/manage/%crm_core_case_type',
-        'real path' => 'admin/structure/crm/case-types/manage/' . $type,
+        'path' => 'admin/structure/crm-core/case-types/manage/%crm_core_case_type',
+        'real path' => 'admin/structure/crm-core/case-types/manage/' . $type,
         'bundle argument' => 5,
       ),
     );
@@ -147,14 +147,14 @@ function crm_core_case_permission() {
 function crm_core_case_menu() {
   $items = array();
 
-//  $items['admin/structure/crm/case'] = array(
+//  $items['admin/structure/crm-core/case'] = array(
 //    'title' => 'Cases',
 //    'page callback' => 'crm_core_case_admin_page',
 //    'access arguments' => array('administer crm_core_case entities'),
 //    'file' => 'crm_core_case.admin.inc',
 //  );
 
-  $items['crm/case/add'] = array(
+  $items['crm-core/case/add'] = array(
     'title' => 'Add Case',
     'page callback' => 'crm_core_case_admin_add_page',
     'access arguments' => array('administer crm_core_case entities'),
@@ -207,7 +207,7 @@ function crm_core_case_menu() {
   );
 
   foreach (crm_core_case_types() as $type => $info) {
-    $items['crm/case/add/' . $type] = array(
+    $items['crm-core/case/add/' . $type] = array(
       'title' => 'Add case',
       'page callback' => 'crm_core_case_add',
       'page arguments' => array(3),
@@ -217,7 +217,7 @@ function crm_core_case_menu() {
     );
   }
 
-  $items['admin/structure/crm/case-types/%crm_core_case_type/delete'] = array(
+  $items['admin/structure/crm-core/case-types/%crm_core_case_type/delete'] = array(
     'title' => 'Delete',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('crm_core_case_type_form_delete_confirm', 4),
@@ -231,7 +231,7 @@ function crm_core_case_menu() {
 }
 
 function crm_core_case_menu_alter(&$items) {
-  $items['admin/structure/crm/case-types']['type'] = MENU_LOCAL_TASK;
+  $items['admin/structure/crm-core/case-types']['type'] = MENU_LOCAL_TASK;
 }
 
 /**
@@ -293,7 +293,7 @@ function crm_core_case_label($case) {
 }
 
 function crm_core_case_uri($case) {
-  return array('path' => 'crm/case/' . $case->cid);
+  return array('path' => 'crm-core/case/' . $case->cid);
 }
 
 /**

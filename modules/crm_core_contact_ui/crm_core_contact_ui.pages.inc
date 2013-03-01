@@ -147,7 +147,7 @@ function crm_core_contact_ui_form_submit($form, &$form_state) {
 
   // Redirect based on the button clicked.
   drupal_set_message(t('Contact saved.'));
-  $form_state['redirect'] = ($create) ? 'crm/contact' : "crm/contact/{$contact->contact_id}";
+  $form_state['redirect'] = ($create) ? 'crm-core/contact' : "crm-core/contact/{$contact->contact_id}";
 }
 
 /**
@@ -171,7 +171,7 @@ function crm_core_contact_ui_delete_form($form, &$form_state, $contact) {
   $form['contact_id'] = array('#type' => 'value', '#value' => $contact->contact_id);
   return confirm_form($form,
     t("Are you sure want to delete '@name' contact?", array('@name' => crm_core_contact_title($contact))),
-    'crm/contact/' . $contact->contact_id, $description = NULL, $yes = t('Yes'), $no = t('No'));
+    'crm-core/contact/' . $contact->contact_id, $description = NULL, $yes = t('Yes'), $no = t('No'));
 }
 
 /**
@@ -181,7 +181,7 @@ function crm_core_contact_ui_delete_form_submit($form, &$form_state) {
   if (crm_core_contact_delete($form_state['values']['contact_id'])) {
     drupal_set_message(t('Contact deleted.'));
   }
-  $form_state['redirect'] = 'crm/contact';
+  $form_state['redirect'] = 'crm-core/contact';
 }
 
 /**
@@ -220,7 +220,7 @@ function crm_core_contact_ui_revert_form($form, &$form_state, $contact, $vid) {
 
   return confirm_form($form,
     t("Are you sure want to revert this contact?"),
-    'crm/contact/' . $contact->contact_id . '/revisions', 'Reverting the contact will result in a new revision being created', t('Yes'), t('Cancel'));
+    'crm-core/contact/' . $contact->contact_id . '/revisions', 'Reverting the contact will result in a new revision being created', t('Yes'), t('Cancel'));
 }
 
 function crm_core_contact_ui_revert_form_submit($form, &$form_state) {
@@ -230,5 +230,5 @@ function crm_core_contact_ui_revert_form_submit($form, &$form_state) {
   if (crm_core_contact_revert($contact, $form_state['values']['vid'])) {
     drupal_set_message(t('Contact reverted.'));
   }
-  $form_state['redirect'] = 'crm/contact/' . $contact->contact_id . '/revisions';
+  $form_state['redirect'] = 'crm-core/contact/' . $contact->contact_id . '/revisions';
 }
