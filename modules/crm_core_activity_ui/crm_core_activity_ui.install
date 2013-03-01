@@ -16,7 +16,7 @@ function crm_core_activity_ui_install() {
 function crm_core_activity_ui_enable() {
   $menu_items = array(
     array(
-      'link_path' => 'admin/structure/crm/activity-types',
+      'link_path' => 'admin/structure/crm-core/activity-types',
       'link_title' => 'Administer CRM Activity Types',
       'menu_name' => 'crm-core-admin-menu',
     ),
@@ -33,7 +33,7 @@ function crm_core_activity_ui_disable() {
   //Remove links from crm-core-menu and crm-core-admin-menu.
   $conditions = array(
     'crm-core-admin-menu' => array(
-      'admin/structure/crm/activity-types'
+      'admin/structure/crm-core/activity-types'
     ),
   );
   crm_core_ui_remove_links($conditions);

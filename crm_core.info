@@ -1,4 +1,4 @@
 name = CRM Core
-description = Provides basic functionality for a Drupal CRM.
+description = Provides basic functionality for a CRM Core.
 package = CRM
 core = 7.x

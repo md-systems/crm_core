@@ -147,7 +147,7 @@ function crm_core_activity_ui_views_default_views() {
   $handler->display->display_options['fields']['title']['table'] = 'crm_core_activity';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['make_link'] = TRUE;
-  $handler->display->display_options['fields']['title']['alter']['path'] = 'crm/activity/[activity_id]';
+  $handler->display->display_options['fields']['title']['alter']['path'] = 'crm-core/activity/[activity_id]';
   $handler->display->display_options['fields']['title']['hide_alter_empty'] = FALSE;
   /* Field: CRM Activity: Label */
   $handler->display->display_options['fields']['label']['id'] = 'label';

@@ -6,8 +6,8 @@
 function crm_core_relationship_ui_enable() {
   $menu_items = array(
     array(
-      'link_path' => 'admin/structure/crm/relationship-types',
-      'link_title' => 'Administer CRM Relationship Types',
+      'link_path' => 'admin/structure/crm-core/relationship-types',
+      'link_title' => 'Administer CRM Core Relationship Types',
       'menu_name' => 'crm-core-admin-menu',
     ),
   );
@@ -23,7 +23,7 @@ function crm_core_relationship_ui_disable() {
   //Remove links from crm-core-menu and crm-core-admin-menu.
   $conditions = array(
     'crm-core-admin-menu' => array(
-      'admin/structure/crm/relationship-types'
+      'admin/structure/crm-core/relationship-types'
     ),
   );
   crm_core_ui_remove_links($conditions);
