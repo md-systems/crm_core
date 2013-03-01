@@ -98,6 +98,7 @@ function crm_core_admin_config_form($form, &$form_state) {
     '#default_value' => variable_get('crm_core_theme', ''),
     '#options' => $options,
     '#weight' => 0,
+    '#empty_option' => t('- Please Select -'),
     '#empty_value' => '',
     '#states' => array(
       'required' => array(
@@ -105,6 +106,7 @@ function crm_core_admin_config_form($form, &$form_state) {
       ),
     ),
   );
+  // TODO: We must figure out possibility to be able to set "menu_main_links_source" dynamically. Look menu_main_menu().
   $form['theme']['crm_core_theme_settings']['crm_core_theme_replace_links'] = array(
     '#type' => 'checkbox',
     '#title' => t('Replace primary links with the CRM Core menu?'),
@@ -135,9 +137,9 @@ function crm_core_admin_config_form_validate($form, &$form_state) {
   if (!$menu_item) {
     form_set_error('crm_core_dashboard_path', t('You must VALID path(it must exist already).'));
   }
-  // TODO: Add validator for "dashboard_path" and "crm_core_theme" !empty when "crm_core_theme_enabled" is checked.
-  //form_set_error('crm_core_theme', t('You must select theme.'));
   $theme_enabled = $form_state['values']['crm_core_theme_enabled'];
   $theme = $form_state['values']['crm_core_theme'];
-
+  if ($theme_enabled && empty($theme)) {
+    form_set_error('crm_core_theme', t('You must select a theme to use.'));
+  }
 }
