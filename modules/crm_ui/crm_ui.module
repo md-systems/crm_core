@@ -42,6 +42,16 @@ function crm_ui_menu() {
       'file path' => drupal_get_path('module', 'system'),
   );
 
+  $items['admin/config/crm-core'] = array(
+    'title' => 'CRM Core Settings',
+    'description' => 'CRM Core Settings page',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_core_admin_config_form'),
+    'access arguments' => array('administer crm-core settings'),
+    'file' => 'pages/crm_ui.pages.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
   return $items;
 }
 
@@ -76,6 +86,10 @@ function crm_ui_permission() {
     'view crm dashboard' => array(
       'title' => t('View CRM dashboard'),
       'description' => t('Use dashboard.'),
+    ),
+    'administer crm-core settings' => array(
+      'title' => t('Administer CRM Core Settings'),
+      'restrict access' => TRUE,
     ),
   );
 }
