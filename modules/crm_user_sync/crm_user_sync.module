@@ -5,16 +5,15 @@
  */
 function crm_user_sync_menu() {
   $items = array();
-
-  // Only setup ui if crm_ui is present
-  $items['admin/structure/crm/user_sync'] = array(
-    'title' => 'User Synchronization',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('crm_user_sync_admin'),
-    'access arguments' => array('administer user-sync'),
-    'file' => 'crm_user_sync.admin.inc',
-  );
-
+  if (module_exists('crm_ui')) {
+    $items['admin/config/crm-core/user_sync'] = array(
+      'title' => 'User Synchronization',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('crm_user_sync_admin'),
+      'access arguments' => array('administer user-sync'),
+      'file' => 'crm_user_sync.admin.inc',
+    );
+  }
   return $items;
 }
 
