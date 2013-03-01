@@ -14,7 +14,6 @@ function crm_ui_menu() {
     'page callback' => 'crm_ui_placeholder',
     'access arguments' => array('view crm dashboard'),
     'type' => MENU_NORMAL_ITEM,
-    'file' => 'pages/crm_ui.pages.inc',
   );
 
   $items['crm/dashboard'] = array(
@@ -152,7 +151,12 @@ function crm_ui_block_view($delta) {
  * A placeholder function.
  */
  function crm_ui_placeholder() {
-  return "This is a placeholder.";
+   drupal_set_message(t('No dashboard has been configured for CRM Core. Click !here to configure a dashboard.',
+     array(
+     '!here' => l('here', 'admin/config/crm-core'),
+     )
+   ));
+   drupal_goto('crm/contact');
  }
 
 /**
