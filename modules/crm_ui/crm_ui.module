@@ -280,3 +280,10 @@ function crm_core_ui_get_theme() {
     return variable_get('crm_core_theme', '');
   }
 }
+
+function crm_ui_preprocess_page(&$variables) {
+  // Replace "main-menu" links with links from "crm-core-menu".
+  if (menu_get_custom_theme() && variable_get('crm_core_theme_replace_links', FALSE)) {
+    $variables['main_menu'] = menu_navigation_links('crm-core-menu');
+  }
+}

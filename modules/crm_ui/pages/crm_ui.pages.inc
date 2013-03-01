@@ -106,7 +106,6 @@ function crm_core_admin_config_form($form, &$form_state) {
       ),
     ),
   );
-  // TODO: We must figure out possibility to be able to set "menu_main_links_source" dynamically. Look menu_main_menu().
   $form['theme']['crm_core_theme_settings']['crm_core_theme_replace_links'] = array(
     '#type' => 'checkbox',
     '#title' => t('Replace primary links with the CRM Core menu?'),
