@@ -4,7 +4,7 @@
  */
 function crm_core_report_enable() {
   $item = array(
-    'link_path' => 'crm/reports',
+    'link_path' => 'crm-core/reports',
     'link_title' => 'Reports',
     'menu_name' => 'crm-core-menu',
     'weight' => 2,
@@ -18,7 +18,7 @@ function crm_core_report_enable() {
 function crm_core_report_disable() {
   $links = menu_load_links('crm-core-menu');
   foreach ($links as $link) {
-    if ($link['link_path'] == 'crm/reports') {
+    if ($link['link_path'] == 'crm-core/reports') {
       menu_link_delete($link['mlid']);
     }
   }

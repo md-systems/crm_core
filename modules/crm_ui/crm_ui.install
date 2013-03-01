@@ -23,8 +23,7 @@ function crm_ui_enable() {
   db_insert('block')->fields($fields, $values)->execute();
 
   $item = array(
-    'link_path' => 'crm-core/dashboard',
-    'link_path' => 'crm',
+    'link_path' => 'crm-core',
     'link_title' => 'Dashboard',
     'menu_name' => 'crm-core-menu',
     'weight' => 0,
@@ -39,7 +38,7 @@ function crm_ui_disable() {
   db_delete('block')->condition('delta', 'crm-core-menu')->execute();
   $links = menu_load_links('crm-core-menu');
   foreach ($links as $link) {
-    if ($link['link_path'] == 'crm') {
+    if ($link['link_path'] == 'crm-core') {
       menu_link_delete($link['mlid']);
     }
   }
