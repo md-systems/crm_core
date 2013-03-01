@@ -11,7 +11,7 @@ function crm_ui_menu() {
    */
   $items['crm'] = array(
     'title' => 'CRM',
-    'page callback' => 'crm_ui_placeholder',
+    'page callback' => 'crm_core_ui_dashboard',
     'access arguments' => array('view crm dashboard'),
     'type' => MENU_NORMAL_ITEM,
   );
@@ -148,16 +148,29 @@ function crm_ui_block_view($delta) {
 }
 
 /**
- * A placeholder function.
+ * Render CRM Core Dashboard, if configured, otherwise redirects to contacts list.
  */
- function crm_ui_placeholder() {
-   drupal_set_message(t('No dashboard has been configured for CRM Core. Click !here to configure a dashboard.',
-     array(
-     '!here' => l('here', 'admin/config/crm-core'),
-     )
-   ));
-   drupal_goto('crm/contact');
- }
+function crm_core_ui_dashboard() {
+  if (variable_get('crm_core_dashboard_enabled', FALSE)) {
+    $dashboard_path = variable_get('crm_core_dashboard_path', '');
+    // Get the content for the path.
+    $output = menu_execute_active_handler($dashboard_path, FALSE);
+    // If the callback returns an array instead of text, render it.
+    if (is_array($output)) {
+      $output = drupal_render($output);
+    }
+    return $output;
+  }
+  else {
+    // Dashboard is not configured.
+    drupal_set_message(t('No dashboard has been configured for CRM Core. Click !here to configure a dashboard.',
+      array(
+        '!here' => l(t('here'), 'admin/config/crm-core'),
+      )
+    ));
+    drupal_goto('crm/contact');
+  }
+}
 
 /**
  * Implements hook_views_pre_render()

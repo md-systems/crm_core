@@ -95,7 +95,6 @@ function crm_core_admin_config_form($form, &$form_state) {
   $form['theme']['crm_core_theme_settings']['crm_core_theme'] = array(
     '#type' => 'select',
     '#title' => t('Select theme to use'),
-    //'#required' => TRUE,
     '#default_value' => variable_get('crm_core_theme', ''),
     '#options' => $options,
     '#weight' => 0,
@@ -130,8 +129,13 @@ function crm_core_admin_config_form($form, &$form_state) {
  * Validate CRM Core settings.
  */
 function crm_core_admin_config_form_validate($form, &$form_state) {
-  // TODO: Add validator for "dashboard_path" and "crm_core_theme" !empty when "crm_core_theme_enabled" is checked.
+  // Dashboard path validation.
   $dashboard_path = $form_state['values']['crm_core_dashboard_path'];
+  $menu_item = menu_get_item($dashboard_path);
+  if (!$menu_item) {
+    form_set_error('crm_core_dashboard_path', t('You must VALID path(it must exist already).'));
+  }
+  // TODO: Add validator for "dashboard_path" and "crm_core_theme" !empty when "crm_core_theme_enabled" is checked.
   //form_set_error('crm_core_theme', t('You must select theme.'));
   $theme_enabled = $form_state['values']['crm_core_theme_enabled'];
   $theme = $form_state['values']['crm_core_theme'];
