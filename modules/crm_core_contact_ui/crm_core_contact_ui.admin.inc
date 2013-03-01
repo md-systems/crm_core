@@ -13,7 +13,7 @@ function crm_core_contact_ui_types_overview() {
   );
   $rows = array();
   foreach (crm_core_contact_types() as $type => $contact_type) {
-    $links = menu_contextual_links('crm', 'admin/structure/crm-core/contact-types', array($type));
+    $links = menu_contextual_links('crm-core', 'admin/structure/crm-core/contact-types', array($type));
 
     // @todo: this might not be the best place to hide these
     if ((bool) $contact_type->disabled) {

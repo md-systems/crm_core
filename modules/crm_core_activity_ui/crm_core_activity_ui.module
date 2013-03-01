@@ -153,7 +153,7 @@ function crm_core_activity_ui_views_api() {
  * Implements hook_init().
  */
 function crm_core_activity_ui_init() {
-  if (arg(0) == 'crm' && arg(1) == 'contact' && arg(3) == 'activity') {
+  if (arg(0) == 'crm-core' && arg(1) == 'contact' && arg(3) == 'activity') {
     drupal_add_css(drupal_get_path('module', 'crm_core_activity_ui') . '/crm_core_activity_ui.css');
   }
 }

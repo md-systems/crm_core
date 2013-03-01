@@ -306,7 +306,7 @@ function crm_core_relationship_ui_query_views_crm_relationships_by_contact_alter
  */
 function crm_core_relationship_ui_init() {
   // Check that we on relationships page of contact.
-  if (arg(0) == 'crm' && arg(1) == 'contact' && arg(3) == 'relationships') {
+  if (arg(0) == 'crm-core' && arg(1) == 'contact' && arg(3) == 'relationships') {
     drupal_add_css(drupal_get_path('module', 'crm_core_relationship_ui') . '/crm_core_relationship_ui.css');
     //drupal_set_title()
   }
@@ -320,7 +320,7 @@ function crm_core_relationship_ui_preprocess_views_view(&$vars) {
     $contact_uri = entity_uri('crm_core_contact', $contact);
     $breadcrumb = array(
       l(t('Home'), '<front>'),
-      l(t('CRM'), 'crm'),
+      l(t('CRM'), 'crm-core'),
       l($contact_label, $contact_uri['path']),
     );
     drupal_set_breadcrumb($breadcrumb);
