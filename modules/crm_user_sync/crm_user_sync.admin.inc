@@ -3,59 +3,61 @@
 /**
  * Admin form for User Synchronization
  */
-function crm_user_sync_admin($form_state) {
+function crm_user_sync_admin_form($form_state) {
   $form = array();
 
   $roles = user_roles(TRUE);
   $types = crm_core_contact_types();
- 
-  $form['crm_user_sync_roles'] = array(
-    '#type' => 'checkboxes',
-    '#title' => t('Roles to enable User Synchronization.'),
-    '#options' => $roles,
-    '#default_value' => variable_get('crm_user_sync_roles', array()),
-  );
 
   $types_options = array();
   foreach ($types as $key => $type) {
     $types_options[$key] = $type->name;
   }
 
-  if (empty($types[$key])) {
-    $form[] = array('#markup' => t('You need at least a Contact type to enable User Synchronization'));
-  }
-  else {
-    foreach ($roles as $rid => $role) {
-      $form['crm_user_sync_' . $rid . '_type'] = array(
-        '#type' => 'select',
-        '#title' => t('Contact type to use for role @role', array('@role' => $role)),
-        '#options' => $types_options,
-        '#states' => array(
-          'visible' => array(
-            'input[name="crm_user_sync_roles[' . $rid . ']"]' => array('checked' => TRUE),
-          ),
-        ),
-        '#default_value' => variable_get('crm_user_sync_' . $rid . '_type', isset($types_options['individual']) ? 'individual' : NULL),
-      );
-    }
+  $settings = variable_get('crm_user_sync_settings', array());
+
+  // TODO: remove this
+  $settings = array(
+    array('rid' => 2, 'contact_type' => 'individual', 'enabled' => true, 'weight' => 1),
+    array('rid' => 3, 'contact_type' => 'organization', 'enabled' => false, 'weight' => 1)
+  );
+
+  $form['crm_user_sync_description'] = array(
+    '#markup' => t('CRM Core User Synchronization can automatically create contact records associated with user accounts under certain conditions.')
+  );
+
+  $form['crm_user_sync_settings'] = array(
+    '#type' => 'container'
+  );
+
+  foreach ($settings as $id => $setting) {
+    $form['crm_user_sync_settings'][$id]['role'] = array('#markup' => $roles[$setting['rid']]);
+    $form['crm_user_sync_settings'][$id]['contact_type'] = array('#markup' => $types_options[$setting['contact_type']]);
+    $form['crm_user_sync_settings'][$id]['enabled'] = array('#markup' => $setting['enabled'] ? 'Yes' : 'No');
+
+    $form['crm_user_sync_settings'][$id]['weight'] = array(
+      '#type' => 'weight',
+      '#title_display' => 'invisible',
+      '#default_value' => $setting['weight'],
+    );
   }
 
   $form['crm_user_sync_auto_sync_user_create'] = array(
     '#type' => 'checkbox',
     '#title' => t('Automatically create an associated contact when account is created'),
-    '#description' => t('Disable this option if you want to manage synchronization within custom modules.'),
+    '#description' => t('When checked, this checkbox will automatically create new contacts when a new user account is created according to rules listed above. Rules will be processed in order until a new contact is created.'),
     '#default_value' => variable_get('crm_user_sync_auto_sync_user_create', 1),
   );
 
-  $form['#submit'][] = 'crm_user_sync_admin_submit';
+  $form['#submit'][] = 'crm_user_sync_admin_form_submit';
 
-  return system_settings_form($form);
+  return $form;
 }
 
 /**
  * Validation callback.
  */
-function crm_user_sync_admin_validate($form, &$form_state) {
+function crm_user_sync_admin_form_validate($form, &$form_state) {
   // we need to make sure that no single contact type is selected to match multiple roles
   $errors = array();
   $values = $form_state['values'];
@@ -83,7 +85,7 @@ function crm_user_sync_admin_validate($form, &$form_state) {
 /**
  * Submit callback. Handles synchronization changes.
  */
-function crm_user_sync_admin_submit($form, &$form_state) {
+function crm_user_sync_admin_form_submit($form, &$form_state) {
   // we shouldn't use the submission handler to perform bulk operations, it can potentially be messy,
   // instead we will let the user hooks to do the works
 }
@@ -135,3 +137,34 @@ function crm_user_sync_admin_submit($form, &$form_state) {
   // dsm($form);
   // dsm($form_state);
 }*/
+
+
+/**
+ * Theme implementation of the weight form
+ */
+function theme_crm_user_sync_admin_form($variables) {
+  $form = $variables['form'];
+
+  $rows = array();
+
+  foreach (element_children($form['crm_user_sync_settings']) as $field_name) {
+    $form['crm_user_sync_settings'][$field_name]['weight']['#attributes']['class'] = array('crm-user-sync-settings-order-weight');
+    $rows[] = array(
+      'data' => array(
+        drupal_render($form['crm_user_sync_settings'][$field_name]['role']),
+        drupal_render($form['crm_user_sync_settings'][$field_name]['contact_type']),
+        drupal_render($form['crm_user_sync_settings'][$field_name]['enabled']),
+        drupal_render($form['crm_user_sync_settings'][$field_name]['weight']),
+      ),
+      'class' => array('draggable'),  
+    );
+  }
+
+  $header = array(t('Role'), t('Contact Type'), t('Enabled'), t('Weight'),);
+  $form['crm_user_sync_settings']['content']['#markup'] = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'crm-user-sync-settings-order')));
+  $output = drupal_render_children($form);
+
+  drupal_add_tabledrag('crm-user-sync-settings-order', 'order', 'sibling', 'crm-user-sync-settings-order-weight');
+
+  return $output;
+}

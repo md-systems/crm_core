@@ -10,7 +10,7 @@ function crm_user_sync_menu() {
       'title' => 'User Synchronization',
       'description' => 'Manage CRM Core user synchronization settings',
       'page callback' => 'drupal_get_form',
-      'page arguments' => array('crm_user_sync_admin'),
+      'page arguments' => array('crm_user_sync_admin_form'),
       'access arguments' => array('administer user-sync'),
       'file' => 'crm_user_sync.admin.inc',
       'type' => MENU_LOCAL_TASK,
@@ -314,4 +314,16 @@ function crm_user_sync_init() {
     global $user;
     $user->crm_core['contact'] = crm_user_sync_get_contact_from_uid($user->uid);
   }
+}
+
+/**
+ * Implements hook_theme
+ */
+function crm_user_sync_theme() {
+  return array(
+    'crm_user_sync_admin_form' => array(
+      'render element' => 'form',
+      'file' => 'crm_user_sync.admin.inc',
+    ),
+  );
 }
