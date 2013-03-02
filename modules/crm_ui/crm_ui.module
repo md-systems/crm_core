@@ -172,7 +172,7 @@ function crm_core_ui_dashboard() {
     // Dashboard is not configured.
     drupal_set_message(t('No dashboard has been configured for CRM Core. Click !here to configure a dashboard.',
       array(
-        '!here' => l(t('here'), 'admin/config/crm-core'),
+        '!here' => l(t('here'), 'admin/config/crm-core/settings'),
       )
     ));
     drupal_goto('crm-core/contact');

@@ -131,11 +131,14 @@ function crm_core_admin_config_form($form, &$form_state) {
  */
 function crm_core_admin_config_form_validate($form, &$form_state) {
   // Dashboard path validation.
-  $dashboard_path = $form_state['values']['crm_core_dashboard_path'];
-  $menu_item = menu_get_item($dashboard_path);
-  if (!$menu_item) {
-    form_set_error('crm_core_dashboard_path', t('You must VALID path(it must exist already).'));
+  $dashboard_enabled = $form_state['values']['crm_core_dashboard_enabled'];
+  if ($dashboard_enabled) {
+    $menu_item = menu_get_item($form_state['values']['crm_core_dashboard_path']);
+    if (!$menu_item) {
+      form_set_error('crm_core_dashboard_path', t('You must VALID path(it must exist already).'));
+    }
   }
+  // Theme settings validation.
   $theme_enabled = $form_state['values']['crm_core_theme_enabled'];
   $theme = $form_state['values']['crm_core_theme'];
   if ($theme_enabled && empty($theme)) {
