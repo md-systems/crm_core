@@ -6,13 +6,15 @@
 function crm_user_sync_menu() {
   $items = array();
   if (module_exists('crm_ui')) {
-    $items['admin/config/crm-core/user_sync'] = array(
+    $items['admin/config/crm-core/settings/user_sync'] = array(
       'title' => 'User Synchronization',
       'description' => 'Manage CRM Core user synchronization settings',
       'page callback' => 'drupal_get_form',
       'page arguments' => array('crm_user_sync_admin'),
       'access arguments' => array('administer user-sync'),
       'file' => 'crm_user_sync.admin.inc',
+      'type' => MENU_LOCAL_TASK,
+      'weight' => 0,
     );
   }
   return $items;
