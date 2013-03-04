@@ -146,7 +146,7 @@ function crm_core_contact_ui_menu() {
     'file' => 'crm_core_contact_ui.pages.inc',
   );
 
-  $items['crm-core/contact/add'] = array(
+  $items['crm-core/contacts/add'] = array(
     'title' => 'Add a contact',
     'description' => 'Add a new contact to the CRM.',
     'page callback' => 'crm_core_contact_ui_add_page',
@@ -158,7 +158,7 @@ function crm_core_contact_ui_menu() {
     'file' => 'crm_core_contact_ui.pages.inc',
   );
   foreach (crm_core_contact_types() as $type => $contact_type) {
-    $items['crm-core/contact/add/' . $type] = array(
+    $items['crm-core/contacts/add/' . $type] = array(
       'title' => 'Add @type',
       'title arguments' => array('@type' => $contact_type->name),
       'description' => $contact_type->description,
@@ -262,7 +262,7 @@ function crm_core_contact_ui_theme() {
  * Implements hook_init().
  */
 function crm_core_contact_ui_init() {
-  if (arg(0) == 'crm-core' && arg(1) == 'contact') {
+  if (arg(0) == 'crm-core' && arg(1) == 'contacts') {
     drupal_add_css(drupal_get_path('module', 'crm_core_contact_ui') . '/crm_core_contact_ui.css');
   }
 }

@@ -187,7 +187,7 @@ function crm_core_contact_ui_views_default_views() {
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page_1');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
-  $handler->display->display_options['path'] = 'crm-core/contact';
+  $handler->display->display_options['path'] = 'crm-core/contacts';
   $handler->display->display_options['menu']['type'] = 'tab';
   $handler->display->display_options['menu']['title'] = 'Contacts';
   $handler->display->display_options['menu']['weight'] = '0';

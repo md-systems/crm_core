@@ -175,7 +175,7 @@ function crm_core_ui_dashboard() {
         '!here' => l(t('here'), 'admin/config/crm-core/settings'),
       )
     ));
-    drupal_goto('crm-core/contact');
+    drupal_goto('crm-core/contacts');
   }
 }
 

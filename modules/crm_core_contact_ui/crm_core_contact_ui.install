@@ -5,7 +5,7 @@
 function crm_core_contact_ui_enable() {
   $menu_items = array(
     array(
-      'link_path' => 'crm-core/contact',
+      'link_path' => 'crm-core/contacts',
       'link_title' => 'Contacts',
       'menu_name' => 'crm-core-menu',
       'weight' => 1,
@@ -28,7 +28,7 @@ function crm_core_contact_ui_disable() {
   //Remove links from crm-core-menu and crm-core-admin-menu.
   $conditions = array(
     'crm-core-menu' => array(
-      'crm-core/contact'
+      'crm-core/contacts'
     ),
     'crm-core-admin-menu' => array(
       'admin/structure/crm-core/contact-types'
