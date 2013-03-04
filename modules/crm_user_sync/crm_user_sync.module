@@ -16,7 +16,17 @@ function crm_user_sync_menu() {
       'type' => MENU_LOCAL_TASK,
       'weight' => 0,
     );
+
+    $items['admin/config/crm-core/settings/user_sync/new'] = array(
+      'title' => t('Add a new rule'),
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('crm_user_sync_admin_edit_rule_form', null),
+      'access callback' => TRUE, //TODO FIX IT
+      'file' => 'crm_user_sync.admin.inc',
+      'type' => MENU_LOCAL_ACTION,
+    );
   }
+
   return $items;
 }
 

@@ -35,7 +35,7 @@ class views_plugin_argument_default_contact_id extends views_plugin_argument_def
       if (!empty($user)) {
         $contact = _crm_user_sync_get_related_entity('user', $user->uid, 'crm_user_sync');
         if (!empty($contact)) {
-          return $contact->contact_id;  
+          return $contact->contact_id;
         }
       }
     }
@@ -45,7 +45,7 @@ class views_plugin_argument_default_contact_id extends views_plugin_argument_def
       if (!empty($user)) {
         $contact = _crm_user_sync_get_related_entity('user', $user->uid, 'crm_user_sync');
         if (!empty($contact)) {
-          return $contact->contact_id;  
+          return $contact->contact_id;
         }
       }
     }
@@ -56,7 +56,7 @@ class views_plugin_argument_default_contact_id extends views_plugin_argument_def
         if (!empty($node)) {
           $contact = _crm_user_sync_get_related_entity('user', $node->uid, 'crm_user_sync');
           if (!empty($contact)) {
-            return $contact->contact_id;  
+            return $contact->contact_id;
           }
         }
       }
@@ -66,7 +66,7 @@ class views_plugin_argument_default_contact_id extends views_plugin_argument_def
       $uid = arg(1);
       $contact = _crm_user_sync_get_related_entity('user', $uid, 'crm_user_sync');
       if (!empty($contact)) {
-        return $contact->contact_id;  
+        return $contact->contact_id;
       }
     }
 
@@ -76,7 +76,7 @@ class views_plugin_argument_default_contact_id extends views_plugin_argument_def
         if ($node) {
           $contact = _crm_user_sync_get_related_entity('user', $node->uid, 'crm_user_sync');
           if (!empty($contact)) {
-            return $contact->contact_id;  
+            return $contact->contact_id;
           }
         }
       }

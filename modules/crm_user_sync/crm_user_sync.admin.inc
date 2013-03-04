@@ -125,3 +125,44 @@ function crm_user_sync_weight_cmp($a, $b) {
 }
 
 
+function crm_user_sync_admin_edit_rule_form($form_state) {
+
+  drupal_set_title('Add user syncrhonzation rule');
+  $form = array();
+
+  $roles = user_roles(TRUE);
+  $types = crm_core_contact_types();
+
+  $types_options = array();
+  foreach ($types as $key => $type) {
+    $types_options[$key] = $type->name;
+  }
+
+  $form['role'] = array(
+    '#type' => 'select',
+    '#title' => t('User Role'),
+    '#options' => $roles,
+    '#default_value' => ''
+  );
+
+  $form['contact_type'] = array(
+    '#type' => 'select',
+    '#title' => t('Contact Type'),
+    '#options' => $types_options,
+    '#default_value' => ''
+  );
+
+  $form['enabled'] = array(
+    '#type' =>'checkbox',
+    '#title' => t('Enabled'),
+    '#description' => 'When checked, this rule will be used to synchronize user accounts. When unchecked, it will be ignored throughout the system.'
+  );
+
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['save'] = array('#type' => 'submit', '#value' => t('Save'));
+  $form['actions']['cancel'] = array('#type' => 'submit', '#value' => t('Cancel'));
+
+
+  return $form;
+}
+
