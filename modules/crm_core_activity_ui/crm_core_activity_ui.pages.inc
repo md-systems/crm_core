@@ -151,10 +151,10 @@ function crm_core_activity_form_submit($form, &$form_state) {
 
   // Show message to user.
   if ($form_state['op'] == 'add') {
-    drupal_set_message(t('Activity @title created.', array('@title' => $activity->title)));
+    drupal_set_message(t('Activity %title created.', array('%title' => $activity->title)));
   }
   elseif ($form_state['op'] == 'edit') {
-    drupal_set_message(t('Activity @title edited.', array('@title' => $activity->title)));
+    drupal_set_message(t('Activity %title edited.', array('%title' => $activity->title)));
   }
 
   $form_state['redirect'] = 'crm-core/activity/' . $activity->activity_id;
