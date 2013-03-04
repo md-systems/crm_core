@@ -337,3 +337,25 @@ function crm_user_sync_theme() {
     ),
   );
 }
+
+/**
+ * Implements hook_user_view().
+ */
+function crm_user_sync_user_view($account, $view_mode, $langcode) {
+  $contact = crm_user_sync_get_contact_from_uid($account->uid);
+  if ($contact) {
+    $content = array(
+      '#type' => 'user_profile_item',
+      '#title' => t('Contact Information'),
+    );
+    global $user;
+    if (user_access('edit any crm_core_contact entity', $user)) {
+      $uri = $contact->uri();
+      $content['#markup'] = l($contact->label(), $uri['path']);
+    }
+    else {
+      $content['#markup'] = $contact->label();
+    }
+    $account->content['crm_core'] = $content;
+  }
+}
