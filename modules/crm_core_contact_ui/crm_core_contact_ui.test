@@ -37,14 +37,9 @@ class CRMCoreContactUITestCase extends DrupalWebTestCase {
     $this->assertLink(t('Add Individual'));
     $this->assertLink(t('Add Organization'));
 
-    // Load test images.
-//    $image_files = $this->drupalGetTestFiles('image');
-
     // Create Household contact.
-//    $file = $image_files[rand(0, count($image_files) - 1)];
     $household_node = array(
       'contact_name[und][0][given]' => $this->randomName(),
-//      'files[contact_image_und_0]' => drupal_realpath($file->uri),
     );
     $this->drupalPost('crm-core/contact/add/household', $household_node, crm_core_contact_ui_save_contact_button_name('household'));
 
@@ -62,7 +57,6 @@ class CRMCoreContactUITestCase extends DrupalWebTestCase {
       'contact_name[und][0][family]' => $this->randomName(),
       'contact_name[und][0][generational]' => 'IV',
       'contact_name[und][0][credentials]' => $this->randomName(),
-//      'files[contact_image_und_0]' => drupal_realpath($file->uri),
     );
     $this->drupalPost('crm-core/contact/add/individual', $individual_node, crm_core_contact_ui_save_contact_button_name('individual'));
 
@@ -76,7 +70,6 @@ class CRMCoreContactUITestCase extends DrupalWebTestCase {
     // Create Organization contact.
     $organization_node = array(
       'contact_name[und][0][given]' => $this->randomName(),
-//      'files[contact_image_und_0]' => drupal_realpath($file->uri),
     );
     $this->drupalPost('crm-core/contact/add/organization', $organization_node, crm_core_contact_ui_save_contact_button_name('organization'));
 
