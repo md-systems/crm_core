@@ -117,10 +117,6 @@ function crm_core_contact_permission() {
       'title' => t('Administer Contact Types'),
       'description' => t('Allows the user to edit the types of contact such as Individual, Organization, etc.'),
     ),
-//    'view contachook_permits' => array(
-//      'title' => t('View Contacts'),
-//      'description' => t('Allows the user to view list of CRM contacts.'),
-//    ),hook_permi
     'view disabled contact types' => array(
       'title' => t('View Disabled Contact Types'),
       'description' => t('Allows the user to view disabled contact types'),
@@ -129,14 +125,6 @@ function crm_core_contact_permission() {
       'title' => ('Revert Contact Record'),
       'description' => t('Allows the user to have ability to revert contacts'),
     ),
-//    'add contacts' => array(
-//      'title' => t('Add Contacts'),
-//      'description' => t('Allows the user to add contact to the CRM.'),
-//    ),
-//    'edit contacts' => array(
-//      'title' => t('Edit Contacts'),
-//      'description' => t('Allows the user to edit contacts that have already been added to the CRM.'),
-//    ),
   );
 
   $permissions += crm_core_entity_access_permissions('crm_core_contact');
@@ -908,15 +896,6 @@ function crm_core_contact_query_crm_core_contact_search_alter(QueryAlterableInte
   $where_expression = "LOWER(CONCAT(' ', $coalesce)) LIKE $placeholder";
   $query->innerJoin($table, $table, "crm_core_contact.contact_id = {$table}.entity_id");
   $query->where($where_expression, array($placeholder => $value));
-
-  /*
-  Altermative way to do it.
-
-  $or = db_or()
-    ->condition('field_data_contact_name.contact_name_family', '%' . $query->alterMetaData['match'] . '%', 'LIKE')
-    ->condition('field_data_contact_name.contact_name_given', '%' . $query->alterMetaData['match'] . '%', 'LIKE');
-  $query->condition($or);
-  */
 }
 
 /**
