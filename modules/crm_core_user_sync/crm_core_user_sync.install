@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Implements hook_install()
  */
@@ -17,6 +16,17 @@ function crm_core_user_sync_install() {
   );
   $relation_type = relation_type_create($relation_type_info);
   relation_type_save($relation_type);
+}
+
+
+/**
+ * Implements hook_uninstall()
+ */
+function crm_core_user_sync_uninstall() {
+  relation_type_delete('crm_core_user_sync');
+
+  variable_del('crm_core_user_sync_rules');
+  variable_del('crm_core_user_sync_auto_sync_user_create');
 }
 
 /**
