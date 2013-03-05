@@ -154,41 +154,46 @@ function crm_core_activity_ui_views_default_views() {
   $handler->display->display_options['fields']['label']['table'] = 'crm_core_activity_type';
   $handler->display->display_options['fields']['label']['field'] = 'label';
   $handler->display->display_options['fields']['label']['label'] = 'Activity Type';
-  /* Field: CRM Activity: Link */
-  $handler->display->display_options['fields']['view_crm_activity']['id'] = 'view_crm_activity';
-  $handler->display->display_options['fields']['view_crm_activity']['table'] = 'crm_core_activity';
-  $handler->display->display_options['fields']['view_crm_activity']['field'] = 'view_crm_activity';
-  $handler->display->display_options['fields']['view_crm_activity']['label'] = '';
-  $handler->display->display_options['fields']['view_crm_activity']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['view_crm_activity']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['view_crm_activity']['hide_alter_empty'] = FALSE;
-  $handler->display->display_options['fields']['view_crm_activity']['text'] = 'View';
-  /* Field: CRM Activity: Edit link */
-  $handler->display->display_options['fields']['edit_crm_activity']['id'] = 'edit_crm_activity';
-  $handler->display->display_options['fields']['edit_crm_activity']['table'] = 'crm_core_activity';
-  $handler->display->display_options['fields']['edit_crm_activity']['field'] = 'edit_crm_activity';
-  $handler->display->display_options['fields']['edit_crm_activity']['label'] = '';
-  $handler->display->display_options['fields']['edit_crm_activity']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['edit_crm_activity']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['edit_crm_activity']['hide_alter_empty'] = FALSE;
-  $handler->display->display_options['fields']['edit_crm_activity']['text'] = 'Edit';
-  $handler->display->display_options['fields']['edit_crm_activity']['redirect'] = 1;
-  /* Field: CRM Activity: Delete link */
-  $handler->display->display_options['fields']['delete_crm_activity']['id'] = 'delete_crm_activity';
-  $handler->display->display_options['fields']['delete_crm_activity']['table'] = 'crm_core_activity';
-  $handler->display->display_options['fields']['delete_crm_activity']['field'] = 'delete_crm_activity';
-  $handler->display->display_options['fields']['delete_crm_activity']['label'] = '';
-  $handler->display->display_options['fields']['delete_crm_activity']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['delete_crm_activity']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['delete_crm_activity']['hide_alter_empty'] = FALSE;
-  $handler->display->display_options['fields']['delete_crm_activity']['text'] = 'Delete';
-  $handler->display->display_options['fields']['delete_crm_activity']['redirect'] = 1;
+  /* Field: CRM Contact: Contact ID */
+  $handler->display->display_options['fields']['contact_id']['id'] = 'contact_id';
+  $handler->display->display_options['fields']['contact_id']['table'] = 'crm_core_contact';
+  $handler->display->display_options['fields']['contact_id']['field'] = 'contact_id';
+  $handler->display->display_options['fields']['contact_id']['relationship'] = 'field_activity_participants_target_id';
+  $handler->display->display_options['fields']['contact_id']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['contact_id']['link_to_contact'] = 0;
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing_1']['id'] = 'nothing_1';
+  $handler->display->display_options['fields']['nothing_1']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing_1']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing_1']['label'] = 'View Link';
+  $handler->display->display_options['fields']['nothing_1']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['nothing_1']['alter']['text'] = 'View';
+  $handler->display->display_options['fields']['nothing_1']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['nothing_1']['alter']['path'] = 'crm-core/contact/[contact_id]/activity/[activity_id]';
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing_2']['id'] = 'nothing_2';
+  $handler->display->display_options['fields']['nothing_2']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing_2']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing_2']['label'] = 'Edit Link';
+  $handler->display->display_options['fields']['nothing_2']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['nothing_2']['alter']['text'] = 'Edit';
+  $handler->display->display_options['fields']['nothing_2']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['nothing_2']['alter']['path'] = 'crm-core/contact/[contact_id]/activity/[activity_id]/edit';
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing_3']['id'] = 'nothing_3';
+  $handler->display->display_options['fields']['nothing_3']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing_3']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing_3']['label'] = 'Delete Link';
+  $handler->display->display_options['fields']['nothing_3']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['nothing_3']['alter']['text'] = 'Delete';
+  $handler->display->display_options['fields']['nothing_3']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['nothing_3']['alter']['path'] = 'crm-core/contact/[contact_id]/activity/[activity_id]/delete';
   /* Field: Global: Custom text */
   $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = 'Operations';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '[view_crm_activity] | [edit_crm_activity] | [delete_crm_activity]';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '[nothing_1] | [nothing_2] | [nothing_3]';
   /* Field: CRM Contact: Household name */
   $handler->display->display_options['fields']['contact_name']['id'] = 'contact_name';
   $handler->display->display_options['fields']['contact_name']['table'] = 'field_data_contact_name';
@@ -226,7 +231,7 @@ function crm_core_activity_ui_views_default_views() {
   );
   $handler->display->display_options['filters']['type']['exposed'] = TRUE;
   $handler->display->display_options['filters']['type']['expose']['operator_id'] = 'type_op';
-  $handler->display->display_options['filters']['type']['expose']['label'] = 'Activity type';
+  $handler->display->display_options['filters']['type']['expose']['label'] = 'Filter by:';
   $handler->display->display_options['filters']['type']['expose']['operator'] = 'type_op';
   $handler->display->display_options['filters']['type']['expose']['identifier'] = 'type';
   $handler->display->display_options['filters']['type']['expose']['remember_roles'] = array(

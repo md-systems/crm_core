@@ -6,20 +6,6 @@
 function crm_core_activity_ui_menu() {
   $items = array();
 
-  /*
-   * Contact Activities
-   */
-  /*$items['crm-core/contact/%crm_core_contact/activity'] = array(
-    'title' => 'Activity',
-    'description' => 'View contact activity',
-    'page callback' => 'crm_core_contact_activity',
-    'page arguments' => array(2),
-    'access arguments' => array('view contacts'),
-    'type' => MENU_LOCAL_TASK,
-    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
-    'file' => 'crm_core_activity_ui.pages.inc',
-  );*/
-
   // Menu items for creation of new Activities.
   foreach (crm_core_activity_types() as $type => $info) {
     $items['crm-core/contact/%crm_core_contact/activity/add/' . $type] = array(
@@ -44,8 +30,24 @@ function crm_core_activity_ui_menu() {
     'access arguments' => array('view', 'crm_core_activity', 2),
     'type' => MENU_NORMAL_ITEM,
   );
+  $items['crm-core/contact/%/activity/%crm_core_activity'] =  array(
+    'title' => 'Activity',
+    'page callback' => 'crm_core_activity_view',
+    'page arguments' => array(4),
+    'title callback' => 'entity_label',
+    'title arguments' => array('crm_core_activity', 4),
+    'access callback' => 'entity_access',
+    'access arguments' => array('view', 'crm_core_activity', 4),
+    'type' => MENU_NORMAL_ITEM,
+  );
 
   $items['crm-core/activity/%crm_core_activity/view'] = array(
+    'title' => 'View',
+    'weight' => -10,
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+  );
+  $items['crm-core/contact/%/activity/%crm_core_activity/view'] = array(
     'title' => 'View',
     'weight' => -10,
     'type' => MENU_DEFAULT_LOCAL_TASK,
@@ -61,6 +63,15 @@ function crm_core_activity_ui_menu() {
     'type' => MENU_LOCAL_TASK,
     'file' => 'crm_core_activity_ui.pages.inc',
   );
+  $items['crm-core/contact/%/activity/%crm_core_activity/edit'] = array(
+    'title' => 'Edit',
+    'page callback' => 'entity_ui_get_form',
+    'page arguments' => array('crm_core_activity', 4, 'edit'),
+    'access callback' => 'entity_access',
+    'access arguments' => array('edit', 'crm_core_activity', 4),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'crm_core_activity_ui.pages.inc',
+  );
 
   $items['crm-core/activity/%crm_core_activity/delete'] = array(
     'title' => 'Delete',
@@ -68,6 +79,16 @@ function crm_core_activity_ui_menu() {
     'page arguments' => array('crm_core_activity_form_delete_confirm', 2),
     'access callback' => 'entity_access',
     'access arguments' => array('edit', 'crm_core_activity', 2),
+    'weight' => 1,
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'crm_core_activity_ui.pages.inc',
+  );
+  $items['crm-core/contact/%/activity/%crm_core_activity/delete'] = array(
+    'title' => 'Delete',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_core_activity_form_delete_confirm', 4),
+    'access callback' => 'entity_access',
+    'access arguments' => array('edit', 'crm_core_activity', 4),
     'weight' => 1,
     'type' => MENU_NORMAL_ITEM,
     'file' => 'crm_core_activity_ui.pages.inc',

@@ -64,7 +64,7 @@ function crm_core_relationship_ui_types_overview($reverse = FALSE) {
 }
 
 /**
- * Relation relation type bundle settings form.
+ * Relation type bundle settings form.
  *
  * @param $relation_type
  *   Relation type machine name. If this is not provided, assume that we're
@@ -288,7 +288,7 @@ function _crm_core_relationship_ui_type_set_breadcrumb() {
     l(t('Home'), '<front>'),
     l(t('Administration'), 'admin'),
     l(t('Structure'), 'admin/structure'),
-    l(t('CRM'), 'admin/structure/crm-core'),
+    l(t('CRM Core'), 'admin/structure/crm-core'),
     l(t('Relationship types'), 'admin/structure/crm-core/relationship-types')
   );
 

@@ -320,7 +320,7 @@ function crm_core_relationship_ui_preprocess_views_view(&$vars) {
     $contact_uri = entity_uri('crm_core_contact', $contact);
     $breadcrumb = array(
       l(t('Home'), '<front>'),
-      l(t('CRM'), 'crm-core'),
+      l(t('CRM Core'), 'crm-core'),
       l($contact_label, $contact_uri['path']),
     );
     drupal_set_breadcrumb($breadcrumb);
