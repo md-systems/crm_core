@@ -28,10 +28,18 @@ function crm_core_user_sync_menu() {
     $items['admin/config/crm-core/user_sync/%/edit'] = array(
       'title' => t('Edit a rule'),
       'page callback' => 'drupal_get_form',
-      'page arguments' => array('crm_core_user_sync_admin_edit_rule_form', 5),
+      'page arguments' => array('crm_core_user_sync_admin_edit_rule_form', 4),
       'access arguments' => array('administer user-sync'),
       'file' => 'crm_core_user_sync.admin.inc',
       'type' => MENU_CALLBACK,
+    );
+
+    $items['admin/config/crm-core/user_sync/%/delete'] = array(
+      'title' => t('Delete a rule'),
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('crm_core_user_sync_admin_delete_rule_form', 4),
+      'access arguments' => array('administer user-sync'),
+      'file' => 'crm_core_user_sync.admin.inc',
     );
   }
 

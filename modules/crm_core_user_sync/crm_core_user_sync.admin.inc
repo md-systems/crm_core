@@ -143,10 +143,10 @@ function crm_core_user_sync_weight_cmp($a, $b) {
 function crm_core_user_sync_admin_edit_rule_form($form, &$form_state, $rule_key = null) {
   $form = array();
 
-  $roles = array('' => t(' - Select -')) + user_roles(TRUE);
+  $roles = array('' => t('- Select -')) + user_roles(TRUE);
   $types = crm_core_contact_types();
 
-  $types_options = array('' => t(' - Select -'));
+  $types_options = array('' => t('- Select -'));
   foreach ($types as $key => $type) {
     $types_options[$key] = $type->name;
   }
@@ -198,6 +198,9 @@ function crm_core_user_sync_admin_edit_rule_form($form, &$form_state, $rule_key 
   return $form;
 }
 
+/**
+ * Submit handler for add new rule form.
+ */
 function crm_core_user_sync_admin_edit_rule_form_submit($form, &$form_state) {
   if ($form_state['values']['op'] == $form['actions']['save']['#value']) {
     $rules = variable_get('crm_core_user_sync_rules', array());
@@ -219,10 +222,39 @@ function crm_core_user_sync_admin_edit_rule_form_submit($form, &$form_state) {
     uasort($rules, 'crm_core_user_sync_weight_cmp');
     variable_set('crm_core_user_sync_rules', $rules);
 
-    drupal_set_message(t('User syncrhonzation rule has been saved.'));
     $form_state['redirect'] = 'admin/config/crm-core/user_sync';
+    drupal_set_message(t('User syncrhonzation rule has been saved.'));
   }
   elseif ($form_state['values']['op'] == $form['actions']['cancel']['#value']) {
     $form_state['redirect'] = 'admin/config/crm-core/user_sync';
   }
+}
+
+/**
+ * Delete rule form.
+ */
+function crm_core_user_sync_admin_delete_rule_form($form, &$form_state, $rule_key) {
+  $form['rule_key'] = array(
+    '#type' => 'value',
+    '#value' => $rule_key,
+  );
+
+  $question = t('Are you sure you want to delete the user synchronization rule?');
+  $path = 'admin/config/crm-core/user_sync';
+
+  return confirm_form($form, $question, $path);
+}
+
+/**
+ * Submission handler for delete rule form.
+ */
+function crm_core_user_sync_admin_delete_rule_form_submit($form, &$form_state) {
+  $rule_key = $form_state['values']['rule_key'];
+
+  $rules = variable_get('crm_core_user_sync_rules', array());
+  unset($rules[$rule_key]);
+  variable_set('crm_core_user_sync_rules', $rules);
+
+  $form_state['redirect'] = 'admin/config/crm-core/user_sync';
+  drupal_set_message(t('User syncrhonzation rule has been deleted.'));
 }
