@@ -33,7 +33,7 @@ class views_plugin_argument_default_contact_id extends views_plugin_argument_def
     foreach (range(1, 3) as $i) {
       $user = menu_get_object('user', $i);
       if (!empty($user)) {
-        $contact = _crm_user_sync_get_related_entity('user', $user->uid, 'crm_user_sync');
+        $contact = _crm_core_user_sync_get_related_entity('user', $user->uid, 'crm_core_user_sync');
         if (!empty($contact)) {
           return $contact->contact_id;
         }
@@ -43,7 +43,7 @@ class views_plugin_argument_default_contact_id extends views_plugin_argument_def
     foreach (range(1, 3) as $i) {
       $user = menu_get_object('user_uid_optional', $i);
       if (!empty($user)) {
-        $contact = _crm_user_sync_get_related_entity('user', $user->uid, 'crm_user_sync');
+        $contact = _crm_core_user_sync_get_related_entity('user', $user->uid, 'crm_core_user_sync');
         if (!empty($contact)) {
           return $contact->contact_id;
         }
@@ -54,7 +54,7 @@ class views_plugin_argument_default_contact_id extends views_plugin_argument_def
       foreach (range(1, 3) as $i) {
         $node = menu_get_object('node', $i);
         if (!empty($node)) {
-          $contact = _crm_user_sync_get_related_entity('user', $node->uid, 'crm_user_sync');
+          $contact = _crm_core_user_sync_get_related_entity('user', $node->uid, 'crm_core_user_sync');
           if (!empty($contact)) {
             return $contact->contact_id;
           }
@@ -64,7 +64,7 @@ class views_plugin_argument_default_contact_id extends views_plugin_argument_def
 
     if (arg(0) == 'user' && is_numeric(arg(1))) {
       $uid = arg(1);
-      $contact = _crm_user_sync_get_related_entity('user', $uid, 'crm_user_sync');
+      $contact = _crm_core_user_sync_get_related_entity('user', $uid, 'crm_core_user_sync');
       if (!empty($contact)) {
         return $contact->contact_id;
       }
@@ -74,7 +74,7 @@ class views_plugin_argument_default_contact_id extends views_plugin_argument_def
       if (arg(0) == 'node' && is_numeric(arg(1))) {
         $node = node_load(arg(1));
         if ($node) {
-          $contact = _crm_user_sync_get_related_entity('user', $node->uid, 'crm_user_sync');
+          $contact = _crm_core_user_sync_get_related_entity('user', $node->uid, 'crm_core_user_sync');
           if (!empty($contact)) {
             return $contact->contact_id;
           }

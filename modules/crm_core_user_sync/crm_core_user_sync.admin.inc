@@ -3,7 +3,7 @@
 /**
  * Admin form.
  */
-function crm_user_sync_admin_form($form, &$form_state) {
+function crm_core_user_sync_admin_form($form, &$form_state) {
   $form = array();
 
   $roles = user_roles(TRUE);
@@ -14,35 +14,35 @@ function crm_user_sync_admin_form($form, &$form_state) {
     $types_options[$key] = $type->name;
   }
 
-  $rules = variable_get('crm_user_sync_rules', array());
-  uasort($rules, 'crm_user_sync_weight_cmp');
+  $rules = variable_get('crm_core_user_sync_rules', array());
+  uasort($rules, 'crm_core_user_sync_weight_cmp');
 
-  $form['crm_user_sync_description'] = array(
+  $form['crm_core_user_sync_description'] = array(
     '#markup' => t('CRM Core User Synchronization can automatically create contact records associated with user accounts under certain conditions.')
   );
 
-  $form['crm_user_sync_rules'] = array(
+  $form['crm_core_user_sync_rules'] = array(
     '#type' => 'container'
   );
 
   $form['#tree'] = TRUE;
   foreach ($rules as $key => $rule) {
-    $form['crm_user_sync_rules'][$key]['role'] = array('#markup' => $roles[$rule['rid']]);
-    $form['crm_user_sync_rules'][$key]['contact_type'] = array('#markup' => $types_options[$rule['contact_type']]);
-    $form['crm_user_sync_rules'][$key]['enabled'] = array('#markup' => $rule['enabled'] ? 'Yes' : 'No');
-    $form['crm_user_sync_rules'][$key]['weight'] = array(
+    $form['crm_core_user_sync_rules'][$key]['role'] = array('#markup' => $roles[$rule['rid']]);
+    $form['crm_core_user_sync_rules'][$key]['contact_type'] = array('#markup' => $types_options[$rule['contact_type']]);
+    $form['crm_core_user_sync_rules'][$key]['enabled'] = array('#markup' => $rule['enabled'] ? 'Yes' : 'No');
+    $form['crm_core_user_sync_rules'][$key]['weight'] = array(
       '#type' => 'weight',
       '#title_display' => 'invisible',
       '#default_value' => $rule['weight'],
     );
 
-    $form['crm_user_sync_rules'][$key]['operations'] = array(
+    $form['crm_core_user_sync_rules'][$key]['operations'] = array(
       '#theme' => 'links',
       '#links' => array(),
       '#attributes' => array('class' => array('links', 'inline')),
     );
 
-    $links = &$form['crm_user_sync_rules'][$key]['operations']['#links'];
+    $links = &$form['crm_core_user_sync_rules'][$key]['operations']['#links'];
     $path = 'admin/config/crm-core/user_sync/' . $key;
     $links['edit'] = array('title' => 'Edit', 'href' => $path . '/edit');
     $links['delete'] = array('title' => 'Delete', 'href' => $path . '/delete');
@@ -55,11 +55,11 @@ function crm_user_sync_admin_form($form, &$form_state) {
     }
   }
 
-  $form['crm_user_sync_auto_sync_user_create'] = array(
+  $form['crm_core_user_sync_auto_sync_user_create'] = array(
     '#type' => 'checkbox',
     '#title' => t('Automatically create an associated contact when account is created'),
     '#description' => t('When checked, this checkbox will automatically create new contacts when a new user account is created according to rules listed above. Rules will be processed in order until a new contact is created.'),
-    '#default_value' => variable_get('crm_user_sync_auto_sync_user_create', 1),
+    '#default_value' => variable_get('crm_core_user_sync_auto_sync_user_create', 1),
   );
 
   $form['actions'] = array('#type' => 'actions');
@@ -71,55 +71,55 @@ function crm_user_sync_admin_form($form, &$form_state) {
 /**
  * Validation callback.
  */
-function crm_user_sync_admin_form_validate($form, &$form_state) {
+function crm_core_user_sync_admin_form_validate($form, &$form_state) {
 
 }
 
 /**
  * Submit callback. Handles synchronization changes.
  */
-function crm_user_sync_admin_form_submit($form, &$form_state) {
-  $rules = variable_get('crm_user_sync_rules', array());
+function crm_core_user_sync_admin_form_submit($form, &$form_state) {
+  $rules = variable_get('crm_core_user_sync_rules', array());
 
-  foreach ($form_state['values']['crm_user_sync_rules']as $key => $values) {
+  foreach ($form_state['values']['crm_core_user_sync_rules']as $key => $values) {
     if (!empty($values['weight'])) {
       $rules[$key]['weight'] = $values['weight'];
     }
   }
 
-  uasort($rules, 'crm_user_sync_weight_cmp');
+  uasort($rules, 'crm_core_user_sync_weight_cmp');
 
-  variable_set('crm_user_sync_rules', $rules);
+  variable_set('crm_core_user_sync_rules', $rules);
 
-  variable_set('crm_user_sync_auto_sync_user_create', $form_state['values']['crm_user_sync_auto_sync_user_create']);
+  variable_set('crm_core_user_sync_auto_sync_user_create', $form_state['values']['crm_core_user_sync_auto_sync_user_create']);
 
   drupal_set_message('Your changes have been saved');
 }
 
 /**
- * Theme implementation of the crm_user_sync_settings form.
+ * Theme implementation of the crm_core_user_sync_settings form.
  */
-function theme_crm_user_sync_admin_form($variables) {
+function theme_crm_core_user_sync_admin_form($variables) {
   $form = $variables['form'];
 
   $rows = array();
 
-  foreach (element_children($form['crm_user_sync_rules']) as $key) {
-    $form['crm_user_sync_rules'][$key]['weight']['#attributes']['class'] = array('crm-user-sync-settings-order-weight');
+  foreach (element_children($form['crm_core_user_sync_rules']) as $key) {
+    $form['crm_core_user_sync_rules'][$key]['weight']['#attributes']['class'] = array('crm-user-sync-settings-order-weight');
     $rows[] = array(
       'data' => array(
-        drupal_render($form['crm_user_sync_rules'][$key]['role']),
-        drupal_render($form['crm_user_sync_rules'][$key]['contact_type']),
-        drupal_render($form['crm_user_sync_rules'][$key]['enabled']),
-        drupal_render($form['crm_user_sync_rules'][$key]['weight']),
-        drupal_render($form['crm_user_sync_rules'][$key]['operations']),
+        drupal_render($form['crm_core_user_sync_rules'][$key]['role']),
+        drupal_render($form['crm_core_user_sync_rules'][$key]['contact_type']),
+        drupal_render($form['crm_core_user_sync_rules'][$key]['enabled']),
+        drupal_render($form['crm_core_user_sync_rules'][$key]['weight']),
+        drupal_render($form['crm_core_user_sync_rules'][$key]['operations']),
       ),
       'class' => array('draggable'),
     );
   }
 
   $header = array(t('Role'), t('Contact Type'), t('Enabled'), t('Weight'), t('Operations'));
-  $form['crm_user_sync_rules']['content']['#markup'] = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'crm-user-sync-settings-order')));
+  $form['crm_core_user_sync_rules']['content']['#markup'] = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'crm-user-sync-settings-order')));
   $output = drupal_render_children($form);
 
   drupal_add_tabledrag('crm-user-sync-settings-order', 'order', 'sibling', 'crm-user-sync-settings-order-weight');
@@ -130,7 +130,7 @@ function theme_crm_user_sync_admin_form($variables) {
 /**
  * Weight comparison function
  */
-function crm_user_sync_weight_cmp($a, $b) {
+function crm_core_user_sync_weight_cmp($a, $b) {
   if ($a['weight'] == $b['weight']) {
     return 0;
   }
@@ -140,7 +140,7 @@ function crm_user_sync_weight_cmp($a, $b) {
 /**
  * Add new rule form.
  */
-function crm_user_sync_admin_edit_rule_form($form, &$form_state, $rule_key = null) {
+function crm_core_user_sync_admin_edit_rule_form($form, &$form_state, $rule_key = null) {
   $form = array();
 
   $roles = array('' => t(' - Select -')) + user_roles(TRUE);
@@ -151,7 +151,7 @@ function crm_user_sync_admin_edit_rule_form($form, &$form_state, $rule_key = nul
     $types_options[$key] = $type->name;
   }
 
-  $rules = variable_get('crm_user_sync_rules', array());
+  $rules = variable_get('crm_core_user_sync_rules', array());
 
   if (isset($rule_key) && isset($rules[$rule_key])) {
     $form_state['rule'] = $rule = $rules[$rule_key];
@@ -198,9 +198,9 @@ function crm_user_sync_admin_edit_rule_form($form, &$form_state, $rule_key = nul
   return $form;
 }
 
-function crm_user_sync_admin_edit_rule_form_submit($form, &$form_state) {
+function crm_core_user_sync_admin_edit_rule_form_submit($form, &$form_state) {
   if ($form_state['values']['op'] == $form['actions']['save']['#value']) {
-    $rules = variable_get('crm_user_sync_rules', array());
+    $rules = variable_get('crm_core_user_sync_rules', array());
 
     $rule = array(
       'rid' => $form_state['values']['rid'],
@@ -216,8 +216,8 @@ function crm_user_sync_admin_edit_rule_form_submit($form, &$form_state) {
       $rules[] = $rule;
     }
 
-    uasort($rules, 'crm_user_sync_weight_cmp');
-    variable_set('crm_user_sync_rules', $rules);
+    uasort($rules, 'crm_core_user_sync_weight_cmp');
+    variable_set('crm_core_user_sync_rules', $rules);
 
     drupal_set_message(t('User syncrhonzation rule has been saved.'));
     $form_state['redirect'] = 'admin/config/crm-core/user_sync';

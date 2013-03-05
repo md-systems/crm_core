@@ -1,5 +1,5 @@
-name = CRM User Synchronization
-description = Synchronizes users from selected roles with contacts.
+name = CRM Core User Synchronization
+description = Synchronizes crm contacts with users.
 package = CRM
 core = 7.x
 configure = admin/config/crm-core/user_sync
@@ -21,6 +21,6 @@ dependencies[] = relation
 ; =======================
 
 ; Base Files
-files[] = crm_user_sync.module
-files[] = crm_user_sync.admin.inc
+files[] = crm_core_user_sync.module
+files[] = crm_core_user_sync.admin.inc
 files[] = views/views_plugin_argument_default_contact_id.inc
