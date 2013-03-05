@@ -49,7 +49,6 @@ function crm_ui_menu() {
     'page arguments' => array('crm_core_admin_config_form'),
     'access arguments' => array('administer crm-core settings'),
     'file' => 'pages/crm_ui.pages.inc',
-    'weight' => 0,
   );
 
   return $items;

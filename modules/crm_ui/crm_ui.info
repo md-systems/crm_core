@@ -1,5 +1,5 @@
 name = CRM Core UI
-description = User Interface for DropCRM.
+description = User Interface for CRM Core.
 package = CRM
 core = 7.x
 configure = admin/structure/crm

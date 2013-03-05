@@ -18,7 +18,6 @@ function crm_core_user_sync_install() {
   relation_type_save($relation_type);
 }
 
-
 /**
  * Implements hook_uninstall()
  */
