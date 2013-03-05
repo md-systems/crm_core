@@ -91,12 +91,18 @@ function crm_core_relationship_ui_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['relation/%relation/toggle_status'] = array(
-    'title' => 'Toggle relation status',
+  $items['crm-core/contact/%/relationships/%/active'] = array(
+    'title' => 'Toggle relationship status',
     'access arguments' => array('edit relations'),
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('relation_toggle_form', 1),
-    'type' => MENU_LOCAL_TASK,
+    'page callback' => 'crm_core_relationship_ui_toggle_relationship_status',
+    'page arguments' => array(4, TRUE),
+    'file' => 'crm_core_relationship_ui.pages.inc',
+  );
+  $items['crm-core/contact/%/relationships/%/inactive'] = array(
+    'title' => 'Toggle relationship status',
+    'access arguments' => array('edit relations'),
+    'page callback' => 'crm_core_relationship_ui_toggle_relationship_status',
+    'page arguments' => array(4, FALSE),
     'file' => 'crm_core_relationship_ui.pages.inc',
   );
 

@@ -349,20 +349,13 @@ function _crm_core_relationship_ui_get_contact_from_autocomplete_field_value($st
 }
 
 /**
- * Relation toggle status form.
+ * Relationship toggle status callback.
  */
-function relation_toggle_form($form, &$form_state, $relation) {
-  $form_state['relation'] = $relation;
-  return confirm_form($form, t('Are you sure you want to toggle this relationship status?'), NULL);
-}
-
-/**
- * Relation toggle status form submit handler.
- */
-function relation_toggle_form_submit($form, &$form_state) {
-  $relation = $form_state['relation'];
-  $status = $relation->crm_core_relationship_status[LANGUAGE_NONE][0]['value'];
-  $relation->crm_core_relationship_status[LANGUAGE_NONE][0]['value'] = $status ? 0 : 1;
+function crm_core_relationship_ui_toggle_relationship_status($relationship_id, $status) {
+  $relation = relation_load($relationship_id);
+  $relation->crm_core_relationship_status[LANGUAGE_NONE][0]['value'] = $status ? 1 : 0;
   entity_save('relation', $relation);
   drupal_set_message(t('Relationship status was successfully changed.'));
+  $path = drupal_get_destination();
+  drupal_goto($path);
 }

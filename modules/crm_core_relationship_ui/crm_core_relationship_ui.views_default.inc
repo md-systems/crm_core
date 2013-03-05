@@ -143,7 +143,7 @@ function crm_core_relationship_ui_views_default_views() {
   $handler->display->display_options['fields']['crm_core_relationship_status_1']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['crm_core_relationship_status_1']['alter']['text'] = 'Mark as inactive';
   $handler->display->display_options['fields']['crm_core_relationship_status_1']['alter']['make_link'] = TRUE;
-  $handler->display->display_options['fields']['crm_core_relationship_status_1']['alter']['path'] = 'relation/[rid]/toggle_status?destination=crm-core/contact/[endpoints_1]/relationships';
+  $handler->display->display_options['fields']['crm_core_relationship_status_1']['alter']['path'] = 'crm-core/contact/[endpoints_1]/relationships/[rid]/inactive?destination=crm-core/contact/[endpoints_1]/relationships';
   $handler->display->display_options['fields']['crm_core_relationship_status_1']['type'] = 'list_key';
   /* Field: Relation: Delete link */
   $handler->display->display_options['fields']['delete']['id'] = 'delete';
@@ -289,7 +289,7 @@ function crm_core_relationship_ui_views_default_views() {
   $handler->display->display_options['fields']['crm_core_relationship_status_1']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['crm_core_relationship_status_1']['alter']['text'] = 'Mark as active';
   $handler->display->display_options['fields']['crm_core_relationship_status_1']['alter']['make_link'] = TRUE;
-  $handler->display->display_options['fields']['crm_core_relationship_status_1']['alter']['path'] = 'relation/[rid]/toggle_status?destination=crm-core/contact/[endpoints_1]/relationships';
+  $handler->display->display_options['fields']['crm_core_relationship_status_1']['alter']['path'] = 'crm-core/contact/[endpoints_1]/relationships/[rid]/active?destination=crm-core/contact/[endpoints_1]/relationships/inactive';
   $handler->display->display_options['fields']['crm_core_relationship_status_1']['type'] = 'list_key';
   /* Field: Relation: Delete link */
   $handler->display->display_options['fields']['delete']['id'] = 'delete';
