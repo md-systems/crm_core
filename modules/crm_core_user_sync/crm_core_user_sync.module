@@ -138,9 +138,8 @@ function crm_core_user_sync_get_contact_type_for_account($account) {
   $rules = variable_get('crm_core_user_sync_rules', array());
   uasort($rules, 'crm_core_user_sync_weight_cmp');
 
-
   foreach ($rules as $rule) {
-    if ($rule['enabled'] && in_array($rule['rid'], $account->roles)) {
+    if ($rule['enabled'] && in_array($rule['rid'], array_keys($account->roles))) {
       return $rule['contact_type'];
     }
   }
@@ -164,6 +163,7 @@ function crm_core_user_sync_sync($account, $contact = NULL) {
 
     // Get corresponding contact type
     $contact_type = crm_core_user_sync_get_contact_type_for_account($account);
+
     if (!$contact_type) {
       return;
     }
@@ -205,6 +205,10 @@ function crm_core_user_sync_sync($account, $contact = NULL) {
 
   $relation = relation_create('crm_core_user_sync', $endpoints);
   relation_save($relation);
+
+  watchdog('crm_core_user_sync', 'User !user has been synchronized to the contact !contact_id, relation !rid has been created.',
+    array('!user' => $account->name, '!contact_id' => $contact->contact_id, '!rid' => $relation->rid)
+  );
 
   return $contact;
 }
