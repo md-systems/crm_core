@@ -41,6 +41,22 @@ function crm_core_user_sync_menu() {
       'access arguments' => array('administer user-sync'),
       'file' => 'crm_core_user_sync.admin.inc',
     );
+
+    $items['admin/config/crm-core/user_sync/%/enable'] = array(
+      'title' => t('Delete a rule'),
+      'page callback' => 'crm_core_user_sync_admin_update_rule_status',
+      'page arguments' => array(4, true),
+      'access arguments' => array('administer user-sync'),
+      'file' => 'crm_core_user_sync.admin.inc',
+    );
+
+    $items['admin/config/crm-core/user_sync/%/disable'] = array(
+      'title' => t('Delete a rule'),
+      'page callback' => 'crm_core_user_sync_admin_update_rule_status',
+      'page arguments' => array(4, false),
+      'access arguments' => array('administer user-sync'),
+      'file' => 'crm_core_user_sync.admin.inc',
+    );
   }
 
   return $items;

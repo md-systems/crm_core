@@ -258,3 +258,11 @@ function crm_core_user_sync_admin_delete_rule_form_submit($form, &$form_state) {
   $form_state['redirect'] = 'admin/config/crm-core/user_sync';
   drupal_set_message(t('User syncrhonzation rule has been deleted.'));
 }
+
+function crm_core_user_sync_admin_update_rule_status($rule_key, $status) {
+  $rules = variable_get('crm_core_user_sync_rules', array());
+  $rules[$rule_key]['enabled'] = $status;
+  variable_set('crm_core_user_sync_rules', $rules);
+
+  drupal_goto('admin/config/crm-core/user_sync');
+}
