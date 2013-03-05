@@ -155,6 +155,17 @@ function crm_core_ui_dashboard() {
     $dashboard_path = variable_get('crm_core_dashboard_path', '');
     // Get the content for the path.
     $output = menu_execute_active_handler($dashboard_path, FALSE);
+    // Lets check if specified path still exists and accessible.
+    if ($output === MENU_NOT_FOUND || $output === MENU_ACCESS_DENIED) {
+      if (user_access('administer crm-core settings')) {
+        drupal_set_message(t('The dashboard cannot be loaded. Please check the !settings.',
+          array(
+            '!settings' => l(t('CRM Core Dashboard settings'), 'admin/config/crm-core/settings'),
+          )
+        ), 'error');
+      }
+      drupal_goto('crm-core/contacts');
+    }
     // If the callback returns an array instead of text, render it.
     if (is_array($output)) {
       $output = drupal_render($output);
@@ -165,7 +176,7 @@ function crm_core_ui_dashboard() {
     // Dashboard is not configured.
     drupal_set_message(t('No dashboard has been configured for CRM Core. Click !here to configure a dashboard.',
       array(
-        '!here' => l(t('here'), 'admin/config/crm-core'),
+        '!here' => l(t('here'), 'admin/config/crm-core/settings'),
       )
     ));
     drupal_goto('crm-core/contacts');

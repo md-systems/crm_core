@@ -159,7 +159,7 @@ function crm_core_admin_config_form_validate($form, &$form_state) {
   if ($dashboard_enabled) {
     $menu_item = menu_get_item($form_state['values']['crm_core_dashboard_path']);
     if (!$menu_item) {
-      form_set_error('crm_core_dashboard_path', t('You must VALID path(it must exist already).'));
+      form_set_error('crm_core_dashboard_path', t('You must enter VALID path(it must exist already).'));
     }
   }
   // Theme settings validation.
