@@ -20,7 +20,7 @@ function crm_core_relationship_install() {
     array(
       'relation_type' => 'crm_employee',
       'label' => st('Employee of'),
-      'reverse_label' => st('Employee'),
+      'reverse_label' => st('Employer of'),
       'directional' => TRUE,
       'r_unique' => TRUE,
       'source_bundles' => array('crm_core_contact:individual'),
@@ -29,7 +29,7 @@ function crm_core_relationship_install() {
     array(
       'relation_type' => 'crm_member',
       'label' => st('Member of'),
-      'reverse_label' => st('Member'),
+      'reverse_label' => st('Household for'),
       'directional' => TRUE,
       'r_unique' => TRUE,
       'source_bundles' => array('crm_core_contact:individual'),
