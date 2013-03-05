@@ -43,7 +43,7 @@ function crm_user_sync_admin_form($form, &$form_state) {
     );
 
     $links = &$form['crm_user_sync_rules'][$key]['operations']['#links'];
-    $path = 'admin/config/crm-core/settings/user_sync/' . $key;
+    $path = 'admin/config/crm-core/user_sync/' . $key;
     $links['edit'] = array('title' => 'Edit', 'href' => $path . '/edit');
     $links['delete'] = array('title' => 'Delete', 'href' => $path . '/delete');
 
@@ -220,9 +220,9 @@ function crm_user_sync_admin_edit_rule_form_submit($form, &$form_state) {
     variable_set('crm_user_sync_rules', $rules);
 
     drupal_set_message(t('User syncrhonzation rule has been saved.'));
-    $form_state['redirect'] = 'admin/config/crm-core/settings/user_sync';
+    $form_state['redirect'] = 'admin/config/crm-core/user_sync';
   }
   elseif ($form_state['values']['op'] == $form['actions']['cancel']['#value']) {
-    $form_state['redirect'] = 'admin/config/crm-core/settings/user_sync';
+    $form_state['redirect'] = 'admin/config/crm-core/user_sync';
   }
 }

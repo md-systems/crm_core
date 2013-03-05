@@ -25,7 +25,7 @@ function crm_user_sync_install() {
 function crm_user_sync_enable() {
   $menu_items = array(
     array(
-      'link_path' => 'admin/config/crm-core/settings/user_sync',
+      'link_path' => 'admin/config/crm-core/user_sync',
       'link_title' => 'Administer User Synchronization',
       'menu_name' => 'crm-core-admin-menu',
     ),
@@ -42,7 +42,7 @@ function crm_user_sync_disable() {
   //Remove links from crm-core-menu and crm-core-admin-menu.
   $conditions = array(
     'crm-core-admin-menu' => array(
-      'admin/config/crm-core/settings/user_sync'
+      'admin/config/crm-core/user_sync'
     ),
   );
   crm_core_ui_remove_links($conditions);

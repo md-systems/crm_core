@@ -33,14 +33,13 @@ function crm_ui_menu() {
   );
 
   $items['admin/config/crm-core'] = array(
-      'title' => 'CRM Core',
-      'description' => 'CRM Core module and feature settings.',
-      'position' => 'right',
-      'page callback' => 'system_admin_menu_block_page',
-      'access arguments' => array('access administration pages'),
-      'file' => 'system.admin.inc',
-      'file path' => drupal_get_path('module', 'system'),
-      'weight' => 10,
+    'title' => 'CRM Core',
+    'description' => 'CRM Core module and feature settings.',
+    'position' => 'right',
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('access administration pages'),
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
   );
 
   $items['admin/config/crm-core/settings'] = array(
@@ -50,11 +49,6 @@ function crm_ui_menu() {
     'page arguments' => array('crm_core_admin_config_form'),
     'access arguments' => array('administer crm-core settings'),
     'file' => 'pages/crm_ui.pages.inc',
-    'weight' => 0,
-  );
-  $items['admin/config/crm-core/settings/settings'] = array(
-    'title' => 'Settings',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => 0,
   );
 
@@ -172,7 +166,7 @@ function crm_core_ui_dashboard() {
     // Dashboard is not configured.
     drupal_set_message(t('No dashboard has been configured for CRM Core. Click !here to configure a dashboard.',
       array(
-        '!here' => l(t('here'), 'admin/config/crm-core/settings'),
+        '!here' => l(t('here'), 'admin/config/crm-core'),
       )
     ));
     drupal_goto('crm-core/contacts');
