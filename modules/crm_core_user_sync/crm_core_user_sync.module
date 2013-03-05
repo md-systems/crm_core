@@ -132,7 +132,25 @@ function crm_core_user_sync_user_delete($account) {
 }
 
 /**
- * Synchronizes user.
+ * Returns corresponding contact type for user account to synchronize with.
+ */
+function crm_core_user_sync_get_contact_type_for_account($account) {
+  $rules = variable_get('crm_core_user_sync_rules', array());
+  uasort($rules, 'crm_core_user_sync_weight_cmp');
+
+
+  foreach ($rules as $rule) {
+    if ($rule['enabled'] && in_array($rule['rid'], $account->roles)) {
+      return $rule['contact_type'];
+    }
+  }
+
+  return FALSE;
+}
+
+/**
+ * Synchronizes user amd contact.
+ *
  * @param $account to be synchronized
  * @param $contact to be associated with $account
  *
@@ -141,39 +159,35 @@ function crm_core_user_sync_user_delete($account) {
 function crm_core_user_sync_sync($account, $contact = NULL) {
   // @TODO: think about the logic here, what to do with multiple roles?
   // For now we just use the first that has user-sync enabled, if there is.
-  $roles_sync = variable_get('crm_core_user_sync_roles', array());
-  foreach ($roles_sync as $rid => $sync_rid) {
-    if ($sync_rid == 0) {
-      unset($roles_sync[$rid]);
-    }
-  }
-  $roles = array_intersect_key($roles_sync, $account->roles);
-  if (empty($roles)) {
-    return;
-  }
-
-  $rid = key($roles);
-  $contact_type = variable_get('crm_core_user_sync_' . $rid . '_type', 'individual');
 
   if (empty($contact)) {
+
+    // Get corresponding contact type
+    $contact_type = crm_core_user_sync_get_contact_type_for_account($account);
+    if (!$contact_type) {
+      return;
+    }
+
     // Create the contact.
-    // For now we just add the name.
     $contact = crm_core_contact_type_new($contact_type);
     $contact->uid = $account->uid;
 
+    // For now we just add the name.
     $contact_name = field_info_instance('crm_core_contact', 'contact_name', $contact_type);
     if (!empty($contact_name)) {
       $contact->contact_name[LANGUAGE_NONE][0] = array(
-             'title' => '',
-             'family' => '',
-             'generational' => '',
-             'credentials' => '',
-             'given' => $account->name,
+        'title' => '',
+        'family' => '',
+        'generational' => '',
+        'credentials' => '',
+        'given' => $account->name,
       );
     }
 
     crm_core_contact_save($contact);
   }
+
+  // TODO: for existing contacts check if contact type is in set of available.
 
   // Create the relation
   $endpoints = array(
@@ -188,6 +202,7 @@ function crm_core_user_sync_sync($account, $contact = NULL) {
       'entity_id' => $contact->contact_id,
     ),
   );
+
   $relation = relation_create('crm_core_user_sync', $endpoints);
   relation_save($relation);
 
@@ -390,4 +405,14 @@ function crm_core_user_sync_user_view($account, $view_mode, $langcode) {
     }
     $account->content['crm_core'] = $content;
   }
+}
+
+/**
+ * Weight comparison function
+ */
+function crm_core_user_sync_weight_cmp($a, $b) {
+  if ($a['weight'] == $b['weight']) {
+    return 0;
+  }
+  return ($a['weight'] < $b['weight']) ? -1 : 1;
 }

@@ -128,16 +128,6 @@ function theme_crm_core_user_sync_admin_form($variables) {
 }
 
 /**
- * Weight comparison function
- */
-function crm_core_user_sync_weight_cmp($a, $b) {
-  if ($a['weight'] == $b['weight']) {
-    return 0;
-  }
-  return ($a['weight'] < $b['weight']) ? -1 : 1;
-}
-
-/**
  * Add new rule form.
  */
 function crm_core_user_sync_admin_edit_rule_form($form, &$form_state, $rule_key = null) {
