@@ -5,7 +5,8 @@
  */
 function crm_core_report_list(){
   $reports = hook_crm_core_report_register();
-  return theme('crm_core_report_index', array('reports' => $reports));
+  return empty($reports)
+    ? t('There are no reports to display at this time.') : theme('crm_core_report_index', array('reports' => $reports));
 }
 
 

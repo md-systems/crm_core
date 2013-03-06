@@ -24,7 +24,7 @@ function crm_core_report_permission() {
   return array(
     'view crm report index' => array(
       'title' => t('View CRM Core report index'),
-      'description' => t('Use dashboard.'),
+      'description' => t('View CRM Core report index page.'),
     ),
   );
 }
