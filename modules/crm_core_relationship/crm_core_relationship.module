@@ -318,6 +318,10 @@ function crm_core_relationship_preprocess_relationship(&$variables) {
 
   $entity = $variables['relationship'];
 
+  // add classes based on the type of relation
+  $variables['classes_array'][] = 'relation';
+  $variables['classes_array'][] = 'relation-' . $entity->relation_type;
+
   $variables['theme_hook_suggestions'][] = 'relationship__' . $entity->relation_type;
   $variables['theme_hook_suggestions'][] = 'relationship__' . $entity->rid;
 }
