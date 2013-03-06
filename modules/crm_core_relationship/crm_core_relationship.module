@@ -293,6 +293,7 @@ function crm_core_relationship_field_attach_create_bundle($relation_type, $relat
     }
   }
 }
+
 /**
  * Implements hook_theme().
  */
@@ -312,6 +313,8 @@ function crm_core_relationship_theme($existing, $type, $theme, $path) {
 function crm_core_relationship_preprocess_relationship(&$variables) {
   $variables['view_mode'] = $variables['elements']['#view_mode'];
   $variables['relationship'] = $variables['elements']['#relationship'];
+  $variables['language'] = $variables['elements']['#view_mode'];
+  $variables['content'] = relation_view($variables['relationship'], $variables['view_mode']);
 
   $entity = $variables['relationship'];
 
