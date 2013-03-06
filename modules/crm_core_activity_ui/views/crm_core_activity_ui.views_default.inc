@@ -153,7 +153,7 @@ function crm_core_activity_ui_views_default_views() {
   $handler->display->display_options['fields']['nothing_2']['exclude'] = TRUE;
   $handler->display->display_options['fields']['nothing_2']['alter']['text'] = 'Edit';
   $handler->display->display_options['fields']['nothing_2']['alter']['make_link'] = TRUE;
-  $handler->display->display_options['fields']['nothing_2']['alter']['path'] = 'crm-core/contact/[contact_id]/activity/[activity_id]/edit';
+  $handler->display->display_options['fields']['nothing_2']['alter']['path'] = 'crm-core/contact/[contact_id]/activity/[activity_id]/edit?destination=crm-core/contact/[contact_id]/activity';
   /* Field: Global: Custom text */
   $handler->display->display_options['fields']['nothing_3']['id'] = 'nothing_3';
   $handler->display->display_options['fields']['nothing_3']['table'] = 'views';
