@@ -156,6 +156,10 @@ function crm_core_ui_dashboard() {
     if (is_array($output)) {
       $output = drupal_render($output);
     }
+    $menu_item = menu_get_item($dashboard_path);
+    if (!empty($menu_item['title'])) {
+      drupal_set_title($menu_item['title']);
+    }
     return $output;
   }
   else {
