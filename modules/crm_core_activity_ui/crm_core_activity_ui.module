@@ -30,10 +30,10 @@ function crm_core_activity_ui_menu() {
     'access arguments' => array('view', 'crm_core_activity', 2),
     'type' => MENU_NORMAL_ITEM,
   );
-  $items['crm-core/contact/%/activity/%crm_core_activity'] =  array(
+  $items['crm-core/contact/%crm_core_contact/activity/%crm_core_activity'] =  array(
     'title' => 'Activity',
     'page callback' => 'crm_core_activity_view',
-    'page arguments' => array(4),
+    'page arguments' => array(4, 2),
     'title callback' => 'entity_label',
     'title arguments' => array('crm_core_activity', 4),
     'access callback' => 'entity_access',
@@ -178,16 +178,25 @@ function crm_core_activity_ui_views_pre_render(&$view) {
   if ($view->name == 'crm_activities_by_contact' && $view->current_display == 'page') {
     $contact_id = arg(2);
     $contact = crm_core_contact_load($contact_id);
-    $contact_uri = $contact->uri();
-    $contact_name = $contact->label();
-    $view->build_info['title'] = t('Activities for @contact_name', array('@contact_name' => $contact_name));
-    $breadcrumb = array(
-      l(t('Home'), '<front>'),
-      l(t('CRM Core'), 'crm-core'),
-      l(t('Contacts'), 'crm-core/contacts'),
-      l(t($contact_name), $contact_uri['path']),
-      l(t('Activities'), $contact_uri['path'] . '/activity'),
-    );
-    drupal_set_breadcrumb($breadcrumb);
+    _crm_core_activity_ui_set_breadcrumb($contact);
+    $view->build_info['title'] = t('Activities for @contact_name', array('@contact_name' => $contact->label()));
   }
+}
+
+/**
+ * Helper function to set breadcrumb.
+ *
+ * @param $contact object
+ *  CRM Core contact from path.
+ */
+function _crm_core_activity_ui_set_breadcrumb($contact) {
+  $contact_uri = $contact->uri();
+  $breadcrumb = array(
+    l(t('Home'), '<front>'),
+    l(t('CRM Core'), 'crm-core'),
+    l(t('Contacts'), 'crm-core/contacts'),
+    l(t($contact->label()), $contact_uri['path']),
+    l(t('Activities'), $contact_uri['path'] . '/activity'),
+  );
+  drupal_set_breadcrumb($breadcrumb);
 }

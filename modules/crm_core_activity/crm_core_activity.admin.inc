@@ -123,7 +123,17 @@ function crm_core_activity_type_add_default_fields($activity_type) {
         'path' => '',
       ),
     ),
-    'display' => array(),
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => 1,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => '0',
+      ),
+    ),
   );
 
   // Date field.

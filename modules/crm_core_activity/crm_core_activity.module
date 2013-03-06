@@ -331,13 +331,12 @@ function crm_core_activity_forms($form_id, $args) {
  * Activity view callback.
  */
 function crm_core_activity_view($activity) {
-  $content = entity_get_controller('crm_core_activity')->view(array($activity->activity_id => $activity), 'full');
-
-  // We don't want to run output through entity theming function.
-  // To avoid this hack apply patch from http://drupal.org/node/1259916
-  // Then we can load content in following way
-  // $content = entity_build_content('crm_core_activity', $activity);
-  unset($content['crm_core_activity'][$activity->activity_id]['#theme']);
+  $content = entity_build_content('crm_core_activity', $activity);
+  $args = func_get_args();
+  // Lets check if contact is passed.
+  if (!empty($args[1])) {
+    _crm_core_activity_ui_set_breadcrumb($args[1]);
+  }
   return $content;
 }
 
