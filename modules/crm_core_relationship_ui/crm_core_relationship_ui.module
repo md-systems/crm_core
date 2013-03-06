@@ -314,7 +314,6 @@ function crm_core_relationship_ui_init() {
   // Check that we on relationships page of contact.
   if (arg(0) == 'crm-core' && arg(1) == 'contact' && arg(3) == 'relationships') {
     drupal_add_css(drupal_get_path('module', 'crm_core_relationship_ui') . '/crm_core_relationship_ui.css');
-    //drupal_set_title()
   }
 }
 

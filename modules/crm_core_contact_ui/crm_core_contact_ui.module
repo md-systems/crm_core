@@ -175,12 +175,3 @@ function crm_core_contact_ui_theme() {
 
   return $theme;
 }
-
-/**
- * Implements hook_init().
- */
-function crm_core_contact_ui_init() {
-  if (arg(0) == 'crm-core' && arg(1) == 'contacts') {
-    drupal_add_css(drupal_get_path('module', 'crm_core_contact_ui') . '/crm_core_contact_ui.css');
-  }
-}
