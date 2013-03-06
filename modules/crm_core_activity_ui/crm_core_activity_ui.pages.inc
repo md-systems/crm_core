@@ -197,7 +197,18 @@ function crm_core_activity_form_delete_confirm_submit($form, &$form_state) {
     crm_core_activity_delete($activity);
 
     watchdog('crm_core_activity', '@type: deleted %title.', array('@type' => $activity->type, '%title' => $activity->title));
-    drupal_set_message(t('@type %title has been deleted.', array('@type' => crm_core_activity_type_get_name($activity->type), '%title' => $activity->title)));
+    drupal_set_message(t('@type %title has been deleted.', array(
+      '@type' => crm_core_activity_type_get_name($activity->type),
+      '%title' => $activity->title
+    )));
+  }
+  $destination = drupal_get_destination();
+  $current_path = drupal_get_path_alias();
+  if ($destination['destination'] == $current_path) {
+    drupal_goto('crm-core');
+  }
+  else {
+    drupal_goto($destination);
   }
 }
 
