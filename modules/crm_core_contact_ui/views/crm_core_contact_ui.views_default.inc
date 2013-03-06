@@ -22,7 +22,7 @@ function crm_core_contact_ui_views_default_views() {
 
   /* Display: Defaults */
   $handler = $view->new_display('default', 'Defaults', 'default');
-  $handler->display->display_options['title'] = 'CRM Contact';
+  $handler->display->display_options['title'] = 'Contacts';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'perm';
   $handler->display->display_options['access']['perm'] = 'view any crm_core_contact entity';
