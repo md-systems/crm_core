@@ -94,7 +94,6 @@ function crm_core_activity_ui_views_default_views() {
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'Activities for [contact_name]';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
@@ -194,24 +193,6 @@ function crm_core_activity_ui_views_default_views() {
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = 'Operations';
   $handler->display->display_options['fields']['nothing']['alter']['text'] = '[nothing_1] | [nothing_2] | [nothing_3]';
-  /* Field: CRM Contact: Household name */
-  $handler->display->display_options['fields']['contact_name']['id'] = 'contact_name';
-  $handler->display->display_options['fields']['contact_name']['table'] = 'field_data_contact_name';
-  $handler->display->display_options['fields']['contact_name']['field'] = 'contact_name';
-  $handler->display->display_options['fields']['contact_name']['relationship'] = 'field_activity_participants_target_id';
-  $handler->display->display_options['fields']['contact_name']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['contact_name']['click_sort_column'] = 'title';
-  $handler->display->display_options['fields']['contact_name']['settings'] = array(
-    'format' => 'default',
-    'markup' => 0,
-    'output' => 'default',
-    'multiple' => 'default',
-    'multiple_delimiter' => ', ',
-    'multiple_and' => 'text',
-    'multiple_delimiter_precedes_last' => 'never',
-    'multiple_el_al_min' => '3',
-    'multiple_el_al_first' => '1',
-  );
   /* Contextual filter: CRM Activity: Participants (field_activity_participants) */
   $handler->display->display_options['arguments']['field_activity_participants_target_id']['id'] = 'field_activity_participants_target_id';
   $handler->display->display_options['arguments']['field_activity_participants_target_id']['table'] = 'field_data_field_activity_participants';
@@ -245,6 +226,10 @@ function crm_core_activity_ui_views_default_views() {
   $handler = $view->new_display('page', 'Page', 'page');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $handler->display->display_options['path'] = 'crm-core/contact/%/activity';
+  $handler->display->display_options['menu']['type'] = 'tab';
+  $handler->display->display_options['menu']['title'] = 'Activities';
+  $handler->display->display_options['menu']['weight'] = '0';
+  $handler->display->display_options['menu']['context'] = 0;
 
   $views['crm_activities_by_contact'] = $view;
 

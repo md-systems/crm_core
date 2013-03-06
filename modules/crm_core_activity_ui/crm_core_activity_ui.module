@@ -109,6 +109,7 @@ function crm_core_activity_ui_menu() {
 function crm_core_activity_ui_menu_alter(&$items) {
   $items['admin/structure/crm-core/activity-types']['type'] = MENU_LOCAL_TASK;
   // Set "Add activity" as local action.
+  $items['crm-core/contact/%/activity/add']['title'] = t('Add Activity');
   $items['crm-core/contact/%/activity/add']['type'] = MENU_LOCAL_ACTION;
   $items['crm-core/contact/%/activity/add']['context'] = MENU_CONTEXT_PAGE;
   unset($items['crm-core/contact/%/activity/add']['tab_root']);
@@ -176,5 +177,26 @@ function crm_core_activity_ui_views_api() {
 function crm_core_activity_ui_init() {
   if (arg(0) == 'crm-core' && arg(1) == 'contact' && arg(3) == 'activity') {
     drupal_add_css(drupal_get_path('module', 'crm_core_activity_ui') . '/crm_core_activity_ui.css');
+  }
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function crm_core_activity_ui_views_pre_render(&$view) {
+  if ($view->name == 'crm_activities_by_contact' && $view->current_display == 'page') {
+    $contact_id = arg(2);
+    $contact = crm_core_contact_load($contact_id);
+    $contact_uri = $contact->uri();
+    $contact_name = $contact->label();
+    $view->build_info['title'] = t('Activities for @contact_name', array('@contact_name' => $contact_name));
+    $breadcrumb = array(
+      l(t('Home'), '<front>'),
+      l(t('CRM Core'), 'crm-core'),
+      l(t('Contacts'), 'crm-core/contacts'),
+      l(t($contact_name), $contact_uri['path']),
+      l(t('Activities'), $contact_uri['path'] . '/activity'),
+    );
+    drupal_set_breadcrumb($breadcrumb);
   }
 }

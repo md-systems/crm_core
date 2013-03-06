@@ -61,20 +61,6 @@ function crm_ui_menu_alter(&$items) {
   // Transform the field UI tabs into contextual links.
   $items['admin/structure/crm-core/activity-types']['type'] = MENU_LOCAL_TASK;
   $items['admin/structure/crm-core/contact-types']['type'] = MENU_LOCAL_TASK;
-
-  // Make Views menu item local task.
-  $items['crm-core/contact/%/activity/add']['type'] = MENU_LOCAL_ACTION;
-  $items['crm-core/contact/%/activity/add']['title'] = t('Add Activity');
-  $items['crm-core/contact/%/activity/add']['tab_root'] = 'crm-core/contact/%/activity';
-
-  // Set tab_root for views local actions.
-  $items['crm-core/contact/%/activity']['tab_root'] = 'crm-core/contact/%';
-  $items['crm-core/contact/%/revisions']['tab_root'] = 'crm-core/contact/%';
-
-  // Alter Views menu item.
-  $items['crm-core/contact/%/activity']['title'] = t('Activity');
-  $items['crm-core/contact/%/activity']['type'] = MENU_LOCAL_TASK;
-  $items['crm-core/contact/%/activity']['context'] = MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE;
 }
 
 /**
