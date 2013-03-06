@@ -130,30 +130,6 @@ function crm_core_activity_ui_views_default_views() {
   $handler->display->display_options['fields']['activity_id']['exclude'] = TRUE;
   $handler->display->display_options['fields']['activity_id']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['activity_id']['hide_alter_empty'] = FALSE;
-  /* Field: CRM Activity: Date */
-  $handler->display->display_options['fields']['field_activity_date']['id'] = 'field_activity_date';
-  $handler->display->display_options['fields']['field_activity_date']['table'] = 'field_data_field_activity_date';
-  $handler->display->display_options['fields']['field_activity_date']['field'] = 'field_activity_date';
-  $handler->display->display_options['fields']['field_activity_date']['label'] = 'Activity Date';
-  $handler->display->display_options['fields']['field_activity_date']['settings'] = array(
-    'format_type' => 'long',
-    'fromto' => 'both',
-    'multiple_number' => '',
-    'multiple_from' => '',
-    'multiple_to' => '',
-  );
-  /* Field: CRM Activity: Title */
-  $handler->display->display_options['fields']['title']['id'] = 'title';
-  $handler->display->display_options['fields']['title']['table'] = 'crm_core_activity';
-  $handler->display->display_options['fields']['title']['field'] = 'title';
-  $handler->display->display_options['fields']['title']['alter']['make_link'] = TRUE;
-  $handler->display->display_options['fields']['title']['alter']['path'] = 'crm-core/activity/[activity_id]';
-  $handler->display->display_options['fields']['title']['hide_alter_empty'] = FALSE;
-  /* Field: CRM Activity: Label */
-  $handler->display->display_options['fields']['label']['id'] = 'label';
-  $handler->display->display_options['fields']['label']['table'] = 'crm_core_activity_type';
-  $handler->display->display_options['fields']['label']['field'] = 'label';
-  $handler->display->display_options['fields']['label']['label'] = 'Activity Type';
   /* Field: CRM Contact: Contact ID */
   $handler->display->display_options['fields']['contact_id']['id'] = 'contact_id';
   $handler->display->display_options['fields']['contact_id']['table'] = 'crm_core_contact';
@@ -187,7 +163,31 @@ function crm_core_activity_ui_views_default_views() {
   $handler->display->display_options['fields']['nothing_3']['exclude'] = TRUE;
   $handler->display->display_options['fields']['nothing_3']['alter']['text'] = 'Delete';
   $handler->display->display_options['fields']['nothing_3']['alter']['make_link'] = TRUE;
-  $handler->display->display_options['fields']['nothing_3']['alter']['path'] = 'crm-core/contact/[contact_id]/activity/[activity_id]/delete';
+  $handler->display->display_options['fields']['nothing_3']['alter']['path'] = 'crm-core/contact/[contact_id]/activity/[activity_id]/delete?destination=crm-core/contact/[contact_id]/activity';
+  /* Field: CRM Activity: Date */
+  $handler->display->display_options['fields']['field_activity_date']['id'] = 'field_activity_date';
+  $handler->display->display_options['fields']['field_activity_date']['table'] = 'field_data_field_activity_date';
+  $handler->display->display_options['fields']['field_activity_date']['field'] = 'field_activity_date';
+  $handler->display->display_options['fields']['field_activity_date']['label'] = 'Activity Date';
+  $handler->display->display_options['fields']['field_activity_date']['settings'] = array(
+    'format_type' => 'long',
+    'fromto' => 'both',
+    'multiple_number' => '',
+    'multiple_from' => '',
+    'multiple_to' => '',
+  );
+  /* Field: CRM Activity: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'crm_core_activity';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['title']['alter']['path'] = 'crm-core/contact/[contact_id]/activity/[activity_id]';
+  $handler->display->display_options['fields']['title']['hide_alter_empty'] = FALSE;
+  /* Field: CRM Activity: Label */
+  $handler->display->display_options['fields']['label']['id'] = 'label';
+  $handler->display->display_options['fields']['label']['table'] = 'crm_core_activity_type';
+  $handler->display->display_options['fields']['label']['field'] = 'label';
+  $handler->display->display_options['fields']['label']['label'] = 'Activity Type';
   /* Field: Global: Custom text */
   $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['table'] = 'views';

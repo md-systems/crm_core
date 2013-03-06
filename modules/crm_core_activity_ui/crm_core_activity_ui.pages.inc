@@ -34,10 +34,10 @@ function crm_core_activity_form($form, &$form_state, $activity) {
   $form_state['build_info']['files'][] =
     drupal_get_path('module', 'crm_core_activity_ui') . '/crm_core_activity_ui.pages.inc';
   // get the contact id of who is trying to add the activity
-  if (isset($activity->field_activity_participants['und']['0'])) {
+  if (isset($activity->field_activity_participants[LANGUAGE_NONE]['0'])) {
       $form['contact_id'] = array(
         '#type' => 'value',
-        '#value' => arg(1) == 'contact' ? arg(2) : $activity->field_activity_participants['und']['0']['target_id'],
+        '#value' => arg(1) == 'contact' ? arg(2) : $activity->field_activity_participants[LANGUAGE_NONE]['0']['target_id'],
       );
   }
 
@@ -100,33 +100,12 @@ function crm_core_activity_form($form, &$form_state, $activity) {
  * Validation callback for crm_activity_form.
  */
 function crm_core_activity_form_validate($form, &$form_state) {
-
   $activity = $form_state['crm_core_activity'];
-  if (isset($activity->field_activity_participants[LANGUAGE_NONE])) {
-
-    // Ensure that contact set in $activity is present in values. We create activity
-    // from the page of the contact. So we ensure that this contact is added in
-    // participants field.
-    $form_state_values = array();
-    foreach ($form_state['values']['field_activity_participants'][LANGUAGE_NONE] as $value) {
-      $form_state_values[] = $value['target_id'];
-    }
-
-    $activity_values = array();
-    foreach ($activity->field_activity_participants[LANGUAGE_NONE] as $value) {
-      $activity_values[] = $value['target_id'];
-    }
-    $array_intersect = array_intersect($form_state_values, $activity_values);
-
-    // Not all default values present in form state values.
-    if (array_values($array_intersect) != $activity_values) {
-      form_set_error('field_activity_participants', t('Original contact should be included in Participants field.'));
-    }
+  if (empty($form_state['values']['field_activity_participants'][LANGUAGE_NONE])) {
+    form_set_error('field_activity_participants', t('Participants field should include at least one participant.'));
   }
-
   // Notify field widgets to validate their data.
   field_attach_form_validate('crm_core_activity', $activity, $form, $form_state);
-
 }
 
 /**
@@ -218,8 +197,8 @@ function crm_core_activity_form_delete_confirm_submit($form, &$form_state) {
  * Set proper page title.
  */
 function crm_core_activity_form_after_build(&$form, &$form_state) {
-  $crm_activity_type = crm_core_activity_types($form_state['crm_core_activity']->type);
   if ($form_state['op'] == 'add') {
+    $crm_activity_type = crm_core_activity_types($form_state['crm_core_activity']->type);
     drupal_set_title(t('Add new activity @label', array('@label' => $crm_activity_type->label)));
   }
   return $form;
