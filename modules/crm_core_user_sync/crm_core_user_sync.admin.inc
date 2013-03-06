@@ -43,7 +43,7 @@ function crm_core_user_sync_admin_form($form, &$form_state) {
     );
 
     $links = &$form['crm_core_user_sync_rules'][$key]['operations']['#links'];
-    $path = 'admin/config/crm-core/user_sync/' . $key;
+    $path = 'admin/config/crm-core/user-sync/' . $key;
     $links['edit'] = array('title' => 'Edit', 'href' => $path . '/edit');
     $links['delete'] = array('title' => 'Delete', 'href' => $path . '/delete');
 
@@ -212,11 +212,11 @@ function crm_core_user_sync_admin_edit_rule_form_submit($form, &$form_state) {
     uasort($rules, 'crm_core_user_sync_weight_cmp');
     variable_set('crm_core_user_sync_rules', $rules);
 
-    $form_state['redirect'] = 'admin/config/crm-core/user_sync';
+    $form_state['redirect'] = 'admin/config/crm-core/user-sync';
     drupal_set_message(t('User syncrhonzation rule has been saved.'));
   }
   elseif ($form_state['values']['op'] == $form['actions']['cancel']['#value']) {
-    $form_state['redirect'] = 'admin/config/crm-core/user_sync';
+    $form_state['redirect'] = 'admin/config/crm-core/user-sync';
   }
 }
 
@@ -230,7 +230,7 @@ function crm_core_user_sync_admin_delete_rule_form($form, &$form_state, $rule_ke
   );
 
   $question = t('Are you sure you want to delete the user synchronization rule?');
-  $path = 'admin/config/crm-core/user_sync';
+  $path = 'admin/config/crm-core/user-sync';
 
   return confirm_form($form, $question, $path);
 }
@@ -245,7 +245,7 @@ function crm_core_user_sync_admin_delete_rule_form_submit($form, &$form_state) {
   unset($rules[$rule_key]);
   variable_set('crm_core_user_sync_rules', $rules);
 
-  $form_state['redirect'] = 'admin/config/crm-core/user_sync';
+  $form_state['redirect'] = 'admin/config/crm-core/user-sync';
   drupal_set_message(t('User syncrhonzation rule has been deleted.'));
 }
 
@@ -257,5 +257,5 @@ function crm_core_user_sync_admin_update_rule_status($rule_key, $status) {
   $rules[$rule_key]['enabled'] = $status;
   variable_set('crm_core_user_sync_rules', $rules);
 
-  drupal_goto('admin/config/crm-core/user_sync');
+  drupal_goto('admin/config/crm-core/user-sync');
 }
