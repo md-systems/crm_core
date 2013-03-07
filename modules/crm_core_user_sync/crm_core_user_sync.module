@@ -63,6 +63,15 @@ function crm_core_user_sync_menu() {
       'access arguments' => array('administer user-sync'),
       'file' => 'crm_core_user_sync.admin.inc',
     );
+
+    $items['crm-core/contact/%crm_core_contact/user'] = array(
+      'title' => 'User relation',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('crm_core_user_sync_edit_form', 2),
+      'access arguments' => array('administer relations'),
+      'file' => 'crm_core_user_sync.pages.inc',
+      'type' => MENU_LOCAL_TASK,
+    );
   }
 
   return $items;
