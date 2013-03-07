@@ -405,13 +405,14 @@ function crm_core_user_sync_user_view($account, $view_mode, $langcode) {
       '#type' => 'user_profile_item',
       '#title' => t('Contact Information'),
     );
+    $contact_label = t('Contact name: ');
     global $user;
     if (user_access('edit any crm_core_contact entity', $user)) {
       $uri = $contact->uri();
-      $content['#markup'] = l($contact->label(), $uri['path']);
+      $content['#markup'] = $contact_label . l($contact->label(), $uri['path']);
     }
     else {
-      $content['#markup'] = $contact->label();
+      $content['#markup'] = $contact_label . $contact->label();
     }
     $account->content['crm_core'] = $content;
   }
