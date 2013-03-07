@@ -200,7 +200,7 @@ function crm_core_relationship_ui_views_default_views() {
   );
   $handler->display->display_options['filters']['relation_type']['exposed'] = TRUE;
   $handler->display->display_options['filters']['relation_type']['expose']['operator_id'] = 'relation_type_op';
-  $handler->display->display_options['filters']['relation_type']['expose']['label'] = 'Relationship type';
+  $handler->display->display_options['filters']['relation_type']['expose']['label'] = 'Filter by:';
   $handler->display->display_options['filters']['relation_type']['expose']['operator'] = 'relation_type_op';
   $handler->display->display_options['filters']['relation_type']['expose']['identifier'] = 'relation_type';
   $handler->display->display_options['filters']['relation_type']['expose']['remember_roles'] = array(
@@ -325,7 +325,7 @@ function crm_core_relationship_ui_views_default_views() {
   );
   $handler->display->display_options['filters']['relation_type']['exposed'] = TRUE;
   $handler->display->display_options['filters']['relation_type']['expose']['operator_id'] = 'relation_type_op';
-  $handler->display->display_options['filters']['relation_type']['expose']['label'] = 'Relationship type';
+  $handler->display->display_options['filters']['relation_type']['expose']['label'] = 'Filter by:';
   $handler->display->display_options['filters']['relation_type']['expose']['operator'] = 'relation_type_op';
   $handler->display->display_options['filters']['relation_type']['expose']['identifier'] = 'relation_type';
   $handler->display->display_options['filters']['relation_type']['expose']['remember_roles'] = array(

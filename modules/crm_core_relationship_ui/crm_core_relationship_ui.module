@@ -105,6 +105,24 @@ function crm_core_relationship_ui_menu() {
     'page arguments' => array(4, FALSE),
     'file' => 'crm_core_relationship_ui.pages.inc',
   );
+  /**
+   * Relationship Edit/Delete section.
+   */
+  $items['crm-core/contact/%/relationships/%relation/edit'] = array(
+    'title' => 'Edit',
+    'access arguments' => array('edit relations'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('relation_edit_form', 4),
+    'type' => MENU_LOCAL_ACTION,
+  );
+  $items['crm-core/contact/%/relationships/%relation/delete'] = array(
+    'title' => 'Delete',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('relation_delete_confirm', 4),
+    'access arguments' => array('delete relations'),
+    'weight' => 10,
+    'type' => MENU_LOCAL_ACTION,
+  );
 
   return $items;
 }
@@ -317,17 +335,23 @@ function crm_core_relationship_ui_init() {
   }
 }
 
-function crm_core_relationship_ui_preprocess_views_view(&$vars) {
-  $view = $vars['view'];
+/**
+ * Implements hook_views_pre_render().
+ */
+function crm_core_relationship_ui_views_pre_render(&$view) {
   if ($view->name == 'crm_relationships_by_contact') {
-    $contact = crm_core_contact_load(arg(2));
-    $contact_label = entity_label('crm_core_contact', $contact);
-    $contact_uri = entity_uri('crm_core_contact', $contact);
+    // Grabbing 1st view argument to avoid preview problems.
+    $contact_id = $view->args[0];
+    $contact = crm_core_contact_load($contact_id);
+    $contact_uri = $contact->uri();
     $breadcrumb = array(
       l(t('Home'), '<front>'),
       l(t('CRM Core'), 'crm-core'),
-      l($contact_label, $contact_uri['path']),
+      l(t('Contacts'), 'crm-core/contacts'),
+      l(t($contact->label()), $contact_uri['path']),
+      l(t('Relationships'), $contact_uri['path'] . '/activity'),
     );
     drupal_set_breadcrumb($breadcrumb);
+    $view->build_info['title'] = t('Relationships for @contact_name', array('@contact_name' => $contact->label()));
   }
 }

@@ -176,7 +176,8 @@ function crm_core_activity_ui_views_api() {
  */
 function crm_core_activity_ui_views_pre_render(&$view) {
   if ($view->name == 'crm_activities_by_contact' && $view->current_display == 'page') {
-    $contact_id = arg(2);
+    // Grabbing 1st view argument to avoid preview problems.
+    $contact_id = $view->args[0];
     $contact = crm_core_contact_load($contact_id);
     _crm_core_activity_ui_set_breadcrumb($contact);
     $view->build_info['title'] = t('Activities for @contact_name', array('@contact_name' => $contact->label()));
