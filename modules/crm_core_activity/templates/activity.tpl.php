@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Theme implementation for relation entity.
+ * Theme implementation for activity entity.
  *
  * Available variables:
  * - $content: An array of comment items. Use render($content) to print them all, or

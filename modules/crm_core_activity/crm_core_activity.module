@@ -331,13 +331,14 @@ function crm_core_activity_forms($form_id, $args) {
  * Activity view callback.
  */
 function crm_core_activity_view($activity) {
-  $content = entity_build_content('crm_core_activity', $activity);
-  $args = func_get_args();
-  // Lets check if contact is passed.
-  if (!empty($args[1])) {
-    _crm_core_activity_ui_set_breadcrumb($args[1]);
-  }
-  return $content;
+  $langcode = $GLOBALS['language_content']->language;
+
+  return array(
+    '#theme' => 'activity',
+    '#activity' => $activity,
+    '#view_mode' => 'full',
+    '#language' => $langcode,
+  );
 }
 
 /**
@@ -556,4 +557,35 @@ function crm_core_activity_file_download_access($file_item, $entity_type, $entit
   if ($entity_type == 'crm_core_activity') {
     return crm_core_activity_access('view', $entity);
   }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function crm_core_activity_theme($existing, $type, $theme, $path) {
+  return array(
+    'activity' => array(
+      'render element' => 'elements',
+      'template' => 'activity',
+      'path' => $path . '/templates',
+    )
+  );
+}
+
+/**
+ * Implements hook_preprocess().
+ */
+function crm_core_activity_preprocess_activity(&$variables) {
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+  $variables['activity'] = $variables['elements']['#activity'];
+  $variables['content'] = entity_build_content('crm_core_activity', $variables['activity']);
+
+  $entity = $variables['activity'];
+
+  // add classes based on the type of activity
+  $variables['classes_array'][] = 'activity';
+  $variables['classes_array'][] = 'activity-' . $variables['activity']->type;
+
+  $variables['theme_hook_suggestions'][] = 'activity__' . $entity->type;
+  $variables['theme_hook_suggestions'][] = 'activity__' . $entity->activity_id;
 }

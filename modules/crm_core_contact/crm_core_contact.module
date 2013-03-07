@@ -715,17 +715,15 @@ function crm_core_contact_view($contact, $view_mode = 'full') {
   module_invoke_all('entity_view', $contact, 'crm_core_contact', $view_mode, $langcode);
   $contact->content += array(
     '#theme'         => 'contact',
-    '#contact'	     => $contact,
-    '#contact_data'	 => $contact->content,
-    '#cid'	         => $contact->contact_id,
+    '#contact'	=> $contact,
+    '#content'	=> $contact->content,
+    '#cid'	       => $contact->contact_id,
     '#type'          => $contact->type,
     '#view_mode'     => $view_mode,
     '#language'      => $langcode,
   );
   $build = $contact->content;
   return $build;
-
-  return $contact->content;
 }
 
 /**
@@ -734,9 +732,10 @@ function crm_core_contact_view($contact, $view_mode = 'full') {
 function crm_core_contact_theme($existing, $type, $theme, $path) {
   return array(
     'contact' => array(
-      'variables' => array('contact' => null, 'type' => null, 'contact_data' => null, 'cid' => null, 'view_mode' => null),
-      'template' => 'contact'
-    ),
+      'render element' => 'elements',
+      'template' => 'contact',
+      'path' => $path . '/templates',
+    )
   );
 }
 
@@ -748,19 +747,16 @@ function crm_core_contact_theme($existing, $type, $theme, $path) {
  *
  */
 function template_preprocess_contact(&$variables) {
-
-  // hide the label on the name field, when we are looking at something
-  // besides a full view mode
-  if($variables['view_mode'] !== 'full'){
-    $variables['contact_data']['contact_name']['#label_display'] = 'hidden';
-  }
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+  $variables['contact'] = $variables['elements']['#contact'];
+  $variables['content'] = $variables['elements']['#content'];
 
   // add classes based on the type of contact
-  $variables['classes_array'][] = 'contact-' . $variables['type'];
+  $variables['classes_array'][] = 'contact';
+  $variables['classes_array'][] = 'contact-' . $variables['contact']->type;
 
   // add template suggestions
-  $variables['theme_hook_suggestions'][] = 'contact__' . $variables['type'];
-
+  $variables['theme_hook_suggestions'][] = 'contact__' . $variables['contact']->type;
 }
 
 /**
