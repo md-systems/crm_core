@@ -25,7 +25,7 @@ function crm_core_user_sync_menu() {
     $items['admin/config/crm-core/user-sync/new'] = array(
       'title' => t('Add a new rule'),
       'page callback' => 'drupal_get_form',
-      'page arguments' => array('crm_core_user_sync_admin_edit_rule_form', null),
+      'page arguments' => array('crm_core_user_sync_admin_edit_rule_form', NULL),
       'access arguments' => array('administer user-sync'),
       'file' => 'crm_core_user_sync.admin.inc',
       'type' => MENU_LOCAL_ACTION,
@@ -51,7 +51,7 @@ function crm_core_user_sync_menu() {
     $items['admin/config/crm-core/user-sync/%/enable'] = array(
       'title' => t('Delete a rule'),
       'page callback' => 'crm_core_user_sync_admin_update_rule_status',
-      'page arguments' => array(4, true),
+      'page arguments' => array(4, TRUE),
       'access arguments' => array('administer user-sync'),
       'file' => 'crm_core_user_sync.admin.inc',
     );
@@ -59,7 +59,7 @@ function crm_core_user_sync_menu() {
     $items['admin/config/crm-core/user-sync/%/disable'] = array(
       'title' => t('Delete a rule'),
       'page callback' => 'crm_core_user_sync_admin_update_rule_status',
-      'page arguments' => array(4, false),
+      'page arguments' => array(4, FALSE),
       'access arguments' => array('administer user-sync'),
       'file' => 'crm_core_user_sync.admin.inc',
     );
@@ -426,4 +426,35 @@ function crm_core_user_sync_weight_cmp($a, $b) {
     return 0;
   }
   return ($a['weight'] < $b['weight']) ? -1 : 1;
+}
+
+/**
+ * Implemets hook_views_pre_execute().
+ */
+function crm_core_user_sync_views_pre_execute(&$view) {
+  if ($view->name == 'crm_сore_contact_to_user_management') {
+    // Implementing "FULL OUTER JOIN" by union of queries.
+    // Reciept from http://drupal.org/node/748844#comment-7070234
+    $left_query = db_select('crm_core_contact');
+    $left_query->leftJoin('field_data_endpoints', 'field_data_endpoints', "crm_core_contact.contact_id = field_data_endpoints.endpoints_entity_id AND field_data_endpoints.bundle = 'crm_core_user_sync' AND field_data_endpoints.endpoints_entity_type = 'crm_core_contact'");
+    $left_query->leftJoin('field_data_endpoints', 'field_data_endpoints2', "field_data_endpoints.entity_id = field_data_endpoints2.entity_id AND field_data_endpoints2.endpoints_entity_type = 'user'");
+    $left_query->leftJoin('users', 'users_crm_core_contact', "field_data_endpoints2.endpoints_entity_id = users_crm_core_contact.uid AND field_data_endpoints2.endpoints_entity_type = 'user'");
+    $left_query->addField('crm_core_contact', 'contact_id', 'contact_id');
+    $left_query->addField('users_crm_core_contact', 'uid', 'users_crm_core_contact_uid');
+    $left_query->addField('users_crm_core_contact', 'name', 'users_crm_core_contact_name');
+    $left_query->addExpression("'crm_core_contact'", 'field_data_contact_name_crm_core_contact_entity_type');
+
+    $right_query = db_select('crm_core_contact');
+    $right_query->leftJoin('field_data_endpoints', 'field_data_endpoints', "crm_core_contact.contact_id = field_data_endpoints.endpoints_entity_id AND field_data_endpoints.bundle = 'crm_core_user_sync' AND field_data_endpoints.endpoints_entity_type = 'crm_core_contact'");
+    $right_query->leftJoin('field_data_endpoints', 'field_data_endpoints2', "field_data_endpoints.entity_id = field_data_endpoints2.entity_id AND field_data_endpoints2.endpoints_entity_type = 'user'");
+    $right_query->rightJoin('users', 'users_crm_core_contact', "field_data_endpoints2.endpoints_entity_id = users_crm_core_contact.uid AND field_data_endpoints2.endpoints_entity_type = 'user'");
+    $right_query->addField('crm_core_contact', 'contact_id', 'contact_id');
+    $right_query->addField('users_crm_core_contact', 'uid', 'users_crm_core_contact_uid');
+    $right_query->addField('users_crm_core_contact', 'name', 'users_crm_core_contact_name');
+    $right_query->addExpression("'crm_core_contact'", 'field_data_contact_name_crm_core_contact_entity_type');
+
+    $left_query->union($right_query);
+    $total_query = db_select($left_query, 'total')->fields('total');
+    $view->build_info['count_query'] = $view->build_info['query'] = $total_query;
+  }
 }
