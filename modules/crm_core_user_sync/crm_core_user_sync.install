@@ -9,8 +9,8 @@ function crm_core_user_sync_install() {
     'relation_type' => 'crm_core_user_sync',
     'label' => st('Contact'),
     'reverse_label' => st('User'),
-    'source_bundles' => array('user:user'),
-    'target_bundles' => array('crm_core_contact:*'),
+    'source_bundles' => array('crm_core_contact:*'),
+    'target_bundles' => array('user:user'),
     'r_unique' => TRUE,
     'directional' => TRUE,
   );
