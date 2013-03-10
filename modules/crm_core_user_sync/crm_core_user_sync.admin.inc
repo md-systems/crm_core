@@ -259,3 +259,54 @@ function crm_core_user_sync_admin_update_rule_status($rule_key, $status) {
 
   drupal_goto('admin/config/crm-core/user-sync');
 }
+
+
+/**
+ * Contact->User relation edit form.
+ */
+function crm_core_user_sync_edit_form($form, &$form_state, $relation) {
+  if (!empty($relation)) {
+    drupal_set_title('Edit Relation');
+    
+    if (!empty($relation->endpoints[LANGUAGE_NONE][0]['entity_id'])) {
+      $contact = crm_core_contact_load($relation->endpoints[LANGUAGE_NONE][0]['entity_id']);
+    }
+
+    if (!empty($relation->endpoints[LANGUAGE_NONE][1]['entity_id'])) {
+      $user = user_load($relation->endpoints[LANGUAGE_NONE][1]['entity_id']);
+    }
+  }
+
+  $form['description_wrapper'] = array(
+    '#type' => 'container',
+  );
+
+  $form['description_wrapper']['description'] = array(
+    '#type' => 'item',
+    '#markup' => t('You can edit the details of a contact record to user account relationship using the following form. Leave either field blank to remove the relationship.'),
+  );
+
+  $form['contact'] = array(
+    '#title' => t('Contact Record'),
+    '#type' => 'textfield',
+    '#default_value' => $contact->label() . " [cid:{$contact->contact_id}]",
+    '#autocomplete_path' => '',
+  );
+
+  $form['user'] = array(
+    '#title' => t('User Record'),
+    '#type' => 'textfield',
+    '#default_value' => $user->name . " [uid:{$user->uid}]",
+    '#autocomplete_path' => '',
+  );
+
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+  );
+  $form['actions']['cancel'] = array(
+    '#markup' => l(t('Cancel'), 'crm-core/contact/' . $contact->contact_id),
+  );
+  return  $form;
+}
