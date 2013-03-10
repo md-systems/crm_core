@@ -64,8 +64,17 @@ function crm_core_user_sync_menu() {
       'file' => 'crm_core_user_sync.admin.inc',
     );
 
+    $items['admin/config/crm-core/user-sync/contact-to-user-management/add'] = array(
+      'title' => 'Add a new relation',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('crm_core_user_sync_edit_relation_form', NULL),
+      'access arguments' => array('administer user-sync'),
+      'file' => 'crm_core_user_sync.admin.inc',
+      'type' => MENU_LOCAL_ACTION,
+    );
+
     $items['admin/config/crm-core/user-sync/contact-to-user-management/%relation/edit'] = array(
-      'title' => 'User relation',
+      'title' => 'Edit relation',
       'page callback' => 'drupal_get_form',
       'page arguments' => array('crm_core_user_sync_edit_relation_form', 5),
       'access arguments' => array('administer user-sync'),
@@ -74,7 +83,7 @@ function crm_core_user_sync_menu() {
     );
 
     $items['admin/config/crm-core/user-sync/contact-to-user-management/%relation/delete'] = array(
-      'title' => 'User relation',
+      'title' => 'Delete relation',
       'page callback' => 'drupal_get_form',
       'page arguments' => array('crm_core_user_sync_delete_relation_form', 5),
       'access arguments' => array('administer user-sync'),
@@ -209,6 +218,9 @@ function crm_core_user_sync_sync($account, $contact = NULL) {
     }
 
     crm_core_contact_save($contact);
+  }
+  else {
+    $contact_type = $contact->type;
   }
 
   // TODO: for existing contacts check if contact type is in set of available.
