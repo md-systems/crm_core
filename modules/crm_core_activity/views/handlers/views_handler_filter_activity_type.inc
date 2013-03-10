@@ -1,6 +1,8 @@
 <?php
+
 /**
- * Filter by activity type
+ * @file
+ * Views support. Allows users to filter by activity type
  */
 class views_handler_filter_activity_type extends views_handler_filter_in_operator {
   function get_value_options() {
@@ -11,7 +13,6 @@ class views_handler_filter_activity_type extends views_handler_filter_in_operato
         $options[$type] = $info->label;
       }
       asort($options);
-// $options = array('this' => t('that'));
       $this->value_options = $options;
     }
   }

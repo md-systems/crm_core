@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Views support.
+ */
+
+/**
  * Custom field handler for activity_type.
  *
  * Needed for building view crm_activity_types to show the list of available

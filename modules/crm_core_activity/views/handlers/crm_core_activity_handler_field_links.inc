@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @file
  * Provides views handlers for View, Edit, Delete links.
  */
 

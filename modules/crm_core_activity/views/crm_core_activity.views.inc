@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Creates views used by default for displaying activities with contact records.
+ */
+
+/**
  * Implements hook_views_data_alter().
  */
 function crm_core_activity_views_data_alter(&$data) {
