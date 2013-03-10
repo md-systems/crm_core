@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Install, update and uninstall functions for Activity UI module.
+ */
+
+/**
  * Implements hook_install().
  *
  * Set weight of the module to 20. It should be more than

@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * User page callbacks for the Activity UI module.
+ */
+
+/**
  * Wrapper around entity_ui_get_form().
  *
  * Create new crm_activity entity and pass it to entity_ui_get_form().
