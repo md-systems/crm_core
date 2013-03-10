@@ -1,15 +1,21 @@
 <?php
 
 /**
+ * @file
+ *  Pages for administrative settings in CRM Core Contact.
+ */
+
+/**
  * Form callback: create or edit a contact type.
  *
- * @param $product_type
- * The contact type object to edit or for a create form an empty contact type
- * object with properties instantiated but not populated.
+ * @param object $contact_type
+ *   (Optional) The contact type object to edit.
+ *   Can be empty when used for a create form.
  */
 function crm_core_contact_type_form($form, &$form_state, $contact_type) {
+
   // Ensure this include file is loaded when the form is rebuilt from the cache.
-  //$form_state['build_info']['file'] = drupal_get_path('module', 'commerce_product') . '/includes/commerce_product.forms.inc';
+  // $form_state['build_info']['file'] = drupal_get_path('module', 'commerce_product') . '/includes/commerce_product.forms.inc';
 
   // Store the initial product type in the form state.
   $form_state['contact_type'] = $contact_type;
@@ -62,14 +68,6 @@ function crm_core_contact_type_form($form, &$form_state, $contact_type) {
     '#default_value' => $contact_type->description,
     '#rows' => 3,
   );
-
-//  $form['contact_type']['help'] = array(
-//    '#type' => 'textarea',
-//    '#title' => t('Explanation or submission guidelines'),
-//    '#description' => t('This text will be displayed at the top of the page when creating or editing contacts of this type.'),
-//    '#default_value' => (isset($contact_type->help)) ? $contact_type->help : '',
-//    '#rows' => 3,
-//  );
 
   $form['actions'] = array(
     '#type' => 'container',
