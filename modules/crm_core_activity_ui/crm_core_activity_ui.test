@@ -48,7 +48,7 @@ class CRMCoreActivityUITestCase extends DrupalWebTestCase {
 
     $this->drupalGet('crm-core/contact/1/activity');
     $this->assertText(t('This contact has no activity, add an activity above.'), t('No activities avaiable for newly created contact.'));
-    $this->assertLink(t('Add Activity'));
+    $this->assertLink(t('Add activity'));
 
     $this->drupalGet('crm-core/contact/1/activity/add');
     $this->assertLink(t('Meeting'));
