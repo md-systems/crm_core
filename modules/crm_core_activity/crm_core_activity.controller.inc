@@ -2,7 +2,8 @@
 
 /**
  * @file
- * Extends EntityAPIControllerInterface with classes for Activities used by CRM Core.
+ * Extends EntityAPIControllerInterface with classes for 
+ * Activities used by CRM Core.
  */
 
 /**
@@ -56,6 +57,9 @@ class CRMCoreActivityController extends EntityAPIController {
 }
 
 /**
+ * 
+ * Provides a class for activities.
+ * 
  * Use a separate class for profile types so we can specify some defaults
  * modules may alter.
  */
@@ -91,7 +95,8 @@ class CRMCoreActivityTypeController extends EntityAPIControllerExportable {
   /**
    * Implements EntityAPIControllerInterface.
    *
-   * @param @ids array of IDs
+   * @param array @ids 
+   *    List of IDs.
    * @param $transaction
    *   Optionally a DatabaseTransaction object to use. Allows overrides to pass
    *   in their transaction object.
