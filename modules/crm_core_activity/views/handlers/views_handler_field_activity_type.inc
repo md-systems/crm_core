@@ -6,12 +6,13 @@
  */
 
 /**
- * Custom field handler for activity_type.
+ * Provides a field handler for activity_type.
  *
- * Needed for building view crm_activity_types to show the list of available
- * activity types that we can create activity.
- *
- * Link to be build: 'crm-core/contact/' . [node nid] . '/activity/add/' . [activity type machine name].
+ * This is used in views that provide the ability to add
+ * an activity for a contact.
+ * 
+ * The link is strucuted like so:
+ * 'crm-core/contact/' . [node nid] . '/activity/add/' . [activity machine name]
  */
 class views_handler_field_activity_type extends views_handler_field {
   function option_definition() {
