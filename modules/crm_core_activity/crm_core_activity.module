@@ -1,6 +1,12 @@
 <?php
 
 /**
+ * @file
+ * Defines an entity called "activity" which is used to track 
+ * contact relationships.
+ */
+
+/**
  * Include file with hook_property_info().
  */
 module_load_include('inc', 'crm_core_activity', 'crm_core_activity.info');
@@ -189,8 +195,7 @@ function crm_core_activity_load_multiple($activity_ids = array(), $conditions = 
 }
 
 /**
- * Save single activity object to db.
- *   Wrapper for controller.
+ * Save single activity object to db. Wrapper for controller.
  *
  * @param object $activity
  *   Entity object of crm_core_activity type.
@@ -210,8 +215,7 @@ function crm_core_activity_delete($activity) {
 }
 
 /**
- * Delete multiple activities.
- *   Wrapper for controller.
+ * Delete multiple activities. Wrapper for controller.
  *
  * @param array $activity_ids
  *   array of entity ids that should be deleted.
@@ -261,10 +265,14 @@ function crm_core_activity_types($type_name = NULL) {
 }
 
 /**
- * Get activity type name by machine name of activity type.
- *
- * @param type $type_name
- * @return type
+ * 
+ * Returns the human-readable name of an activity type.
+ * 
+ * @param string|null $type_name
+ *   (Optional) The machine name for an activity type.
+ *   Leave NULL to return all activity types.
+ * @return array $names
+ *   An array of human readable names for the activity type.
  */
 function crm_core_activity_type_get_name($type_name = NULL) {
   $types = crm_core_activity_types();
@@ -286,11 +294,10 @@ function crm_core_activity_type_get_name($type_name = NULL) {
 }
 
 /**
- * Creates or Saves an activity type
+ * Creates or saves an activity type
  *
- * @param stdClass $activity_type
+ * @param object $activity_type
  *   The activity type info to be saved
- *
  */
 function crm_core_activity_type_save($activity_type) {
   return entity_get_controller('crm_core_activity_type')->save($activity_type);
@@ -409,7 +416,7 @@ function crm_core_activity_crm_core_contact_delete($crm_core_contact) {
  */
 function crm_core_activity_search_info() {
   return array(
-    'title' => 'CRM Core Activities',
+    'title' => t('CRM Core Activities'),
     'path' => 'activity',
   );
 }
@@ -546,7 +553,7 @@ function crm_core_activity_feeds_plugins() {
  * Implements hook_enable().
  */
 function crm_core_activity_enable() {
-  //clear the cache to display in Feeds as available plugin.
+  // clear the cache to display in Feeds as available plugin.
   cache_clear_all('plugins:feeds:plugins', 'cache');
 }
 
