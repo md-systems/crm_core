@@ -67,10 +67,19 @@ function crm_core_user_sync_menu() {
     $items['admin/config/crm-core/user-sync/contact-to-user-management/%relation/edit'] = array(
       'title' => 'User relation',
       'page callback' => 'drupal_get_form',
-      'page arguments' => array('crm_core_user_sync_edit_form', 5),
+      'page arguments' => array('crm_core_user_sync_edit_relation_form', 5),
       'access arguments' => array('administer user-sync'),
       'file' => 'crm_core_user_sync.admin.inc',
-      'type' => MENU_LOCAL_TASK,
+      'type' => MENU_CALLBACK,
+    );
+
+    $items['admin/config/crm-core/user-sync/contact-to-user-management/%relation/delete'] = array(
+      'title' => 'User relation',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('crm_core_user_sync_delete_relation_form', 5),
+      'access arguments' => array('administer user-sync'),
+      'file' => 'crm_core_user_sync.admin.inc',
+      'type' => MENU_CALLBACK,
     );
   }
 

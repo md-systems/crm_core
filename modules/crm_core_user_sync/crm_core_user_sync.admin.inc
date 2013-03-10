@@ -264,7 +264,7 @@ function crm_core_user_sync_admin_update_rule_status($rule_key, $status) {
 /**
  * Contact->User relation edit form.
  */
-function crm_core_user_sync_edit_form($form, &$form_state, $relation) {
+function crm_core_user_sync_edit_relation_form($form, &$form_state, $relation) {
   if (!empty($relation)) {
     drupal_set_title('Edit Relation');
 
@@ -309,7 +309,7 @@ function crm_core_user_sync_edit_form($form, &$form_state, $relation) {
   );
 
   $form['actions']['cancel'] = array(
-    '#markup' => l(t('Cancel'), 'crm-core/contact/' . $contact->contact_id),
+    '#markup' => l(t('Cancel'), 'admin/config/crm-core/user-sync/contact-to-user-management'),
   );
 
   return  $form;
@@ -318,7 +318,7 @@ function crm_core_user_sync_edit_form($form, &$form_state, $relation) {
 /**
  * Submit callback on edit form.
  */
-function crm_core_user_sync_edit_form_submit($form, &$form_state) {
+function crm_core_user_sync_edit_relation_form_submit($form, &$form_state) {
   $relation = $form_state['values']['relation'];
 
   $user = _crm_core_user_sync_get_entity_id_from_text($form_state['values']['user'], 'user');
@@ -329,6 +329,34 @@ function crm_core_user_sync_edit_form_submit($form, &$form_state) {
 
   relation_save($relation);
 
-  drupal_set_message('Relation has been saved.');
   $form_state['redirect'] = 'admin/config/crm-core/user-sync/contact-to-user-management';
+  drupal_set_message('Relation has been saved.');
+}
+
+
+/**
+ * Delete relation form.
+ */
+function crm_core_user_sync_delete_relation_form($form, &$form_state, $relation) {
+  $form['relation'] = array(
+    '#type' => 'value',
+    '#value' => $relation,
+  );
+
+  $question = t('Are you sure you want to delete the relation?');
+  $path = 'admin/config/crm-core/user-sync/contact-to-user-management';
+
+  return confirm_form($form, $question, $path);
+}
+
+/**
+ * Submission handler for delete relation form.
+ */
+function crm_core_user_sync_delete_relation_form_submit($form, &$form_state) {
+  $relation = $form_state['values']['relation'];
+
+  relation_delete($relation->rid);
+
+  $form_state['redirect'] = 'admin/config/crm-core/user-sync/contact-to-user-management';
+  drupal_set_message(t('Relation has been deleted.'));
 }
