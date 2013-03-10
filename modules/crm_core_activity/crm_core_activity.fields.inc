@@ -9,12 +9,12 @@
  * - A list of participants
  * - A date
  * - Notes
- * 
  */
 
 /**
  * @return
- *   Return default fields definition that have to be attached to newly created activity type.
+ *   Return default fields definition that have to be attached 
+ *   to newly created activity type.
  *
  * @see field_create_field()
  */
