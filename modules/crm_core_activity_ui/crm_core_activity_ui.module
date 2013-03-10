@@ -1,6 +1,12 @@
 <?php
 
 /**
+ * @file
+ * 
+ * Provides the UI for viewing activities.
+ */
+
+/**
  * Implements hook_menu()
  */
 function crm_core_activity_ui_menu() {
@@ -9,7 +15,7 @@ function crm_core_activity_ui_menu() {
   // Menu items for creation of new Activities.
   foreach (crm_core_activity_types() as $type => $info) {
     $items['crm-core/contact/%crm_core_contact/activity/add/' . $type] = array(
-      'title' => 'Add Activity',
+      'title' => 'Add activity',
       'description' => 'Add an activity to this contact',
       'page callback' => 'crm_core_activity_entity_ui_get_form_wrapper',
       'page arguments' => array(2, 5),
@@ -187,8 +193,8 @@ function crm_core_activity_ui_views_pre_render(&$view) {
 /**
  * Helper function to set breadcrumb.
  *
- * @param $contact object
- *  CRM Core contact from path.
+ * @param object $contact
+ *   CRM Core contact from path.
  */
 function _crm_core_activity_ui_set_breadcrumb($contact) {
   $contact_uri = $contact->uri();
