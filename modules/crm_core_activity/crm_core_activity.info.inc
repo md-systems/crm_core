@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Entity support.
+ */
+
+/**
  * Implements hook_property_info().
  */
 function crm_core_activity_entity_property_info() {
