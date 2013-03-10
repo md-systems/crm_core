@@ -1,6 +1,9 @@
 <?php
 
-
+/**
+ * @file
+ * Provides basic activity management functionality in CRM Core.
+ */
 
 /**
  * Generates the profile type editing form.

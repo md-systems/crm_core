@@ -1,6 +1,18 @@
 <?php
 
 /**
+ * @file
+ * Adds fields to the activity entity type used by CRM Core.
+ * 
+ * By default, an activity will include:
+ * 
+ * - A list of participants
+ * - A date
+ * - Notes
+ * 
+ */
+
+/**
  * @return
  *   Return default fields definition that have to be attached to newly created activity type.
  *

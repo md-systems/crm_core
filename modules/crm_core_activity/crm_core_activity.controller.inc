@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Extends EntityAPIControllerInterface with classes for Activities used by CRM Core.
+ */
+
+/**
  * CRM Activity Entity Class.
  */
 class CRMCoreActivityEntity extends Entity {
@@ -32,7 +37,7 @@ class CRMCoreActivityController extends EntityAPIController {
       ->execute();
     if (!empty($results)) {
       $type_id = 0;
-      foreach(array_keys($results['crm_core_activity_type']) as $id) {
+      foreach (array_keys($results['crm_core_activity_type']) as $id) {
         $type_id = $id;
       }
       $values += array(
