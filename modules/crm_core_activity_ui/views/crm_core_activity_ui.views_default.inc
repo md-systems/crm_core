@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Views support.
+ */
+
+/**
  * Implements hook_views_default_views().
  */
 function crm_core_activity_ui_views_default_views() {
