@@ -416,7 +416,7 @@ function crm_core_activity_crm_core_contact_delete($crm_core_contact) {
  */
 function crm_core_activity_search_info() {
   return array(
-    'title' => t('CRM Core Activities'),
+    'title' => t('CRM Core activities'),
     'path' => 'activity',
   );
 }
