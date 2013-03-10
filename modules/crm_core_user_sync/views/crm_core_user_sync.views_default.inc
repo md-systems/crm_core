@@ -28,37 +28,17 @@ function crm_core_user_sync_views_default_views() {
   $handler->display->display_options['style_plugin'] = 'table';
   $handler->display->display_options['style_options']['columns'] = array(
     'contact_id' => 'contact_id',
-    'contact_name' => 'contact_name',
-    'rid' => 'rid',
-    'name' => 'name',
     'uid' => 'uid',
-    'edit' => 'edit',
-    'delete' => 'edit',
+    'rid' => 'rid',
+    'contact_name' => 'contact_name',
+    'name' => 'name',
+    'nothing' => 'nothing',
+    'nothing_1' => 'nothing',
+    'nothing_2' => 'nothing',
   );
   $handler->display->display_options['style_options']['default'] = '-1';
   $handler->display->display_options['style_options']['info'] = array(
     'contact_id' => array(
-      'sortable' => 0,
-      'default_sort_order' => 'asc',
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
-    'contact_name' => array(
-      'sortable' => 0,
-      'default_sort_order' => 'asc',
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
-    'rid' => array(
-      'sortable' => 0,
-      'default_sort_order' => 'asc',
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
-    'name' => array(
       'sortable' => 0,
       'default_sort_order' => 'asc',
       'align' => '',
@@ -72,16 +52,38 @@ function crm_core_user_sync_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
-    'edit' => array(
+    'rid' => array(
       'sortable' => 0,
       'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'contact_name' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'name' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'nothing' => array(
       'align' => '',
       'separator' => ' | ',
       'empty_column' => 0,
     ),
-    'delete' => array(
-      'sortable' => 0,
-      'default_sort_order' => 'asc',
+    'nothing_1' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'nothing_2' => array(
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
@@ -93,14 +95,14 @@ function crm_core_user_sync_views_default_views() {
   $handler->display->display_options['header']['area']['field'] = 'area';
   $handler->display->display_options['header']['area']['content'] = 'Occasionally, a contact will be mismatched with a user account. This tool provides you with manual control over the relations between contact records and user accounts. You can configure the default rules for automated contact synchronization by <a href="/admin/config/crm-core/user-sync">clicking here</a>.';
   $handler->display->display_options['header']['area']['format'] = 'filtered_html';
-  /* Relationship: CRM Contact: Relation: Contact (crm_core_contact → user) */
+  /* Relationship: CRM Contact: Relation: User (crm_core_contact -&gt; user) */
   $handler->display->display_options['relationships']['relation_crm_core_user_sync_user']['id'] = 'relation_crm_core_user_sync_user';
   $handler->display->display_options['relationships']['relation_crm_core_user_sync_user']['table'] = 'crm_core_contact';
   $handler->display->display_options['relationships']['relation_crm_core_user_sync_user']['field'] = 'relation_crm_core_user_sync_user';
   $handler->display->display_options['relationships']['relation_crm_core_user_sync_user']['r_index'] = '-1';
   $handler->display->display_options['relationships']['relation_crm_core_user_sync_user']['entity_deduplication_left'] = 0;
   $handler->display->display_options['relationships']['relation_crm_core_user_sync_user']['entity_deduplication_right'] = 0;
-  /* Relationship: Broken/missing handler */
+  /* Relationship: User: Relation: Contact (user -> relation) */
   $handler->display->display_options['relationships']['relation_base_left_crm_core_user_sync']['id'] = 'relation_base_left_crm_core_user_sync';
   $handler->display->display_options['relationships']['relation_base_left_crm_core_user_sync']['table'] = 'users';
   $handler->display->display_options['relationships']['relation_base_left_crm_core_user_sync']['field'] = 'relation_base_left_crm_core_user_sync';
@@ -125,6 +127,15 @@ function crm_core_user_sync_views_default_views() {
   $handler->display->display_options['fields']['uid']['alter']['text'] = '[name]';
   $handler->display->display_options['fields']['uid']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['uid']['link_to_user'] = FALSE;
+  /* Field: Relation: Rid */
+  $handler->display->display_options['fields']['rid']['id'] = 'rid';
+  $handler->display->display_options['fields']['rid']['table'] = 'relation';
+  $handler->display->display_options['fields']['rid']['field'] = 'rid';
+  $handler->display->display_options['fields']['rid']['relationship'] = 'relation_base_left_crm_core_user_sync';
+  $handler->display->display_options['fields']['rid']['label'] = '';
+  $handler->display->display_options['fields']['rid']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['rid']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['rid']['separator'] = '';
   /* Field: CRM Contact: Household name */
   $handler->display->display_options['fields']['contact_name']['id'] = 'contact_name';
   $handler->display->display_options['fields']['contact_name']['table'] = 'field_data_contact_name';
@@ -153,20 +164,28 @@ function crm_core_user_sync_views_default_views() {
   $handler->display->display_options['fields']['name']['label'] = 'User Name';
   $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
   /* Field: Global: Custom text */
-  $handler->display->display_options['fields']['nothing_1']['id'] = 'nothing_1';
-  $handler->display->display_options['fields']['nothing_1']['table'] = 'views';
-  $handler->display->display_options['fields']['nothing_1']['field'] = 'nothing';
-  $handler->display->display_options['fields']['nothing_1']['label'] = 'Edit Link';
-  $handler->display->display_options['fields']['nothing_1']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['nothing_1']['alter']['text'] = 'Edit';
-  $handler->display->display_options['fields']['nothing_1']['alter']['make_link'] = TRUE;
-  $handler->display->display_options['fields']['nothing_1']['alter']['path'] = 'crm-core/contact/[contact_id]/user';
-  /* Field: Global: Custom text */
   $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = 'Operations';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '[nothing_1] | Delete';
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing_1']['id'] = 'nothing_1';
+  $handler->display->display_options['fields']['nothing_1']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing_1']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing_1']['label'] = 'Edit Link';
+  $handler->display->display_options['fields']['nothing_1']['alter']['text'] = 'Edit';
+  $handler->display->display_options['fields']['nothing_1']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['nothing_1']['alter']['path'] = 'admin/config/crm-core/user-sync/contact-to-user-management/[rid]/edit';
+  $handler->display->display_options['fields']['nothing_1']['element_label_colon'] = FALSE;
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing_2']['id'] = 'nothing_2';
+  $handler->display->display_options['fields']['nothing_2']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing_2']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing_2']['label'] = 'Delete Link';
+  $handler->display->display_options['fields']['nothing_2']['alter']['text'] = 'Delete';
+  $handler->display->display_options['fields']['nothing_2']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['nothing_2']['alter']['path'] = 'admin/config/crm-core/user-sync/contact-to-user-management/[rid]/delete';
+  $handler->display->display_options['fields']['nothing_2']['element_label_colon'] = FALSE;
   /* Filter criterion: CRM Contact: Household name */
   $handler->display->display_options['filters']['contact_name']['id'] = 'contact_name';
   $handler->display->display_options['filters']['contact_name']['table'] = 'field_data_contact_name';
