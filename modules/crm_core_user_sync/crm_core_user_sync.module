@@ -467,3 +467,27 @@ function crm_core_user_sync_views_pre_execute(&$view) {
     $view->build_info['count_query'] = $view->build_info['query'] = $total_query;
   }
 }
+
+/**
+ * Retrieves entity object from a text in a format like 'Title [id_key: 123]'.
+ */
+function _crm_core_user_sync_get_entity_id_from_text($text, $entity_type) {
+  $entity_info = entity_get_info($entity_type);
+
+  if (empty($entity_info) || empty($entity_info['entity keys']['id'])){
+    return FALSE;
+  }
+
+  $id_key = $entity_info['entity keys']['id'];
+
+  $matches = array();
+  preg_match('/\[' . $id_key . ':([0-9]+)\]/', $text, $matches);
+  if (!array_key_exists(1, $matches) || !is_numeric($matches[1])) {
+    return FALSE;
+  }
+  $entities = entity_load($entity_type, array($matches[1]));
+  if (empty($entities)) {
+    return FALSE;
+  }
+  return $entities[$matches[1]];
+}
