@@ -246,9 +246,6 @@ function crm_core_user_sync_validate($account, $contact_type) {
  * @return contact object
  */
 function crm_core_user_sync_sync($account, $contact = NULL) {
-  // @TODO: think about the logic here, what to do with multiple roles?
-  // For now we just use the first that has user-sync enabled, if there is.
-
   if (empty($contact)) {
 
     // Get corresponding contact type
@@ -278,9 +275,18 @@ function crm_core_user_sync_sync($account, $contact = NULL) {
   }
   else {
     $contact_type = $contact->type;
+
+    // Check if contact can be synchronized to a contact.
+    if (!crm_core_user_sync_validate($account, $contact)) {
+      return;
+    }
   }
 
-  // TODO: for existing contacts check if contact type is in set of available.
+  // Check if crm_core_user_sync relation exists for any of endpoint.
+  if (crm_core_user_sync_get_contact_from_uid($account->uid) ||
+          crm_core_user_sync_get_user_from_contact_id($contact->contact_id)) {
+    return;
+  }
 
   // Create the relation
   $endpoints = array(
