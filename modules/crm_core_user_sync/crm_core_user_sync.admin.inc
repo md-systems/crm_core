@@ -325,7 +325,7 @@ function crm_core_user_sync_edit_relation_form($form, &$form_state, $relation) {
     '#type' => 'textfield',
     '#default_value' => empty($contact) ? '' : $contact->label() . " [contact_id:{$contact->contact_id}]",
     '#disabled' => empty($disabled_contact_field) ? false : true,
-    '#autocomplete_path' => '',
+    '#autocomplete_path' => 'admin/config/crm-core/user-sync/contact-to-user-management/contact-autocomplete/%',
   );
 
   $form['user'] = array(
@@ -333,7 +333,7 @@ function crm_core_user_sync_edit_relation_form($form, &$form_state, $relation) {
     '#type' => 'textfield',
     '#default_value' =>  empty($user) ? '' : $user->name . " [uid:{$user->uid}]",
     '#disabled' => empty($disabled_user_field) ? false : true,
-    '#autocomplete_path' => '',
+    '#autocomplete_path' => 'admin/config/crm-core/user-sync/contact-to-user-management/user-autocomplete/%',
   );
 
   $form['actions'] = array('#type' => 'actions');
@@ -383,12 +383,15 @@ function crm_core_user_sync_edit_relation_form_validate($form, &$form_state) {
     }
 
     // Check if the same user->contact relation exists when adding or editing relation.
-    if (crm_core_user_sync_exists($user, $contact) && (
-            empty($form_state['values']['relation']) ||
-            $form_state['values']['relation']->endpoints[LANGUAGE_NONE][0]['entity_id'] != $user->uid ||
+    if (crm_core_user_sync_get_contact_from_uid($user->uid) && (empty($form_state['values']['relation']) ||
+            $form_state['values']['relation']->endpoints[LANGUAGE_NONE][0]['entity_id'] != $user->uid)) {
+      form_set_error('user', t('The user account has been already synchronized.'));
+    }
+
+    // Check if the same user->contact relation exists when adding or editing relation.
+    if (crm_core_user_sync_get_user_from_contact_id($contact->contact_id) && (empty($form_state['values']['relation']) ||
             $form_state['values']['relation']->endpoints[LANGUAGE_NONE][1]['entity_id'] != $contact->contact_id)) {
-      form_set_error('', t('The user account has been already synchronized with the specified contact.'));
-      return;
+      form_set_error('contact', t('The contact record has been already synchronized.'));
     }
   }
 }
@@ -422,6 +425,49 @@ function crm_core_user_sync_edit_relation_form_submit($form, &$form_state) {
   }
 }
 
+/**
+ * User autocomplete for user->contact relation form.
+ */
+function crm_core_user_sync_user_autocomplete($search_string) {
+  $query = new EntityFieldQuery;
+  $result = $query
+    ->entityCondition('entity_type', 'user')
+    ->propertyCondition('name', $search_string . '%', 'like')
+    ->range(0, 20)
+    ->execute();
+
+  $users = entity_load('user', array_keys($result['user']));
+  foreach ($users as $user) {
+    $matches[$user->name . " [uid:$user->uid]"] = $user->name;
+  }
+
+  drupal_json_output($matches);
+}
+
+/**
+ * User autocomplete for user->contact relation form.
+ */
+function crm_core_user_sync_contact_autocomplete($search_string) {
+  module_load_include('inc', 'crm_core_relationship_ui');
+
+  $matches = array();
+
+  $query = new EntityFieldQuery;
+  $query->entityCondition('entity_type', 'crm_core_contact')
+    ->range(0, 20);
+
+  $query->addMetaData('match', $search_string)
+    ->addTag(variable_get('crm_core_contact_search_query_tag', 'crm_core_contact_search'));
+
+  $result = $query->execute();
+  $contacts = entity_load('crm_core_contact', array_keys($result['crm_core_contact']));
+  foreach ($contacts as $contact) {
+    $crm_core_contact_title = crm_core_contact_title($contact);
+    $matches[$crm_core_contact_title . " [contact_id:$contact->contact_id]"] = $crm_core_contact_title;
+  }
+
+  drupal_json_output($matches);
+}
 
 /**
  * Delete relation form.
