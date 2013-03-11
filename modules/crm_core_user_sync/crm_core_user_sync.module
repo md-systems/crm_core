@@ -98,6 +98,14 @@ function crm_core_user_sync_menu() {
       'file' => 'crm_core_user_sync.admin.inc',
       'type' => MENU_CALLBACK,
     );
+
+    $items['admin/config/crm-core/user-sync/contact-to-user-management/contact-autocomplete/%'] = array(
+      'page callback' => 'crm_core_user_sync_contact_autocomplete',
+      'page arguments', array(6),
+      'access arguments' => array('administer user-sync'),
+      'file' => 'crm_core_user_sync.admin.inc',
+      'type' => MENU_CALLBACK,
+    );
   }
 
   return $items;
@@ -511,7 +519,9 @@ function crm_core_user_sync_weight_cmp($a, $b) {
  * Implemets hook_views_pre_execute().
  */
 function crm_core_user_sync_views_pre_execute(&$view) {
-  if ($view->name == 'crm_сore_contact_to_user_management') {
+    return; // TODO: update this
+
+    if ($view->name == 'crm_core_contact_to_user_management') {
     // Implementing "FULL OUTER JOIN" by union of queries.
     // Reciept from http://drupal.org/node/748844#comment-7070234
     $left_query = db_select('crm_core_contact');

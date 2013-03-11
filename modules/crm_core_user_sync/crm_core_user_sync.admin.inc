@@ -325,7 +325,7 @@ function crm_core_user_sync_edit_relation_form($form, &$form_state, $relation) {
     '#type' => 'textfield',
     '#default_value' => empty($contact) ? '' : $contact->label() . " [contact_id:{$contact->contact_id}]",
     '#disabled' => empty($disabled_contact_field) ? false : true,
-    '#autocomplete_path' => '',
+    '#autocomplete_path' => 'admin/config/crm-core/user-sync/contact-to-user-management/contact-autocomplete/%',
   );
 
   $form['user'] = array(
@@ -441,6 +441,30 @@ function crm_core_user_sync_user_autocomplete($search_string) {
   drupal_json_output($matches);
 }
 
+/**
+ * User autocomplete for user->contact relation form.
+ */
+function crm_core_user_sync_contact_autocomplete($search_string) {
+  module_load_include('inc', 'crm_core_relationship_ui');
+
+  $matches = array();
+
+  $query = new EntityFieldQuery;
+  $query->entityCondition('entity_type', 'crm_core_contact')
+    ->range(0, 20);
+
+  $query->addMetaData('match', $search_string)
+    ->addTag(variable_get('crm_core_contact_search_query_tag', 'crm_core_contact_search'));
+
+  $result = $query->execute();
+  $contacts = entity_load('crm_core_contact', array_keys($result['crm_core_contact']));
+  foreach ($contacts as $contact) {
+    $crm_core_contact_title = crm_core_contact_title($contact);
+    $matches[$crm_core_contact_title . " [contact_id:$contact->contact_id]"] = $crm_core_contact_title;
+  }
+
+  drupal_json_output($matches);
+}
 
 /**
  * Delete relation form.
