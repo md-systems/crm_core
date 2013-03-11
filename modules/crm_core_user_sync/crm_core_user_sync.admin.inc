@@ -333,7 +333,7 @@ function crm_core_user_sync_edit_relation_form($form, &$form_state, $relation) {
     '#type' => 'textfield',
     '#default_value' =>  empty($user) ? '' : $user->name . " [uid:{$user->uid}]",
     '#disabled' => empty($disabled_user_field) ? false : true,
-    '#autocomplete_path' => '',
+    '#autocomplete_path' => 'admin/config/crm-core/user-sync/contact-to-user-management/user-autocomplete/%',
   );
 
   $form['actions'] = array('#type' => 'actions');
@@ -420,6 +420,25 @@ function crm_core_user_sync_edit_relation_form_submit($form, &$form_state) {
     $relation = $form_state['values']['relation'];
     $form_state['redirect'] = 'admin/config/crm-core/user-sync/contact-to-user-management/' . $relation->rid . '/delete';
   }
+}
+
+/**
+ * User autocomplete for user->contact relation form.
+ */
+function crm_core_user_sync_user_autocomplete($search_string) {
+  $query = new EntityFieldQuery;
+  $result = $query
+    ->entityCondition('entity_type', 'user')
+    ->propertyCondition('name', $search_string . '%', 'like')
+    ->range(0, 20)
+    ->execute();
+
+  $users = entity_load('user', array_keys($result['user']));
+  foreach ($users as $user) {
+    $matches[$user->name . " [uid:$user->uid]"] = $user->name;
+  }
+
+  drupal_json_output($matches);
 }
 
 
