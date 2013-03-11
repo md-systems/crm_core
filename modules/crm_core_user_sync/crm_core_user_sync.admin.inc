@@ -62,6 +62,25 @@ function crm_core_user_sync_admin_form($form, &$form_state) {
     '#default_value' => variable_get('crm_core_user_sync_auto_sync_user_create', 1),
   );
 
+  $form['crm_core_user_sync_wrapper'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Sync Current Users'),
+  );
+  $form['crm_core_user_sync_wrapper']['user_sync'] = array(
+    '#type' => 'submit',
+    '#value' => t('Synchronize Users'),
+    '#submit' => array('crm_core_user_sync_admin_form_user_sync_submit'),
+  );
+  $form['crm_core_user_sync_wrapper']['description_wrapper'] = array(
+    '#type' => 'container',
+  );
+  $form['crm_core_user_sync_wrapper']['description_wrapper']['description'] = array(
+    '#type' => 'item',
+    '#markup' => t('Click this button to apply user synchronization rules to all user accounts that are currently not'
+      . ' associated with a contact in the system. It will create an associated contact record for each user according'
+      . ' to the rules configured above. Warning: this cannot be undone.'),
+  );
+
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save changes'));
 
@@ -429,4 +448,39 @@ function crm_core_user_sync_delete_relation_form_submit($form, &$form_state) {
 
   $form_state['redirect'] = 'admin/config/crm-core/user-sync/contact-to-user-management';
   drupal_set_message(t('Relation has been deleted.'));
+}
+
+/**
+ * Submit callback. Handles user synchronization.
+ */
+function crm_core_user_sync_admin_form_user_sync_submit($form, &$form_state) {
+  $uids = db_select('users', 'u')->fields('u', array('uid'))->condition('status', '1')->execute()->fetchCol();
+  $contacts = crm_core_user_sync_get_contacts_from_uids($uids);
+  $uids_to_sync = array_diff_key(array_flip($uids), $contacts);
+  $uids_to_sync = array_flip($uids_to_sync);
+
+  if (empty($uids_to_sync)) {
+    drupal_set_message(t('Nothing to synchronize. All users have associated contacts.'));
+  }
+  else {
+    if ( count($uids_to_sync) > 100 ) {
+      // Set batch.
+      $operations = array();
+      foreach ($uids_to_sync as $uid) {
+        $operations[] = array('_crm_core_user_sync_batch_processing', array($uid));
+      }
+      $batch = array(
+        'operations' => $operations,
+        'title' => t('Processing user synchronization'),
+      );
+      batch_set($batch);
+    }
+    else {
+      $users = user_load_multiple(array_keys($uids_to_sync));
+      foreach ($users as $user) {
+        crm_core_user_sync_sync($user);
+      }
+      drupal_set_message(t('@count users was associated with contacts.', array('@count' => count($uids_to_sync))));
+    }
+  }
 }
