@@ -481,22 +481,20 @@ function _crm_core_user_sync_batch_processing(&$context) {
   if (empty($context['sandbox'])) {
     $context['sandbox'] = array();
     $count_query = $query->countQuery();
-    $uids_to_sync = $count_query->execute()->fetchField();
-    $context['sandbox']['max'] = $uids_to_sync;
+    $context['sandbox']['max'] = $count_query->execute()->fetchField();
     $context['sandbox']['progress'] = 0;
   }
   // Limit users quantity to process per request.
   $limit = 20;
-  $start_from = $context['sandbox']['progress'];
-  $uids = $query->range($start_from, $limit)->execute()->fetchCol();
-  $users = user_load_multiple(($uids));
+  $uids = $query->range(0, $limit)->execute()->fetchCol();
+  $users = user_load_multiple($uids);
   foreach ($users as $user) {
     crm_core_user_sync_sync($user);
     $context['sandbox']['progress']++;
   }
 
   if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
-    $context['finished'] = ($context['sandbox']['progress'] >= $context['sandbox']['max']);
+    $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
   }
   else {
     $context['results']['synced'] = $context['sandbox']['max'];
