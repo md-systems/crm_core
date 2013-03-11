@@ -9,7 +9,7 @@
  * Implements hook_install().
  */
 function crm_core_activity_install() {
-  $t = get_t()
+  $t = get_t();
 
   // Create a default meeting activity type.
   $meeting = entity_create('crm_core_activity_type', array(
