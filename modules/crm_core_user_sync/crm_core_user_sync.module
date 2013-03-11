@@ -181,6 +181,29 @@ function crm_core_user_sync_get_contact_type_for_account($account) {
 }
 
 /**
+ * Validates user amd contact.
+ *
+ * @param $account to be synchronized
+ * @param $contact_type to be associated with $account. It can be contact object either.
+ */
+function crm_core_user_sync_validate($account, $contact_type) {
+  if (is_object($contact_type)) {
+    $contact_type = $contact_type->type;
+  }
+
+  $rules = variable_get('crm_core_user_sync_rules', array());
+
+  foreach ($rules as $rule) {
+    if ($rule['enabled'] && in_array($rule['rid'], array_keys($account->roles))
+          && $rule['contact_type'] == $contact_type) {
+      return TRUE;
+    }
+  }
+
+  return FALSE;
+}
+
+/**
  * Synchronizes user amd contact.
  *
  * @param $account to be synchronized

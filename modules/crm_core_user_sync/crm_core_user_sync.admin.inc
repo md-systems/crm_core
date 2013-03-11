@@ -287,7 +287,7 @@ function crm_core_user_sync_edit_relation_form($form, &$form_state, $relation) {
 
   $form['description'] = array(
     '#type' => 'item',
-    '#markup' => t('You can edit the details of a contact record to user account relationship using the following form. Leave either field blank to remove the relationship.'),
+    '#markup' => t('You can edit the details of a contact record to user account relationship using the following form.'),
   );
 
   $form['contact'] = array(
@@ -316,6 +316,30 @@ function crm_core_user_sync_edit_relation_form($form, &$form_state, $relation) {
   );
 
   return  $form;
+}
+
+/**
+ * Validate callback on edit form.
+ */
+function crm_core_user_sync_edit_relation_form_validate($form, &$form_state) {
+  $user = _crm_core_user_sync_get_entity_id_from_text($form_state['values']['user'], 'user');
+  $contact = _crm_core_user_sync_get_entity_id_from_text($form_state['values']['contact'], 'crm_core_contact');
+
+  if (empty($user)) {
+    form_set_error('user', t('Could not load a user account.'));
+  }
+
+  if (empty($contact)) {
+    form_set_error('contact', t('Could not load a contact.'));
+  }
+
+  if (empty($user) || empty($contact)) {
+    return;
+  }
+
+  if (!crm_core_user_sync_validate($user, $contact)) {
+    form_set_error('', t('User account could not be syncrhonized with a contact accordning to rules.')); 
+  }
 }
 
 /**
