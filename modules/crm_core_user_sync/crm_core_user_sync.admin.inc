@@ -267,6 +267,17 @@ function crm_core_user_sync_admin_update_rule_status($rule_key, $status) {
 function crm_core_user_sync_edit_relation_form($form, &$form_state, $relation) {
   if (empty($relation)) {
     drupal_set_title('Create a new relation');
+
+    if (!empty($_GET['uid'])) {
+      $user = user_load($_GET['uid']);
+      $disabled_user_field = !empty($user);
+    }
+
+    if (!empty($_GET['contact_id'])) {
+      $contact = crm_core_contact_load($_GET['contact_id']);
+      $disabled_contact_field = !empty($contact);
+    }
+
   }
   else {
     drupal_set_title('Edit relation');
@@ -294,6 +305,7 @@ function crm_core_user_sync_edit_relation_form($form, &$form_state, $relation) {
     '#title' => t('Contact record'),
     '#type' => 'textfield',
     '#default_value' => empty($contact) ? '' : $contact->label() . " [contact_id:{$contact->contact_id}]",
+    '#disabled' => empty($disabled_contact_field) ? false : true,
     '#autocomplete_path' => '',
   );
 
@@ -301,6 +313,7 @@ function crm_core_user_sync_edit_relation_form($form, &$form_state, $relation) {
     '#title' => t('User record'),
     '#type' => 'textfield',
     '#default_value' =>  empty($user) ? '' : $user->name . " [uid:{$user->uid}]",
+    '#disabled' => empty($disabled_user_field) ? false : true,
     '#autocomplete_path' => '',
   );
 
