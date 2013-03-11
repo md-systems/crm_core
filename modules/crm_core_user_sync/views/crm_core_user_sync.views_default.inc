@@ -24,7 +24,10 @@ function crm_core_user_sync_views_default_views() {
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'full';
-  $handler->display->display_options['pager']['options']['items_per_page'] = '10';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '25';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['pager']['options']['id'] = '0';
+  $handler->display->display_options['pager']['options']['quantity'] = '9';
   $handler->display->display_options['style_plugin'] = 'table';
   $handler->display->display_options['style_options']['columns'] = array(
     'contact_id' => 'contact_id',
@@ -32,10 +35,12 @@ function crm_core_user_sync_views_default_views() {
     'rid' => 'rid',
     'contact_name' => 'contact_name',
     'name' => 'name',
+    'uid_2' => 'uid_2',
     'nothing' => 'nothing',
     'nothing_1' => 'nothing',
     'nothing_2' => 'nothing',
     'rid_1' => 'nothing',
+    'contact_id_1' => 'contact_id_1',
     'uid_1' => 'nothing',
     'nothing_3' => 'nothing',
   );
@@ -76,6 +81,13 @@ function crm_core_user_sync_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
+    'uid_2' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
     'nothing' => array(
       'align' => '',
       'separator' => ' | ',
@@ -92,6 +104,13 @@ function crm_core_user_sync_views_default_views() {
       'empty_column' => 0,
     ),
     'rid_1' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'contact_id_1' => array(
       'sortable' => 0,
       'default_sort_order' => 'asc',
       'align' => '',
@@ -166,6 +185,7 @@ function crm_core_user_sync_views_default_views() {
   $handler->display->display_options['fields']['contact_name']['alter']['make_link'] = TRUE;
   $handler->display->display_options['fields']['contact_name']['alter']['path'] = 'crm-core/contact/[contact_id]';
   $handler->display->display_options['fields']['contact_name']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['contact_name']['empty'] = '---';
   $handler->display->display_options['fields']['contact_name']['click_sort_column'] = 'title';
   $handler->display->display_options['fields']['contact_name']['settings'] = array(
     'format' => 'default',
@@ -184,7 +204,21 @@ function crm_core_user_sync_views_default_views() {
   $handler->display->display_options['fields']['name']['field'] = 'name';
   $handler->display->display_options['fields']['name']['relationship'] = 'relation_crm_core_user_sync_user';
   $handler->display->display_options['fields']['name']['label'] = 'User Name';
+  $handler->display->display_options['fields']['name']['exclude'] = TRUE;
   $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['name']['empty'] = '---';
+  $handler->display->display_options['fields']['name']['hide_empty'] = TRUE;
+  /* Field: User: Uid */
+  $handler->display->display_options['fields']['uid_2']['id'] = 'uid_2';
+  $handler->display->display_options['fields']['uid_2']['table'] = 'users';
+  $handler->display->display_options['fields']['uid_2']['field'] = 'uid';
+  $handler->display->display_options['fields']['uid_2']['relationship'] = 'relation_crm_core_user_sync_user';
+  $handler->display->display_options['fields']['uid_2']['label'] = 'User name';
+  $handler->display->display_options['fields']['uid_2']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['uid_2']['alter']['text'] = '[name]';
+  $handler->display->display_options['fields']['uid_2']['empty'] = '---';
+  $handler->display->display_options['fields']['uid_2']['empty_zero'] = TRUE;
+  $handler->display->display_options['fields']['uid_2']['link_to_user'] = FALSE;
   /* Field: Global: Custom text */
   $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
@@ -252,6 +286,25 @@ function crm_core_user_sync_views_default_views() {
   $handler->display->display_options['fields']['nothing_3']['alter']['text'] = '[uid_1]';
   $handler->display->display_options['fields']['nothing_3']['alter']['trim_whitespace'] = TRUE;
   $handler->display->display_options['fields']['nothing_3']['element_label_colon'] = FALSE;
+  /* Sort criterion: CRM Contact: Household name (contact_name:given) */
+  $handler->display->display_options['sorts']['contact_name_given']['id'] = 'contact_name_given';
+  $handler->display->display_options['sorts']['contact_name_given']['table'] = 'field_data_contact_name';
+  $handler->display->display_options['sorts']['contact_name_given']['field'] = 'contact_name_given';
+  $handler->display->display_options['sorts']['contact_name_given']['exposed'] = TRUE;
+  $handler->display->display_options['sorts']['contact_name_given']['expose']['label'] = 'First name';
+  /* Sort criterion: CRM Contact: Household name (contact_name:family) */
+  $handler->display->display_options['sorts']['contact_name_family']['id'] = 'contact_name_family';
+  $handler->display->display_options['sorts']['contact_name_family']['table'] = 'field_data_contact_name';
+  $handler->display->display_options['sorts']['contact_name_family']['field'] = 'contact_name_family';
+  $handler->display->display_options['sorts']['contact_name_family']['exposed'] = TRUE;
+  $handler->display->display_options['sorts']['contact_name_family']['expose']['label'] = 'Last name';
+  /* Sort criterion: User: Name */
+  $handler->display->display_options['sorts']['name']['id'] = 'name';
+  $handler->display->display_options['sorts']['name']['table'] = 'users';
+  $handler->display->display_options['sorts']['name']['field'] = 'name';
+  $handler->display->display_options['sorts']['name']['relationship'] = 'relation_crm_core_user_sync_user';
+  $handler->display->display_options['sorts']['name']['exposed'] = TRUE;
+  $handler->display->display_options['sorts']['name']['expose']['label'] = 'User name';
   /* Filter criterion: CRM Contact: Household name */
   $handler->display->display_options['filters']['contact_name']['id'] = 'contact_name';
   $handler->display->display_options['filters']['contact_name']['table'] = 'field_data_contact_name';
