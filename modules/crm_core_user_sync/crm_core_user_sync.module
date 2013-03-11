@@ -243,7 +243,7 @@ function crm_core_user_sync_sync($account, $contact = NULL) {
     }
 
     // Create the contact.
-    $contact = crm_core_contact_type_new($contact_type);
+    $contact = entity_create('crm_core_contact', array('type' => $contact_type));
     $contact->uid = $account->uid;
 
     // For now we just add the name.
@@ -281,10 +281,10 @@ function crm_core_user_sync_sync($account, $contact = NULL) {
   );
 
   $relation = relation_create('crm_core_user_sync', $endpoints);
-  relation_save($relation);
+  $rid = relation_save($relation);
 
-  watchdog('crm_core_user_sync', 'User !user has been synchronized to the contact !contact_id, relation !rid has been created.',
-    array('!user' => $account->name, '!contact_id' => $contact->contact_id, '!rid' => $relation->rid)
+  watchdog('crm_core_user_sync', 'User @user has been synchronized to the contact @contact_id, relation @rid has been created.',
+    array('@user' => $account->name, '@contact_id' => $contact->contact_id, '@rid' => $rid)
   );
 
   return $contact;
