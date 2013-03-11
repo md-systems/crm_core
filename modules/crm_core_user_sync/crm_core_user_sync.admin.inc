@@ -265,7 +265,10 @@ function crm_core_user_sync_admin_update_rule_status($rule_key, $status) {
  * Contact->User relation edit form.
  */
 function crm_core_user_sync_edit_relation_form($form, &$form_state, $relation) {
-  if (!empty($relation)) {
+  if (empty($relation)) {
+    drupal_set_title('Create a new relation');
+  }
+  else {
     drupal_set_title('Edit relation');
 
     if (!empty($relation->endpoints[LANGUAGE_NONE][0]['entity_id'])) {
@@ -275,9 +278,6 @@ function crm_core_user_sync_edit_relation_form($form, &$form_state, $relation) {
     if (!empty($relation->endpoints[LANGUAGE_NONE][1]['entity_id'])) {
       $contact = crm_core_contact_load($relation->endpoints[LANGUAGE_NONE][1]['entity_id']);
     }
-  }
-  else {
-    drupal_set_title('Create a new relation');
   }
 
   $form['relation'] = array(
@@ -306,10 +306,17 @@ function crm_core_user_sync_edit_relation_form($form, &$form_state, $relation) {
 
   $form['actions'] = array('#type' => 'actions');
 
-  $form['actions']['submit'] = array(
+  $form['actions']['save'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
   );
+
+  if (!empty($relation)) {
+    $form['actions']['delete'] = array(
+      '#type' => 'submit',
+      '#value' => t('Delete'),
+    );
+  }
 
   $form['actions']['cancel'] = array(
     '#markup' => l(t('Cancel'), 'admin/config/crm-core/user-sync/contact-to-user-management'),
@@ -322,23 +329,25 @@ function crm_core_user_sync_edit_relation_form($form, &$form_state, $relation) {
  * Validate callback on edit form.
  */
 function crm_core_user_sync_edit_relation_form_validate($form, &$form_state) {
-  $user = _crm_core_user_sync_get_entity_id_from_text($form_state['values']['user'], 'user');
-  $contact = _crm_core_user_sync_get_entity_id_from_text($form_state['values']['contact'], 'crm_core_contact');
+  if ($form_state['values']['op'] == $form['actions']['save']['#value']) {
+    $user = _crm_core_user_sync_get_entity_id_from_text($form_state['values']['user'], 'user');
+    $contact = _crm_core_user_sync_get_entity_id_from_text($form_state['values']['contact'], 'crm_core_contact');
 
-  if (empty($user)) {
-    form_set_error('user', t('Could not load a user account.'));
-  }
+    if (empty($user)) {
+      form_set_error('user', t('Could not load a user account.'));
+    }
 
-  if (empty($contact)) {
-    form_set_error('contact', t('Could not load a contact.'));
-  }
+    if (empty($contact)) {
+      form_set_error('contact', t('Could not load a contact.'));
+    }
 
-  if (empty($user) || empty($contact)) {
-    return;
-  }
+    if (empty($user) || empty($contact)) {
+      return;
+    }
 
-  if (!crm_core_user_sync_validate($user, $contact)) {
-    form_set_error('', t('User account could not be syncrhonized with a contact accordning to rules.')); 
+    if (!crm_core_user_sync_validate($user, $contact)) {
+      form_set_error('', t('User account could not be syncrhonized with a contact accordning to rules.')); 
+    }
   }
 }
 
@@ -346,24 +355,29 @@ function crm_core_user_sync_edit_relation_form_validate($form, &$form_state) {
  * Submit callback on edit form.
  */
 function crm_core_user_sync_edit_relation_form_submit($form, &$form_state) {
-  $user = _crm_core_user_sync_get_entity_id_from_text($form_state['values']['user'], 'user');
-  $contact = _crm_core_user_sync_get_entity_id_from_text($form_state['values']['contact'], 'crm_core_contact');
+  if ($form_state['values']['op'] == $form['actions']['save']['#value']) {
+    $user = _crm_core_user_sync_get_entity_id_from_text($form_state['values']['user'], 'user');
+    $contact = _crm_core_user_sync_get_entity_id_from_text($form_state['values']['contact'], 'crm_core_contact');
 
+    if (!empty($form_state['values']['relation'])) {
+      $relation = $form_state['values']['relation'];
 
-  if (!empty($form_state['values']['relation'])) {
+      $relation->endpoints[LANGUAGE_NONE][0]['entity_id'] = $user->uid;
+      $relation->endpoints[LANGUAGE_NONE][1]['entity_id'] = $contact->contact_id;
+
+      relation_save($relation);
+    }
+    else {
+      crm_core_user_sync_sync($user, $contact);
+    }
+
+    $form_state['redirect'] = 'admin/config/crm-core/user-sync/contact-to-user-management';
+    drupal_set_message('Relation has been saved.');
+  }
+  elseif ($form_state['values']['op'] == $form['actions']['delete']['#value']) {
     $relation = $form_state['values']['relation'];
-
-    $relation->endpoints[LANGUAGE_NONE][0]['entity_id'] = $user->uid;
-    $relation->endpoints[LANGUAGE_NONE][1]['entity_id'] = $contact->contact_id;
-
-    relation_save($relation);
+    $form_state['redirect'] = 'admin/config/crm-core/user-sync/contact-to-user-management/' . $relation->rid . '/delete';
   }
-  else {
-    crm_core_user_sync_sync($user, $contact);
-  }
-
-  $form_state['redirect'] = 'admin/config/crm-core/user-sync/contact-to-user-management';
-  drupal_set_message('Relation has been saved.');
 }
 
 
