@@ -55,7 +55,7 @@ function crm_core_activity_type_form($form, &$form_state, $crm_activity_type, $o
       '#value' => t('Delete activity type'),
       '#weight' => 45,
       '#limit_validation_errors' => array(),
-      '#submit' => array('crm_core_activity_type_form_submit_delete')
+      '#submit' => array('crm_core_activity_type_form_submit_delete'),
     );
   }
   return $form;
@@ -89,13 +89,11 @@ function crm_core_activity_type_form_submit_delete(&$form, &$form_state) {
  * Add default fields to newly created activity type.
  */
 function crm_core_activity_type_add_default_fields($activity_type) {
-
   $type = $activity_type->type;
 
   module_load_include('inc', 'crm_core_activity', 'crm_core_activity.fields');
   $fields = _crm_core_activity_type_default_fields();
 
-  // Create the fields if they don't exist
   foreach ($fields as $field) {
     $info = field_info_field($field['field_name']);
     if (empty($info)) {
@@ -103,7 +101,6 @@ function crm_core_activity_type_add_default_fields($activity_type) {
     }
   }
 
-  // Create field instances for the type if they don't exist
   $instances = array();
 
   // Participants field.
@@ -217,7 +214,6 @@ function crm_core_activity_type_add_default_fields($activity_type) {
     ),
   );
 
-  // Create field instances if they don't exist
   foreach ($instances as $instance) {
     $info_instance = field_info_instance('crm_core_activity', $instance['field_name'], $type);
     if (empty($info_instance)) {

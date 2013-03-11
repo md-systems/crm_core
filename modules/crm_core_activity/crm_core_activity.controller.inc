@@ -2,8 +2,7 @@
 
 /**
  * @file
- * Extends EntityAPIControllerInterface with classes for 
- * Activities used by CRM Core.
+ * Extends EntityAPIControllerInterface with classes for Activities.
  */
 
 /**
@@ -29,9 +28,7 @@ class CRMCoreActivityEntity extends Entity {
  */
 class CRMCoreActivityController extends EntityAPIController {
   public function create(array $values = array()) {
-    global $user;
-    // Get activity_type_id.
-    $query = new EntityFieldQuery;
+    $query = new EntityFieldQuery();
     $results = $query
       ->entityCondition('entity_type', 'crm_core_activity_type')
       ->propertyCondition('type', $values['type'])
@@ -49,7 +46,7 @@ class CRMCoreActivityController extends EntityAPIController {
       'title' => '',
       'created' => REQUEST_TIME,
       'changed' => REQUEST_TIME,
-      'uid' => $user->uid,
+      'uid' => $GLOBALS['user']->uid,
     );
 
     return parent::create($values);
@@ -57,11 +54,9 @@ class CRMCoreActivityController extends EntityAPIController {
 }
 
 /**
- * 
  * Provides a class for activities.
- * 
- * Use a separate class for profile types so we can specify some defaults
- * modules may alter.
+ *
+ * Use a separate class so we can specify some defaults modules may alter.
  */
 class CRMActivityType extends Entity {
   public $type;
@@ -95,15 +90,15 @@ class CRMCoreActivityTypeController extends EntityAPIControllerExportable {
   /**
    * Implements EntityAPIControllerInterface.
    *
-   * @param array @ids 
-   *    List of IDs.
-   * @param $transaction
+   * @param array $ids
+   *   List of IDs.
+   * @param object $transaction
    *   Optionally a DatabaseTransaction object to use. Allows overrides to pass
    *   in their transaction object.
    */
   public function delete($ids, DatabaseTransaction $transaction = NULL) {
     // Delete all instances of the given type.
-    $query = new EntityFieldQuery;
+    $query = new EntityFieldQuery();
     $results = $query
       ->entityCondition('entity_type', 'crm_core_activity')
       ->entityCondition('bundle', $ids, 'IN')
@@ -118,5 +113,4 @@ class CRMCoreActivityTypeController extends EntityAPIControllerExportable {
     // Finally delete the type itself.
     return parent::delete($ids, $transaction);
   }
-
 }

@@ -4,6 +4,7 @@
  * @file
  * Views support. Allows users to filter by activity type
  */
+
 class views_handler_filter_activity_type extends views_handler_filter_in_operator {
   function get_value_options() {
     if (!isset($this->value_options)) {

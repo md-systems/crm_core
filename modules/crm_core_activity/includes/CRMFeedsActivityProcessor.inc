@@ -42,15 +42,15 @@ class CRMFeedsActivityProcessor extends FeedsProcessor {
   /**
    * Loads an existing activity.
    *
-   * If the update existing method is not FEEDS_UPDATE_EXISTING, only the activity
-   * table will be loaded, foregoing the crm_core_activity_load API for better performance.
+   * If the method is not FEEDS_UPDATE_EXISTING, only the activity table will
+   * be loaded, foregoing the crm_core_activity_load API for better performance.
    */
   protected function entityLoad(FeedsSource $source, $activity_id) {
     if ($this->config['update_existing'] == FEEDS_UPDATE_EXISTING) {
       $activity = crm_core_activity_load($activity_id, TRUE);
     }
     else {
-      // We're replacing the existing activity. Only save the absolutely necessary.
+      // We're replacing the existing activity. Only save the necessary.
       $activity = db_query("SELECT created, activity_id, type FROM {crm_core_activity} WHERE activity_id = :activity_id", array(':activity_id' => $activity_id))->fetchObject();
       $activity->uid = $this->config['author'];
     }
@@ -145,12 +145,14 @@ class CRMFeedsActivityProcessor extends FeedsProcessor {
       '#autocomplete_path' => 'user/autocomplete',
       '#default_value' => empty($author->name) ?  'anonymous' : check_plain($author->name),
     );
-    $period = drupal_map_assoc(array(FEEDS_EXPIRE_NEVER, 3600, 10800, 21600, 43200, 86400, 259200, 604800, 2592000, 2592000 * 3, 2592000 * 6, 31536000), 'feeds_format_expire');
+    $period = drupal_map_assoc(array(FEEDS_EXPIRE_NEVER, 3600, 10800, 21600,
+      43200, 86400, 259200, 604800, 2592000, 2592000 * 3, 2592000 * 6, 31536000),
+      'feeds_format_expire');
     $form['expire'] = array(
       '#type' => 'select',
       '#title' => t('Expire activities'),
       '#options' => $period,
-      '#description' => t('Select after how much time activities should be deleted. The activity\'s published date will be used for determining the activity\'s age, see Mapping settings.'),
+      '#description' => t("Select after how much time activities should be deleted. The activity's published date will be used for determining the activity's age, see Mapping settings."),
       '#default_value' => $this->config['expire'],
     );
     $form['update_existing']['#options'] = array(
@@ -191,9 +193,10 @@ class CRMFeedsActivityProcessor extends FeedsProcessor {
       case 'created':
         $target_activity->created = feeds_to_unixtime($value, REQUEST_TIME);
         break;
+
       case 'feeds_source':
-        // Get the class of the feed activity importer's fetcher and set the source
-        // property. See feeds_activity_update() how $activity->feeds gets stored.
+        // Get class of the feed activity importer's fetcher and set the source
+        // property. See feeds_activity_update() for $activity->feeds storage.
         if ($id = feeds_get_importer_id($this->config['activity_type'])) {
           $class = get_class(feeds_importer($id)->fetcher);
           $target_activity->feeds[$class]['source'] = $value;
@@ -202,6 +205,7 @@ class CRMFeedsActivityProcessor extends FeedsProcessor {
           $target_activity->feeds['suppress_import'] = TRUE;
         }
         break;
+
       default:
         parent::setTargetElement($source, $target_activity, $target_element, $value);
         break;

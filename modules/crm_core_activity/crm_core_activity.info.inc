@@ -70,7 +70,6 @@ function crm_core_activity_entity_property_info() {
     'schema field' => 'activity_type_id',
   );
 
-
   // Metadata of Activity Type.
   $properties = &$info['crm_core_activity_type']['properties'];
 

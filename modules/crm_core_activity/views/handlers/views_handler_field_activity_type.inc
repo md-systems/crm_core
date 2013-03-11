@@ -8,9 +8,8 @@
 /**
  * Provides a field handler for activity_type.
  *
- * This is used in views that provide the ability to add
- * an activity for a contact.
- * 
+ * Used in views that provide the ability to add an activity for a contact.
+ *
  * The link is strucuted like so:
  * 'crm-core/contact/' . [node nid] . '/activity/add/' . [activity machine name]
  */

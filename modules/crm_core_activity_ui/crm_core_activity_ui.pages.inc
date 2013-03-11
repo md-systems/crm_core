@@ -6,15 +6,12 @@
  */
 
 /**
- * Wrapper around entity_ui_get_form().
- *
  * Create new crm_activity entity and pass it to entity_ui_get_form().
  *
- * @param type $contact
- * @param type $type
+ * @param object $contact
+ * @param string $type
  */
 function crm_core_activity_entity_ui_get_form_wrapper($contact, $type) {
-  // Default empty Activity.
   $values = array(
     'type' => $type,
     'field_activity_participants' => array(
@@ -27,7 +24,6 @@ function crm_core_activity_entity_ui_get_form_wrapper($contact, $type) {
   );
 
   $activity = entity_create('crm_core_activity', $values);
-
   return entity_ui_get_form('crm_core_activity', $activity, 'add');
 }
 
@@ -36,14 +32,14 @@ function crm_core_activity_entity_ui_get_form_wrapper($contact, $type) {
  */
 function crm_core_activity_form($form, &$form_state, $activity) {
   // Ensure this include file is loaded when the form is rebuilt from the cache.
-  $form_state['build_info']['files'][] =
-    drupal_get_path('module', 'crm_core_activity_ui') . '/crm_core_activity_ui.pages.inc';
-  // get the contact id of who is trying to add the activity
+  $form_state['build_info']['files'][] = drupal_get_path('module', 'crm_core_activity_ui') . '/crm_core_activity_ui.pages.inc';
+
+  // Get the contact id of who is trying to add the activity.
   if (isset($activity->field_activity_participants[LANGUAGE_NONE]['0'])) {
-      $form['contact_id'] = array(
-        '#type' => 'value',
-        '#value' => arg(1) == 'contact' ? arg(2) : $activity->field_activity_participants[LANGUAGE_NONE]['0']['target_id'],
-      );
+    $form['contact_id'] = array(
+      '#type' => 'value',
+      '#value' => arg(1) == 'contact' ? arg(2) : $activity->field_activity_participants[LANGUAGE_NONE]['0']['target_id'],
+    );
   }
 
   $form['title'] = array(
@@ -80,7 +76,7 @@ function crm_core_activity_form($form, &$form_state, $activity) {
     '#submit' => $submit + array('crm_core_activity_form_submit'),
   );
 
-  // Show delete button if entity exists and user has appropriate permission
+  // Show delete button if entity exists and user has appropriate permission.
   if ($form_state['op'] == 'edit' && entity_access('delete', 'crm_core_activity', $activity)) {
     $form['actions']['delete'] = array(
       '#type' => 'submit',
@@ -95,7 +91,7 @@ function crm_core_activity_form($form, &$form_state, $activity) {
 
   // Add after build to set proper page Title as it
   // got set by entity_ui_main_form_defaults
-  // @see entity_ui_get_form().
+  // @see entity_ui_get_form()
   $form['#after_build'][] = 'crm_core_activity_form_after_build';
 
   return $form;
@@ -183,7 +179,7 @@ function crm_core_activity_form_delete_confirm_submit($form, &$form_state) {
     watchdog('crm_core_activity', '@type: deleted %title.', array('@type' => $activity->type, '%title' => $activity->title));
     drupal_set_message(t('@type %title has been deleted.', array(
       '@type' => crm_core_activity_type_get_name($activity->type),
-      '%title' => $activity->title
+      '%title' => $activity->title,
     )));
   }
   $destination = drupal_get_destination();
@@ -197,9 +193,7 @@ function crm_core_activity_form_delete_confirm_submit($form, &$form_state) {
 }
 
 /**
- * After build callback for crm_activity_form
- *
- * Set proper page title.
+ * After build callback for crm_activity_form. Set proper page title.
  */
 function crm_core_activity_form_after_build(&$form, &$form_state) {
   if ($form_state['op'] == 'add') {

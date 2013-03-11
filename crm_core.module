@@ -5,7 +5,6 @@
  * Provides basic functionality for a Drupal CRM.
  */
 
-
 /**
  * Implements hook_hook_info().
  */
@@ -19,8 +18,6 @@ function crm_core_hook_info() {
 
 /**
  * Return permission names for a given entity type.
- *
- * Copied from commerce_entity_access_permissions().
  */
 function crm_core_entity_access_permissions($entity_type) {
   $entity_info = entity_get_info($entity_type);
@@ -70,7 +67,7 @@ function crm_core_entity_access_permissions($entity_type) {
 }
 
 /**
- * Define per bundle permissions
+ * Define per-bundle permissions.
  */
 function crm_core_bundle_access_permissions($bundle_name, $bundle_info, $entity_type, $entity_info = array()) {
   $labels = $entity_info['permission labels'];

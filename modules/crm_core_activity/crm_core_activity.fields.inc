@@ -3,23 +3,17 @@
 /**
  * @file
  * Adds fields to the activity entity type used by CRM Core.
- * 
- * By default, an activity will include:
- * 
- * - A list of participants
- * - A date
- * - Notes
  */
 
 /**
- * @return
- *   Return default fields definition that have to be attached 
- *   to newly created activity type.
+ * Define the default fields for the CRM Core Activity entity type.
+ *
+ * @return array
+ *   Return default fields to be attached to newly created activity type.
  *
  * @see field_create_field()
  */
 function _crm_core_activity_type_default_fields() {
-
   $fields = array();
 
   // Participants field.
@@ -77,7 +71,6 @@ function _crm_core_activity_type_default_fields() {
     'settings' => array(),
     'cardinality' => 1,
   );
-  
+
   return $fields;
-  
 }

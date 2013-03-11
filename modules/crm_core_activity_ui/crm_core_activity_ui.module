@@ -2,17 +2,13 @@
 
 /**
  * @file
- * 
  * Provides the UI for viewing activities.
  */
 
 /**
- * Implements hook_menu()
+ * Implements hook_menu().
  */
 function crm_core_activity_ui_menu() {
-  $items = array();
-
-  // Menu items for creation of new Activities.
   foreach (crm_core_activity_types() as $type => $info) {
     $items['crm-core/contact/%crm_core_contact/activity/add/' . $type] = array(
       'title' => 'Add activity',
@@ -26,7 +22,7 @@ function crm_core_activity_ui_menu() {
     );
   }
 
-  $items['crm-core/activity/%crm_core_activity'] =  array(
+  $items['crm-core/activity/%crm_core_activity'] = array(
     'title' => 'Activity',
     'page callback' => 'crm_core_activity_view',
     'page arguments' => array(2),
@@ -36,7 +32,7 @@ function crm_core_activity_ui_menu() {
     'access arguments' => array('view', 'crm_core_activity', 2),
     'type' => MENU_NORMAL_ITEM,
   );
-  $items['crm-core/contact/%crm_core_contact/activity/%crm_core_activity'] =  array(
+  $items['crm-core/contact/%crm_core_contact/activity/%crm_core_activity'] = array(
     'title' => 'Activity',
     'page callback' => 'crm_core_activity_view',
     'page arguments' => array(4, 2),
@@ -150,7 +146,7 @@ function crm_core_activity_ui_admin_menu_map() {
  * Implements hook_form_alter().
  */
 function crm_core_activity_ui_form_alter(&$form, &$form_state, $form_id) {
-  // Alter the operations links so they looks like CTools dropbutton
+  // Alter the operations links so they looks like CTools dropbutton.
   if ($form_id == 'crm_core_activity_type_overview_form') {
     $ops_count = $form['table']['#header'][2]['colspan'];
     $form['table']['#header'][2] = t('Operations');

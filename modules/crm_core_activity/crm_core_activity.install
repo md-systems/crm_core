@@ -1,37 +1,50 @@
 <?php
 
 /**
- * Implements hook_install()
+ * @file
+ * Install, update, and uninstall functions for the CRM Core Activity module.
+ */
+
+/**
+ * Implements hook_install().
  */
 function crm_core_activity_install() {
+  $t = get_t()
 
-  // create a default meeting activity type
+  // Create a default meeting activity type.
   $meeting = entity_create('crm_core_activity_type', array(
     'type' => 'meeting',
-    'label' => st('Meeting'),
-    'description' => st('A meeting between 2 or more contacts'),
+    'label' => $t('Meeting'),
+    'description' => $t('A meeting between 2 or more contacts'),
   ));
   crm_core_activity_type_save($meeting);
 
-  // create a phone call activity type
+  // Create a phone call activity type.
   $phone_call = entity_create('crm_core_activity_type', array(
     'type' => 'phone_call',
-    'label' => st('Phone call'),
-    'description' => st('A phone call between 2 or more contacts'),
+    'label' => $t('Phone call'),
+    'description' => $t('A phone call between 2 or more contacts'),
   ));
   crm_core_activity_type_save($phone_call);
 }
 
-function crm_core_activity_uninstall() {
+/**
+ * Implements hook_enable().
+ */
+function crm_core_activity_enable() {
+  // Clear the cache to display in Feeds as available plugin.
+  cache_clear_all('plugins:feeds:plugins', 'cache');
+}
 
-  // delete all the fields
-  // right now we only have the default fields, what if we can add more fields to the
-  // activities? (we will need to go through the field array and idenfity activity fields?)
+/**
+ * Implements hook_uninstall().
+ */
+function crm_core_activity_uninstall() {
+  // @todo These are the default fields only. What if there are more?
   module_load_include('inc', 'crm_core_activity', 'crm_core_activity.fields');
   foreach (_crm_core_activity_type_default_fields() as $field) {
     field_delete_field($field['field_name']);
   }
-
 }
 
 /**
@@ -137,11 +150,10 @@ function crm_core_activity_schema() {
 
 
 /**
-* Update crm_core_activity schema
-*/
+ * Update crm_core_activity schema.
+ */
 function crm_core_activity_update_7001(&$sandbox) {
   if (!db_field_exists('crm_core_activity', 'activity_type_id')) {
-    // add new field
     $spec = array(
       'description' => 'The current {crm_core_activity_type}.id of this activity.',
       'type' => 'int',
@@ -155,8 +167,8 @@ function crm_core_activity_update_7001(&$sandbox) {
 }
 
 /**
-* Populate crm_core_activity.activity_type_id
-*/
+ * Populate crm_core_activity.activity_type_id.
+ */
 function crm_core_activity_update_7002(&$sandbox) {
   // Update 10 activities at a time to change {crm_core_activity}.type to
   // int value of {crm_core_activity_type}.id
@@ -174,7 +186,7 @@ function crm_core_activity_update_7002(&$sandbox) {
     ->execute();
 
   foreach ($activities as $activity) {
-    // get the matching id from {crm_core_activity_type}
+    // Get the matching id from {crm_core_activity_type}.
     $id = db_select('crm_core_activity_type', 'at')
       ->fields('at', array('id'))
       ->condition('type', $activity->type, '=')
@@ -193,12 +205,7 @@ function crm_core_activity_update_7002(&$sandbox) {
   $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
 
   if ($sandbox['#finished']) {
-    // run drush cc all afterwards
     drupal_flush_all_caches();
-
     return t('Added and populated field values for new {crm_core_activity}.activity_type_id field');
   }
-  // In case of an error, simply throw an exception with an error message.
-  //throw new DrupalUpdateException('Error: updating {crm_core_activity}.activity_type_id field values failed.');
-
 }

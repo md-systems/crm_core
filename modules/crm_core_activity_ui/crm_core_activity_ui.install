@@ -38,7 +38,7 @@ function crm_core_activity_ui_disable() {
   // Remove links from crm-core-menu and crm-core-admin-menu.
   $conditions = array(
     'crm-core-admin-menu' => array(
-      'admin/structure/crm-core/activity-types'
+      'admin/structure/crm-core/activity-types',
     ),
   );
   crm_core_ui_remove_links($conditions);

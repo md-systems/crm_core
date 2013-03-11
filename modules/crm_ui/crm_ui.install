@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Install, update, and uninstall functions for the CRM Core UI module.
+ */
+
+/**
  * Implements hook_install().
  */
 function crm_ui_install() {
