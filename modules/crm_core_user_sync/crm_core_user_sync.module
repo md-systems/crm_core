@@ -577,14 +577,3 @@ function _crm_core_user_sync_get_entity_id_from_text($text, $entity_type) {
   }
   return $entities[$matches[1]];
 }
-
-/**
- * Helper function for batch processing of users synchronization.
- *
- * @param $uid
- *  User id for which contact should be created.
- */
-function _crm_core_user_sync_batch_processing($uid) {
-  $account = user_load($uid);
-  crm_core_user_sync_sync($account);
-}

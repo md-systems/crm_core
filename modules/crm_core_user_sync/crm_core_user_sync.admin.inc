@@ -325,7 +325,7 @@ function crm_core_user_sync_edit_relation_form($form, &$form_state, $relation) {
     '#type' => 'textfield',
     '#default_value' => empty($contact) ? '' : $contact->label() . " [contact_id:{$contact->contact_id}]",
     '#disabled' => empty($disabled_contact_field) ? false : true,
-    '#autocomplete_path' => 'admin/config/crm-core/user-sync/contact-to-user-management/contact-autocomplete/%',
+    '#autocomplete_path' => '',
   );
 
   $form['user'] = array(
@@ -333,7 +333,7 @@ function crm_core_user_sync_edit_relation_form($form, &$form_state, $relation) {
     '#type' => 'textfield',
     '#default_value' =>  empty($user) ? '' : $user->name . " [uid:{$user->uid}]",
     '#disabled' => empty($disabled_user_field) ? false : true,
-    '#autocomplete_path' => 'admin/config/crm-core/user-sync/contact-to-user-management/user-autocomplete/%',
+    '#autocomplete_path' => '',
   );
 
   $form['actions'] = array('#type' => 'actions');
@@ -383,15 +383,12 @@ function crm_core_user_sync_edit_relation_form_validate($form, &$form_state) {
     }
 
     // Check if the same user->contact relation exists when adding or editing relation.
-    if (crm_core_user_sync_get_contact_from_uid($user->uid) && (empty($form_state['values']['relation']) ||
-            $form_state['values']['relation']->endpoints[LANGUAGE_NONE][0]['entity_id'] != $user->uid)) {
-      form_set_error('user', t('The user account has been already synchronized.'));
-    }
-
-    // Check if the same user->contact relation exists when adding or editing relation.
-    if (crm_core_user_sync_get_user_from_contact_id($contact->contact_id) && (empty($form_state['values']['relation']) ||
+    if (crm_core_user_sync_exists($user, $contact) && (
+            empty($form_state['values']['relation']) ||
+            $form_state['values']['relation']->endpoints[LANGUAGE_NONE][0]['entity_id'] != $user->uid ||
             $form_state['values']['relation']->endpoints[LANGUAGE_NONE][1]['entity_id'] != $contact->contact_id)) {
-      form_set_error('contact', t('The contact record has been already synchronized.'));
+      form_set_error('', t('The user account has been already synchronized with the specified contact.'));
+      return;
     }
   }
 }
@@ -425,49 +422,6 @@ function crm_core_user_sync_edit_relation_form_submit($form, &$form_state) {
   }
 }
 
-/**
- * User autocomplete for user->contact relation form.
- */
-function crm_core_user_sync_user_autocomplete($search_string) {
-  $query = new EntityFieldQuery;
-  $result = $query
-    ->entityCondition('entity_type', 'user')
-    ->propertyCondition('name', $search_string . '%', 'like')
-    ->range(0, 20)
-    ->execute();
-
-  $users = entity_load('user', array_keys($result['user']));
-  foreach ($users as $user) {
-    $matches[$user->name . " [uid:$user->uid]"] = $user->name;
-  }
-
-  drupal_json_output($matches);
-}
-
-/**
- * User autocomplete for user->contact relation form.
- */
-function crm_core_user_sync_contact_autocomplete($search_string) {
-  module_load_include('inc', 'crm_core_relationship_ui');
-
-  $matches = array();
-
-  $query = new EntityFieldQuery;
-  $query->entityCondition('entity_type', 'crm_core_contact')
-    ->range(0, 20);
-
-  $query->addMetaData('match', $search_string)
-    ->addTag(variable_get('crm_core_contact_search_query_tag', 'crm_core_contact_search'));
-
-  $result = $query->execute();
-  $contacts = entity_load('crm_core_contact', array_keys($result['crm_core_contact']));
-  foreach ($contacts as $contact) {
-    $crm_core_contact_title = crm_core_contact_title($contact);
-    $matches[$crm_core_contact_title . " [contact_id:$contact->contact_id]"] = $crm_core_contact_title;
-  }
-
-  drupal_json_output($matches);
-}
 
 /**
  * Delete relation form.
@@ -500,33 +454,65 @@ function crm_core_user_sync_delete_relation_form_submit($form, &$form_state) {
  * Submit callback. Handles user synchronization.
  */
 function crm_core_user_sync_admin_form_user_sync_submit($form, &$form_state) {
-  $uids = db_select('users', 'u')->fields('u', array('uid'))->condition('status', '1')->execute()->fetchCol();
-  $contacts = crm_core_user_sync_get_contacts_from_uids($uids);
-  $uids_to_sync = array_diff_key(array_flip($uids), $contacts);
-  $uids_to_sync = array_flip($uids_to_sync);
+  $operations[] = array('_crm_core_user_sync_batch_processing', array());
+  $batch = array(
+    'operations' => $operations,
+    'title' => t('Processing user synchronization'),
+    'finished' => '_crm_core_user_sync_batch_processing_finished',
+    'file' => drupal_get_path('module', 'crm_core_user_sync') . '/crm_core_user_sync.admin.inc'
+  );
+  batch_set($batch);
+}
 
-  if (empty($uids_to_sync)) {
-    drupal_set_message(t('Nothing to synchronize. All users have associated contacts.'));
+/**
+ * Helper function for batch processing of users synchronization.
+ *
+ * @param $uid
+ *  User id for which contact should be created.
+ */
+function _crm_core_user_sync_batch_processing(&$context) {
+  $query = db_select('users', 'users');
+  $query->leftJoin('field_data_endpoints', 'endpoints', "endpoints.endpoints_entity_id = users.uid AND endpoints.endpoints_entity_type = 'user'");
+  $query->addField('users', 'uid');
+  $query->addField('endpoints', 'entity_id', 'rid');
+  $query->condition('users.status', "'0'", '<>');
+  $query->isNull('endpoints.entity_id');
+
+  if (empty($context['sandbox'])) {
+    $context['sandbox'] = array();
+    $count_query = $query->countQuery();
+    $uids_to_sync = $count_query->execute()->fetchField();
+    $context['sandbox']['max'] = $uids_to_sync;
+    $context['sandbox']['progress'] = 0;
+  }
+  // Limit users quantity to process per request.
+  $limit = 20;
+  $start_from = $context['sandbox']['progress'];
+  $uids = $query->range($start_from, $limit)->execute()->fetchCol();
+  $users = user_load_multiple(($uids));
+  foreach ($users as $user) {
+    crm_core_user_sync_sync($user);
+    $context['sandbox']['progress']++;
+  }
+
+  if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+    $context['finished'] = ($context['sandbox']['progress'] >= $context['sandbox']['max']);
   }
   else {
-    if ( count($uids_to_sync) > 100 ) {
-      // Set batch.
-      $operations = array();
-      foreach ($uids_to_sync as $uid) {
-        $operations[] = array('_crm_core_user_sync_batch_processing', array($uid));
-      }
-      $batch = array(
-        'operations' => $operations,
-        'title' => t('Processing user synchronization'),
-      );
-      batch_set($batch);
-    }
-    else {
-      $users = user_load_multiple(array_keys($uids_to_sync));
-      foreach ($users as $user) {
-        crm_core_user_sync_sync($user);
-      }
-      drupal_set_message(t('@count users was associated with contacts.', array('@count' => count($uids_to_sync))));
-    }
+    $context['results']['synced'] = $context['sandbox']['max'];
+  }
+}
+
+/**
+ * Helper to set message to user when batch processing finished.
+ */
+function _crm_core_user_sync_batch_processing_finished($success, $results, $operations) {
+  if ($success) {
+    drupal_set_message(t('@count users have been associated with contacts.', array('@count' => $results['synced'])));
+  }
+  else {
+    drupal_set_message(t('Something went wrong. Please check !dblog.', array('!dblog' =>
+      l(t('Recent log messages'), 'admin/reports/dblog')
+    )), 'error');
   }
 }
