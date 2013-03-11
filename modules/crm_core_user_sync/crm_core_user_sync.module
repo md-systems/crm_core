@@ -181,6 +181,24 @@ function crm_core_user_sync_get_contact_type_for_account($account) {
 }
 
 /**
+ * Checks if user->contact relation exists.
+ */
+function crm_core_user_sync_exists($uid, $contact_id) {
+  if (is_object($uid)) {
+    $uid = $uid->uid;
+  }
+
+  if (is_object(($contact_id))) {
+    $contact_id = $contact_id->contact_id;
+  }
+
+  return relation_relation_exists(array(
+    array('entity_type' => 'user', 'entity_id' => $uid),
+    array('entity_type' => 'crm_core_contact', 'entity_id' => $contact_id)
+  ), 'crm_core_user_sync');
+}
+
+/**
  * Validates user amd contact.
  *
  * @param $account to be synchronized

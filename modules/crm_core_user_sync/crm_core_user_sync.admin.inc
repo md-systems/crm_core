@@ -359,7 +359,17 @@ function crm_core_user_sync_edit_relation_form_validate($form, &$form_state) {
     }
 
     if (!crm_core_user_sync_validate($user, $contact)) {
-      form_set_error('', t('User account could not be syncrhonized with a contact accordning to rules.')); 
+      form_set_error('', t('The user account could not be syncrhonized with the specified contact accordning to rules.'));
+      return;
+    }
+
+    // Check if the same user->contact relation exists when adding or editing relation.
+    if (crm_core_user_sync_exists($user, $contact) && (
+            empty($form_state['values']['relation']) ||
+            $form_state['values']['relation']->endpoints[LANGUAGE_NONE][0]['entity_id'] != $user->uid ||
+            $form_state['values']['relation']->endpoints[LANGUAGE_NONE][1]['entity_id'] != $contact->contact_id)) {
+      form_set_error('', t('The user account has been already synchronized with the specified contact.'));
+      return;
     }
   }
 }
