@@ -34,7 +34,7 @@ function crm_core_activity_ui_menu() {
   );
   $items['crm-core/contact/%crm_core_contact/activity/%crm_core_activity'] = array(
     'title' => 'Activity',
-    'page callback' => 'crm_core_activity_view',
+    'page callback' => 'crm_core_activity_ui_view',
     'page arguments' => array(4, 2),
     'title callback' => 'entity_label',
     'title arguments' => array('crm_core_activity', 4),
@@ -202,4 +202,12 @@ function _crm_core_activity_ui_set_breadcrumb($contact) {
     l(t('Activities'), $contact_uri['path'] . '/activity'),
   );
   drupal_set_breadcrumb($breadcrumb);
+}
+
+/**
+ * Activity UI view callback.
+ */
+function crm_core_activity_ui_view($activity, $contact) {
+  _crm_core_activity_ui_set_breadcrumb($contact);
+  return crm_core_activity_view($activity);
 }
