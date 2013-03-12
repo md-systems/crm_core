@@ -429,16 +429,22 @@ function crm_core_user_sync_edit_relation_form_submit($form, &$form_state) {
  * User autocomplete for user->contact relation form.
  */
 function crm_core_user_sync_user_autocomplete($search_string) {
-  $query = new EntityFieldQuery;
-  $result = $query
-    ->entityCondition('entity_type', 'user')
-    ->propertyCondition('name', $search_string . '%', 'like')
-    ->range(0, 20)
-    ->execute();
+  $matches = array();
 
-  $users = entity_load('user', array_keys($result['user']));
-  foreach ($users as $user) {
-    $matches[$user->name . " [uid:$user->uid]"] = $user->name;
+  $query = db_select('users', 'user');
+  $on_cond = "endpoints.endpoints_entity_type = 'user' AND user.uid = endpoints.endpoints_entity_id";
+  $query->leftJoin('field_data_endpoints', 'endpoints', $on_cond);
+  $query->addField('user', 'uid');
+  $query->isNull('endpoints_entity_id');
+  $query->condition('name', $search_string . '%', 'LIKE');
+  watchdog('debug', $query->__toString());
+  $uids = $query->range(0, 20)->execute()->fetchCol();
+
+  if (!empty($uids)) {
+    $users = entity_load('user', $uids);
+    foreach ($users as $user) {
+      $matches[$user->name . " [uid:$user->uid]"] = $user->name;
+    }
   }
 
   drupal_json_output($matches);

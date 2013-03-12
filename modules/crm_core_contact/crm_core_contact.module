@@ -883,7 +883,7 @@ function crm_core_contact_query_crm_core_contact_search_alter(QueryAlterableInte
     'generational' => 'contact_name_generational',
     'credentials' => 'contact_name_credentials',
   );
-
+  //TODO: Figure out should we use 'starts from' or 'contains' pattern for search.
   $value = '%' . db_like($query->alterMetaData['match']) . '%';
   $placeholder = ':' . $table . '_fulltext';
 
