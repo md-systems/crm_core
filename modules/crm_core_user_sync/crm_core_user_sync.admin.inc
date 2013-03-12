@@ -448,8 +448,6 @@ function crm_core_user_sync_user_autocomplete($search_string) {
  * User autocomplete for user->contact relation form.
  */
 function crm_core_user_sync_contact_autocomplete($search_string) {
-  module_load_include('inc', 'crm_core_relationship_ui');
-
   $matches = array();
 
   $query = new EntityFieldQuery;
@@ -458,14 +456,16 @@ function crm_core_user_sync_contact_autocomplete($search_string) {
 
   $query->addMetaData('match', $search_string)
     ->addTag(variable_get('crm_core_contact_search_query_tag', 'crm_core_contact_search'));
+  $query->addMetaData('user', FALSE);
 
   $result = $query->execute();
-  $contacts = entity_load('crm_core_contact', array_keys($result['crm_core_contact']));
-  foreach ($contacts as $contact) {
-    $crm_core_contact_title = crm_core_contact_title($contact);
-    $matches[$crm_core_contact_title . " [contact_id:$contact->contact_id]"] = $crm_core_contact_title;
+  if (!empty($result)) {
+    $contacts = entity_load('crm_core_contact', array_keys($result['crm_core_contact']));
+    foreach ($contacts as $contact) {
+      $crm_core_contact_title = crm_core_contact_title($contact);
+      $matches[$crm_core_contact_title . " [contact_id:$contact->contact_id]"] = $crm_core_contact_title;
+    }
   }
-
   drupal_json_output($matches);
 }
 

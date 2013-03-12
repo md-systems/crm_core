@@ -896,6 +896,14 @@ function crm_core_contact_query_crm_core_contact_search_alter(QueryAlterableInte
   $where_expression = "LOWER(CONCAT(' ', $coalesce)) LIKE $placeholder";
   $query->innerJoin($table, $table, "crm_core_contact.contact_id = {$table}.entity_id");
   $query->where($where_expression, array($placeholder => $value));
+  // If set $query->addMetaData('user', TRUE); select contacts which have associated users, FALSE without association.
+  if (isset($query->alterMetaData['user'])) {
+    $on_cond = "endpoints.endpoints_entity_type = 'crm_core_contact' AND endpoints.endpoints_entity_id = crm_core_contact.contact_id ";
+    $query->leftJoin('field_data_endpoints', 'endpoints', $on_cond);
+    $where_cond = 'endpoints.entity_id IS ';
+    $where_cond .= empty($query->alterMetaData['user']) ? 'NULL' : 'NOT NULL';
+    $query->where($where_cond);
+  }
 
 }
 
