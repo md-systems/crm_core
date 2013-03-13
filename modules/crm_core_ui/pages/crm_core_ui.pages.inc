@@ -116,6 +116,7 @@ function crm_core_ui_admin_config_form($form, &$form_state) {
       '!theme_settings' => l(t('theme settings'), 'admin/appearance/settings'),
     )),
   );
+  $form['#submit'][] = 'crm_core_ui_admin_config_form_submit';
   return system_settings_form($form);
 }
 
@@ -136,5 +137,30 @@ function crm_core_ui_admin_config_form_validate($form, &$form_state) {
   $theme = $form_state['values']['crm_core_theme'];
   if ($theme_enabled && empty($theme)) {
     form_set_error('crm_core_theme', t('You must select a theme to use.'));
+  }
+}
+
+/**
+ * Submit handler for CRM Core settings form.
+ */
+function crm_core_ui_admin_config_form_submit($form, &$form_state) {
+  $dashboard_enabled = $form_state['values']['crm_core_dashboard_enabled'];
+  if ($dashboard_enabled) {
+    $item = array(
+      'link_path' => 'crm-core/dashboard',
+      'link_title' => 'Dashboard',
+      'menu_name' => 'crm-core-menu',
+      'weight' => 0,
+    );
+    menu_link_save($item);
+    menu_cache_clear_all();
+  }
+  else {
+    $links = menu_load_links('crm-core-menu');
+    foreach ($links as $link) {
+      if ($link['link_path'] == 'crm-core/dashboard') {
+        menu_link_delete($link['mlid']);
+      }
+    }
   }
 }

@@ -19,6 +19,7 @@ function crm_core_contact_ui_enable() {
   foreach ($menu_items as $item) {
     menu_link_save($item);
   }
+  menu_cache_clear_all();
 }
 
 /**

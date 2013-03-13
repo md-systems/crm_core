@@ -10,6 +10,7 @@ function crm_core_report_enable() {
     'weight' => 2,
   );
   menu_link_save($item);
+  menu_cache_clear_all();
 }
 
 /**

@@ -13,7 +13,7 @@ function crm_core_ui_menu() {
     'title' => 'CRM Core',
     'page callback' => 'crm_core_ui_dashboard',
     'access arguments' => array('view crm dashboard'),
-    'type' => MENU_NORMAL_ITEM,
+    'type' => MENU_SUGGESTED_ITEM,
     'theme callback' => 'crm_core_ui_get_theme',
   );
 

@@ -26,14 +26,6 @@ function crm_core_ui_enable() {
   $fields = array( 'module', 'delta', 'theme', 'status', 'weight', 'region', 'custom', 'visibility', 'pages', 'title', 'cache');
   $values = array( 'menu', 'crm-core-menu', 'bartik', '1', '0', 'sidebar_first', '0', '0', '', '', '-1');
   db_insert('block')->fields($fields, $values)->execute();
-
-  $item = array(
-    'link_path' => 'crm-core',
-    'link_title' => 'Dashboard',
-    'menu_name' => 'crm-core-menu',
-    'weight' => 0,
-  );
-  menu_link_save($item);
 }
 
 /**
@@ -41,10 +33,4 @@ function crm_core_ui_enable() {
  */
 function crm_core_ui_disable() {
   db_delete('block')->condition('delta', 'crm-core-menu')->execute();
-  $links = menu_load_links('crm-core-menu');
-  foreach ($links as $link) {
-    if ($link['link_path'] == 'crm-core') {
-      menu_link_delete($link['mlid']);
-    }
-  }
 }
