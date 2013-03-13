@@ -343,15 +343,35 @@ function crm_core_relationship_ui_views_pre_render(&$view) {
     // Grabbing 1st view argument to avoid preview problems.
     $contact_id = $view->args[0];
     $contact = crm_core_contact_load($contact_id);
-    $contact_uri = $contact->uri();
-    $breadcrumb = array(
-      l(t('Home'), '<front>'),
-      l(t('CRM Core'), 'crm-core'),
-      l(t('Contacts'), 'crm-core/contacts'),
-      l(t($contact->label()), $contact_uri['path']),
-      l(t('Relationships'), $contact_uri['path'] . '/activity'),
-    );
-    drupal_set_breadcrumb($breadcrumb);
+    _crm_core_relationships_ui_breadcrmub($contact);
     $view->build_info['title'] = t('Relationships for @contact_name', array('@contact_name' => $contact->label()));
+  }
+}
+
+/**
+ * Helper function sets breadcrumb on contact pages.
+ *
+ * @param $contact object
+ *  Entity object of crm_core_contact type.
+ */
+function _crm_core_relationships_ui_breadcrmub($contact) {
+  $contact_uri = $contact->uri();
+  $breadcrumb = array(
+    l(t('Home'), '<front>'),
+    l(t('CRM Core'), 'crm-core'),
+    l(t('Contacts'), 'crm-core/contacts'),
+    l(t($contact->label()), $contact_uri['path']),
+    l(t('Relationships'), $contact_uri['path'] . '/activity'),
+  );
+  drupal_set_breadcrumb($breadcrumb);
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function crm_core_relationship_ui_preprocess_page(&$vars) {
+  //TODO: Figure out better way to get rid of tabs at "crm-core/contact/%/relationships/add" page.
+  if (arg(0) == 'crm-core' && arg(1) == 'contact' && arg(3) == 'relationships' && arg(4) == 'add') {
+    $vars['tabs']['#primary'] = array();
   }
 }

@@ -153,7 +153,7 @@ function crm_core_relationship_form_after_build(&$form, &$form_state) {
 function crm_core_relationship_ui_add_relationship($crm_core_contact) {
   drupal_set_title(t('Add CRM Core contact relationship'));
 
-  module_load_include('inc', 'crm_core_relationship_ui');
+  _crm_core_relationships_ui_breadcrmub($crm_core_contact);
 
   $return = array();
 
