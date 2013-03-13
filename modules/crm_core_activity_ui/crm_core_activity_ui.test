@@ -47,7 +47,7 @@ class CRMCoreActivityUITestCase extends DrupalWebTestCase {
     $this->drupalPost('crm-core/contact/add/household', $household_contact, t('Save Contact'));
 
     $this->drupalGet('crm-core/contact/1/activity');
-    $this->assertText(t('This contact has no activity, add an activity above.'), t('No activities avaiable for newly created contact.'));
+    $this->assertText(t('There are no activities available.'), t('No activities avaiable for newly created contact.'));
     $this->assertLink(t('Add activity'));
 
     $this->drupalGet('crm-core/contact/1/activity/add');
@@ -113,7 +113,7 @@ class CRMCoreActivityUITestCase extends DrupalWebTestCase {
 
     // Assert there is no activities left.
     $this->drupalGet('crm-core/contact/1/activity');
-    $this->assertText(t('This contact has no activity, add an activity above.'), t('No activities listed.'));
+    $this->assertText(t('There are no activities available.'), t('No activities listed.'));
   }
 
   /**

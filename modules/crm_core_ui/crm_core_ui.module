@@ -44,7 +44,7 @@ function crm_core_ui_menu() {
 
   $items['admin/config/crm-core/settings'] = array(
     'title' => 'CRM Core Settings',
-    'description' => 'CRM Core Settings page',
+    'description' => 'Configure the appearance of CRM Core and presets for interacting with contacts.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('crm_core_ui_admin_config_form'),
     'access arguments' => array('administer crm-core settings'),
@@ -239,7 +239,7 @@ function crm_core_ui_get_menus() {
   return array(
     'crm-core-menu' => array(
       'menu_name' => 'crm-core-menu',
-      'title' => $t('CRM Core Menu'),
+      'title' => $t('CRM Core'),
       'description' => $t('Provides access to various features and functions within CRM Core.'),
     ),
     'crm-core-admin-menu' => array(

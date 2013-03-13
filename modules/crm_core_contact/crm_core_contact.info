@@ -17,11 +17,6 @@ dependencies[] = field_ui
 dependencies[] = views
 
 ; Field dependencies
-dependencies[] = image
-dependencies[] = addressfield
-dependencies[] = email
-dependencies[] = link
-dependencies[] = cck_phone
 dependencies[] = field_group
 dependencies[] = name
 

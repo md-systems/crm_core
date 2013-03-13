@@ -21,7 +21,7 @@ function crm_core_activity_ui_views_default_views() {
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'Select activity type to create';
+  $handler->display->display_options['title'] = 'Add CRM Core contact activity';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
@@ -120,13 +120,15 @@ function crm_core_activity_ui_views_default_views() {
   $handler->display->display_options['empty']['area']['id'] = 'area';
   $handler->display->display_options['empty']['area']['table'] = 'views';
   $handler->display->display_options['empty']['area']['field'] = 'area';
-  $handler->display->display_options['empty']['area']['content'] = 'This contact has no activity, add an activity above.';
+  $handler->display->display_options['empty']['area']['empty'] = TRUE;
+  $handler->display->display_options['empty']['area']['content'] = 'There are no activities available. <a href="/crm-core/contact/!1/activity/add">Add one now</a>.';
   $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
+  $handler->display->display_options['empty']['area']['tokenize'] = TRUE;
   /* Relationship: Entity Reference: Referenced Entity */
   $handler->display->display_options['relationships']['field_activity_participants_target_id']['id'] = 'field_activity_participants_target_id';
   $handler->display->display_options['relationships']['field_activity_participants_target_id']['table'] = 'field_data_field_activity_participants';
   $handler->display->display_options['relationships']['field_activity_participants_target_id']['field'] = 'field_activity_participants_target_id';
-  /* Field: CRM Activity: Activity ID */
+  /* Field: CRM activity: Activity ID */
   $handler->display->display_options['fields']['activity_id']['id'] = 'activity_id';
   $handler->display->display_options['fields']['activity_id']['table'] = 'crm_core_activity';
   $handler->display->display_options['fields']['activity_id']['field'] = 'activity_id';
@@ -180,14 +182,14 @@ function crm_core_activity_ui_views_default_views() {
     'multiple_from' => '',
     'multiple_to' => '',
   );
-  /* Field: CRM Activity: Title */
+  /* Field: CRM activity: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'crm_core_activity';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['make_link'] = TRUE;
   $handler->display->display_options['fields']['title']['alter']['path'] = 'crm-core/contact/[contact_id]/activity/[activity_id]';
   $handler->display->display_options['fields']['title']['hide_alter_empty'] = FALSE;
-  /* Field: CRM Activity: Label */
+  /* Field: CRM activity: Label */
   $handler->display->display_options['fields']['label']['id'] = 'label';
   $handler->display->display_options['fields']['label']['table'] = 'crm_core_activity_type';
   $handler->display->display_options['fields']['label']['field'] = 'label';
@@ -207,7 +209,7 @@ function crm_core_activity_ui_views_default_views() {
   $handler->display->display_options['arguments']['field_activity_participants_target_id']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['field_activity_participants_target_id']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['field_activity_participants_target_id']['summary_options']['items_per_page'] = '25';
-  /* Filter criterion: CRM Activity: Type */
+  /* Filter criterion: CRM activity: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'crm_core_activity';
   $handler->display->display_options['filters']['type']['field'] = 'type';

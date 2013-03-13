@@ -97,10 +97,12 @@ function crm_core_ui_admin_config_form($form, &$form_state) {
       ),
     ),
   );
+  $links_description = 'When checked, this allows you to use the CRM Core menu as the primary links for the site,' .
+    ' when viewing a page in CRM Core.';
   $form['theme']['crm_core_theme_settings']['crm_core_theme_replace_links'] = array(
     '#type' => 'checkbox',
     '#title' => t('Replace primary links with the CRM Core menu?'),
-    '#description' => t('When checked, the primary links for your site will be overridden with links from the CRM Core menu.'),
+    '#description' => t($links_description),
     '#default_value' => variable_get('crm_core_theme_replace_links', FALSE),
     '#weight' => 1,
   );

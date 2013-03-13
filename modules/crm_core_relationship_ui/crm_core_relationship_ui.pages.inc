@@ -151,7 +151,7 @@ function crm_core_relationship_form_after_build(&$form, &$form_state) {
  *   Entity object of crm_core_contact type.
  */
 function crm_core_relationship_ui_add_relationship($crm_core_contact) {
-  drupal_set_title(t('Select relationship type to create'));
+  drupal_set_title(t('Add CRM Core contact relationship'));
 
   module_load_include('inc', 'crm_core_relationship_ui');
 
