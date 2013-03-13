@@ -65,6 +65,8 @@ function crm_core_user_sync_admin_form($form, &$form_state) {
   $form['crm_core_user_sync_wrapper'] = array(
     '#type' => 'fieldset',
     '#title' => t('Sync Current Users'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
   );
   $form['crm_core_user_sync_wrapper']['user_sync'] = array(
     '#type' => 'submit',
