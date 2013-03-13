@@ -216,7 +216,7 @@ function crm_core_contact_ui_revert_form($form, &$form_state, $contact, $vid) {
     '#value' => $vid,
   );
 
-  $form_state['crm_ui']['contact'] = $contact;
+  $form_state['crm_core_ui']['contact'] = $contact;
 
   return confirm_form($form,
     t("Are you sure want to revert this contact?"),
@@ -225,7 +225,7 @@ function crm_core_contact_ui_revert_form($form, &$form_state, $contact, $vid) {
 
 function crm_core_contact_ui_revert_form_submit($form, &$form_state) {
 
-  $contact = $form_state['crm_ui']['contact'];
+  $contact = $form_state['crm_core_ui']['contact'];
 
   if (crm_core_contact_revert($contact, $form_state['values']['vid'])) {
     drupal_set_message(t('Contact reverted.'));

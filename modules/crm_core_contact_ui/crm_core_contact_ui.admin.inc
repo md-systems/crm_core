@@ -34,7 +34,7 @@ function crm_core_contact_ui_types_overview() {
     );
   }
 
-  crm_ui_ctools_add_dropbutton_files();
+  crm_core_ui_ctools_add_dropbutton_files();
   $build['contact_type_table'] = array(
     '#theme' => 'table',
     '#header' => $header,

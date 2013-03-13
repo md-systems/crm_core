@@ -5,7 +5,7 @@
  */
 function crm_core_user_sync_menu() {
   $items = array();
-  if (module_exists('crm_ui')) {
+  if (module_exists('crm_core_ui')) {
     $items['admin/config/crm-core/user-sync'] = array(
       'title' => 'User Synchronization',
       'description' => 'Manage CRM Core user synchronization settings',
@@ -447,7 +447,7 @@ function crm_core_user_sync_contact_get_user_properties($entity, array $options,
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function crm_core_user_sync_form_crm_core_admin_config_form_alter(&$form, &$form_state, $form_id) {
+function crm_core_user_sync_form_crm_core_ui_admin_config_form_alter(&$form, &$form_state, $form_id) {
   $form['contacts'] = array(
     '#type' => 'fieldset',
     '#title' => t('Contacts'),

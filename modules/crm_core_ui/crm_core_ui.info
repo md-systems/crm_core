@@ -2,7 +2,7 @@ name = CRM Core UI
 description = User Interface for CRM Core.
 package = CRM
 core = 7.x
-configure = admin/structure/crm
+configure = admin/config/crm-core
 
 
 ; =======================
@@ -18,4 +18,4 @@ dependencies[] = crm_core_contact_ui
 ; =======================
 
 ; Base Files
-files[] = crm_ui.module
+files[] = crm_core_ui.module

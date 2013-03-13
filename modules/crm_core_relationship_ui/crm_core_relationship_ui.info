@@ -11,7 +11,7 @@ configure = admin/structure/crm-core/relationship-types
 
 ; Core Dependencies
 dependencies[] = crm_core_relationship
-dependencies[] = crm_ui
+dependencies[] = crm_core_ui
 
 ; Contrib Dependecies
 dependencies[] = relation_ui

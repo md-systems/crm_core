@@ -3,7 +3,7 @@
 /**
  * Implements hook_menu().
  */
-function crm_ui_menu() {
+function crm_core_ui_menu() {
   $items = array();
 
   /**
@@ -27,9 +27,9 @@ function crm_ui_menu() {
   $items['admin/structure/crm-core'] = array(
     'title' => 'CRM Core',
     'description' => 'Manage contact types, activity types, and contact relationship types.',
-    'page callback' => 'crm_ui_admin_dashboard',
+    'page callback' => 'crm_core_ui_admin_dashboard',
     'access arguments' => array('access administration pages'),
-    'file' => 'pages/crm_ui.pages.inc',
+    'file' => 'pages/crm_core_ui.pages.inc',
   );
 
   $items['admin/config/crm-core'] = array(
@@ -46,9 +46,9 @@ function crm_ui_menu() {
     'title' => 'CRM Core Settings',
     'description' => 'CRM Core Settings page',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('crm_core_admin_config_form'),
+    'page arguments' => array('crm_core_ui_admin_config_form'),
     'access arguments' => array('administer crm-core settings'),
-    'file' => 'pages/crm_ui.pages.inc',
+    'file' => 'pages/crm_core_ui.pages.inc',
   );
 
   return $items;
@@ -57,7 +57,7 @@ function crm_ui_menu() {
 /**
  * Implements hook_menu_alter().
  */
-function crm_ui_menu_alter(&$items) {
+function crm_core_ui_menu_alter(&$items) {
   // Transform the field UI tabs into contextual links.
   $items['admin/structure/crm-core/activity-types']['type'] = MENU_LOCAL_TASK;
   $items['admin/structure/crm-core/contact-types']['type'] = MENU_LOCAL_TASK;
@@ -66,7 +66,7 @@ function crm_ui_menu_alter(&$items) {
 /**
  * Implements hook_permission().
  */
-function crm_ui_permission() {
+function crm_core_ui_permission() {
   return array(
     'view crm dashboard' => array(
       'title' => t('View CRM dashboard'),
@@ -82,9 +82,9 @@ function crm_ui_permission() {
 /**
  * Implements hook_theme().
  */
-function crm_ui_theme() {
+function crm_core_ui_theme() {
   return array(
-    'crm_ui_ctools_dropbutton' => array(
+    'crm_core_ui_ctools_dropbutton' => array(
       'variables' => array('ops_count' => NULL, 'links' => array(), 'index' => NULL)
     )
   );
@@ -93,7 +93,7 @@ function crm_ui_theme() {
 /**
  * Implements hook_admin_paths().
  */
-function crm_ui_admin_paths() {
+function crm_core_ui_admin_paths() {
   $paths = array(
     'crm-core/admin' => TRUE,
     'crm-core/admin/*' => TRUE,
@@ -105,7 +105,7 @@ function crm_ui_admin_paths() {
 /**
  * Implements hook_block_info().
  */
-function crm_ui_block_info() {
+function crm_core_ui_block_info() {
   $blocks['navigation'] = array(
     'info' => t('CRM Navigaiton'),
     'cache' => DRUPAL_CACHE_PER_ROLE,
@@ -117,11 +117,11 @@ function crm_ui_block_info() {
 /**
  * Implements hook_block_view().
  */
-function crm_ui_block_view($delta) {
-  module_load_include('inc', 'crm_ui', 'includes/crm_ui.blocks');
+function crm_core_ui_block_view($delta) {
+  module_load_include('inc', 'crm_core_ui', 'includes/crm_core_ui.blocks');
 
-  $sub_func = 'crm_ui_block_' . $delta . '_subject';
-  $con_func = 'crm_ui_block_' . $delta . '_content';
+  $sub_func = 'crm_core_ui_block_' . $delta . '_subject';
+  $con_func = 'crm_core_ui_block_' . $delta . '_content';
 
   if (!function_exists($sub_func) || !function_exists($con_func)) {
     return array();
@@ -176,16 +176,16 @@ function crm_core_ui_dashboard() {
 /**
  * Implements hook_views_pre_render()
  */
-function crm_ui_views_pre_render($view) {
+function crm_core_ui_views_pre_render($view) {
   if ($view->name == 'crm_activities_by_contact') {
-    crm_ui_ctools_add_dropbutton_files();
+    crm_core_ui_ctools_add_dropbutton_files();
   }
 }
 
 /**
  * Additional function that adds special CSS/JS files for dropbuttons
  */
-function crm_ui_ctools_add_dropbutton_files() {
+function crm_core_ui_ctools_add_dropbutton_files() {
   // Add needed files
   ctools_add_js('dropbutton');
   ctools_add_css('dropbutton');
@@ -195,13 +195,13 @@ function crm_ui_ctools_add_dropbutton_files() {
   views_add_css('views-admin');
   views_add_css('views-admin.ctools');
   views_add_css('views-admin.seven');
-  drupal_add_css(drupal_get_path('module', 'crm_ui') . '/css/crm_ui.admin.css');
+  drupal_add_css(drupal_get_path('module', 'crm_core_ui') . '/css/crm_core_ui.admin.css');
 }
 
  /**
   * Theme function for operation links
   */
-function theme_crm_ui_ctools_dropbutton($variables) {
+function theme_crm_core_ui_ctools_dropbutton($variables) {
   $output = '';
 
   $ops_count = $variables['ops_count'];
@@ -281,7 +281,7 @@ function crm_core_ui_get_theme() {
   }
 }
 
-function crm_ui_preprocess_page(&$variables) {
+function crm_core_ui_preprocess_page(&$variables) {
   // Replace "main-menu" links with links from "crm-core-menu".
   if (menu_get_custom_theme() && variable_get('crm_core_theme_replace_links', FALSE)) {
     $variables['main_menu'] = menu_navigation_links('crm-core-menu');

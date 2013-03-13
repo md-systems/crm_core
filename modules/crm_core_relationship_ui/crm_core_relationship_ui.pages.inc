@@ -35,7 +35,7 @@ function crm_core_relation_entity_ui_get_form_wrapper($contact, $type, $reverse)
  */
 function crm_core_relationship_form($form, &$form_state, $relation) {
   // Ensure this include file is loaded when the form is rebuilt from the cache.
-  $form_state['build_info']['file'] = drupal_get_path('module', 'crm_ui') . '/pages/contact_activity.pages.inc';
+  $form_state['build_info']['file'] = drupal_get_path('module', 'crm_core_ui') . '/pages/contact_activity.pages.inc';
   $form_state['entity_type'] = 'relation';
   $form_state['relation'] = $form_state['crm_core_relationship'];
   unset($form_state['crm_core_relationship']);

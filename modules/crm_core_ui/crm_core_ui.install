@@ -8,8 +8,8 @@
 /**
  * Implements hook_install().
  */
-function crm_ui_install() {
-  db_query("UPDATE {system} SET weight = 15 WHERE name = 'crm_ui'");
+function crm_core_ui_install() {
+  db_query("UPDATE {system} SET weight = 15 WHERE name = 'crm_core_ui'");
   $menus = crm_core_ui_get_menus();
   foreach($menus as $menu) {
     menu_save($menu);
@@ -21,7 +21,7 @@ function crm_ui_install() {
 /**
  * Implements hook_enable().
  */
-function crm_ui_enable() {
+function crm_core_ui_enable() {
   db_delete('block')->condition('delta', 'crm-core-menu')->execute();
   $fields = array( 'module', 'delta', 'theme', 'status', 'weight', 'region', 'custom', 'visibility', 'pages', 'title', 'cache');
   $values = array( 'menu', 'crm-core-menu', 'bartik', '1', '0', 'sidebar_first', '0', '0', '', '', '-1');
@@ -39,7 +39,7 @@ function crm_ui_enable() {
 /**
  * Implements hook_disable().
  */
-function crm_ui_disable() {
+function crm_core_ui_disable() {
   db_delete('block')->condition('delta', 'crm-core-menu')->execute();
   $links = menu_load_links('crm-core-menu');
   foreach ($links as $link) {

@@ -10,7 +10,7 @@ configure = admin/structure/crm-core/contact-types
 
 ; Core dependencies
 dependencies[] = crm_core_contact
-dependencies[] = crm_ui
+dependencies[] = crm_core_ui
 dependencies[] = search
 
 ; =======================

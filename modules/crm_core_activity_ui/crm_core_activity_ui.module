@@ -151,9 +151,9 @@ function crm_core_activity_ui_form_alter(&$form, &$form_state, $form_id) {
     $ops_count = $form['table']['#header'][2]['colspan'];
     $form['table']['#header'][2] = t('Operations');
 
-    crm_ui_ctools_add_dropbutton_files();
+    crm_core_ui_ctools_add_dropbutton_files();
     foreach ($form['table']['#rows'] as $key => $row) {
-      $output = theme('crm_ui_ctools_dropbutton', array(
+      $output = theme('crm_core_ui_ctools_dropbutton', array(
         'ops_count' => $ops_count,
         'links' => $row,
         'index' => $key,

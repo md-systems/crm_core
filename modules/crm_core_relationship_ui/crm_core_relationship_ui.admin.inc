@@ -28,7 +28,7 @@ function crm_core_relationship_ui_types_overview($reverse = FALSE) {
   $rows = array();
 
 
-  crm_ui_ctools_add_dropbutton_files();
+  crm_core_ui_ctools_add_dropbutton_files();
   foreach ($relation_types as $type => $label) {
     $links = array();
     if ($reverse) {
@@ -46,7 +46,7 @@ function crm_core_relationship_ui_types_overview($reverse = FALSE) {
       $links[] =  l(t('display fields'), $url . '/display');
     }
     $links[] =  l(t('delete'), $url . '/delete');
-    $row[] = theme('crm_ui_ctools_dropbutton', array(
+    $row[] = theme('crm_core_ui_ctools_dropbutton', array(
         'ops_count' => count($links),
         'links' => $links,
         'index' => $type,

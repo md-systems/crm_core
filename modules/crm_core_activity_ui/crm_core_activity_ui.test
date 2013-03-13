@@ -21,7 +21,7 @@ class CRMCoreActivityUITestCase extends DrupalWebTestCase {
    * Enabled dependency modules.
    */
   public function setUp() {
-    parent::setUp(array('ctools', 'entity', 'views', 'image', 'name', 'entityreference', 'date', 'date_popup', 'date_views', 'crm_core', 'crm_ui'));
+    parent::setUp(array('ctools', 'entity', 'views', 'image', 'name', 'entityreference', 'date', 'date_popup', 'date_views', 'crm_core', 'crm_core_ui'));
     module_enable(array('crm_core_contact', 'crm_core_contact_ui', 'crm_core_activity', 'crm_core_activity_ui'));
     $this->resetAll();
   }
