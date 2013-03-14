@@ -86,7 +86,7 @@ function crm_core_contact_ui_views_default_views() {
   $handler->display->display_options['empty']['area']['table'] = 'views';
   $handler->display->display_options['empty']['area']['field'] = 'area';
   $handler->display->display_options['empty']['area']['empty'] = TRUE;
-  $handler->display->display_options['empty']['area']['content'] = 'There are no contacts available. <a href="/crm-core/contacts/add">Add one now</a>.';
+  $handler->display->display_options['empty']['area']['content'] = 'There are no contacts available. <a href="/crm-core/contact/add">Add one now</a>.';
   $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
   $handler->display->display_options['empty']['area']['tokenize'] = TRUE;
   /* Field: CRM Contact: Contact ID */

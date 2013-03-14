@@ -64,7 +64,7 @@ function crm_core_contact_ui_menu() {
     'file' => 'crm_core_contact_ui.pages.inc',
   );
 
-  $items['crm-core/contacts/add'] = array(
+  $items['crm-core/contact/add'] = array(
     'title' => 'Add a contact',
     'description' => 'Add a new contact to the CRM.',
     'page callback' => 'crm_core_contact_ui_add_page',
@@ -76,7 +76,7 @@ function crm_core_contact_ui_menu() {
     'file' => 'crm_core_contact_ui.pages.inc',
   );
   foreach (crm_core_contact_types() as $type => $contact_type) {
-    $items['crm-core/contacts/add/' . $type] = array(
+    $items['crm-core/contact/add/' . $type] = array(
       'title' => 'Add @type',
       'title arguments' => array('@type' => $contact_type->name),
       'description' => $contact_type->description,
