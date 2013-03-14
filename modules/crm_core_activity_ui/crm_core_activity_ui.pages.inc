@@ -24,13 +24,7 @@ function crm_core_activity_entity_ui_get_form_wrapper($contact, $type) {
   );
 
   $activity = entity_create('crm_core_activity', $values);
-  $form = entity_ui_get_form('crm_core_activity', $activity, 'add');
-
-  // Set title
-  $crm_activity_type = crm_core_activity_types($activity->type);
-  drupal_set_title(t('Add new activity @label', array('@label' => $crm_activity_type->label)));
-
-  return $form;
+  return entity_ui_get_form('crm_core_activity', $activity, 'add');
 }
 
 /**
@@ -89,6 +83,12 @@ function crm_core_activity_form($form, &$form_state, $activity) {
       '#value' => t('Delete'),
       '#submit' => array('crm_core_activity_form_submit_delete'),
     );
+  }
+
+  // Set title.
+  if ($form_state['op'] == 'add') {
+    $crm_activity_type = crm_core_activity_types($activity->type);
+    drupal_set_title(t('Add new activity @label', array('@label' => $crm_activity_type->label)));
   }
 
   // We append the validate handler to #validate in case a form callback_wrapper
