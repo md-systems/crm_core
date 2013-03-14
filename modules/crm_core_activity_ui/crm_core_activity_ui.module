@@ -11,8 +11,8 @@
 function crm_core_activity_ui_menu() {
   foreach (crm_core_activity_types() as $type => $info) {
     $items['crm-core/contact/%crm_core_contact/activity/add/' . $type] = array(
-      'title' => 'Add activity',
-      'description' => 'Add an activity to this contact',
+      'title' => 'Add activity @type',
+      'title arguments' => array('@type' => $info->label),
       'page callback' => 'crm_core_activity_entity_ui_get_form_wrapper',
       'page arguments' => array(2, 5),
       'access callback' => 'entity_access',

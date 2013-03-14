@@ -24,7 +24,13 @@ function crm_core_activity_entity_ui_get_form_wrapper($contact, $type) {
   );
 
   $activity = entity_create('crm_core_activity', $values);
-  return entity_ui_get_form('crm_core_activity', $activity, 'add');
+  $form = entity_ui_get_form('crm_core_activity', $activity, 'add');
+
+  // Set title
+  $crm_activity_type = crm_core_activity_types($activity->type);
+  drupal_set_title(t('Add new activity @label', array('@label' => $crm_activity_type->label)));
+
+  return $form;
 }
 
 /**
@@ -88,11 +94,6 @@ function crm_core_activity_form($form, &$form_state, $activity) {
   // We append the validate handler to #validate in case a form callback_wrapper
   // is used to add validate handlers earlier.
   $form['#validate'][] = 'crm_core_activity_form_validate';
-
-  // Add after build to set proper page Title as it
-  // got set by entity_ui_main_form_defaults
-  // @see entity_ui_get_form()
-  $form['#after_build'][] = 'crm_core_activity_form_after_build';
 
   return $form;
 }
@@ -190,15 +191,4 @@ function crm_core_activity_form_delete_confirm_submit($form, &$form_state) {
   else {
     drupal_goto($destination);
   }
-}
-
-/**
- * After build callback for crm_activity_form. Set proper page title.
- */
-function crm_core_activity_form_after_build(&$form, &$form_state) {
-  if ($form_state['op'] == 'add') {
-    $crm_activity_type = crm_core_activity_types($form_state['crm_core_activity']->type);
-    drupal_set_title(t('Add new activity @label', array('@label' => $crm_activity_type->label)));
-  }
-  return $form;
 }
