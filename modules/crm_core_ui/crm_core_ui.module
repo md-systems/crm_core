@@ -153,6 +153,7 @@ function crm_core_ui_dashboard() {
           )
         ), 'error');
       }
+      drupal_flush_all_caches();
       drupal_goto('crm-core/contacts');
     }
     // If the callback returns an array instead of text, render it.
@@ -172,6 +173,7 @@ function crm_core_ui_dashboard() {
         '!here' => l(t('here'), 'admin/config/crm-core/settings'),
       )
     ));
+    drupal_flush_all_caches();
     drupal_goto('crm-core/contacts');
   }
 }
