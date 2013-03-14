@@ -17,8 +17,11 @@
 ?>
 <div class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
   <div class="content"<?php print $content_attributes; ?>>
-    <?php
-      print render($content);
-    ?>
+  <?php if ($view_mode !== 'full'): ?>
+    <h2<?php print $title_attributes; ?>><a href="<?php print base_path(); ?>crm-core/contact/<?php print $contact->contact_id; ?>"><?php print render($content['contact_name']); ?></a></h2>
+  <?php endif; ?>
+  <?php if ($view_mode === 'full'): ?>
+    <?php print render($content); ?>
+  <?php endif; ?>
   </div>
 </div>
