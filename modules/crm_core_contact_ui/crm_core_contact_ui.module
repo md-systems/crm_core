@@ -38,7 +38,8 @@ function crm_core_contact_ui_menu() {
     'page arguments' => array('crm_core_contact_ui_form', 2),
     'access callback' => 'entity_access',
     'access arguments' => array('edit', 'crm_core_contact', 2),
-    'type' => MENU_LOCAL_ACTION,
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -9,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'file' => 'crm_core_contact_ui.pages.inc',
   );
@@ -59,8 +60,7 @@ function crm_core_contact_ui_menu() {
     'page arguments' => array('crm_core_contact_ui_delete_form', 2),
     'access callback' => 'entity_access',
     'access arguments' => array('delete', 'crm_core_contact', 2),
-    'type' => MENU_LOCAL_ACTION,
-    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+    'type' => MENU_CALLBACK,
     'file' => 'crm_core_contact_ui.pages.inc',
   );
 
