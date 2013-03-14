@@ -530,7 +530,11 @@ function crm_core_contact_type_load($type, $reset = FALSE) {
  *   based on the operation performed
  */
 function crm_core_contact_type_save($contact_type) {
+  $new = empty($contact_type->is_new) ? FALSE : TRUE;
   entity_save('crm_core_contact_type', $contact_type);
+  if (isset($new)) {
+    crm_core_contact_type_initialize($contact_type->type);
+  }
 }
 
 /**
@@ -780,7 +784,7 @@ function crm_core_contact_revision_list($contact) {
     fields('rev', array('vid', 'log', 'created', 'changed', 'uid'))->
     condition('contact_id', $contact->contact_id)->
     execute()->
-    fetchAllAssoc('vid', $fetch);
+    fetchAllAssoc('vid');
 }
 
 
