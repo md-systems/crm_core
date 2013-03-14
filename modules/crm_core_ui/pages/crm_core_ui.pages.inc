@@ -144,8 +144,9 @@ function crm_core_ui_admin_config_form_validate($form, &$form_state) {
  * Submit handler for CRM Core settings form.
  */
 function crm_core_ui_admin_config_form_submit($form, &$form_state) {
-  $dashboard_enabled = $form_state['values']['crm_core_dashboard_enabled'];
-  if ($dashboard_enabled) {
+  $dashboard_enabled_current = $form_state['values']['crm_core_dashboard_enabled'];
+  $dashboard_enabled_saved = variable_get('crm_core_dashboard_enabled', FALSE);
+  if ($dashboard_enabled_current && !$dashboard_enabled_saved) {
     $item = array(
       'link_path' => 'crm-core/dashboard',
       'link_title' => 'Dashboard',
@@ -153,14 +154,16 @@ function crm_core_ui_admin_config_form_submit($form, &$form_state) {
       'weight' => 0,
     );
     menu_link_save($item);
-    menu_cache_clear_all();
+    variable_set('crm_core_dashboard_enabled', TRUE);
   }
-  else {
+  elseif (!$dashboard_enabled_current) {
     $links = menu_load_links('crm-core-menu');
     foreach ($links as $link) {
       if ($link['link_path'] == 'crm-core/dashboard') {
         menu_link_delete($link['mlid']);
       }
     }
+    variable_set('crm_core_dashboard_enabled', FALSE);
   }
+  menu_rebuild();
 }

@@ -17,12 +17,15 @@ function crm_core_ui_menu() {
     'theme callback' => 'crm_core_ui_get_theme',
   );
 
-  $items['crm-core/dashboard'] = array(
-    'title' => 'Dashboard',
-    'weight' => -10,
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'context' => MENU_CONTEXT_PAGE,
-  );
+  $dashboard_enabled = variable_get('crm_core_dashboard_enabled', FALSE);
+  if ($dashboard_enabled) {
+    $items['crm-core/dashboard'] = array(
+      'title' => 'Dashboard',
+      'weight' => -10,
+      'type' => MENU_DEFAULT_LOCAL_TASK,
+      'context' => MENU_CONTEXT_PAGE,
+    );
+  }
 
   $items['admin/structure/crm-core'] = array(
     'title' => 'CRM Core',
