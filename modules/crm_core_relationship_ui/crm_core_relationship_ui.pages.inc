@@ -26,7 +26,15 @@ function crm_core_relation_entity_ui_get_form_wrapper($contact, $type, $reverse)
     'label' => $current_type->directional && $reverse ? $current_type->reverse_label : $current_type->label,
   );
   $relation = crm_core_relation_create($values);
-
+  $contact_uri = $contact->uri();
+  $breadcrumb = array(
+    l(t('Home'), '<front>'),
+    l(t('CRM Core'), 'crm-core'),
+    l(t('Contacts'), 'crm-core/contacts'),
+    l(t($contact->label()), $contact_uri['path']),
+    l(t('Add relationship'), $contact_uri['path'] . '/relationships/add'),
+  );
+  drupal_set_breadcrumb($breadcrumb);
   return entity_ui_get_form('crm_core_relationship', $relation, 'add');
 }
 

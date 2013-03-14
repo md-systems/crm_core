@@ -361,7 +361,7 @@ function _crm_core_relationships_ui_breadcrmub($contact) {
     l(t('CRM Core'), 'crm-core'),
     l(t('Contacts'), 'crm-core/contacts'),
     l(t($contact->label()), $contact_uri['path']),
-    l(t('Relationships'), $contact_uri['path'] . '/activity'),
+    l(t('Relationships'), $contact_uri['path'] . '/relationships'),
   );
   drupal_set_breadcrumb($breadcrumb);
 }
