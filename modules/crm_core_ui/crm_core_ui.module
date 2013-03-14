@@ -168,11 +168,13 @@ function crm_core_ui_dashboard() {
   }
   else {
     // Dashboard is not configured.
-    drupal_set_message(t('No dashboard has been configured for CRM Core. Click !here to configure a dashboard.',
-      array(
-        '!here' => l(t('here'), 'admin/config/crm-core/settings'),
-      )
-    ));
+    if (user_access('administer crm-core settings')) {
+      drupal_set_message(t('No dashboard has been configured for CRM Core. Click !here to configure a dashboard.',
+        array(
+          '!here' => l(t('here'), 'admin/config/crm-core/settings'),
+        )
+      ));
+    }
     drupal_flush_all_caches();
     drupal_goto('crm-core/contacts');
   }
