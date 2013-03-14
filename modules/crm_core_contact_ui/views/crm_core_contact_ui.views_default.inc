@@ -152,7 +152,7 @@ function crm_core_contact_ui_views_default_views() {
   $handler->display->display_options['fields']['nothing_3']['table'] = 'views';
   $handler->display->display_options['fields']['nothing_3']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing_3']['label'] = 'Operations';
-  $handler->display->display_options['fields']['nothing_3']['alter']['text'] = '[nothing] | [nothing_1] | [nothing_2]';
+  $handler->display->display_options['fields']['nothing_3']['alter']['text'] = '[nothing] [nothing_1] [nothing_2]';
   /* Sort criterion: CRM Contact: Updated date */
   $handler->display->display_options['sorts']['changed']['id'] = 'changed';
   $handler->display->display_options['sorts']['changed']['table'] = 'crm_core_contact';

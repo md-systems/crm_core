@@ -19,3 +19,6 @@ files[] = crm_core_activity_ui.module
 
 ; Test
 files[] = crm_core_activity_ui.test
+
+; Styles
+stylesheets[all][] = crm_core_activity_ui.css

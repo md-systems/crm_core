@@ -24,3 +24,6 @@ files[] = crm_core_relationship_ui.module
 
 ; Test
 files[] = crm_core_relationship_ui.test
+
+; Styles
+stylesheets[all][] = crm_core_relationship_ui.css

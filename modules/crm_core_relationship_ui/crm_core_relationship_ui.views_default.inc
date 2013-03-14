@@ -156,7 +156,7 @@ function crm_core_relationship_ui_views_default_views() {
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = '';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '[edit] | [crm_core_relationship_status_1] | [delete]';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '[edit] [crm_core_relationship_status_1] [delete]';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
   /* Field: Relation: endpoints */
   $handler->display->display_options['fields']['endpoints_2']['id'] = 'endpoints_2';
@@ -302,7 +302,7 @@ function crm_core_relationship_ui_views_default_views() {
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = '';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '[delete] | [crm_core_relationship_status_1]';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '[delete] [crm_core_relationship_status_1]';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
   /* Field: Relation: endpoints */
   $handler->display->display_options['fields']['endpoints_2']['id'] = 'endpoints_2';

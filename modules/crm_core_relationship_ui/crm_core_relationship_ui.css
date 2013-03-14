@@ -1,3 +1,7 @@
 .view-crm-relationships-by-contact .views-field-nothing {
   text-align: right;
 }
+
+.view-crm-relationships-by-contact .views-field-nothing  a {
+  padding-right: 5px;
+}

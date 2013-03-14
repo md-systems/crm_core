@@ -200,7 +200,7 @@ function crm_core_activity_ui_views_default_views() {
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = 'Operations';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '[nothing_1] | [nothing_2] | [nothing_3]';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '[nothing_1] [nothing_2] [nothing_3]';
   /* Contextual filter: CRM Activity: Participants (field_activity_participants) */
   $handler->display->display_options['arguments']['field_activity_participants_target_id']['id'] = 'field_activity_participants_target_id';
   $handler->display->display_options['arguments']['field_activity_participants_target_id']['table'] = 'field_data_field_activity_participants';

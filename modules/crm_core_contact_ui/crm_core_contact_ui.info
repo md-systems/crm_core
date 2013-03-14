@@ -26,3 +26,6 @@ files[] = views/crm_core_contact_ui.views.inc
 ; Tests
 files[] = crm_core_contact_ui.test
 
+; Styles
+stylesheets[all][] = crm_core_contact_ui.css
+
