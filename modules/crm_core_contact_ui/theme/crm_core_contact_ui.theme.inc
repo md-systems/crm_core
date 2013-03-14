@@ -7,8 +7,8 @@ function theme_crm_core_contact_ui_add_list($variables) {
   if ($content) {
     $output .= '<dl>';
     foreach ($content as $item) {
-      $output .= '<dt>' . l($item['title'], $item['href'], $item['localized_options']) . '</dt>';
-      $output .= '<dd>' . filter_xss_admin($item['description']) . '</dd>';
+      $output .= '<dt>' . l(t($item['title']), $item['href'], $item['localized_options']) . '</dt>';
+      $output .= '<dd>' . t($item['description']) . '</dd>';
     }
     $output .= '</dl>';
   }

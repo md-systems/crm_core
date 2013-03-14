@@ -9,10 +9,21 @@
  * Implements hook_menu().
  */
 function crm_core_activity_ui_menu() {
+  $items['crm-core/contact/%crm_core_contact/activity/add'] = array(
+    'title' => 'Add CRM Core contact activity',
+    'page callback' => 'crm_core_activity_ui_add_activity',
+    'page arguments' => array(2),
+    'access callback' => 'entity_access',
+    'access arguments' => array('create', 'crm_core_activity'),
+    'type' => MENU_LOCAL_ACTION,
+    'file' => 'crm_core_activity_ui.pages.inc',
+  );
+
   foreach (crm_core_activity_types() as $type => $info) {
     $items['crm-core/contact/%crm_core_contact/activity/add/' . $type] = array(
       'title' => 'Add activity @type',
       'title arguments' => array('@type' => $info->label),
+      'description' => $info->description,
       'page callback' => 'crm_core_activity_entity_ui_get_form_wrapper',
       'page arguments' => array(2, 5),
       'access callback' => 'entity_access',
@@ -110,11 +121,6 @@ function crm_core_activity_ui_menu() {
  */
 function crm_core_activity_ui_menu_alter(&$items) {
   $items['admin/structure/crm-core/activity-types']['type'] = MENU_LOCAL_TASK;
-  // Set "Add activity" as local action.
-  $items['crm-core/contact/%/activity/add']['title'] = t('Add Activity');
-  $items['crm-core/contact/%/activity/add']['type'] = MENU_LOCAL_ACTION;
-  $items['crm-core/contact/%/activity/add']['context'] = MENU_CONTEXT_PAGE;
-  unset($items['crm-core/contact/%/activity/add']['tab_root']);
 }
 
 /**

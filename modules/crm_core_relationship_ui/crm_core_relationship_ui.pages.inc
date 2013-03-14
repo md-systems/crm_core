@@ -155,37 +155,37 @@ function crm_core_relationship_form_after_build(&$form, &$form_state) {
 /**
  * Return a list of links to add relationship for specific CRM contact.
  *
- * @param $crm_core_contact
+ * @param $contact
  *   Entity object of crm_core_contact type.
  */
-function crm_core_relationship_ui_add_relationship($crm_core_contact) {
+function crm_core_relationship_ui_add_relationship($contact) {
   drupal_set_title(t('Add CRM Core contact relationship'));
 
-  _crm_core_relationships_ui_breadcrmub($crm_core_contact);
+  _crm_core_relationships_ui_breadcrmub($contact);
 
   $return = array();
 
   $relationship_type_links = array();
   foreach (array(0, 1) as $reverse) {
-    $relationship_types = crm_core_relationship_load_relationship_types($crm_core_contact->type, $reverse);
+    $relationship_types = crm_core_relationship_load_relationship_types($contact->type, $reverse);
 
     foreach ($relationship_types as $relationship_type) {
       if (user_access('create relation entities of bundle ' . $relationship_type->relation_type) || user_access('create relation entities of any contact relationship')) {
-        $relationship_type_links[$relationship_type->relation_type] = l(
-          $reverse ? $relationship_type->reverse_label : $relationship_type->label,
-          'crm-core/contact/' . $crm_core_contact->contact_id . '/relationships/add/' . $relationship_type->relation_type . '/' . $reverse
+        $contact_uri = $contact->uri();
+        $href = $contact_uri['path'] . '/relationships/add/' . $relationship_type->relation_type . '/' . $reverse;
+        $title = $reverse ? $relationship_type->reverse_label : $relationship_type->label;
+        $relationship_type_links[$relationship_type->relation_type] = array(
+          'title' => $title,
+          'href' => $href,
+          'localized_options' => array(),
+          'description' => t('Create %kind relationship.', array('%kind' => $title)),
         );
-        // Add description of the relationship here.
       }
     }
   }
 
   if (!empty($relationship_type_links)) {
-    $return['links'] = array(
-      '#theme' => 'item_list',
-      '#items' => $relationship_type_links,
-      '#attributes' => array('class' => array('links', 'type-list')),
-    );
+    $return = theme('crm_core_contact_ui_add_list', array('content' => $relationship_type_links));
   }
 
   return $return;
