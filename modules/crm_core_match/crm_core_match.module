@@ -24,33 +24,14 @@ function crm_core_match_menu() {
   );
 
   foreach (crm_core_contact_types() as $type => $info) {
-    $items['admin/config/crm-core/match/' . $type] = array(
-      'title' => 'Matching Rules for @type overview',
-      'title arguments' => array('@type' => $info->name),
-      'description' => 'Edit Matching Rules for %type',
-      'description arguments' => array('%type' => $info->description),
-      'page callback' => '_crm_core_match_ui_placeholder',
-      'access callback' => TRUE,
-    );
-  }
-
-  foreach (crm_core_contact_types() as $type => $info) {
-    $items['admin/config/crm-core/match/' . $type . '/view'] = array(
-      'title' => 'View',
-      'type' => MENU_DEFAULT_LOCAL_TASK,
-      'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
-      'weight' => -10,
-    );
-  }
-
-  foreach (crm_core_contact_types() as $type => $info) {
     $items['admin/config/crm-core/match/' . $type . '/edit'] = array(
-      'title' => 'Edit',
+      'title' => 'Matching Rules for @type',
+      'title arguments' => array('@type' => $info->name),
+      'description' => 'Matching Rules for %type',
+      'description arguments' => array('%type' => $info->name),
       'page callback' => '_crm_core_match_ui_placeholder',
       'access callback' => TRUE,
-      'type' => MENU_LOCAL_TASK,
-      'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
-      'weight' => -9,
+      'file' => 'crm_core_match.admin.inc',
     );
   }
 
