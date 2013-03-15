@@ -4,3 +4,59 @@
  * @file
  *
  */
+
+/**
+ * Implements hook_menu().
+ */
+function crm_core_match_menu() {
+  $items['admin/config/crm-core/match'] = array(
+    'title' => 'Match configuration',
+    'description' => 'Settings page listing match configurations by contact type',
+    'page callback' => '_crm_core_match_ui_placeholder',
+    'access callback' => TRUE,
+  );
+
+  $items['admin/config/crm-core/match/engines'] = array(
+    'title' => 'Matching Engines',
+    'description' => 'Matching Engines Settings page',
+    'page callback' => '_crm_core_match_ui_placeholder',
+    'access callback' => TRUE,
+  );
+
+  foreach (crm_core_contact_types() as $type => $info) {
+    $items['admin/config/crm-core/match/' . $type] = array(
+      'title' => 'Matching Rules for @type overview',
+      'title arguments' => array('@type' => $info->name),
+      'description' => 'Edit Matching Rules for %type',
+      'description arguments' => array('%type' => $info->description),
+      'page callback' => '_crm_core_match_ui_placeholder',
+      'access callback' => TRUE,
+    );
+  }
+
+  foreach (crm_core_contact_types() as $type => $info) {
+    $items['admin/config/crm-core/match/' . $type . '/view'] = array(
+      'title' => 'View',
+      'type' => MENU_DEFAULT_LOCAL_TASK,
+      'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+      'weight' => -10,
+    );
+  }
+
+  foreach (crm_core_contact_types() as $type => $info) {
+    $items['admin/config/crm-core/match/' . $type . '/edit'] = array(
+      'title' => 'Edit',
+      'page callback' => '_crm_core_match_ui_placeholder',
+      'access callback' => TRUE,
+      'type' => MENU_LOCAL_TASK,
+      'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+      'weight' => -9,
+    );
+  }
+
+  return $items;
+}
+
+function _crm_core_match_ui_placeholder() {
+  return 'CRM Core Match UI would be here soon!';
+}
