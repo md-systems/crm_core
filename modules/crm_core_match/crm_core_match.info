@@ -1,0 +1,9 @@
+name = CRM Core Match
+description = CRM Core Match.
+package = CRM
+version = VERSION
+core = 7.x
+configure = admin/config/crm-core/settings
+files[] = includes/crm_core_contact.controller.inc
+dependencies[] = crm_core_contact
+dependencies[] = crm_core_profile
