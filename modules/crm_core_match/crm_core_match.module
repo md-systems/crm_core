@@ -11,16 +11,16 @@
 function crm_core_match_menu() {
   $items['admin/config/crm-core/match'] = array(
     'title' => 'Match configuration',
-    'description' => 'Settings page listing match configurations by contact type',
-    'page callback' => '_crm_core_match_ui_placeholder',
+    'description' => 'Settings page listing match engines in order they would be applied.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_core_match_admin_config_engines_form'),
     'access callback' => TRUE,
+    'file' => 'crm_core_match.admin.inc',
   );
 
   $items['admin/config/crm-core/match/engines'] = array(
-    'title' => 'Matching Engines',
-    'description' => 'Matching Engines Settings page',
-    'page callback' => '_crm_core_match_ui_placeholder',
-    'access callback' => TRUE,
+    'title' => 'Engines',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
   );
 
   foreach (crm_core_contact_types() as $type => $info) {
