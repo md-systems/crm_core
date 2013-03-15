@@ -147,7 +147,7 @@ function crm_core_contact_ui_form_submit($form, &$form_state) {
 
   // Redirect based on the button clicked.
   drupal_set_message(t('Contact saved.'));
-  $form_state['redirect'] = ($create) ? 'crm-core/contacts' : "crm-core/contact/{$contact->contact_id}";
+  $form_state['redirect'] = ($create) ? 'crm-core/contact' : "crm-core/contact/{$contact->contact_id}";
 }
 
 /**
@@ -181,7 +181,7 @@ function crm_core_contact_ui_delete_form_submit($form, &$form_state) {
   if (crm_core_contact_delete($form_state['values']['contact_id'])) {
     drupal_set_message(t('Contact deleted.'));
   }
-  $form_state['redirect'] = 'crm-core/contacts';
+  $form_state['redirect'] = 'crm-core/contact';
 }
 
 /**

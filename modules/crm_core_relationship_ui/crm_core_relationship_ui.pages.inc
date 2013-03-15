@@ -30,7 +30,7 @@ function crm_core_relation_entity_ui_get_form_wrapper($contact, $type, $reverse)
   $breadcrumb = array(
     l(t('Home'), '<front>'),
     l(t('CRM Core'), 'crm-core'),
-    l(t('Contacts'), 'crm-core/contacts'),
+    l(t('Contacts'), 'crm-core/contact'),
     l(t($contact->label()), $contact_uri['path']),
     l(t('Add relationship'), $contact_uri['path'] . '/relationships/add'),
   );

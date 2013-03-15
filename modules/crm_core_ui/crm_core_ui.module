@@ -154,7 +154,7 @@ function crm_core_ui_dashboard() {
         ), 'error');
       }
       drupal_flush_all_caches();
-      drupal_goto('crm-core/contacts');
+      drupal_goto('crm-core/contact');
     }
     // If the callback returns an array instead of text, render it.
     if (is_array($output)) {
@@ -176,7 +176,7 @@ function crm_core_ui_dashboard() {
       ));
     }
     drupal_flush_all_caches();
-    drupal_goto('crm-core/contacts');
+    drupal_goto('crm-core/contact');
   }
 }
 

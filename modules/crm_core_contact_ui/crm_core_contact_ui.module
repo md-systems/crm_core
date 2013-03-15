@@ -64,7 +64,7 @@ function crm_core_contact_ui_menu() {
     'file' => 'crm_core_contact_ui.pages.inc',
   );
 
-  $items['crm-core/contacts/add'] = array(
+  $items['crm-core/contact/add'] = array(
     'title' => 'Add a contact',
     'description' => 'Add a new contact to the CRM.',
     'page callback' => 'crm_core_contact_ui_add_page',
@@ -76,7 +76,7 @@ function crm_core_contact_ui_menu() {
     'file' => 'crm_core_contact_ui.pages.inc',
   );
   foreach (crm_core_contact_types() as $type => $contact_type) {
-    $items['crm-core/contacts/add/' . $type] = array(
+    $items['crm-core/contact/add/' . $type] = array(
       'title' => 'Add @type',
       'title arguments' => array('@type' => $contact_type->name),
       'description' => $contact_type->description,
@@ -140,7 +140,7 @@ function crm_core_contact_ui_menu_alter(&$items) {
   $items['admin/structure/crm-core/contact-types/%crm_core_contact_type/display']['context'] = MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE;
   $dashboard_enabled = variable_get('crm_core_dashboard_enabled', FALSE);
   if (!$dashboard_enabled) {
-    $items['crm-core/contacts']['type'] = MENU_DEFAULT_LOCAL_TASK;
+    $items['crm-core/contact']['type'] = MENU_DEFAULT_LOCAL_TASK;
   }
 }
 
@@ -187,7 +187,7 @@ function crm_core_contact_ui_view($contact) {
   $breadcrumb = array(
     l(t('Home'), '<front>'),
     l(t('CRM Core'), 'crm-core'),
-    l(t('Contacts'), 'crm-core/contacts'),
+    l(t('Contacts'), 'crm-core/contact'),
   );
   drupal_set_breadcrumb($breadcrumb);
   return crm_core_contact_view($contact);
