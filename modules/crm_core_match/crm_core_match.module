@@ -31,8 +31,8 @@ function crm_core_match_hook_info() {
  */
 function crm_core_match_menu() {
   $items['admin/config/crm-core/match'] = array(
-    'title' => 'Match configuration',
-    'description' => 'Settings page listing match engines in order they would be applied.',
+    'title' => 'Matching Engines',
+    'description' => 'Configure the default rules for matching duplicate contacts in CRM Core.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('crm_core_match_admin_config_engines_form'),
     'access callback' => TRUE,
