@@ -9,6 +9,7 @@
  * Matching Engines form.
  */
 function crm_core_match_admin_config_engines_form($form, &$form_state) {
+ 
   $form['#tree'] = TRUE;
 
   $form['header'] = array(
@@ -32,10 +33,10 @@ function crm_core_match_admin_config_engines_form($form, &$form_state) {
     '#type' => 'container'
   );
 
-  $engines = _crm_core_match_engines_placeholder();
+  $engines = _crm_core_match_get_engines();
   
   foreach ($engines as $index => $engine) {
-    $form['engines_container'][$engine->name]['name'] = array('#markup' => $engine->label);
+    $form['engines_container'][$engine->name]['name'] = array('#markup' => $engine->name);
     $form['engines_container'][$engine->name]['enabled'] = array(
       '#markup' => l('Disable', '<front>'),
     );
@@ -100,6 +101,21 @@ function _crm_core_match_engines_placeholder() {
 
   return array($crm_core_engine , $custom_engine);
 }
+
+
+/**
+ * Returns a list of all matching engines registered with CRM Core Match.
+ */
+function _crm_core_match_get_engines(){
+  $engines = array();
+  foreach (module_implements('crm_core_match_engine_register') as $module) {
+    $function = $module . '_crm_core_match_engine_register';
+    $engines[] = $function();
+  }
+  return $engines;
+}
+
+
 
 /**
  * Theme implementation of the crm_core_match_admin_config_engines_form form.
