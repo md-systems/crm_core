@@ -37,6 +37,7 @@ function crm_core_match_admin_config_engines_form($form, &$form_state) {
   
   foreach ($engines as $index => $engine) {
     $form['engines_container'][$engine->name]['name'] = array('#markup' => $engine->name);
+    $form['engines_container'][$engine->name]['desc'] = array('#markup' => $engine->description);
     $form['engines_container'][$engine->name]['enabled'] = array(
       '#markup' => l('Disable', '<front>'),
     );
@@ -111,6 +112,7 @@ function theme_crm_core_match_admin_config_engines_form($variables) {
     $rows[] = array(
       'data' => array(
         drupal_render($form['engines_container'][$key]['name']),
+        drupal_render($form['engines_container'][$key]['desc']),
         drupal_render($form['engines_container'][$key]['enabled']),
         drupal_render($form['engines_container'][$key]['settings']),
         drupal_render($form['engines_container'][$key]['weight']),
@@ -119,7 +121,7 @@ function theme_crm_core_match_admin_config_engines_form($variables) {
     );
   }
 
-  $header = array(t('Name'), t('Enabled'), t('Operations'), t('Weight'));
+  $header = array(t('Name'), t('Description'), t('Enabled'), t('Operations'), t('Weight'));
   $form['engines_container']['content']['#markup'] = theme('table', array(
     'header' => $header,
     'rows' => $rows,

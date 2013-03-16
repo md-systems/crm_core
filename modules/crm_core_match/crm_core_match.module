@@ -72,9 +72,9 @@ function crm_core_match_theme() {
 function crm_core_match_crm_core_match_engine_register(){
   
   $info = new stdClass();
-  $info->name = 'CRM Core Match Engine';
+  $info->name = '(test) CRM Core Match Engine';
   $info->machine_name = 'test_matching_engine';
-  $info->description = 'This is just a test, to see how matching engines show up in CRM Core Match. Remove this before the module is launched.';
+  $info->description = 'This is just a test, to see how matching engines show up in CRM Core Match. Remove this from CRM Core Match before the module is launched.';
   $info->settings = array(
     array('path' => '<front>', 'label' => 'Test Settings Page', 'name' => 'settings'),
     array('path' => '<front>', 'label' => 'Other Test Settings Page', 'name' => 'settings2'),
