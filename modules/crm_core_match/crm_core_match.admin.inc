@@ -33,6 +33,7 @@ function crm_core_match_admin_config_engines_form($form, &$form_state) {
   );
 
   $engines = _crm_core_match_engines_placeholder();
+  
   foreach ($engines as $index => $engine) {
     $form['engines_container'][$engine->name]['name'] = array('#markup' => $engine->label);
     $form['engines_container'][$engine->name]['enabled'] = array(
@@ -72,8 +73,14 @@ function crm_core_match_admin_config_engines_form($form, &$form_state) {
 
 /**
  * Emulates return from module_implements('')
+ * 
+ * @TODO: we need to define the structure for a matching engine
+ * - what it returns when identifying itself
+ * - the structure of the object itself
+ * - where it should live: should not be in the crm core match module
  */
 function _crm_core_match_engines_placeholder() {
+  
   $crm_core_engine = new stdClass();
   $crm_core_engine->name = 'crm_core_match_engine';
   $crm_core_engine->label = 'CRM Core Match Engine';

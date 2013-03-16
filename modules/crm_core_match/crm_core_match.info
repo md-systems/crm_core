@@ -1,7 +1,8 @@
 name = CRM Core Match
-description = CRM Core Match.
+description = Provides framework for identifying duplicate contacts in CRM Core contact records.
 package = CRM Core
 core = 7.x
 configure = admin/config/crm-core/match
-files[] = includes/crm_core_contact.controller.inc
+files[] = includes/crm_core_match.inc
+; files[] = includes/crm_core_contact.controller.inc
 dependencies[] = crm_core_contact

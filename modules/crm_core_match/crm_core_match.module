@@ -20,6 +20,14 @@ function crm_core_match_hook_info() {
 
 /**
  * Implements hook_menu().
+ * 
+ * @todo: this needs to change...
+ * - there should be a second module
+ * - call it default matching engine
+ * - this is where the links for the matching engine will be defined
+ * - these links might need to be defined as part of the entity
+ * - which entity?
+ * 
  */
 function crm_core_match_menu() {
   $items['admin/config/crm-core/match'] = array(
