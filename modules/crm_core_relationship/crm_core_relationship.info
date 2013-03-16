@@ -1,6 +1,6 @@
 name = CRM Core Relationship
 description = Provide relationship between contacts
-package = CRM
+package = CRM Core
 core = 7.x
 
 

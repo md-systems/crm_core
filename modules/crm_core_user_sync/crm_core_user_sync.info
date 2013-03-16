@@ -1,6 +1,6 @@
 name = CRM Core User Synchronization
 description = Synchronizes crm contacts with users.
-package = CRM
+package = CRM Core
 core = 7.x
 configure = admin/config/crm-core/user-sync
 

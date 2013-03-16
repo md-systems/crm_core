@@ -1,6 +1,6 @@
 name = CRM Core Activity UI
 description = User Interface for activities.
-package = CRM
+package = CRM Core
 core = 7.x
 configure = admin/structure/crm-core/activity-types
 

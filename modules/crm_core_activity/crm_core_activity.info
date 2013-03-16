@@ -1,6 +1,6 @@
 name = CRM Core Activity
 description = Provides an entity for recording a contact's activities.
-package = CRM
+package = CRM Core
 core = 7.x
 
 

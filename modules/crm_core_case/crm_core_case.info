@@ -1,6 +1,6 @@
 name = CRM Core Case
 description = Provide case entity.
-package = CRM
+package = CRM Core
 core = 7.x
 
 dependencies[] = entity

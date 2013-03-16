@@ -1,6 +1,6 @@
 name = CRM Core Contact UI
 description = Provides a user interface for CRM Core Contact.
-package = CRM
+package = CRM Core
 core = 7.x
 configure = admin/structure/crm-core/contact-types
 

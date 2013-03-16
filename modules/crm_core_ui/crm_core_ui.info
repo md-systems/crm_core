@@ -1,6 +1,6 @@
 name = CRM Core UI
 description = User Interface for CRM Core.
-package = CRM
+package = CRM Core
 core = 7.x
 configure = admin/config/crm-core
 

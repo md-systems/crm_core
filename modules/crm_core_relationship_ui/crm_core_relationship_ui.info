@@ -1,6 +1,6 @@
 name = CRM Core Relationship UI
 description = User Interface for relationships between contacts. Back end is Relation module.
-package = CRM
+package = CRM Core
 core = 7.x
 configure = admin/structure/crm-core/relationship-types
 

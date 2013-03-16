@@ -1,6 +1,6 @@
 name = CRM Core Contact
 description = Provides default CRM Core Contact entities and the ability to create more.
-package = CRM
+package = CRM Core
 core = 7.x
 
 

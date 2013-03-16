@@ -1,6 +1,6 @@
 name = CRM Core Match
 description = CRM Core Match.
-package = CRM
+package = CRM Core
 core = 7.x
 configure = admin/config/crm-core/match
 files[] = includes/crm_core_contact.controller.inc
