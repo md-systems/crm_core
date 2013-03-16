@@ -1,5 +1,16 @@
 <?php 
 
+function crm_core_default_matching_engine_permission() {
+  return array(
+    'modify default matching engine rules' => array(
+      'title' => t('Modify default matching engine rules'),
+      'description' => t('Allow users to modify the rules associated with the CRM Core Match default matching engine.'),
+    ),
+  );
+}
+
+
+
 /**
  * Implements hook_menu().
  * 
@@ -17,12 +28,12 @@ function crm_core_default_matching_engine_menu() {
       'title arguments' => array('@type' => $info->name),
       'description' => 'Matching Rules for %type',
       'description arguments' => array('%type' => $info->name),
-      'page callback' => '_crm_core_default_matching_engine_placeholder',
-      'access callback' => TRUE,
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('_crm_core_default_matching_engine_form', 4),
+      'access arguments' => array('modify default matching engine rules'),
       'file' => 'crm_core_default_matching_engine.admin.inc',
     );
   }
-
   return $items;
 }
 
@@ -35,7 +46,7 @@ function crm_core_default_matching_engine_crm_core_match_engine_register(){
   $info = new stdClass();
   $info->name = 'Default Matching Engine';
   $info->machine_name = 'default_matching_engine';
-  $info->description = 'This is the default matching engine from CRM Core.';
+  $info->description = 'This is a simple matching engine from CRM Core. Allows administrators to specify matching rules for individual contact types on a field-by-field basis.';
   $info->settings = array();
   $default = new DefaultMatchingEngine($info);
   return $default->matchEngineInfo();
