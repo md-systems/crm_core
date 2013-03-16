@@ -1,13 +1,9 @@
 <?php
 
-
-dpm('yo yo yo');
-
 /**
  * @file
  * Contains the matching engine.
  */
-
 
 /*
  * Interface for matching engines
@@ -34,8 +30,11 @@ interface CrmCoreMatchEngineInterface {
    * 
    * Accepts contact data and a list of ids for identifying matches.
    * 
+   * @param object $contactData: a contact object used to pass data for identifying a match
+   * @param array $ids: an array of entity ids for potential matches.
+   * 
    */
-  public function execute();
+  public function execute(&$contactData, &$ids = array());
   
 }
 
@@ -119,17 +118,11 @@ class CrmCoreMatchEngine implements CrmCoreMatchEngineInterface {
    * 
    * Accepts a list of matches and contact information to identify potential duplicates.
    * 
-   * @param object $contactData: a contact object used to pass data for identifying a match
-   * @param array $ids: an array of entity ids for potential matches.
-   * 
    * @see CrmCoreMatchEngineInterface::execute()
    */
   public function execute(&$contactData, &$ids = array()){
-    
-    
-    
+    return false;
   }
-  
   
 }
 
