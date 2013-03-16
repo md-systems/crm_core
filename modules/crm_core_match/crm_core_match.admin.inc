@@ -72,39 +72,22 @@ function crm_core_match_admin_config_engines_form($form, &$form_state) {
   return $form;
 }
 
-/**
- * Emulates return from module_implements('')
- * 
- * @TODO: we need to define the structure for a matching engine
- * - what it returns when identifying itself
- * - the structure of the object itself
- * - where it should live: should not be in the crm core match module
- */
-function _crm_core_match_engines_placeholder() {
-  
-  $crm_core_engine = new stdClass();
-  $crm_core_engine->name = 'crm_core_match_engine';
-  $crm_core_engine->label = 'CRM Core Match Engine';
-  $crm_core_engine->description = 'CRM Core Match Engine';
-  $crm_core_engine->settings = array(
-    array('path' => '<front>', 'label' => 'Settings', 'name' => 'settings'),
-  );
-
-  $custom_engine = new stdClass();
-  $custom_engine->name = 'custom_match_engine';
-  $custom_engine->label = 'Custom Match Engine';
-  $custom_engine->description = 'Custom Match Engine';
-  $custom_engine->settings = array(
-    array('path' => '<front>', 'label' => 'Settings', 'name' => 'settings'),
-    array('path' => '<front>', 'label' => 'Settings 2', 'name' => 'settings2'),
-  );
-
-  return array($crm_core_engine , $custom_engine);
-}
-
 
 /**
  * Returns a list of all matching engines registered with CRM Core Match.
+ * 
+ * This should return a list of matching engines registered with CRM Core 
+ * Match, in order. Any matching engines added since the last time the list
+ * of matching engines was changed should appear at the bottom.
+ * 
+ * @TODO: should this actually be sorted? Is it possible this should just
+ *   be a list of the engines?
+ *   
+ * @TODO: should this be keyed by machine name?
+ * 
+ * @TODO: add caching.
+ * 
+ * @return array $engines: a list of engines for CRM Core
  */
 function _crm_core_match_get_engines(){
   $engines = array();
