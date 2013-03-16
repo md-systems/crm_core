@@ -4,5 +4,4 @@ package = CRM Core
 core = 7.x
 configure = admin/config/crm-core/match
 files[] = includes/crm_core_match.inc
-; files[] = includes/crm_core_contact.controller.inc
 dependencies[] = crm_core_contact
