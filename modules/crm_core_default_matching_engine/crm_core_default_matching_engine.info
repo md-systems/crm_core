@@ -6,3 +6,4 @@ core = 7.x
 ; this is where the controller is defined
 ; files[] = includes/crm_core_contact.controller.inc
 dependencies[] = crm_core_match
+files[] = includes/DefaultMatchingEngine.inc
