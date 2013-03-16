@@ -1,5 +1,31 @@
 <?php 
 
+/**
+ * Implements hook_menu().
+ * 
+ * @TODO: improve this, way too many links appearing on the config page
+ * 
+ * @TODO: links should point to something in the structure section
+ *   - this is too important
+ * 
+ */
+function crm_core_default_matching_engine_menu() {
+  
+  foreach (crm_core_contact_types() as $type => $info) {
+    $items['admin/config/crm-core/default_match/' . $type . '/edit'] = array(
+      'title' => 'Matching Rules for @type',
+      'title arguments' => array('@type' => $info->name),
+      'description' => 'Matching Rules for %type',
+      'description arguments' => array('%type' => $info->name),
+      'page callback' => '_crm_core_default_matching_engine_placeholder',
+      'access callback' => TRUE,
+      'file' => 'crm_core_default_matching_engine.admin.inc',
+    );
+  }
+
+  return $items;
+}
+
 
 /**
  * Implements hook_crm_core_match_engine_register
