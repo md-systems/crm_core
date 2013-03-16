@@ -43,19 +43,7 @@ function crm_core_match_menu() {
     'title' => 'Engines',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-
-  foreach (crm_core_contact_types() as $type => $info) {
-    $items['admin/config/crm-core/match/' . $type . '/edit'] = array(
-      'title' => 'Matching Rules for @type',
-      'title arguments' => array('@type' => $info->name),
-      'description' => 'Matching Rules for %type',
-      'description arguments' => array('%type' => $info->name),
-      'page callback' => '_crm_core_match_ui_placeholder',
-      'access callback' => TRUE,
-      'file' => 'crm_core_match.admin.inc',
-    );
-  }
-
+  
   return $items;
 }
 
