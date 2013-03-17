@@ -6,7 +6,13 @@
  */
 class nameMatchField extends CrmCoreMatchField{
   
-  public function fieldRender(){
+  
+  
+  public function fieldRender($formElement, $formInfo){
+    
+    dpm($formElement);
+    dpm($formInfo);
+    
     
     /*
      * Need to add a set of form elements

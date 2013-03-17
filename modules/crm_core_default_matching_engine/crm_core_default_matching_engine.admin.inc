@@ -100,7 +100,7 @@ function crm_core_default_matching_engine_form ($form, &$form_state, $contact_ty
       // need to pass in the form array by reference and allow it to be modified
       
       $obj = new $fieldHandler();
-      $obj->fieldRender();
+      $obj->fieldRender($field, $field_info);
       
       // @TODO: need to add something that adds the output of fieldRender to the form
       // the output of fieldrender can be one field, or it can be many
