@@ -2,7 +2,19 @@
 
 /**
  * @file
- *
+ * Manages matching engines for identifying duplicate contacts in CRM Core.
+ * Allows CRM Core to install, enable and disable matching engines.
+ * 
+ * A matching engine is used to do the following:
+ * 
+ * - identify duplicate contact records
+ * - inject data into contact records being saved
+ * - carry out other scripted operations not easily handled in the normal bootstrapping process
+ * 
+ * This module does not define any matching engines itself, it only provides the framework
+ * through which they can be applied to new contacts being created in the database.
+ * 
+ * @TODO: add hooks for altering the submission process
  */
 
 /**
