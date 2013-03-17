@@ -26,7 +26,7 @@ function _crm_core_default_matching_engine_placeholder() {
  * @param unknown_type $form
  * @param unknown_type $form_state
  */
-function crm_core_default_matching_engine_form ($form, &$form_state){
+function crm_core_default_matching_engine_form ($form, &$form_state, $contact_type){
   
   $form['enabled'] = array(
     '#type' => 'checkbox',
@@ -62,11 +62,12 @@ function crm_core_default_matching_engine_form ($form, &$form_state){
   
   // dpm(field_info_instance('crm_core_contact', 'contact_name', 'individual'));
   
-  foreach(field_info_instances('crm_core_contact', 'individual') as $field_name => $field) {
+  foreach(field_info_instances('crm_core_contact', $contact_type) as $field_name => $field) {
     
     // dpm($field_name);
     // dpm($field);
     
+    // start off by getting additional information about the field
     $field_info = field_info_field($field_name);
     
     // once we know the field type, we need to load some information about the fieldtype
