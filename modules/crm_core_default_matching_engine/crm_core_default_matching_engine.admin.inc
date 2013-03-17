@@ -60,19 +60,10 @@ function crm_core_default_matching_engine_form ($form, &$form_state, $contact_ty
     '#type' => 'container'
   );
   
-  // dpm(field_info_instance('crm_core_contact', 'contact_name', 'individual'));
-  
-  /**
-   * This returns a list of all fields associated with the selected contact type
-   */
+  // This returns a list of all fields associated with the selected contact type
   foreach(field_info_instances('crm_core_contact', $contact_type) as $field_name => $field) {
     
-    // dpm($field_name);
-    // dpm($field);
-    
-    /**
-     * This returns some additional information about the field
-     */
+    // This returns some additional information about the field
     $field_info = field_info_field($field_name);
     
     /**
@@ -80,17 +71,6 @@ function crm_core_default_matching_engine_form ($form, &$form_state, $contact_ty
      * for it. Some fields are going to have multiple rows (for instance,
      * name fields) and need to be handled a little differently.
      */
-    
-    // so, check to see if there is a handler for the field
-    
-    
-    // once we know the field type, we need to load some information about the fieldtype
-    // in order to allow the proper operators to appear.
-    
-    // dpm($field_info);
-    
-    // we want to check if there is an include file with a class with the same name.
-    // if so, great, we are ready to rock! If not, we will have to generate some default data
     
     $fieldHandler = $field_info['type'] . 'MatchField';
     
@@ -100,7 +80,7 @@ function crm_core_default_matching_engine_form ($form, &$form_state, $contact_ty
       // need to pass in the form array by reference and allow it to be modified
       
       $obj = new $fieldHandler();
-      $obj->fieldRender($field, $field_info);
+      $obj->fieldRender($field, $field_info, $form);
       
       // @TODO: need to add something that adds the output of fieldRender to the form
       // the output of fieldrender can be one field, or it can be many
