@@ -47,10 +47,6 @@ function crm_core_match_menu() {
   return $items;
 }
 
-function _crm_core_match_ui_placeholder() {
-  return 'CRM Core Match UI would be here soon!';
-}
-
 /**
  * Implements hook_theme
  */
