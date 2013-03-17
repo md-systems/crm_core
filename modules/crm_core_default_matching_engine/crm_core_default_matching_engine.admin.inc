@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * @file
+ * Admnistrative screens.
+ */
+
+/**
+ * Placeholder for matching engine configuration pages
+ * @TODO: remove this function, it's no longer needed
+ */
 function _crm_core_default_matching_engine_placeholder() {
   
   $text = 'CRM Core Match UI would be here soon!';
@@ -12,7 +21,11 @@ function _crm_core_default_matching_engine_placeholder() {
   return $text;
 }
 
-
+/**
+ * Creates a form for customizing the match rules for an individual contact type.
+ * @param unknown_type $form
+ * @param unknown_type $form_state
+ */
 function crm_core_default_matching_engine_form ($form, &$form_state){
   
   $form['enabled'] = array(
@@ -43,14 +56,26 @@ function crm_core_default_matching_engine_form ($form, &$form_state){
     '#title' => t('Field Matching'),
   );
   
-  
   $form['field_matching'] = array(
     '#type' => 'container'
   );
 
+  
+  // dpm(field_info_instance('crm_core_contact', 'contact_name', 'individual'));
+  
   foreach(field_info_instances('crm_core_contact', 'individual') as $field_name => $field) {
-    dpm($field_name);
-    dpm($field);
+    
+    // dpm($field_name);
+    // dpm($field);
+    
+    $field_info = field_info_field($field_name);
+    
+    // once we know the field type, we need to load some information about the fieldtype
+    // in order to allow the proper operators to appear.
+    
+    
+    
+    // dpm($field_info);
 
     $form['field_matching'][$field_name]['check'] = array(
       '#type' => 'checkbox',

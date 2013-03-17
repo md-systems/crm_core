@@ -1,5 +1,15 @@
 <?php 
 
+/**
+ * @file
+ * The default matching engine for CRM Core.
+ * Identifies duplicate contacts in the system using criteria
+ * defined by users through the configuration tools.
+ */
+
+/**
+ * Implements hook_permissions
+ */
 function crm_core_default_matching_engine_permission() {
   return array(
     'modify default matching engine rules' => array(
