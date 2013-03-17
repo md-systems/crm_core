@@ -5,7 +5,7 @@ class CRMCoreRelationshipUITestCase extends DrupalWebTestCase {
     return array(
       'name' => t('Relationship UI'),
       'description' => t('Test create/edit/delete relations.'),
-      'group' => t('Drupal CRM'),
+      'group' => t('CRM Core'),
     );
   }
 
@@ -29,10 +29,10 @@ class CRMCoreRelationshipUITestCase extends DrupalWebTestCase {
 
     // Create organization and individual contacts.
     $individual_contact = CRMCoreContactUITestCase::individualContactValues();
-    $this->drupalPost('crm-core/contact/add/individual', $individual_contact, t('Save Contact'));
+    $this->drupalPost('crm-core/contact/add/individual', $individual_contact, crm_core_contact_ui_save_contact_button_name('individual'));
 
     $organization_contact = CRMCoreContactUITestCase::organizationContactValues();
-    $this->drupalPost('crm-core/contact/add/organization', $organization_contact, t('Save Contact'));
+    $this->drupalPost('crm-core/contact/add/organization', $organization_contact, crm_core_contact_ui_save_contact_button_name('organization'));
 
     // Ensure Relationships tab on contact view page.
     $this->drupalGet('crm-core/contact/1');
@@ -46,7 +46,7 @@ class CRMCoreRelationshipUITestCase extends DrupalWebTestCase {
     // Assert standard relationship types.
     $this->drupalGet('crm-core/contact/1/relationships/add');
     $this->assertLink(t('Employee of'));
-    $this->assertLink(t('Friend'));
+    $this->assertLink(t('Friend of'));
     $this->assertLink(t('Member of'));
 
     // Create relationship "Employer of"

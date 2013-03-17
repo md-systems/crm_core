@@ -104,15 +104,6 @@ function crm_core_contact_ui_form($form, &$form_state, $contact) {
 }
 
 /**
- * Returns save contact button name depending on contact type.
- */
-function crm_core_contact_ui_save_contact_button_name($contact_type) {
-  return t('Save !contact_type', array(
-    '!contact_type' => crm_core_contact_type_get_name($contact_type)
-  ));
-}
-
-/**
  * Validation callback for crm_core_contact_ui_form().
  */
 function crm_core_contact_ui_form_validate($form, &$form_state) {

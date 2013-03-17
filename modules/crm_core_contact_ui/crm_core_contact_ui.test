@@ -5,7 +5,7 @@ class CRMCoreContactUITestCase extends DrupalWebTestCase {
     return array(
       'name' => t('Contact UI'),
       'description' => t('Test create/edit/delete contacts.'),
-      'group' => t('Drupal CRM'),
+      'group' => t('CRM Core'),
     );
   }
 
@@ -13,7 +13,18 @@ class CRMCoreContactUITestCase extends DrupalWebTestCase {
    * Enable dependency modules.
    */
   public function setUp() {
-    parent::setUp(array('ctools', 'entity', 'views', 'image', 'name', 'crm_core', 'addressfield', 'email', 'link', 'cck_phone', 'field_group', 'name', 'crm_core_contact', 'crm_core_contact_ui'));
+    parent::setUp(array(
+      'ctools',
+      'entity',
+      'views',
+      'image',
+      'crm_core',
+      'cck_phone',
+      'field_group',
+      'name',
+      'crm_core_contact',
+      'crm_core_contact_ui'
+    ));
   }
 
   /**
@@ -28,7 +39,7 @@ class CRMCoreContactUITestCase extends DrupalWebTestCase {
     // There should be no contacts available after fresh installation and
     // there is link to create new contacts.
     $this->drupalGet('crm-core/contact');
-    $this->assertText(t('There are no contacts in the CRM.  Add one by clicking above.'), t('No contacts available after fresh installation.'));
+    $this->assertText(t('There are no contacts available. Add one now.'), t('No contacts available after fresh installation.'));
     $this->assertLink(t('Add a contact'));
 
     // Open page crm-core/contact/add and assert standard contact types available.
@@ -133,7 +144,7 @@ class CRMCoreContactUITestCase extends DrupalWebTestCase {
     $this->assertNoLink($organization_node['contact_name[und][0][given]'], 0, t('Deleted contact title no more listed.'));
 
     // Assert that there are no contacts left.
-    $this->assertText(t('There are no contacts in the CRM.  Add one by clicking above.'), t('No contacts available after fresh installation.'));
+    $this->assertText(t('There are no contacts available. Add one now.'), t('No contacts available after fresh installation.'));
   }
 
   /**

@@ -192,3 +192,12 @@ function crm_core_contact_ui_view($contact) {
   drupal_set_breadcrumb($breadcrumb);
   return crm_core_contact_view($contact);
 }
+
+/**
+ * Returns save contact button name depending on contact type.
+ */
+function crm_core_contact_ui_save_contact_button_name($contact_type) {
+  return t('Save !contact_type', array(
+    '!contact_type' => crm_core_contact_type_get_name($contact_type)
+  ));
+}

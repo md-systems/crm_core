@@ -7,9 +7,9 @@
 class CRMCoreContactTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => 'Contact type',
+      'name' => 'Contact types',
       'description' => 'Tests for contact types.',
-      'group' => 'Drupal CRM',
+      'group' => 'CRM Core',
     );
   }
 
