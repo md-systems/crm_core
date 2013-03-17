@@ -29,7 +29,7 @@ function crm_core_default_matching_engine_menu() {
       'description' => 'Matching Rules for %type',
       'description arguments' => array('%type' => $info->name),
       'page callback' => 'drupal_get_form',
-      'page arguments' => array('_crm_core_default_matching_engine_form', 4),
+      'page arguments' => array('crm_core_default_matching_engine_form', 4),
       'access arguments' => array('modify default matching engine rules'),
       'file' => 'crm_core_default_matching_engine.admin.inc',
     );
@@ -53,5 +53,14 @@ function crm_core_default_matching_engine_crm_core_match_engine_register(){
   
 }
 
-
-
+/**
+ * Implements hook_theme
+ */
+function crm_core_default_matching_engine_theme() {
+  return array(
+    'crm_core_default_matching_engine_form' => array(
+      'render element' => 'form',
+      'file' => 'crm_core_default_matching_engine.admin.inc',
+    ),
+  );
+}
