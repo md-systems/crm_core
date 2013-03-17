@@ -4,66 +4,48 @@
 /**
  * Class for evaluating name fields.
  */
-class nameMatchField extends CrmCoreMatchField{
+class nameMatchField extends CrmCoreMatchField {
   
+  /**
+   * This function is going to add a number of fields
+   * based on what the name field is configured to display.
+   * 
+   * The name field uses text and select fields to set values
+   * we will need to pass information into these other namehandlers
+   * to get the right records to pass back
+   * 
+   * @see CrmCoreMatchField::fieldRender()
+   */
   
-  
-  public function fieldRender($formElement, $formInfo){
+  public function fieldRender($formElement, $formInfo, &$form){
     
-    dpm($formElement);
-    dpm($formInfo);
-    
-    
-    /*
-     * Need to add a set of form elements
-     * Should only add the form elements that are enabled for the contact type
-     * The structure will look like this...
-     * 
-    $form['field_matching'][$field_name]['check'] = array(
-      '#type' => 'checkbox',
-      '#title' => '',
-    );
-    $form['field_matching'][$field_name]['name'] = array(
-      '#type' => 'item',
-      '#markup' => $field['label'],
-    );
-    $form['field_matching'][$field_name]['fieldtype'] = array(
-      '#type' => 'item',
-      '#markup' => $field_info['type'],
-    );
-    
-    // @TODO: add a selector for the logical operator
-    $form['field_matching'][$field_name]['operator'] = array(
-      '#type' => 'item',
-      '#markup' => '---',
-    );
-    
-    // @TODO: add a textfield for any extra information that's needed
-    $form['field_matching'][$field_name]['options'] = array(
-      '#type' => 'item',
-      '#markup' => '---',
-    );
-    
-    // @TODO: add a textfield for any extra information that's needed
-    $form['field_matching'][$field_name]['score'] = array(
-      '#type' => 'textfield',
-      '#title' => 'Score',
-      '#maxlength' => 28,
-      '#title_display' => 'invisible',
-      '#default_value' => 0,
-    );
-    
-    // @TODO: get the actual weight as the default value
-    $form['field_matching'][$field_name]['weight'] = array(
-      '#type' => 'weight',
-      '#title_display' => 'invisible',
-      '#default_value' => 0,
-      '#attributes' => array(
-        'class' => array('crm-core-match-engine-order-weight'),
-      ),
-    );    
-    */
-    
+    // this works
+    foreach ($formInfo['columns'] as $item => $info){
+      if($formElement['settings']['inline_css'][$item] != 'display:none'){
+        
+        // construct some fake values to pass to the handler
+        // title will be a composite of the field name and the field part
+        // i.e. contact_name_given
+        
+        // @TODO: get the real name of the field in there, contact_field_ is not actually the real name...
+        // @TODO: add some extra text to the label to indicate where this came from
+        $temp['field_name'] = 'contact_field_' . $item;
+        $temp['label'] = $formInfo['settings']['labels'][$item];
+        
+        if(isset($formElement['settings'][$item . '_field'])){
+          dpm( $item . ': this is a select field');
+          $item = new selectMatchField;
+          $item->fieldRender($temp, $formInfo, $form);
+        } else {
+          dpm( $item . ': this is a text field');
+          $item = new textMatchField;
+          $item->fieldRender($temp, $formInfo, $form);
+        }
+        
+      }
+      
+    }
+
   }
   
   public function operators(){
