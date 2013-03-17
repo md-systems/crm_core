@@ -11,3 +11,6 @@ files[] = includes/DefaultMatchingEngine.inc
 
 ; handlers for various field types
 files[] = includes/nameMatchField.inc
+files[] = includes/textMatchField.inc
+files[] = includes/selectMatchField.inc
+
