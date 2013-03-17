@@ -59,7 +59,6 @@ function crm_core_default_matching_engine_form ($form, &$form_state){
   $form['field_matching'] = array(
     '#type' => 'container'
   );
-
   
   // dpm(field_info_instance('crm_core_contact', 'contact_name', 'individual'));
   
@@ -72,8 +71,6 @@ function crm_core_default_matching_engine_form ($form, &$form_state){
     
     // once we know the field type, we need to load some information about the fieldtype
     // in order to allow the proper operators to appear.
-    
-    
     
     // dpm($field_info);
 
@@ -93,9 +90,18 @@ function crm_core_default_matching_engine_form ($form, &$form_state){
     );
     
     // @TODO: add a textfield for any extra information that's needed
-    $form['field_matching'][$field_name]['extra'] = array(
+    $form['field_matching'][$field_name]['options'] = array(
       '#type' => 'item',
       '#markup' => '---',
+    );
+    
+    // @TODO: add a textfield for any extra information that's needed
+    $form['field_matching'][$field_name]['score'] = array(
+      '#type' => 'textfield',
+      '#title' => 'Score',
+      '#maxlength' => 28,
+      '#title_display' => 'invisible',
+      '#default_value' => 0,
     );
     
     // @TODO: get the actual weight as the default value
@@ -136,14 +142,15 @@ function theme_crm_core_default_matching_engine_form($variables) {
         drupal_render($form['field_matching'][$key]['check']),
         drupal_render($form['field_matching'][$key]['name']),
         drupal_render($form['field_matching'][$key]['operator']),
-        drupal_render($form['field_matching'][$key]['extra']),
+        drupal_render($form['field_matching'][$key]['options']),
+        drupal_render($form['field_matching'][$key]['score']),
         drupal_render($form['field_matching'][$key]['weight']),
       ),
       'class' => array('draggable'),
     );
   }
 
-  $header = array('', t('Name'), t('Description'), t('Enabled'), t('Operator'), t('Extra'), t('Weight'));
+  $header = array(t('Enabled'), t('Name'), t('Operator'), t('Options'), t('Score'), t('Weight'));
   $form['field_matching']['content']['#markup'] = theme('table', array(
     'header' => $header,
     'rows' => $rows,
