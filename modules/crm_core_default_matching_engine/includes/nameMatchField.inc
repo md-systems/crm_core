@@ -33,11 +33,11 @@ class nameMatchField extends CrmCoreMatchField {
         $temp['label'] = $formInfo['settings']['labels'][$item];
         
         if(isset($formElement['settings'][$item . '_field'])){
-          dpm( $item . ': this is a select field');
+          // dpm( $item . ': this is a select field');
           $item = new selectMatchField;
           $item->fieldRender($temp, $formInfo, $form);
         } else {
-          dpm( $item . ': this is a text field');
+          // dpm( $item . ': this is a text field');
           $item = new textMatchField;
           $item->fieldRender($temp, $formInfo, $form);
         }
