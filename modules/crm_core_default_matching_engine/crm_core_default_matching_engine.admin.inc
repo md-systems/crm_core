@@ -62,58 +62,98 @@ function crm_core_default_matching_engine_form ($form, &$form_state, $contact_ty
   
   // dpm(field_info_instance('crm_core_contact', 'contact_name', 'individual'));
   
+  /**
+   * This returns a list of all fields associated with the selected contact type
+   */
   foreach(field_info_instances('crm_core_contact', $contact_type) as $field_name => $field) {
     
     // dpm($field_name);
     // dpm($field);
     
-    // start off by getting additional information about the field
+    /**
+     * This returns some additional information about the field
+     */
     $field_info = field_info_field($field_name);
+    
+    /**
+     * We now have enough information about the field to render a row
+     * for it. Some fields are going to have multiple rows (for instance,
+     * name fields) and need to be handled a little differently.
+     */
+    
+    // so, check to see if there is a handler for the field
+    
     
     // once we know the field type, we need to load some information about the fieldtype
     // in order to allow the proper operators to appear.
     
     // dpm($field_info);
+    
+    // we want to check if there is an include file with a class with the same name.
+    // if so, great, we are ready to rock! If not, we will have to generate some default data
+    
+    $fieldHandler = $field_info['type'] . 'MatchField';
+    
+    if(class_exists($fieldHandler)){
+      
+      // @TODO: need to modify interface and classes to accept field and field info
+      // need to pass in the form array by reference and allow it to be modified
+      
+      $obj = new $fieldHandler();
+      $obj->fieldRender();
+      
+      // @TODO: need to add something that adds the output of fieldRender to the form
+      // the output of fieldrender can be one field, or it can be many
+      
+      
+    } else {
 
-    $form['field_matching'][$field_name]['check'] = array(
-      '#type' => 'checkbox',
-      '#title' => '',
-    );
-    $form['field_matching'][$field_name]['name'] = array(
-      '#type' => 'item',
-      '#markup' => $field['label'],
-    );
-    
-    // @TODO: add a selector for the logical operator
-    $form['field_matching'][$field_name]['operator'] = array(
-      '#type' => 'item',
-      '#markup' => '---',
-    );
-    
-    // @TODO: add a textfield for any extra information that's needed
-    $form['field_matching'][$field_name]['options'] = array(
-      '#type' => 'item',
-      '#markup' => '---',
-    );
-    
-    // @TODO: add a textfield for any extra information that's needed
-    $form['field_matching'][$field_name]['score'] = array(
-      '#type' => 'textfield',
-      '#title' => 'Score',
-      '#maxlength' => 28,
-      '#title_display' => 'invisible',
-      '#default_value' => 0,
-    );
-    
-    // @TODO: get the actual weight as the default value
-    $form['field_matching'][$field_name]['weight'] = array(
-      '#type' => 'weight',
-      '#title_display' => 'invisible',
-      '#default_value' => 0,
-      '#attributes' => array(
-        'class' => array('crm-core-match-engine-order-weight'),
-      ),
-    );
+      $form['field_matching'][$field_name]['check'] = array(
+        '#type' => 'checkbox',
+        '#title' => '',
+      );
+      $form['field_matching'][$field_name]['name'] = array(
+        '#type' => 'item',
+        '#markup' => $field['label'],
+      );
+      $form['field_matching'][$field_name]['fieldtype'] = array(
+        '#type' => 'item',
+        '#markup' => $field_info['type'],
+      );
+      
+      // @TODO: add a selector for the logical operator
+      $form['field_matching'][$field_name]['operator'] = array(
+        '#type' => 'item',
+        '#markup' => '---',
+      );
+      
+      // @TODO: add a textfield for any extra information that's needed
+      $form['field_matching'][$field_name]['options'] = array(
+        '#type' => 'item',
+        '#markup' => '---',
+      );
+      
+      // @TODO: add a textfield for any extra information that's needed
+      $form['field_matching'][$field_name]['score'] = array(
+        '#type' => 'textfield',
+        '#title' => 'Score',
+        '#maxlength' => 28,
+        '#title_display' => 'invisible',
+        '#default_value' => 0,
+      );
+      
+      // @TODO: get the actual weight as the default value
+      $form['field_matching'][$field_name]['weight'] = array(
+        '#type' => 'weight',
+        '#title_display' => 'invisible',
+        '#default_value' => 0,
+        '#attributes' => array(
+          'class' => array('crm-core-match-engine-order-weight'),
+        ),
+      );
+      
+    }
+      
     
   }  
   
@@ -142,6 +182,7 @@ function theme_crm_core_default_matching_engine_form($variables) {
       'data' => array(
         drupal_render($form['field_matching'][$key]['check']),
         drupal_render($form['field_matching'][$key]['name']),
+        drupal_render($form['field_matching'][$key]['fieldtype']),
         drupal_render($form['field_matching'][$key]['operator']),
         drupal_render($form['field_matching'][$key]['options']),
         drupal_render($form['field_matching'][$key]['score']),
@@ -151,7 +192,7 @@ function theme_crm_core_default_matching_engine_form($variables) {
     );
   }
 
-  $header = array(t('Enabled'), t('Name'), t('Operator'), t('Options'), t('Score'), t('Weight'));
+  $header = array(t('Enabled'), t('Name'), t('Field Type'), t('Operator'), t('Options'), t('Score'), t('Weight'));
   $form['field_matching']['content']['#markup'] = theme('table', array(
     'header' => $header,
     'rows' => $rows,
