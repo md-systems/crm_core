@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Admnistrative screens.
+ * Administrative screens.
  */
 
 /**
@@ -103,7 +103,7 @@ function crm_core_default_matching_engine_form($form, &$form_state, $contact_typ
  */
 function crm_core_default_matching_engine_form_submit($form, &$form_state) {
   $values = $form_state['values'];
-  $ret = db_merge('crm_core_match_contact_types')
+  db_merge('crm_core_match_contact_types')
     ->condition('machine_name', $values['contact_type'])
     ->fields(array(
       'machine_name' => $values['contact_type'],
