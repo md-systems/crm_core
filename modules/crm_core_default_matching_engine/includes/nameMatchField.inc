@@ -19,6 +19,8 @@ class nameMatchField extends CrmCoreMatchField {
   
   public function fieldRender($formElement, $formInfo, &$form){
     
+    dpm($formInfo);
+    
     // this works
     foreach ($formInfo['columns'] as $item => $info){
       if($formElement['settings']['inline_css'][$item] != 'display:none'){
@@ -29,7 +31,7 @@ class nameMatchField extends CrmCoreMatchField {
         
         // @TODO: get the real name of the field in there, contact_field_ is not actually the real name...
         // @TODO: add some extra text to the label to indicate where this came from
-        $temp['field_name'] = 'contact_field_' . $item;
+        $temp['field_name'] = $formInfo['field_name'] . '_' . $item;
         $temp['label'] = $formInfo['settings']['labels'][$item];
         
         if(isset($formElement['settings'][$item . '_field'])){
