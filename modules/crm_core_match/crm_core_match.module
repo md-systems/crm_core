@@ -74,16 +74,6 @@ function crm_core_match_theme() {
 /**
  * Returns a list of all matching engines registered with CRM Core Match.
  *
- * This should return a list of matching engines registered with CRM Core
- * Match, in order. Any matching engines added since the last time the list
- * of matching engines was changed should appear at the bottom.
- *
- * @TODO: should this actually be sorted? Is it possible this should just  be a list of the engines?
- *
- * @TODO: should this be keyed by machine name?
- *
- * @TODO: add caching.
- *
  * @return array $engines: a list of engines for CRM Core
  */
 function crm_core_match_get_engines(){

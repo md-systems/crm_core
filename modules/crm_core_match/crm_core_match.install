@@ -38,5 +38,8 @@ function crm_core_match_schema() {
         'default' => 1,
       ),
     ),
+    'primary key' => array('eid'),
   );
+
+  return $schema;
 }
