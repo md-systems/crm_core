@@ -20,3 +20,4 @@ dependencies[] = crm_core_contact_ui
 
 ; Base Files
 files[] = crm_core_ui.module
+files[] = crm_core_ui.test

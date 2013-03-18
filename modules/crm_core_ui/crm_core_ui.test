@@ -1,0 +1,60 @@
+<?php
+
+class DashboardTestCase extends DrupalWebTestCase {
+  protected $privileged_user;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'CRM Core UI Dashboard',
+      'description' => 'Ensure that CRM Core Dashboard working properly.',
+      'group' => 'CRM Core',
+    );
+  }
+
+  public function setUp() {
+    parent::setUp(array('crm_core_ui'));
+    $this->privileged_user = $this->drupalCreateUser(array(
+      'view crm dashboard',
+      'administer crm-core settings',
+    ));
+    $this->drupalLogin($this->privileged_user);
+  }
+
+  public function testCRMCoreDashboardSettings() {
+    $config_path = 'admin/config/crm-core/settings';
+    $checkbox = 'crm_core_dashboard_enabled';
+    $path_input = 'crm_core_dashboard_path';
+    $save = 'Save configuration';
+
+    $this->drupalGet($config_path);
+    $this->assertText('Use a Dashboard for CRM Core?', 'Enable Dashboard label is present on the page.');
+    $this->assertText('Path to Dashboard', 'Path to Dashboard label is present on the page.');
+    $this->assertField($checkbox, 'Enable Dashboard checkbox is present on the page.');
+    $this->assertField($path_input, 'Path to Dashboard input is present on the page.');
+
+    $this->drupalPost($config_path, array($checkbox => TRUE), $save);
+    $this->assertText('You must enter VALID path(it must exist already).', 'Empty path is not allowed.');
+
+    $this->drupalPost($config_path, array($checkbox => TRUE, $path_input => $this->randomName()), $save);
+    $this->assertText('You must enter VALID path(it must exist already).', 'Invalid path is not allowed.');
+
+    $this->drupalGet('<front>');
+    $this->assertNoLink('Dashboard', 'No link to Dashboard present.');
+
+    $this->drupalPost($config_path, array($checkbox => TRUE, $path_input => 'node'), $save);
+    $this->assertText('The configuration options have been saved.', 'Valid path OK.');
+
+    $this->drupalGet('<front>');
+    $this->assertLink('Dashboard', 0, 'Link to Dashboard present.');
+
+    $this->drupalGet('crm-core/dashboard');
+    $this->assertText('No front page content has been created yet.', 'Dashboard link working.');
+
+    // Emulate deleted Dashboard.
+    variable_set('crm_core_dashboard_path', 'node1');
+    $this->clickLink('Dashboard');
+    $text = 'The dashboard cannot be loaded. Please check the CRM Core Dashboard settings.';
+    $this->assertText($text, 'Dashboard gracefully handles broken config.');
+    $this->assertUrl('crm-core/contact', array(),'Dashboard gracefully handles broken config and redirect user correctly.');
+  }
+}
