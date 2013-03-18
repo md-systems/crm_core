@@ -13,7 +13,7 @@ class CRMCoreActivityUITestCase extends DrupalWebTestCase {
     return array(
       'name' => t('Activity UI'),
       'description' => t('Test create/edit/delete activities.'),
-      'group' => t('Drupal CRM'),
+      'group' => t('CRM Core'),
     );
   }
 
@@ -37,18 +37,22 @@ class CRMCoreActivityUITestCase extends DrupalWebTestCase {
    */
   public function testActivityOperations() {
     // Create and login user. User should be able to create contacts and activities.
-    $user = $this->drupalCreateUser(array('administer crm_core_contact entities', 'view any crm_core_contact entity', 'administer crm_core_activity entities'));
+    $user = $this->drupalCreateUser(array(
+      'administer crm_core_contact entities',
+      'view any crm_core_contact entity',
+      'administer crm_core_activity entities'
+    ));
     $this->drupalLogin($user);
 
     // Create Houshold contact.
     $household_contact = array(
       'contact_name[und][0][given]' => $this->randomName(),
     );
-    $this->drupalPost('crm-core/contact/add/household', $household_contact, t('Save Contact'));
+    $this->drupalPost('crm-core/contact/add/household', $household_contact, t('Save Household'));
 
     $this->drupalGet('crm-core/contact/1/activity');
     $this->assertText(t('There are no activities available.'), t('No activities avaiable for newly created contact.'));
-    $this->assertLink(t('Add activity'));
+    $this->assertLink(t('Add CRM Core contact activity'));
 
     $this->drupalGet('crm-core/contact/1/activity/add');
     $this->assertLink(t('Meeting'));
