@@ -61,6 +61,17 @@ class CrmCoreMatchField implements DefaultMatchingEngineFieldType {
  * Extends CrmCoreMatchEngine to provide rules for identifying duplicate contacts.
  */
 class DefaultMatchingEngine extends CrmCoreMatchEngine {
+
+  /**
+   * Constructor: sets basic variables.
+   */
+  public function __construct() {
+    $this->name = 'Default Matching Engine';
+    $this->machine_name = 'default_matching_engine';
+    $this->description = 'This is a simple matching engine from CRM Core. Allows administrators to specify matching rules'
+      . ' for individual contact types on a field-by-field basis.';
+    $this->settings = array();
+  }
   
   /**
    * When processing a match, this module takes contact information being 

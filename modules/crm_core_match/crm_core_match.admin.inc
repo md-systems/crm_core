@@ -33,28 +33,28 @@ function crm_core_match_admin_config_engines_form($form, &$form_state) {
     '#type' => 'container'
   );
 
-  $engines = _crm_core_match_get_engines();
+  $engines = crm_core_match_get_engines();
   
   foreach ($engines as $index => $engine) {
-    $form['engines_container'][$engine->name]['name'] = array('#markup' => $engine->name);
-    $form['engines_container'][$engine->name]['desc'] = array('#markup' => $engine->description);
-    $form['engines_container'][$engine->name]['enabled'] = array(
+    $form['engines_container'][$engine['machine_name']]['name'] = array('#markup' => t($engine['name']));
+    $form['engines_container'][$engine['machine_name']]['description'] = array('#markup' => t($engine['description']));
+    $form['engines_container'][$engine['machine_name']]['enabled'] = array(
       '#markup' => l('Disable', '<front>'),
     );
     // Operations links.
     $links = array();
-    foreach ($engine->settings as $item) {
+    foreach ($engine['settings'] as $item) {
       $links[$item['name']] = array(
         'title' => $item['label'],
         'href' => $item['path'],
       );
     }
-    $form['engines_container'][$engine->name]['settings'] = array(
+    $form['engines_container'][$engine['machine_name']]['settings'] = array(
       '#theme' => 'links',
       '#links' => $links,
       '#attributes' => array('class' => array('links', 'inline')),
     );
-    $form['engines_container'][$engine->name]['weight'] = array(
+    $form['engines_container'][$engine['machine_name']]['weight'] = array(
       '#type' => 'weight',
       '#title_display' => 'invisible',
       '#default_value' => $index,
@@ -73,34 +73,6 @@ function crm_core_match_admin_config_engines_form($form, &$form_state) {
   return $form;
 }
 
-
-/**
- * Returns a list of all matching engines registered with CRM Core Match.
- * 
- * This should return a list of matching engines registered with CRM Core 
- * Match, in order. Any matching engines added since the last time the list
- * of matching engines was changed should appear at the bottom.
- * 
- * @TODO: should this actually be sorted? Is it possible this should just
- *   be a list of the engines?
- *   
- * @TODO: should this be keyed by machine name?
- * 
- * @TODO: add caching.
- * 
- * @return array $engines: a list of engines for CRM Core
- */
-function _crm_core_match_get_engines(){
-  $engines = array();
-  foreach (module_implements('crm_core_match_engine_register') as $module) {
-    $function = $module . '_crm_core_match_engine_register';
-    $engines[] = $function();
-  }
-  return $engines;
-}
-
-
-
 /**
  * Theme implementation of the crm_core_match_admin_config_engines_form form.
  */
@@ -112,7 +84,7 @@ function theme_crm_core_match_admin_config_engines_form($variables) {
     $rows[] = array(
       'data' => array(
         drupal_render($form['engines_container'][$key]['name']),
-        drupal_render($form['engines_container'][$key]['desc']),
+        drupal_render($form['engines_container'][$key]['description']),
         drupal_render($form['engines_container'][$key]['enabled']),
         drupal_render($form['engines_container'][$key]['settings']),
         drupal_render($form['engines_container'][$key]['weight']),

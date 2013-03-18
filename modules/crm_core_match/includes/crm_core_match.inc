@@ -16,13 +16,13 @@ interface CrmCoreMatchEngineInterface {
   /**
    * Constructor.
    */
-  public function __construct($entityType);
+  public function __construct();
 
   /**
    * Returns information about the matching engine to use
    * in identifying the engine
    */
-  public function matchEngineInfo();
+  public function getEngineInfo();
   
   /**
    * This function will be executed by CRM Core Match each time 
@@ -52,7 +52,7 @@ class CrmCoreMatchEngine implements CrmCoreMatchEngineInterface {
    * @var $name string 
    * 
    */
-  protected $name = '';
+  protected $name;
   
   /**
    * The machine name used for the matching engine
@@ -78,36 +78,35 @@ class CrmCoreMatchEngine implements CrmCoreMatchEngineInterface {
    */
   protected $settings;
   
-  
-  /**
-   * An object containing information used to describe the engine.
-   * 
-   * @var $engineInfo object
-   */
-  protected $engineInfo;
-  
-  
   /**
    * Constructor: sets basic variables.
    */
-  public function __construct($engineInfo) {
-    $this->name = $engineInfo->name;
-    $this->machine_name = $engineInfo->machine_name;
-    $this->description = $engineInfo->description;
-    $this->settings = $engineInfo->settings;
+  public function __construct() {
+//    $this->name = '';
+//    $this->machine_name = '';
+//    $this->description = '';
+//    $this->settings = array();
+//@TODO: Remove this when finish with testing and uncomment above.
+    $this->name = '(test) CRM Core Match Engine';
+    $this->machine_name = 'test_matching_engine';
+    $this->description = 'This is just a test, to see how matching engines show up in CRM Core Match. Remove this from CRM Core Match before the module is launched.';
+    $this->settings = array(
+      array('path' => '<front>', 'label' => 'Test Settings Page', 'name' => 'settings'),
+      array('path' => '<front>', 'label' => 'Other Test Settings Page', 'name' => 'settings2'),
+    );
   }  
   
   /**
    * Returns basic information about the matching engine
-   * @see CrmCoreMatchEngineInterface::matchEngineInfo()
+   * @see CrmCoreMatchEngineInterface::getEngineInfo
    */
-  public function matchEngineInfo() {
-    $info = new stdClass();
-    $info->name = $this->name;
-    $info->machine_name = $this->machine_name;
-    $info->description = $this->description;
-    $info->settings = $this->settings;
-    return $info;
+  public function getEngineInfo() {
+    return array(
+      'name' => $this->name,
+      'machine_name' => $this->machine_name,
+      'description' => $this->description,
+      'settings' => $this->settings,
+    );
   }
   
   /**
@@ -121,7 +120,7 @@ class CrmCoreMatchEngine implements CrmCoreMatchEngineInterface {
    * @see CrmCoreMatchEngineInterface::execute()
    */
   public function execute(&$contactData, &$ids = array()){
-    return false;
+    return FALSE;
   }
   
 }

@@ -72,25 +72,44 @@ function crm_core_match_theme() {
 }
 
 /**
+ * Returns a list of all matching engines registered with CRM Core Match.
+ *
+ * This should return a list of matching engines registered with CRM Core
+ * Match, in order. Any matching engines added since the last time the list
+ * of matching engines was changed should appear at the bottom.
+ *
+ * @TODO: should this actually be sorted? Is it possible this should just  be a list of the engines?
+ *
+ * @TODO: should this be keyed by machine name?
+ *
+ * @TODO: add caching.
+ *
+ * @return array $engines: a list of engines for CRM Core
+ */
+function crm_core_match_get_engines(){
+  $cache = &drupal_static(__FUNCTION__);
+  if (empty($cache)) {
+    $engines = array();
+    foreach (module_implements('crm_core_match_engine_register') as $module) {
+      $function = $module . '_crm_core_match_engine_register';
+      $engines[] = $function();
+    }
+    $cache = $engines;
+  }
+
+  return $cache;
+}
+
+/**
  * Implements hook_crm_core_match_engine_register
  * 
  * @todo: remove this once we are done testing
  * 
  */
 function crm_core_match_crm_core_match_engine_register(){
-  
-  $info = new stdClass();
-  $info->name = '(test) CRM Core Match Engine';
-  $info->machine_name = 'test_matching_engine';
-  $info->description = 'This is just a test, to see how matching engines show up in CRM Core Match. Remove this from CRM Core Match before the module is launched.';
-  $info->settings = array(
-    array('path' => '<front>', 'label' => 'Test Settings Page', 'name' => 'settings'),
-    array('path' => '<front>', 'label' => 'Other Test Settings Page', 'name' => 'settings2'),
-  );
-  
-  $test = new DefaultMatchingEngine($info);
-  return $test->matchEngineInfo();
-  
+  $test = new CrmCoreMatchEngine();
+
+  return $test->getEngineInfo();
 }
 
 

@@ -52,15 +52,9 @@ function crm_core_default_matching_engine_menu() {
  * Implements hook_crm_core_match_engine_register
  */
 function crm_core_default_matching_engine_crm_core_match_engine_register(){
-  
-  $info = new stdClass();
-  $info->name = 'Default Matching Engine';
-  $info->machine_name = 'default_matching_engine';
-  $info->description = 'This is a simple matching engine from CRM Core. Allows administrators to specify matching rules for individual contact types on a field-by-field basis.';
-  $info->settings = array();
-  $default = new DefaultMatchingEngine($info);
-  return $default->matchEngineInfo();
-  
+  $default = new DefaultMatchingEngine();
+
+  return $default->getEngineInfo();
 }
 
 /**
