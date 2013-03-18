@@ -1,0 +1,61 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the CRM Core Default Matching Engine module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function crm_core_default_matching_engine_schema() {
+  $schema['crm_core_match_contact_types'] = array(
+    'description' => 'Stores settings information for available contact types.',
+    'fields' => array(
+      'ctid' => array(
+        'description' => 'The primary identifier for a contact type.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'machine_name' => array(
+        'description' => 'Machine readable name of a contact type.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+      ),
+      'threshold' => array(
+        'description' => 'Defines the score at which a contact is considered a match.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'status' => array(
+        'description' => 'Status of a contact type matching. (1 = enabled, 0 = disabled)',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'strict' => array(
+        'description' => 'Strict matching status. (1 = enabled, 0 = disabled)',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'return_order' => array(
+        'description' => 'The order in which to return contact matches.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('ctid'),
+  );
+
+  return $schema;
+}
