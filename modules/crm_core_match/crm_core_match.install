@@ -35,7 +35,7 @@ function crm_core_match_schema() {
         'type' => 'int',
         'size' => 'tiny',
         'not null' => TRUE,
-        'default' => 1,
+        'default' => 0,
       ),
     ),
     'primary key' => array('eid'),

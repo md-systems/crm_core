@@ -32,16 +32,9 @@ function crm_core_match_hook_info() {
 
 /**
  * Implements hook_menu().
- * 
- * @todo: this needs to change...
- * - there should be a second module
- * - call it default matching engine
- * - this is where the links for the matching engine will be defined
- * - these links might need to be defined as part of the entity
- * - which entity?
- * 
  */
 function crm_core_match_menu() {
+  //TODO: Check proper prmissions.
   $items['admin/config/crm-core/match'] = array(
     'title' => 'Matching Engines',
     'description' => 'Configure the default rules for matching duplicate contacts in CRM Core.',
@@ -54,6 +47,14 @@ function crm_core_match_menu() {
   $items['admin/config/crm-core/match/engines'] = array(
     'title' => 'Engines',
     'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+
+  $items['admin/config/crm-core/match/engines/%/%'] = array(
+    'title' => 'Engine status toggle callback',
+    'type' => MENU_CALLBACK,
+    'page callback' => 'crm_core_match_engine_status_toggle',
+    'page arguments' => array(5, 6),
+    'access callback' => TRUE,
   );
   
   return $items;
@@ -80,14 +81,50 @@ function crm_core_match_get_engines(){
   $cache = &drupal_static(__FUNCTION__);
   if (empty($cache)) {
     $engines = array();
+    $stored_engines = db_select('crm_core_match_engines')
+      ->fields('crm_core_match_engines')
+      ->execute()
+      ->fetchAllAssoc('machine_name');
     foreach (module_implements('crm_core_match_engine_register') as $module) {
       $function = $module . '_crm_core_match_engine_register';
-      $engines[] = $function();
+      $engine = $function();
+      if(isset($stored_engines[$engine['machine_name']])) {
+        $engine['status'] = $stored_engines[$engine['machine_name']]->status;
+        $engine['weight'] = $stored_engines[$engine['machine_name']]->weight;
+      }
+      else {
+        $engine['weight'] = 10;
+      }
+      $engines[] = $engine;
     }
     $cache = $engines;
   }
 
   return $cache;
+}
+
+/**
+ * Page callback to toggle matching engine status.
+ */
+function crm_core_match_engine_status_toggle($engine_machine_name, $to_status) {
+  $status = NULL;
+  switch ($to_status) {
+    case 'enable': $status = 1;
+      break;
+    case 'disable': $status = 0;
+      break;
+  }
+  if (isset($status)) {
+    db_merge('crm_core_match_engines')
+      ->condition('machine_name', $engine_machine_name)
+      ->fields(array(
+        'status' => $status,
+      ))
+      ->execute();
+    drupal_set_message(t('Status changed successfully.'));
+  }
+  $destination = drupal_get_destination();
+  drupal_goto($destination['destination']);
 }
 
 /**

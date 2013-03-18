@@ -34,12 +34,17 @@ function crm_core_match_admin_config_engines_form($form, &$form_state) {
   );
 
   $engines = crm_core_match_get_engines();
-  
-  foreach ($engines as $index => $engine) {
+  $form_state['engines'] = $engines;
+  foreach ($engines as $engine) {
     $form['engines_container'][$engine['machine_name']]['name'] = array('#markup' => t($engine['name']));
     $form['engines_container'][$engine['machine_name']]['description'] = array('#markup' => t($engine['description']));
+    $status_toggle_path = 'admin/config/crm-core/match/engines/' . $engine['machine_name'] . '/';
+    $status_toggle_path .= $engine['status'] ? 'disable' : 'enable';
+    $destination = drupal_get_destination();
     $form['engines_container'][$engine['machine_name']]['enabled'] = array(
-      '#markup' => l('Disable', '<front>'),
+      '#markup' => l($engine['status'] ? t('Disable') : t('Enable'), $status_toggle_path, array('query' => array(
+        'destination' => $destination['destination']
+      ))),
     );
     // Operations links.
     $links = array();
@@ -57,7 +62,7 @@ function crm_core_match_admin_config_engines_form($form, &$form_state) {
     $form['engines_container'][$engine['machine_name']]['weight'] = array(
       '#type' => 'weight',
       '#title_display' => 'invisible',
-      '#default_value' => $index,
+      '#default_value' => $engine['weight'],
       '#attributes' => array(
         'class' => array('crm-core-match-engine-order-weight'),
       ),
@@ -71,6 +76,23 @@ function crm_core_match_admin_config_engines_form($form, &$form_state) {
   );
 
   return $form;
+}
+
+/**
+ * Matching Engines form submit handler.
+ */
+function crm_core_match_admin_config_engines_form_submit($form, &$form_state) {
+  $engines = $form_state['engines'];
+  foreach ($engines as $engine) {
+    db_merge('crm_core_match_engines')
+      ->condition('machine_name', $engine['machine_name'])
+      ->fields(array(
+          'weight' => $form_state['values']['engines_container'][$engine['machine_name']]['weight'],
+          'machine_name' => $engine['machine_name'],
+        ))
+      ->execute();
+  }
+  drupal_set_message(t('The configuration options have been saved.'));
 }
 
 /**
