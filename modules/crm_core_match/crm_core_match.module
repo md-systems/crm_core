@@ -94,6 +94,7 @@ function crm_core_match_get_engines(){
       }
       else {
         $engine['weight'] = 10;
+        $engine['status'] = 0;
       }
       $engines[] = $engine;
     }
@@ -119,6 +120,7 @@ function crm_core_match_engine_status_toggle($engine_machine_name, $to_status) {
       ->condition('machine_name', $engine_machine_name)
       ->fields(array(
         'status' => $status,
+        'machine_name' => $engine_machine_name,
       ))
       ->execute();
     drupal_set_message(t('Status changed successfully.'));
