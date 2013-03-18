@@ -6,149 +6,114 @@
  */
 
 /**
- * Placeholder for matching engine configuration pages
- * @TODO: remove this function, it's no longer needed
+ * Creates a form for customizing the matching rules per contact type.
  */
-function _crm_core_default_matching_engine_placeholder() {
-  
-  $text = 'CRM Core Match UI would be here soon!';
-  
-  foreach(field_info_instances('crm_core_contact', 'individual') as $field_name => $field) {
-    dpm($field_name);
-    dpm($field);
-  }  
-  
-  return $text;
-}
+function crm_core_default_matching_engine_form($form, &$form_state, $contact_type) {
+  $config = _crm_core_default_matching_engine_load_contact_type_config($contact_type);
 
-/**
- * Creates a form for customizing the match rules for an individual contact type.
- * @param unknown_type $form
- * @param unknown_type $form_state
- */
-function crm_core_default_matching_engine_form ($form, &$form_state, $contact_type){
-  
-  $form['enabled'] = array(
-    '#type' => 'checkbox',
-    '#title' => 'Enable matching for this contact type',
-    '#description' => t('Check this box to allow CRM Core to check for duplicate contact records for this contact type.'),
-    '#default_value' => (!empty($form['enabled'])) ? $form['enabled'] : 0,
+  $form['#tree'] = TRUE;
+
+  $form['contact_type'] = array(
+    '#type' => 'value',
+    '#value' => $contact_type,
   );
 
+  $form['status'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable matching for this contact type'),
+    '#description' => t('Check this box to allow CRM Core to check for duplicate contact records for this contact type.'),
+    '#default_value' => $config['status'],
+  );
+
+  $form['threshold'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Threshold'),
+    '#description' => t('Defines the score at which a contact is considered a match.'),
+    '#maxlength' => 28,
+    '#size' => 28,
+    '#required' => TRUE,
+    '#default_value' => $config['threshold'],
+  );
+
+  $return_description = 'If two or more contact records result in matches with identical scores, CRM Core will give'
+    . ' preference to one over the other base on selected option.';
+  $form['return_order'] = array(
+    '#type' => 'select',
+    '#title' => t('Return Order'),
+    '#description' => t($return_description),
+    '#default_value' => $config['return_order'],
+    '#options' => array(
+      'created' => t('Most recently created'),
+      'updated' => t('Most recently updated'),
+      'associated' => t('Associated with user'),
+    ),
+  );
+
+  $strict_description = 'Check this box to return a match for this contact type the first time one is identified that'
+    . ' meets the threshold. Stops redundant processing.';
   $form['strict'] = array(
     '#type' => 'checkbox',
-    '#title' => 'Strict matching',
-    '#description' => t('Check this box to return a match for this contact type the first time one is identified that meets the threshold. Stops rednudant processing.'),
-    '#default_value' => (!empty($form['strict'])) ? $form['strict'] : 0,
+    '#title' => t('Strict matching'),
+    '#description' => t($strict_description),
+    '#default_value' => $config['strict'],
   );
-  
-  $form['label'] = array(
-    '#type' => 'textfield',
-    '#title' => 'Threshold',
-    '#description' => 'Defines the score at which a contact is considered a match.',
-    '#maxlength' => 28,
-    '#required' => TRUE,
-    '#default_value' => (!empty($form['threshold'])) ? $form['threshold'] : '',
-  );
-  
+
   $form['fields'] = array(
     '#type' => 'item',
     '#title' => t('Field Matching'),
   );
-  
-  $form['field_matching'] = array(
-    '#type' => 'container'
-  );
-  
-  // This returns a list of all fields associated with the selected contact type
-  foreach(field_info_instances('crm_core_contact', $contact_type) as $field_name => $field) {
-    
-    // This returns some additional information about the field
-    $field_info = field_info_field($field_name);
-    
-    /**
-     * We now have enough information about the field to render a row
-     * for it. Some fields are going to have multiple rows (for instance,
-     * name fields) and need to be handled a little differently.
-     */
-    
-    $fieldHandler = $field_info['type'] . 'MatchField';
-    
-    if(class_exists($fieldHandler)){
-      
-      // @TODO: need to modify interface and classes to accept field and field info
-      // need to pass in the form array by reference and allow it to be modified
-      
-      $obj = new $fieldHandler();
-      $obj->fieldRender($field, $field_info, $form);
-      
-      // @TODO: need to add something that adds the output of fieldRender to the form
-      // the output of fieldrender can be one field, or it can be many
-      
-      
-    } else {
 
-      $form['field_matching'][$field_name]['check'] = array(
-        '#type' => 'checkbox',
-        '#title' => '',
-      );
-      $form['field_matching'][$field_name]['name'] = array(
-        '#type' => 'item',
-        '#markup' => $field['label'],
-      );
-      $form['field_matching'][$field_name]['fieldtype'] = array(
-        '#type' => 'item',
-        '#markup' => $field_info['type'],
-      );
-      
-      // @TODO: add a selector for the logical operator
-      $form['field_matching'][$field_name]['operator'] = array(
-        '#type' => 'item',
-        '#markup' => '---',
-      );
-      
-      // @TODO: add a textfield for any extra information that's needed
-      $form['field_matching'][$field_name]['options'] = array(
-        '#type' => 'item',
-        '#markup' => '---',
-      );
-      
-      // @TODO: add a textfield for any extra information that's needed
-      $form['field_matching'][$field_name]['score'] = array(
-        '#type' => 'textfield',
-        '#title' => 'Score',
-        '#maxlength' => 28,
-        '#title_display' => 'invisible',
-        '#default_value' => 0,
-      );
-      
-      // @TODO: get the actual weight as the default value
-      $form['field_matching'][$field_name]['weight'] = array(
-        '#type' => 'weight',
-        '#title_display' => 'invisible',
-        '#default_value' => 0,
-        '#attributes' => array(
-          'class' => array('crm-core-match-engine-order-weight'),
-        ),
-      );
-      
+  $form['field_matching'] = array(
+    '#type' => 'container',
+  );
+
+  // This returns a list of all fields associated with the selected contact type.
+  foreach (field_info_instances('crm_core_contact', $contact_type) as $field_name => $field) {
+
+    // This returns some additional information about the field.
+    $field_info = field_info_field($field_name);
+
+    // We now have enough information about the field to render a row for it. Some fields are going to have multiple
+    // rows (for instance, name fields) and need to be handled a little differently.
+    $field_handler = $field_info['type'] . 'MatchField';
+
+    if (class_exists($field_handler)) {
+
+      // @TODO: need to modify interface and classes to accept field and field info need to pass in the form array
+      // by reference and allow it to be modified.
+      $obj = new $field_handler();
+      $obj->fieldRender($field, $field_info, $form);
+
+      // @TODO: need to add something that adds the output of fieldRender to the form the output of fieldrender can be
+      // one field, or it can be many.
     }
-      
-    
-  }  
-  
+  }
+
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
   );
 
-  
   return $form;
-  
 }
 
-
+/**
+ * Submit handler for crm_core_default_matching_engine_form.
+ */
+function crm_core_default_matching_engine_form_submit($form, &$form_state) {
+  $values = $form_state['values'];
+  $ret = db_merge('crm_core_match_contact_types')
+    ->condition('machine_name', $values['contact_type'])
+    ->fields(array(
+      'machine_name' => $values['contact_type'],
+      'threshold' => $values['threshold'],
+      'status' => $values['status'],
+      'strict' => $values['strict'],
+      'return_order' => $values['return_order'],
+    ))
+    ->execute();
+}
 
 /**
  * Theme implementation of the crm_core_match_admin_config_engines_form form.
@@ -176,7 +141,7 @@ function theme_crm_core_default_matching_engine_form($variables) {
   $form['field_matching']['content']['#markup'] = theme('table', array(
     'header' => $header,
     'rows' => $rows,
-    'attributes' => array('id' => 'crm-core-match-engine-order')
+    'attributes' => array('id' => 'crm-core-match-engine-order'),
   ));
   $output = drupal_render_children($form);
 
@@ -185,4 +150,27 @@ function theme_crm_core_default_matching_engine_form($variables) {
   return $output;
 }
 
-
+/**
+ * Helper function to load contact type config from DB.
+ *
+ * @param string $contact_type
+ *   Machine readable contact type name.
+ *
+ * @return array
+ *   Contact type matching configuration.
+ */
+function _crm_core_default_matching_engine_load_contact_type_config($contact_type) {
+  $config = db_select('crm_core_match_contact_types')
+    ->fields('crm_core_match_contact_types')
+    ->condition('machine_name', $contact_type)
+    ->execute()
+    ->fetchAssoc();
+  // Merge default config.
+  $config += array(
+    'threshold' => 0,
+    'status' => 0,
+    'strict' => 0,
+    'return_order' => '',
+  );
+  return $config;
+}

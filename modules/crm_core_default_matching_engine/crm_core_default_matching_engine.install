@@ -48,10 +48,9 @@ function crm_core_default_matching_engine_schema() {
       ),
       'return_order' => array(
         'description' => 'The order in which to return contact matches.',
-        'type' => 'int',
-        'size' => 'tiny',
+        'type' => 'varchar',
+        'length' => 32,
         'not null' => TRUE,
-        'default' => 0,
       ),
     ),
     'primary key' => array('ctid'),
