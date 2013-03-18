@@ -4,16 +4,16 @@
  * @file
  * Manages matching engines for identifying duplicate contacts in CRM Core.
  * Allows CRM Core to install, enable and disable matching engines.
- * 
+ *
  * A matching engine is used to do the following:
- * 
+ *
  * - identify duplicate contact records
  * - inject data into contact records being saved
  * - carry out other scripted operations not easily handled in the normal bootstrapping process
- * 
+ *
  * This module does not define any matching engines itself, it only provides the framework
  * through which they can be applied to new contacts being created in the database.
- * 
+ *
  * @TODO: add hooks for altering the submission process
  */
 
@@ -34,7 +34,7 @@ function crm_core_match_hook_info() {
  * Implements hook_menu().
  */
 function crm_core_match_menu() {
-  //TODO: Check proper prmissions.
+  // TODO: Check proper prmissions.
   $items['admin/config/crm-core/match'] = array(
     'title' => 'Matching Engines',
     'description' => 'Configure the default rules for matching duplicate contacts in CRM Core.',
@@ -56,12 +56,12 @@ function crm_core_match_menu() {
     'page arguments' => array(5, 6),
     'access callback' => TRUE,
   );
-  
+
   return $items;
 }
 
 /**
- * Implements hook_theme
+ * Implements hook_theme().
  */
 function crm_core_match_theme() {
   return array(
@@ -75,10 +75,11 @@ function crm_core_match_theme() {
 /**
  * Returns a list of all matching engines registered with CRM Core Match.
  *
- * @return array $engines: a list of engines for CRM Core
+ * @return array
+ *   A list of matching engines for CRM Core Match.
  */
-function crm_core_match_get_engines(){
-  $cache = &drupal_static(__FUNCTION__);
+function crm_core_match_get_engines() {
+  $cache = & drupal_static(__FUNCTION__);
   if (empty($cache)) {
     $engines = array();
     $stored_engines = db_select('crm_core_match_engines')
@@ -88,7 +89,7 @@ function crm_core_match_get_engines(){
     foreach (module_implements('crm_core_match_engine_register') as $module) {
       $function = $module . '_crm_core_match_engine_register';
       $engine = $function();
-      if(isset($stored_engines[$engine['machine_name']])) {
+      if (isset($stored_engines[$engine['machine_name']])) {
         $engine['status'] = $stored_engines[$engine['machine_name']]->status;
         $engine['weight'] = $stored_engines[$engine['machine_name']]->weight;
       }
@@ -110,10 +111,14 @@ function crm_core_match_get_engines(){
 function crm_core_match_engine_status_toggle($engine_machine_name, $to_status) {
   $status = NULL;
   switch ($to_status) {
-    case 'enable': $status = 1;
+    case 'enable':
+      $status = 1;
       break;
-    case 'disable': $status = 0;
+
+    case 'disable':
+      $status = 0;
       break;
+
   }
   if (isset($status)) {
     db_merge('crm_core_match_engines')
@@ -130,16 +135,12 @@ function crm_core_match_engine_status_toggle($engine_machine_name, $to_status) {
 }
 
 /**
- * Implements hook_crm_core_match_engine_register
- * 
+ * Implements hook_crm_core_match_engine_register().
+ *
  * @todo: remove this once we are done testing
- * 
  */
-function crm_core_match_crm_core_match_engine_register(){
+function crm_core_match_crm_core_match_engine_register() {
   $test = new CrmCoreMatchEngine();
 
   return $test->getEngineInfo();
 }
-
-
-
