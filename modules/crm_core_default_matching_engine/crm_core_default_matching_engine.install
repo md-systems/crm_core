@@ -56,5 +56,62 @@ function crm_core_default_matching_engine_schema() {
     'primary key' => array('ctid'),
   );
 
+  $schema['crm_core_match_contact_type_rules'] = array(
+    'description' => 'Stores settings information for contact type matching rules.',
+    'fields' => array(
+      'mrid' => array(
+        'description' => 'The primary identifier for a matching rule.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'contact_type' => array(
+        'description' => 'Machine readable name of a contact type, to which rule is applied.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+      ),
+      'field_name' => array(
+        'description' => 'Machine readable name of a field.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+      ),
+      'operator' => array(
+        'description' => 'Operator used for this rule.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+      ),
+      'options' => array(
+        'description' => 'Operator used for this rule.',
+        'type' => 'text',
+        'size' => 'normal',
+      ),
+      'score' => array(
+        'description' => 'Defines the score for this rule.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'status' => array(
+        'description' => 'Status of a rule. (1 = enabled, 0 = disabled)',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('mrid'),
+    'foreign keys' => array(
+      'crm_core_match_contact_types' => array(
+        'table' => 'crm_core_match_contact_types',
+        'columns' => array('contact_type' => 'machine_name'),
+      ),
+    ),
+  );
+
   return $schema;
 }
