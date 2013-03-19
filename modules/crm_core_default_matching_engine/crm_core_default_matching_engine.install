@@ -103,6 +103,13 @@ function crm_core_default_matching_engine_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
+      'weight' => array(
+        'description' => 'Order in which rule would be applied.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
     ),
     'primary key' => array('mrid'),
     'foreign keys' => array(
