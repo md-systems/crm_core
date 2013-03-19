@@ -200,7 +200,7 @@ function crm_core_activity_form_delete_confirm_submit($form, &$form_state) {
  *  CRM Core contact.
  */
 function crm_core_activity_ui_add_activity($contact) {
-  drupal_set_title(t('Add CRM Core contact activity'));
+  drupal_set_title(t('Add a activity'));
   _crm_core_activity_ui_set_breadcrumb($contact);
   $items = array();
   $contact_uri = $contact->uri();

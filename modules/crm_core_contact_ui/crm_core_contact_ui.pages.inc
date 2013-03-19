@@ -12,7 +12,7 @@ function crm_core_contact_ui_form_wrapper($contact) {
  * Show a list of contact types that can be added into the CRM.
  */
 function crm_core_contact_ui_add_page() {
-  drupal_set_title(t('Add CRM Core contact'));
+  drupal_set_title(t('Add a contact'));
   $item = menu_get_item();
   $types = crm_core_contact_types(TRUE);
   $content = array();

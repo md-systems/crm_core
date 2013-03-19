@@ -32,7 +32,7 @@ function crm_core_relation_entity_ui_get_form_wrapper($contact, $type, $reverse)
     l(t('CRM Core'), 'crm-core'),
     l(t('Contacts'), 'crm-core/contact'),
     l(t($contact->label()), $contact_uri['path']),
-    l(t('Add relationship'), $contact_uri['path'] . '/relationships/add'),
+    l(t('Add a relationship'), $contact_uri['path'] . '/relationships/add'),
   );
   drupal_set_breadcrumb($breadcrumb);
   return entity_ui_get_form('crm_core_relationship', $relation, 'add');
@@ -159,7 +159,7 @@ function crm_core_relationship_form_after_build(&$form, &$form_state) {
  *   Entity object of crm_core_contact type.
  */
 function crm_core_relationship_ui_add_relationship($contact) {
-  drupal_set_title(t('Add CRM Core contact relationship'));
+  drupal_set_title(t('Add a relationship'));
 
   _crm_core_relationships_ui_breadcrmub($contact);
 

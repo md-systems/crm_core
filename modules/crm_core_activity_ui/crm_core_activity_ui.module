@@ -10,7 +10,7 @@
  */
 function crm_core_activity_ui_menu() {
   $items['crm-core/contact/%crm_core_contact/activity/add'] = array(
-    'title' => 'Add CRM Core contact activity',
+    'title' => 'Add an activity',
     'page callback' => 'crm_core_activity_ui_add_activity',
     'page arguments' => array(2),
     'access callback' => 'entity_access',

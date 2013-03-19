@@ -41,7 +41,7 @@ class CRMCoreRelationshipUITestCase extends DrupalWebTestCase {
     $this->drupalGet('crm-core/contact/1/relationships');
     $this->assertNoRaw('<div class="messages error">', t('No errors on Relationships page.'));
     // Assert link "Add Relationship".
-    $this->assertLink(t('Add relationship'));
+    $this->assertLink(t('Add a relationship'));
 
     // Assert standard relationship types.
     $this->drupalGet('crm-core/contact/1/relationships/add');

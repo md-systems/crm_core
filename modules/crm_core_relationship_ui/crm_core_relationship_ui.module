@@ -9,7 +9,7 @@ function crm_core_relationship_ui_menu() {
    * CRM Contact Relationships
    */
   $items['crm-core/contact/%crm_core_contact/relationships/add'] = array(
-    'title' => 'Add relationship',
+    'title' => 'Add a relationship',
     'description' => 'Add a relationship to this contact',
     'page callback' => 'crm_core_relationship_ui_add_relationship',
     'page arguments' => array(2),
