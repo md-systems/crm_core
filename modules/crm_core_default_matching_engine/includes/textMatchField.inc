@@ -69,13 +69,19 @@ class textMatchField implements DefaultMatchingEngineFieldTypeInterface {
     );
   }
 
+  /**
+   * Defines logical operators to use with this field.
+   *
+   * This operators would be interpreted in fieldQuery() method.
+   * @return array
+   *   Assoc array of operators.
+   */
   public function operators() {
-    // @TODO: add operators for EQUALS, STARTS WITH, ENDS WITH.
-    // This is placeholder for debug purposes.
     return array(
       'equals' => t('Equals'),
       'starts' => t('Starts with'),
       'ends' => t('Ends with'),
+      'contains' => t('Contains'),
     );
   }
 
