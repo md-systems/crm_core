@@ -133,14 +133,3 @@ function crm_core_match_engine_status_toggle($engine_machine_name, $to_status) {
   $destination = drupal_get_destination();
   drupal_goto($destination['destination']);
 }
-
-/**
- * Implements hook_crm_core_match_engine_register().
- *
- * @todo: remove this once we are done testing
- */
-function crm_core_match_crm_core_match_engine_register() {
-  $test = new CrmCoreMatchEngine();
-
-  return $test->getEngineInfo();
-}

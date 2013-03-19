@@ -73,7 +73,7 @@ class DefaultMatchingEngine extends CrmCoreMatchEngine {
    *
    * @see CrmCoreMatchEngineInterface::execute()
    */
-  public function execute(&$contactData, &$ids = array()) {
+  public function execute(&$contact, &$ids = array()) {
     dpm('yo yo yo');
   }
 }

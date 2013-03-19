@@ -9,7 +9,7 @@
  * Matching Engines form.
  */
 function crm_core_match_admin_config_engines_form($form, &$form_state) {
- 
+
   $form['#tree'] = TRUE;
 
   $form['header'] = array(
@@ -24,13 +24,13 @@ function crm_core_match_admin_config_engines_form($form, &$form_state) {
   $description = 'Configure matching engines for contacts. Matching engines are used when new contacts are created,'
     . ' allowing CRM Core to identify potential duplicates and prevent additional records from being added to the'
     . ' system. Use this screen to activate / deactivate various matching engines and control the order in which they'
-    .  ' are applied.';
+    . ' are applied.';
   $form['description_wrapper']['description'] = array(
     '#markup' => t($description),
   );
 
   $form['engines_container'] = array(
-    '#type' => 'container'
+    '#type' => 'container',
   );
 
   $engines = crm_core_match_get_engines();
@@ -42,9 +42,11 @@ function crm_core_match_admin_config_engines_form($form, &$form_state) {
     $status_toggle_path .= $engine['status'] ? 'disable' : 'enable';
     $destination = drupal_get_destination();
     $form['engines_container'][$engine['machine_name']]['enabled'] = array(
-      '#markup' => l($engine['status'] ? t('Disable') : t('Enable'), $status_toggle_path, array('query' => array(
-        'destination' => $destination['destination']
-      ))),
+      '#markup' => l($engine['status'] ? t('Disable') : t('Enable'), $status_toggle_path, array(
+        'query' => array(
+          'destination' => $destination['destination'],
+        ),
+      )),
     );
     // Operations links.
     $links = array();
@@ -87,9 +89,9 @@ function crm_core_match_admin_config_engines_form_submit($form, &$form_state) {
     db_merge('crm_core_match_engines')
       ->condition('machine_name', $engine['machine_name'])
       ->fields(array(
-          'weight' => $form_state['values']['engines_container'][$engine['machine_name']]['weight'],
-          'machine_name' => $engine['machine_name'],
-        ))
+        'weight' => $form_state['values']['engines_container'][$engine['machine_name']]['weight'],
+        'machine_name' => $engine['machine_name'],
+      ))
       ->execute();
   }
   drupal_set_message(t('The configuration options have been saved.'));
@@ -119,7 +121,7 @@ function theme_crm_core_match_admin_config_engines_form($variables) {
   $form['engines_container']['content']['#markup'] = theme('table', array(
     'header' => $header,
     'rows' => $rows,
-    'attributes' => array('id' => 'crm-core-match-engine-order')
+    'attributes' => array('id' => 'crm-core-match-engine-order'),
   ));
   $output = drupal_render_children($form);
 
