@@ -23,6 +23,8 @@ class textMatchField implements DefaultMatchingEngineFieldTypeInterface {
 
     $config = _crm_core_default_matching_engine_load_field_config($contact_type, $field_name);
 
+    $form['field_matching'][$field_name]['#weight'] = $config['weight'];
+
     $form['field_matching'][$field_name]['status'] = array(
       '#type' => 'checkbox',
       '#default_value' => $config['status'],

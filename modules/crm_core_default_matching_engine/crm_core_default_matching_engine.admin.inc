@@ -137,6 +137,7 @@ function theme_crm_core_default_matching_engine_form($variables) {
   $form = $variables['form'];
 
   $rows = array();
+  uasort($form['field_matching'], '_crm_core_default_matching_engine_load_field_weight_cmp');
   foreach (element_children($form['field_matching']) as $key) {
     $rows[] = array(
       'data' => array(
@@ -222,4 +223,17 @@ function _crm_core_default_matching_engine_load_field_config($contact_type, $fie
     );
   }
   return $config;
+}
+
+/**
+ * Helper function for weight comparison.
+ */
+function _crm_core_default_matching_engine_load_field_weight_cmp($a, $b) {
+  if (empty($a['#weight']) || empty($b['#weight'])) {
+    return 0;
+  }
+  if ($a['#weight'] == $b['#weight']) {
+    return 0;
+  }
+  return ($a['#weight'] < $b['#weight']) ? -1 : 1;
 }

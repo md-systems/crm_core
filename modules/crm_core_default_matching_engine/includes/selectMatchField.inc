@@ -23,6 +23,8 @@ class selectMatchField implements DefaultMatchingEngineFieldTypeInterface {
 
     $config = _crm_core_default_matching_engine_load_field_config($contact_type, $field_name);
 
+    $form['field_matching'][$field_name]['#weight'] = $config['weight'];
+
     /*
      * Need to add a form element in this format
      * there are only some things we need
