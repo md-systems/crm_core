@@ -1,19 +1,22 @@
-<?php 
+<?php
 
+/**
+ * @file
+ * Implementation of DefaultMatchingEngineFieldTypeInterface for text field.
+ */
 
 /**
  * Class for evaluating text fields.
  */
-class textMatchField extends CrmCoreMatchField{
-  
+class textMatchField implements DefaultMatchingEngineFieldTypeInterface {
+
   /**
-   * Constructs the UI for configuring matching on text fields
-   * 
+   * Constructs the UI for configuring matching on text fields.
+   *
    * @see CrmCoreMatchField::fieldRender()
    */
-  
-  public function fieldRender($field, $field_info, &$form){
-    
+  public function fieldRender($field, $field_info, &$form) {
+
     $field_name = $field['field_name'];
     $field_label = $field['label'];
     $contact_type = $field['bundle'];
@@ -41,30 +44,30 @@ class textMatchField extends CrmCoreMatchField{
       '#default_value' => $config['operator'],
       '#options' => $this->operators(),
     );
-    
+
     // @TODO: add a textfield for any extra information that's needed
     $form['field_matching'][$field_name]['options'] = array(
       '#type' => 'item',
       '#markup' => '---',
     );
-    
+
     $form['field_matching'][$field_name]['score'] = array(
       '#type' => 'textfield',
       '#maxlength' => 28,
       '#size' => 28,
       '#default_value' => $config['score'],
     );
-    
+
     $form['field_matching'][$field_name]['weight'] = array(
       '#type' => 'weight',
       '#default_value' => $config['weight'],
       '#attributes' => array(
         'class' => array('crm-core-match-engine-order-weight'),
       ),
-    );    
+    );
   }
-  
-  public function operators(){
+
+  public function operators() {
     // @TODO: add operators for EQUALS, STARTS WITH, ENDS WITH.
     // This is placeholder for debug purposes.
     return array(
@@ -73,7 +76,7 @@ class textMatchField extends CrmCoreMatchField{
       'ends' => t('Ends with'),
     );
   }
-  
-  public function fieldQuery(){
+
+  public function fieldQuery() {
   }
 }

@@ -8,7 +8,7 @@
  */
 
 /**
- * Implements hook_permissions
+ * Implements hook_permissions().
  */
 function crm_core_default_matching_engine_permission() {
   return array(
@@ -19,8 +19,6 @@ function crm_core_default_matching_engine_permission() {
   );
 }
 
-
-
 /**
  * Implements hook_menu().
  * 
@@ -28,10 +26,8 @@ function crm_core_default_matching_engine_permission() {
  * 
  * @TODO: links should point to something in the structure section
  *   - this is too important
- * 
  */
 function crm_core_default_matching_engine_menu() {
-  
   foreach (crm_core_contact_types() as $type => $info) {
     $items['admin/config/crm-core/default_match/' . $type . '/edit'] = array(
       'title' => 'Matching Rules for @type',
@@ -49,16 +45,16 @@ function crm_core_default_matching_engine_menu() {
 
 
 /**
- * Implements hook_crm_core_match_engine_register
+ * Implements hook_crm_core_match_engine_register().
  */
-function crm_core_default_matching_engine_crm_core_match_engine_register(){
+function crm_core_default_matching_engine_crm_core_match_engine_register() {
   $default = new DefaultMatchingEngine();
 
   return $default->getEngineInfo();
 }
 
 /**
- * Implements hook_theme
+ * Implements hook_theme().
  */
 function crm_core_default_matching_engine_theme() {
   return array(

@@ -1,18 +1,22 @@
-<?php 
+<?php
+
+/**
+ * @file
+ * Implementation of DefaultMatchingEngineFieldTypeInterface for select field.
+ */
 
 /**
  * Class for handling select fields.
  */
-class selectMatchField extends CrmCoreMatchField {
-  
+class selectMatchField implements DefaultMatchingEngineFieldTypeInterface {
+
   /**
-   * Handles matching for select lists with pre-determined values
-   * 
+   * Handles matching for select lists with pre-determined values.
+   *
    * @see CrmCoreMatchField::fieldRender()
    */
-  
-  public function fieldRender($field, $field_info, &$form){
-    
+  public function fieldRender($field, $field_info, &$form) {
+
     $field_name = $field['field_name'];
     $field_label = $field['label'];
     $contact_type = $field['bundle'];
@@ -50,37 +54,37 @@ class selectMatchField extends CrmCoreMatchField {
       '#default_value' => $config['operator'],
       '#options' => $this->operators(),
     );
-    
+
     // @TODO: add a textfield for any extra information that's needed
     $form['field_matching'][$field_name]['options'] = array(
       '#type' => 'item',
       '#markup' => '---',
     );
-    
+
     $form['field_matching'][$field_name]['score'] = array(
       '#type' => 'textfield',
       '#maxlength' => 28,
       '#size' => 28,
       '#default_value' => $config['score'],
     );
-    
+
     $form['field_matching'][$field_name]['weight'] = array(
       '#type' => 'weight',
       '#default_value' => $config['weight'],
       '#attributes' => array(
         'class' => array('crm-core-match-engine-order-weight'),
       ),
-    );    
+    );
   }
-  
-  public function operators(){
+
+  public function operators() {
     // @TODO: add operators for EQUALS.
     // This is placeholder for debug purposes.
     return array(
       'equals' => t('Equals'),
     );
   }
-  
-  public function fieldQuery(){
+
+  public function fieldQuery() {
   }
 }

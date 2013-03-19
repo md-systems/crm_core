@@ -193,6 +193,18 @@ function _crm_core_default_matching_engine_load_contact_type_config($contact_typ
   return $config;
 }
 
+/**
+ * Helper function to load field matching rule(config) from DB.
+ *
+ * @param string $contact_type
+ *   Machine readable contact type name.
+ *
+ * @param string $field_name
+ *   Machine readable field name.
+ *
+ * @return array
+ *   Field matching rule(config).
+ */
 function _crm_core_default_matching_engine_load_field_config($contact_type, $field_name) {
   $config = db_select('crm_core_match_contact_type_rules')
     ->fields('crm_core_match_contact_type_rules')
