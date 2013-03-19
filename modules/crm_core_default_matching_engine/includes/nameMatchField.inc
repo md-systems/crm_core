@@ -17,37 +17,23 @@ class nameMatchField extends CrmCoreMatchField {
    * @see CrmCoreMatchField::fieldRender()
    */
   
-  public function fieldRender($formElement, $formInfo, &$form){
-    
-    dpm($formInfo);
-    
-    // this works
-    foreach ($formInfo['columns'] as $item => $info){
-      if($formElement['settings']['inline_css'][$item] != 'display:none'){
-        
-        // construct some fake values to pass to the handler
-        // title will be a composite of the field name and the field part
-        // i.e. contact_name_given
-        
-        // @TODO: get the real name of the field in there, contact_field_ is not actually the real name...
-        // @TODO: add some extra text to the label to indicate where this came from
-        $temp['field_name'] = $formInfo['field_name'] . '_' . $item;
-        $temp['label'] = $formInfo['settings']['labels'][$item];
-        
-        if(isset($formElement['settings'][$item . '_field'])){
-          // dpm( $item . ': this is a select field');
+  public function fieldRender($field, $field_info, &$form){
+    foreach ($field_info['columns'] as $item => $info){
+      if($field['settings']['inline_css'][$item] != 'display:none'){
+        $temp['field_name'] = $field_info['field_name'] . '_' . $item;
+        $temp['label'] = $field['label'] . ': ' . $field_info['settings']['labels'][$item];
+        $temp['bundle'] = $field['bundle'];
+        if(isset($field['settings'][$item . '_field'])){
           $item = new selectMatchField;
-          $item->fieldRender($temp, $formInfo, $form);
+          $item->fieldRender($temp, $field_info, $form);
         } else {
-          // dpm( $item . ': this is a text field');
           $item = new textMatchField;
-          $item->fieldRender($temp, $formInfo, $form);
+          $item->fieldRender($temp, $field_info, $form);
         }
         
       }
-      
-    }
 
+    }
   }
   
   public function operators(){

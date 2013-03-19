@@ -113,6 +113,21 @@ function crm_core_default_matching_engine_form_submit($form, &$form_state) {
       'return_order' => $values['return_order'],
     ))
     ->execute();
+  foreach ($values['field_matching'] as $field_name => $config) {
+    db_merge('crm_core_match_contact_type_rules')
+      ->condition('contact_type', $values['contact_type'])
+      ->condition('field_name', $field_name)
+      ->fields(array(
+        'contact_type' => $values['contact_type'],
+        'field_name' => $field_name,
+        'status' => $config['status'],
+        'operator' => $config['operator'],
+        'weight' => $config['weight'],
+        'score' => $config['score'],
+      ))
+      ->execute();
+  }
+  drupal_set_message(t('The configuration options have been saved.'));
 }
 
 /**
@@ -125,9 +140,9 @@ function theme_crm_core_default_matching_engine_form($variables) {
   foreach (element_children($form['field_matching']) as $key) {
     $rows[] = array(
       'data' => array(
-        drupal_render($form['field_matching'][$key]['check']),
+        drupal_render($form['field_matching'][$key]['status']),
         drupal_render($form['field_matching'][$key]['name']),
-        drupal_render($form['field_matching'][$key]['fieldtype']),
+        drupal_render($form['field_matching'][$key]['field_name']),
         drupal_render($form['field_matching'][$key]['operator']),
         drupal_render($form['field_matching'][$key]['options']),
         drupal_render($form['field_matching'][$key]['score']),
@@ -166,11 +181,33 @@ function _crm_core_default_matching_engine_load_contact_type_config($contact_typ
     ->execute()
     ->fetchAssoc();
   // Merge default config.
-  $config += array(
-    'threshold' => 0,
-    'status' => 0,
-    'strict' => 0,
-    'return_order' => '',
-  );
+  if (!$config) {
+    $config = array(
+      'threshold' => 0,
+      'status' => 0,
+      'strict' => 0,
+      'return_order' => '',
+    );
+  }
+
+  return $config;
+}
+
+function _crm_core_default_matching_engine_load_field_config($contact_type, $field_name) {
+  $config = db_select('crm_core_match_contact_type_rules')
+    ->fields('crm_core_match_contact_type_rules')
+    ->condition('contact_type', $contact_type)
+    ->condition('field_name', $field_name)
+    ->execute()
+    ->fetchAssoc();
+  // Merge default config.
+  if (!$config) {
+    $config = array(
+      'operator' => '',
+      'status' => 0,
+      'score' => 0,
+      'weight' => 0,
+    );
+  }
   return $config;
 }

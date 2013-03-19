@@ -12,28 +12,34 @@ class textMatchField extends CrmCoreMatchField{
    * @see CrmCoreMatchField::fieldRender()
    */
   
-  public function fieldRender($formElement, $formInfo, &$form){
+  public function fieldRender($field, $field_info, &$form){
     
-    $field_name = $formElement['field_name'];
-    $field['label'] = $formElement['label'];
+    $field_name = $field['field_name'];
+    $field_label = $field['label'];
+    $contact_type = $field['bundle'];
 
-    $form['field_matching'][$field_name]['check'] = array(
+    $config = _crm_core_default_matching_engine_load_field_config($contact_type, $field_name);
+
+    $form['field_matching'][$field_name]['status'] = array(
       '#type' => 'checkbox',
-      '#title' => '',
+      '#default_value' => $config['status'],
     );
+
     $form['field_matching'][$field_name]['name'] = array(
       '#type' => 'item',
-      '#markup' => $field['label'],
+      '#markup' => $field_label,
     );
-    $form['field_matching'][$field_name]['fieldtype'] = array(
+
+    $form['field_matching'][$field_name]['field_name'] = array(
       '#type' => 'item',
-      '#markup' => $formInfo['type'],
+      '#markup' => $field_info['type'],
     );
-    
+
     // @TODO: add a selector for the logical operator
     $form['field_matching'][$field_name]['operator'] = array(
-      '#type' => 'item',
-      '#markup' => '---',
+      '#type' => 'select',
+      '#default_value' => $config['operator'],
+      '#options' => $this->operators(),
     );
     
     // @TODO: add a textfield for any extra information that's needed
@@ -42,35 +48,32 @@ class textMatchField extends CrmCoreMatchField{
       '#markup' => '---',
     );
     
-    // @TODO: add a textfield for any extra information that's needed
     $form['field_matching'][$field_name]['score'] = array(
       '#type' => 'textfield',
-      '#title' => 'Score',
       '#maxlength' => 28,
-      '#title_display' => 'invisible',
-      '#default_value' => 0,
+      '#size' => 28,
+      '#default_value' => $config['score'],
     );
     
-    // @TODO: get the actual weight as the default value
     $form['field_matching'][$field_name]['weight'] = array(
       '#type' => 'weight',
-      '#title_display' => 'invisible',
-      '#default_value' => 0,
+      '#default_value' => $config['weight'],
       '#attributes' => array(
         'class' => array('crm-core-match-engine-order-weight'),
       ),
     );    
-    
   }
   
   public function operators(){
-    
-    // add operators for EQUALS, STARTS WITH, ENDS WITH
-    
+    // @TODO: add operators for EQUALS, STARTS WITH, ENDS WITH.
+    // This is placeholder for debug purposes.
+    return array(
+      'equals' => t('Equals'),
+      'starts' => t('Starts with'),
+      'ends' => t('Ends with'),
+    );
   }
   
   public function fieldQuery(){
   }
-  
-  
 }

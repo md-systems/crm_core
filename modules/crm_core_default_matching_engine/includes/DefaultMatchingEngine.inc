@@ -13,9 +13,9 @@ interface DefaultMatchingEngineFieldType {
    * Renders them into component parts for use in applying logical 
    * operators and ordering functions.
    * 
-   * @param object $formElement: the form element being rendered
+   * @param object $field: the field being rendered
    */
-  public function fieldRender($formElement, $formInfo, &$form);
+  public function fieldRender($field, $field_info, &$form);
   
   /**
    * Operators
@@ -45,7 +45,7 @@ interface DefaultMatchingEngineFieldType {
  */
 class CrmCoreMatchField implements DefaultMatchingEngineFieldType {
 
-  public function fieldRender($formElement, $formInfo, &$form){
+  public function fieldRender($field, $field_info, &$form){
   }
   
   public function operators(){
