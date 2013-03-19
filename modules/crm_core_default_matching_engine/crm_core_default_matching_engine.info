@@ -13,3 +13,4 @@ files[] = includes/DefaultMatchingEngine.inc
 files[] = includes/nameMatchField.inc
 files[] = includes/textMatchField.inc
 files[] = includes/selectMatchField.inc
+files[] = includes/emailMatchField.inc
