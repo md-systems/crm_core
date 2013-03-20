@@ -12,16 +12,11 @@
  *
  */
 interface CrmCoreMatchEngineInterface {
-
+// @TODO: Pull all method definitions to interface.
   /**
    * Constructor.
    */
   public function __construct();
-
-  /**
-   * Returns information about the matching engine to use in identifying the engine.
-   */
-  public function getEngineInfo();
 
   /**
    * This function will be executed by CRM Core Match each time the engine is executed.
@@ -46,28 +41,55 @@ abstract class CrmCoreMatchEngine implements CrmCoreMatchEngineInterface {
   /**
    * The human readable name for the matching engine
    *
-   * @var $name string
+   * @var string $name
    */
   protected $name;
 
   /**
    * The machine name used for the matching engine
    *
-   * @var $machineName string
+   * @var string $machineName
    */
   protected $machineName;
 
   /**
    * A short description of what the matching engine does.
    *
-   * @var $name string
+   * @var string $description
    */
   protected $description;
 
   /**
+   * Engine weight when applying matching.
+   *
+   * Configured from UI and stored in DB.
+   *
+   * @var int $weight
+   */
+  protected $weight;
+
+  /**
+   * Engine status.
+   *
+   * Configured from UI and stored in DB.
+   *
+   * @var bool $status
+   */
+  protected $status;
+
+  /**
+   * Engine ID.
+   *
+   * Stored in DB. Used for debug purposes only.
+   *
+   * @var int $eid
+   */
+  protected $eid;
+
+  /**
    * An array listing settings pages for the matching engine.
    *
-   * @var $settings array
+   * @var array $settings
    *
    * Example structure:
    * @code
@@ -84,6 +106,8 @@ abstract class CrmCoreMatchEngine implements CrmCoreMatchEngineInterface {
 
   /**
    * Constructor: sets basic variables.
+   *
+   * Don't forget to user t() for engine name and description fields.
    */
   public function __construct() {
     $this->name = '';
@@ -93,16 +117,94 @@ abstract class CrmCoreMatchEngine implements CrmCoreMatchEngineInterface {
   }
 
   /**
-   * Returns basic information about the matching engine.
-   * @see CrmCoreMatchEngineInterface::getEngineInfo
+   * Returns engine human readable name.
+   *
+   * @return string
    */
-  public function getEngineInfo() {
-    return array(
-      'name' => $this->name,
-      'machine_name' => $this->machineName,
-      'description' => $this->description,
-      'settings' => $this->settings,
-    );
+  public function getName() {
+    return $this->name;
+  }
+
+  /**
+   * Returns engine machine readable name.
+   *
+   * @return string
+   */
+  public function getMachineName() {
+    return $this->machineName;
+  }
+
+  /**
+   * Returns engine description.
+   *
+   * @return string
+   */
+  public function getDescription() {
+    return $this->description;
+  }
+
+  /**
+   * Returns engine ID.
+   *
+   * @return int
+   */
+  public function getID() {
+    return $this->eid;
+  }
+
+  /**
+   * Returns engine weight.
+   *
+   * @return int
+   */
+  public function getWeight() {
+    return $this->weight;
+  }
+
+  /**
+   * Returns engine status.
+   *
+   * @return bool
+   */
+  public function getStatus() {
+    return $this->status;
+  }
+
+
+  /**
+   * Returns engine settings.
+   *
+   * @return array
+   */
+  public function getSettings() {
+    return $this->settings;
+  }
+
+  /**
+   * Set engine ID.
+   *
+   * @param int
+   */
+  public function setID($eid) {
+    $this->eid = $eid;
+  }
+
+  /**
+   * Set engine weigth.
+   *
+   * @param int
+   */
+  public function setWeight($weight) {
+    $this->weight = $weight;
+  }
+
+  /**
+   * Set engine status.
+   *
+   * @param bool
+   */
+  public function setStatus($status) {
+    $this->status = $status;
   }
 
   /**

@@ -35,13 +35,13 @@ function crm_core_match_admin_config_engines_form($form, &$form_state) {
   $engines = crm_core_match_get_engines();
   $form_state['engines'] = $engines;
   foreach ($engines as $engine) {
-    $form['engines_container'][$engine['machine_name']]['name'] = array('#markup' => t($engine['name']));
-    $form['engines_container'][$engine['machine_name']]['description'] = array('#markup' => t($engine['description']));
-    $status_toggle_path = 'admin/config/crm-core/match/engines/' . $engine['machine_name'] . '/';
-    $status_toggle_path .= $engine['status'] ? 'disable' : 'enable';
+    $form['engines_container'][$engine->getMachineName()]['name'] = array('#markup' => $engine->getName());
+    $form['engines_container'][$engine->getMachineName()]['description'] = array('#markup' => $engine->getDescription());
+    $status_toggle_path = 'admin/config/crm-core/match/engines/' . $engine->getMachineName() . '/';
+    $status_toggle_path .= $engine->getStatus() ? 'disable' : 'enable';
     $destination = drupal_get_destination();
-    $form['engines_container'][$engine['machine_name']]['enabled'] = array(
-      '#markup' => l($engine['status'] ? t('Disable') : t('Enable'), $status_toggle_path, array(
+    $form['engines_container'][$engine->getMachineName()]['enabled'] = array(
+      '#markup' => l($engine->getStatus() ? t('Disable') : t('Enable'), $status_toggle_path, array(
         'query' => array(
           'destination' => $destination['destination'],
         ),
@@ -49,21 +49,21 @@ function crm_core_match_admin_config_engines_form($form, &$form_state) {
     );
     // Operations links.
     $links = array();
-    foreach ($engine['settings'] as $item) {
+    foreach ($engine->getSettings() as $item) {
       $links[$item['name']] = array(
         'title' => $item['label'],
         'href' => $item['path'],
       );
     }
-    $form['engines_container'][$engine['machine_name']]['settings'] = array(
+    $form['engines_container'][$engine->getMachineName()]['settings'] = array(
       '#theme' => 'links',
       '#links' => $links,
       '#attributes' => array('class' => array('links', 'inline')),
     );
-    $form['engines_container'][$engine['machine_name']]['weight'] = array(
+    $form['engines_container'][$engine->getMachineName()]['weight'] = array(
       '#type' => 'weight',
       '#title_display' => 'invisible',
-      '#default_value' => $engine['weight'],
+      '#default_value' => $engine->getWeight(),
       '#attributes' => array(
         'class' => array('crm-core-match-engine-order-weight'),
       ),
@@ -86,10 +86,10 @@ function crm_core_match_admin_config_engines_form_submit($form, &$form_state) {
   $engines = $form_state['engines'];
   foreach ($engines as $engine) {
     db_merge('crm_core_match_engines')
-      ->condition('machine_name', $engine['machine_name'])
+      ->condition('machine_name', $engine->getMachineName())
       ->fields(array(
-        'weight' => $form_state['values']['engines_container'][$engine['machine_name']]['weight'],
-        'machine_name' => $engine['machine_name'],
+        'weight' => $form_state['values']['engines_container'][$engine->getMachineName()]['weight'],
+        'machine_name' => $engine->getMachineName(),
       ))
       ->execute();
   }

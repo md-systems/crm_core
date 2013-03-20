@@ -56,10 +56,10 @@ class DefaultMatchingEngine extends CrmCoreMatchEngine {
    * Constructor: sets basic variables.
    */
   public function __construct() {
-    $this->name = 'Default Matching Engine';
+    $this->name = t('Default Matching Engine');
     $this->machineName = 'default_matching_engine';
-    $this->description = 'This is a simple matching engine from CRM Core. Allows administrators to specify matching rules'
-      . ' for individual contact types on a field-by-field basis.';
+    $this->description = t('This is a simple matching engine from CRM Core. Allows administrators to specify matching'
+      . ' rules for individual contact types on a field-by-field basis.');
     $this->settings = array();
   }
 

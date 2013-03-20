@@ -48,9 +48,7 @@ function crm_core_default_matching_engine_menu() {
  * Implements hook_crm_core_match_engine_register().
  */
 function crm_core_default_matching_engine_crm_core_match_engine_register() {
-  $default = new DefaultMatchingEngine();
-
-  return $default->getEngineInfo();
+  return new DefaultMatchingEngine();
 }
 
 /**

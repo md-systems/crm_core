@@ -15,14 +15,15 @@ function crm_core_match_testing_page($contact) {
   $output = '';
 
   $rows = array();
-  foreach (crm_core_match_get_engines() as $engine) {
-    if ($engine['status']) {
+  $engines = crm_core_match_get_engines();
+  foreach ($engines as $engine) {
+    if ($engine->getStatus()) {
       $rows[] = array('data' => array(
-        $engine['eid'],
-        check_plain($engine['name']),
-        check_plain($engine['description']),
-        $engine['machine_name'],
-        $engine['weight'],
+        $engine->getID(),
+        $engine->getName(),
+        $engine->getDescription(),
+        $engine->getMachineName(),
+        $engine->getWeight(),
       ));
     }
   }

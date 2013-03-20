@@ -99,14 +99,15 @@ function crm_core_match_get_engines() {
     foreach (module_implements('crm_core_match_engine_register') as $module) {
       $function = $module . '_crm_core_match_engine_register';
       $engine = $function();
-      if (isset($stored_engines[$engine['machine_name']])) {
-        $engine['status'] = $stored_engines[$engine['machine_name']]->status;
-        $engine['weight'] = $stored_engines[$engine['machine_name']]->weight;
-        $engine['eid'] = $stored_engines[$engine['machine_name']]->eid;
+      if (isset($stored_engines[$engine->getMachineName()])) {
+        $engine->setStatus($stored_engines[$engine->getMachineName()]->status);
+        $engine->setWeight($stored_engines[$engine->getMachineName()]->weight);
+        $engine->setID($stored_engines[$engine->getMachineName()]->eid);
       }
       else {
-        $engine['weight'] = 10;
-        $engine['status'] = 0;
+        $engine->setStatus(0);
+        $engine->setWeight(10);
+        $engine->setID(0);
       }
       $engines[] = $engine;
     }
@@ -150,8 +151,8 @@ function crm_core_match_engine_status_toggle($engine_machine_name, $to_status) {
  * Helper function for engines weight comparison.
  */
 function _crm_core_match_engine_weight_cmp($a, $b) {
-  if ($a['weight'] == $b['weight']) {
+  if ($a->weight == $b->weight) {
     return 0;
   }
-  return ($a['weight'] < $b['weight']) ? -1 : 1;
+  return ($a->weight < $b->weight) ? -1 : 1;
 }
