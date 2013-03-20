@@ -29,7 +29,7 @@ function crm_core_match_testing_page($contact) {
   }
   $header = array(
     t('Engine ID'),
-    t('Engine mame'),
+    t('Engine name'),
     t('Engine description'),
     t('Engine machine name'),
     t('Weight'),
