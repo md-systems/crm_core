@@ -40,11 +40,12 @@ class textMatchField implements DefaultMatchingEngineFieldTypeInterface {
       '#markup' => $field_info['type'],
     );
 
-    // @TODO: add a selector for the logical operator
     $form['field_matching'][$field_name]['operator'] = array(
       '#type' => 'select',
       '#default_value' => $config['operator'],
       '#options' => $this->operators(),
+      '#empty_option' => t('-- Please Select --'),
+      '#empty_value' => '',
     );
 
     // @TODO: add a textfield for any extra information that's needed

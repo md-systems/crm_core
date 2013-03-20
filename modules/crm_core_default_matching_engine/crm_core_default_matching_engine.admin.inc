@@ -11,8 +11,6 @@
 function crm_core_default_matching_engine_form($form, &$form_state, $contact_type) {
   $config = _crm_core_default_matching_engine_load_contact_type_config($contact_type);
 
-  $form['#tree'] = TRUE;
-
   $form['contact_type'] = array(
     '#type' => 'value',
     '#value' => $contact_type,
@@ -65,6 +63,7 @@ function crm_core_default_matching_engine_form($form, &$form_state, $contact_typ
 
   $form['field_matching'] = array(
     '#type' => 'container',
+    '#tree' => TRUE,
   );
 
   // This returns a list of all fields associated with the selected contact type.
@@ -96,6 +95,18 @@ function crm_core_default_matching_engine_form($form, &$form_state, $contact_typ
   );
 
   return $form;
+}
+
+/**
+ * Validate handler for crm_core_default_matching_engine_form.
+ */
+function crm_core_default_matching_engine_form_validate($form, &$form_state) {
+  $fields_rules = $form_state['values']['field_matching'];
+  foreach ($fields_rules as $field_name => $config) {
+    if ($config['status'] && empty($config['operator'])) {
+      form_set_error('field_matching][' . $field_name . '][operator', t('You must select an operator for enabled field.'));
+    }
+  }
 }
 
 /**
