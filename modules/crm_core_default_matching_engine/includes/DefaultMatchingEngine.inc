@@ -74,6 +74,40 @@ class DefaultMatchingEngine extends CrmCoreMatchEngine {
    * @see CrmCoreMatchEngineInterface::execute()
    */
   public function execute(&$contact, &$ids = array()) {
-    dpm('yo yo yo');
+// @TODO we executing engine, it loads list of rules for this contact type, in weighted order executes a
+// a rule queries and summing results by rules, if sum is greater then Threshold , then contact ids from rules
+// queries results pushed to matches.
+
+    $base_config = crm_core_default_matching_engine_load_contact_type_config($contact->type);
+    dpm($base_config, 'Base contact type config');
+    // Check if match is enabled for this contact type.
+    if ($base_config['status']) {
+
+      // This returns a list of all fields associated with the selected contact type.
+      foreach (field_info_instances('crm_core_contact', $contact->type) as $field_name => $field) {
+
+        // This returns some additional information about the field.
+        $field_info = field_info_field($field_name);
+
+        $field_type = $field_info['type'];
+        // We now have enough information about the field to render a row for it. Some fields are going to have multiple
+        // rows (for instance, name fields) and need to be handled a little differently.
+        $field_match_handler_class = $field_type . 'MatchField';
+
+        if (class_exists($field_match_handler_class)) {
+          // Special handling for name fields.
+          if ($field_type == 'name') {
+
+          }
+          $field_match_handler = new $field_match_handler_class();
+
+          $field_rule = crm_core_default_matching_engine_load_field_config($contact->type, $field_type);
+          dpm($field_rule, $field_name);
+          dpm($field_type,$field_type);
+        }
+      }
+
+
+    }
   }
 }

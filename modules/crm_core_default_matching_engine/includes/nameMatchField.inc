@@ -20,21 +20,7 @@ class nameMatchField implements DefaultMatchingEngineFieldTypeInterface {
    * @see CrmCoreMatchField::fieldRender()
    */
   public function fieldRender($field, $field_info, &$form) {
-    foreach ($field_info['columns'] as $item => $info) {
-      if ($field['settings']['inline_css'][$item] != 'display:none') {
-        $temp['field_name'] = $field_info['field_name'] . '_' . $item;
-        $temp['label'] = $field['label'] . ': ' . $field_info['settings']['labels'][$item];
-        $temp['bundle'] = $field['bundle'];
-        if (isset($field['settings'][$item . '_field'])) {
-          $item = new selectMatchField();
-          $item->fieldRender($temp, $field_info, $form);
-        }
-        else {
-          $item = new textMatchField();
-          $item->fieldRender($temp, $field_info, $form);
-        }
-      }
-    }
+    _crm_core_default_matching_engine_name_field_helper($field, $field_info, $form, __FUNCTION__);
   }
 
   public function operators() {

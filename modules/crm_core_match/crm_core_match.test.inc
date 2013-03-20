@@ -11,11 +11,11 @@ function crm_core_match_testing_page_title($contact) {
 }
 
 function crm_core_match_testing_page($contact) {
-  dpm($contact);
   $output = '';
-
-  $rows = array();
   $engines = crm_core_match_get_engines();
+
+  // Display engines table
+  $rows = array();
   foreach ($engines as $engine) {
     if ($engine->getStatus()) {
       $rows[] = array('data' => array(
@@ -34,12 +34,16 @@ function crm_core_match_testing_page($contact) {
     t('Engine machine name'),
     t('Weight'),
   );
-
   $output .= theme('table', array(
     'header' => $header,
     'rows' => $rows,
     'empty' => t('No matching engines enabled or associated with contacts of this type.'),
   ));
+
+  foreach ($engines as $engine) {
+    $matches = array();
+    $engine->execute($contact, $matches);
+  }
 
   return $output;
 }

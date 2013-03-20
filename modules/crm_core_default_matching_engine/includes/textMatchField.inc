@@ -21,7 +21,7 @@ class textMatchField implements DefaultMatchingEngineFieldTypeInterface {
     $field_label = $field['label'];
     $contact_type = $field['bundle'];
 
-    $config = _crm_core_default_matching_engine_load_field_config($contact_type, $field_name);
+    $config = crm_core_default_matching_engine_load_field_config($contact_type, $field_name);
 
     $form['field_matching'][$field_name]['#weight'] = $config['weight'];
 

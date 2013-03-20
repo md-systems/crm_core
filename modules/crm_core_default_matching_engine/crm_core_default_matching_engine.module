@@ -62,3 +62,80 @@ function crm_core_default_matching_engine_theme() {
     ),
   );
 }
+
+/**
+ * Loads contact type matching configuration from DB.
+ *
+ * @param string $contact_type
+ *   Machine readable contact type name.
+ *
+ * @return array
+ *   Contact type matching configuration.
+ */
+function crm_core_default_matching_engine_load_contact_type_config($contact_type) {
+  $base_settings = db_select('crm_core_match_contact_types')
+    ->fields('crm_core_match_contact_types')
+    ->condition('contact_type', $contact_type)
+    ->execute()
+    ->fetchAssoc();
+  // If no settings stored in DB use defaults.
+  if (!$base_settings) {
+    $base_settings = array(
+      'threshold' => 0,
+      'status' => 0,
+      'strict' => 0,
+      'return_order' => '',
+    );
+  }
+
+  return $base_settings;
+}
+
+/**
+ * Loads field matching rule(config) from DB.
+ *
+ * @param string $contact_type
+ *   Machine readable contact type name.
+ *
+ * @param string $field_name
+ *   Machine readable field name.
+ *
+ * @return array
+ *   Field matching rule(config).
+ */
+function crm_core_default_matching_engine_load_field_config($contact_type, $field_name) {
+  $config = db_select('crm_core_match_contact_type_rules')
+    ->fields('crm_core_match_contact_type_rules')
+    ->condition('contact_type', $contact_type)
+    ->condition('field_name', $field_name)
+    ->execute()
+    ->fetchAssoc();
+  // If no settings stored in DB use defaults.
+  if (!$config) {
+    $config = array(
+      'operator' => '',
+      'status' => 0,
+      'score' => 0,
+      'weight' => 0,
+    );
+  }
+  return $config;
+}
+
+function _crm_core_default_matching_engine_name_field_helper($field, $field_info, &$form, $method_name) {
+  foreach ($field_info['columns'] as $item => $info) {
+    if ($field['settings']['inline_css'][$item] != 'display:none') {
+      $temp['field_name'] = $field_info['field_name'] . '_' . $item;
+      $temp['label'] = $field['label'] . ': ' . $field_info['settings']['labels'][$item];
+      $temp['bundle'] = $field['bundle'];
+      if (isset($field['settings'][$item . '_field'])) {
+        $item = new selectMatchField();
+        $item->{$method_name}($temp, $field_info, $form);
+      }
+      else {
+        $item = new textMatchField();
+        $item->{$method_name}($temp, $field_info, $form);
+      }
+    }
+  }
+}

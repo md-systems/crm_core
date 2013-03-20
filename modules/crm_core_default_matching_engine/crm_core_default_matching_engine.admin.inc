@@ -9,7 +9,7 @@
  * Creates a form for customizing the matching rules per contact type.
  */
 function crm_core_default_matching_engine_form($form, &$form_state, $contact_type) {
-  $config = _crm_core_default_matching_engine_load_contact_type_config($contact_type);
+  $config = crm_core_default_matching_engine_load_contact_type_config($contact_type);
 
   $form['contact_type'] = array(
     '#type' => 'value',
@@ -175,65 +175,6 @@ function theme_crm_core_default_matching_engine_form($variables) {
   drupal_add_tabledrag('crm-core-match-engine-order', 'order', 'sibling', 'crm-core-match-engine-order-weight');
 
   return $output;
-}
-
-/**
- * Helper function to load contact type config from DB.
- *
- * @param string $contact_type
- *   Machine readable contact type name.
- *
- * @return array
- *   Contact type matching configuration.
- */
-function _crm_core_default_matching_engine_load_contact_type_config($contact_type) {
-  $config = db_select('crm_core_match_contact_types')
-    ->fields('crm_core_match_contact_types')
-    ->condition('contact_type', $contact_type)
-    ->execute()
-    ->fetchAssoc();
-  // Merge default config.
-  if (!$config) {
-    $config = array(
-      'threshold' => 0,
-      'status' => 0,
-      'strict' => 0,
-      'return_order' => '',
-    );
-  }
-
-  return $config;
-}
-
-/**
- * Helper function to load field matching rule(config) from DB.
- *
- * @param string $contact_type
- *   Machine readable contact type name.
- *
- * @param string $field_name
- *   Machine readable field name.
- *
- * @return array
- *   Field matching rule(config).
- */
-function _crm_core_default_matching_engine_load_field_config($contact_type, $field_name) {
-  $config = db_select('crm_core_match_contact_type_rules')
-    ->fields('crm_core_match_contact_type_rules')
-    ->condition('contact_type', $contact_type)
-    ->condition('field_name', $field_name)
-    ->execute()
-    ->fetchAssoc();
-  // Merge default config.
-  if (!$config) {
-    $config = array(
-      'operator' => '',
-      'status' => 0,
-      'score' => 0,
-      'weight' => 0,
-    );
-  }
-  return $config;
 }
 
 /**
