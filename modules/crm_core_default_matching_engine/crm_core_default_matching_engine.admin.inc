@@ -237,7 +237,7 @@ function _crm_core_default_matching_engine_load_field_config($contact_type, $fie
 }
 
 /**
- * Helper function for weight comparison.
+ * Helper function for field rules weight comparison.
  */
 function _crm_core_default_matching_engine_load_field_weight_cmp($a, $b) {
   if (empty($a['#weight']) || empty($b['#weight'])) {

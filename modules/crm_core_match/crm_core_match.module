@@ -110,6 +110,7 @@ function crm_core_match_get_engines() {
       }
       $engines[] = $engine;
     }
+    uasort($engines, '_crm_core_match_engine_weight_cmp');
     $cache = $engines;
   }
 
@@ -143,4 +144,14 @@ function crm_core_match_engine_status_toggle($engine_machine_name, $to_status) {
   }
   $destination = drupal_get_destination();
   drupal_goto($destination['destination']);
+}
+
+/**
+ * Helper function for engines weight comparison.
+ */
+function _crm_core_match_engine_weight_cmp($a, $b) {
+  if ($a['weight'] == $b['weight']) {
+    return 0;
+  }
+  return ($a['weight'] < $b['weight']) ? -1 : 1;
 }

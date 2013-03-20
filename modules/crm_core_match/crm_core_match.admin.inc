@@ -10,8 +10,6 @@
  */
 function crm_core_match_admin_config_engines_form($form, &$form_state) {
 
-  $form['#tree'] = TRUE;
-
   $form['header'] = array(
     '#prefix' => '<h2>',
     '#markup' => t('Matching Engines'),
@@ -31,6 +29,7 @@ function crm_core_match_admin_config_engines_form($form, &$form_state) {
 
   $form['engines_container'] = array(
     '#type' => 'container',
+    '#tree' => TRUE,
   );
 
   $engines = crm_core_match_get_engines();
