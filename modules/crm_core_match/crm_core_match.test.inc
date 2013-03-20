@@ -36,8 +36,9 @@ function crm_core_match_testing_page($contact) {
 
   $output .= theme('table', array(
     'header' => $header,
-    'rows' => $rows,)
-  );
+    'rows' => $rows,
+    'empty' => t('No matching engines enabled or associated with contacts of this type.'),
+  ));
 
   return $output;
 }

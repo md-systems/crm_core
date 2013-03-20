@@ -115,9 +115,9 @@ function crm_core_default_matching_engine_form_validate($form, &$form_state) {
 function crm_core_default_matching_engine_form_submit($form, &$form_state) {
   $values = $form_state['values'];
   db_merge('crm_core_match_contact_types')
-    ->condition('machine_name', $values['contact_type'])
+    ->condition('contact_type', $values['contact_type'])
     ->fields(array(
-      'machine_name' => $values['contact_type'],
+      'contact_type' => $values['contact_type'],
       'threshold' => $values['threshold'],
       'status' => $values['status'],
       'strict' => $values['strict'],
@@ -189,7 +189,7 @@ function theme_crm_core_default_matching_engine_form($variables) {
 function _crm_core_default_matching_engine_load_contact_type_config($contact_type) {
   $config = db_select('crm_core_match_contact_types')
     ->fields('crm_core_match_contact_types')
-    ->condition('machine_name', $contact_type)
+    ->condition('contact_type', $contact_type)
     ->execute()
     ->fetchAssoc();
   // Merge default config.

@@ -18,7 +18,7 @@ function crm_core_default_matching_engine_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
-      'machine_name' => array(
+      'contact_type' => array(
         'description' => 'Machine readable name of a contact type.',
         'type' => 'varchar',
         'length' => 32,

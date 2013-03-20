@@ -53,9 +53,9 @@ abstract class CrmCoreMatchEngine implements CrmCoreMatchEngineInterface {
   /**
    * The machine name used for the matching engine
    *
-   * @var $machine_name string
+   * @var $machineName string
    */
-  protected $machine_name;
+  protected $machineName;
 
   /**
    * A short description of what the matching engine does.
@@ -99,7 +99,7 @@ abstract class CrmCoreMatchEngine implements CrmCoreMatchEngineInterface {
   public function getEngineInfo() {
     return array(
       'name' => $this->name,
-      'machine_name' => $this->machine_name,
+      'machine_name' => $this->machineName,
       'description' => $this->description,
       'settings' => $this->settings,
     );
