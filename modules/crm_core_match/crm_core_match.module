@@ -57,6 +57,16 @@ function crm_core_match_menu() {
     'access callback' => TRUE,
   );
 
+  $items['crm-core/crm-core-match/check-rules/%crm_core_contact'] = array(
+    'page callback' => 'crm_core_match_testing_page',
+    'page arguments' => array(3),
+    'title callback' => 'crm_core_match_testing_page_title',
+    'title arguments' => array(3),
+    'access callback' => TRUE,
+    'type' => MENU_SUGGESTED_ITEM,
+    'file' => 'crm_core_match.test.inc',
+  );
+
   return $items;
 }
 
@@ -92,6 +102,7 @@ function crm_core_match_get_engines() {
       if (isset($stored_engines[$engine['machine_name']])) {
         $engine['status'] = $stored_engines[$engine['machine_name']]->status;
         $engine['weight'] = $stored_engines[$engine['machine_name']]->weight;
+        $engine['eid'] = $stored_engines[$engine['machine_name']]->eid;
       }
       else {
         $engine['weight'] = 10;
