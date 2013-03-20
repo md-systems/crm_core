@@ -14,3 +14,4 @@ files[] = includes/nameMatchField.inc
 files[] = includes/textMatchField.inc
 files[] = includes/selectMatchField.inc
 files[] = includes/emailMatchField.inc
+files[] = includes/datetimeMatchField.inc
