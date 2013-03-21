@@ -42,13 +42,8 @@ class nameMatchField extends DefaultMatchingEngineFieldType {
   }
 
   public function fieldQuery($contact, $rule) {
-//    dpm($rule, 'Matching rule');
-    dpm($rule->operator, 'Matching operator');
-//    dpm($contact, 'Contact');
-
     $contact_wrapper = entity_metadata_wrapper('crm_core_contact', $contact);
     $needle = $contact_wrapper->{$rule->field_name}->{$rule->field_item}->value();
-
 
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'crm_core_contact')->entityCondition('bundle', $contact->type);
@@ -60,28 +55,21 @@ class nameMatchField extends DefaultMatchingEngineFieldType {
 
       case 'starts':
         $needle = db_like(substr($needle, 0, MATCH_DEFAULT_CHARS)) . '%';
-        dpm($needle, 'Needle');
         $query->fieldCondition($rule->field_name, $rule->field_item, $needle, 'LIKE');
         break;
 
       case 'ends':
         $needle = '%' . db_like(substr($needle, -1, MATCH_DEFAULT_CHARS));
-        dpm($needle, 'Needle');
         $query->fieldCondition($rule->field_name, $rule->field_item, $needle, 'LIKE');
         break;
 
       case 'contains':
         $needle = '%' . db_like($needle) . '%';
-        dpm($needle, 'Needle');
         $query->fieldCondition($rule->field_name, $rule->field_item, $needle, 'LIKE');
         break;
     }
 
-
-
     $results = $query->execute();
-    dpm($results, 'EFQ results');
-    dpm(array_keys($results['crm_core_contact']), 'Returned');
 
     return array_keys($results['crm_core_contact']);
   }

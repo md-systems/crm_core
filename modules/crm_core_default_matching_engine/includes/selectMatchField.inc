@@ -21,6 +21,7 @@ class selectMatchField extends DefaultMatchingEngineFieldType {
 
   /**
    * Defines logical operators to use with this field.
+   *
    * This operators would be interpreted in fieldQuery() method.
    *
    * @return array
@@ -32,6 +33,6 @@ class selectMatchField extends DefaultMatchingEngineFieldType {
     );
   }
 
-  public function fieldQuery() {
+  public function fieldQuery($contact, $rule) {
   }
 }

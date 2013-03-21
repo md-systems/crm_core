@@ -43,6 +43,6 @@ class DateMatchField extends DefaultMatchingEngineFieldType {
     return $operators;
   }
 
-  public function fieldQuery() {
+  public function fieldQuery($contact, $rule) {
   }
 }

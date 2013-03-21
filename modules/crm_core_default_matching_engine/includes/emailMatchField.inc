@@ -33,6 +33,6 @@ class emailMatchField extends DefaultMatchingEngineFieldType {
     );
   }
 
-  public function fieldQuery() {
+  public function fieldQuery($contact, $rule) {
   }
 }

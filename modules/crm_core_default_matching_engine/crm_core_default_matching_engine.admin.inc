@@ -176,7 +176,7 @@ function theme_crm_core_default_matching_engine_form($variables) {
     t('Operator'),
     t('Options'),
     t('Score'),
-    t('Weight')
+    t('Weight'),
   );
   $form['field_matching']['content']['#markup'] = theme('table', array(
     'header' => $header,
