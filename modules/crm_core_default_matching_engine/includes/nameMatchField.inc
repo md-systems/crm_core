@@ -47,6 +47,7 @@ class nameMatchField extends DefaultMatchingEngineFieldType {
 
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'crm_core_contact')->entityCondition('bundle', $contact->type);
+    $query->entityCondition('entity_id', $contact->contact_id, '<>');
 
     switch ($rule->operator) {
       case 'equals':
@@ -71,6 +72,6 @@ class nameMatchField extends DefaultMatchingEngineFieldType {
 
     $results = $query->execute();
 
-    return array_keys($results['crm_core_contact']);
+    return isset($results['crm_core_contact']) ? array_keys($results['crm_core_contact']) : $results;
   }
 }

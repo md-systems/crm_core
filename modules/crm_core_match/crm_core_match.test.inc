@@ -14,17 +14,19 @@ function crm_core_match_testing_page($contact) {
   $output = '';
   $engines = crm_core_match_get_engines();
 
-  // Display engines table
+  // Display engines table.
   $rows = array();
   foreach ($engines as $engine) {
     if ($engine->getStatus()) {
-      $rows[] = array('data' => array(
-        $engine->getID(),
-        $engine->getName(),
-        $engine->getDescription(),
-        $engine->getMachineName(),
-        $engine->getWeight(),
-      ));
+      $rows[] = array(
+        'data' => array(
+          $engine->getID(),
+          $engine->getName(),
+          $engine->getDescription(),
+          $engine->getMachineName(),
+          $engine->getWeight(),
+        ),
+      );
     }
   }
   $header = array(
@@ -44,6 +46,14 @@ function crm_core_match_testing_page($contact) {
     $matches = array();
     $engine->execute($contact, $matches);
   }
+
+  // @TODO: Add matches list.
+  $output .= '<h1>Matches:</h1>';
+  $output .= theme('item_list', array(
+    'items' => $matches,
+    'title' => 'Ids of matched contacts',
+    'type' => 'ol'
+  ));
 
   return $output;
 }
