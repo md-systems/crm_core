@@ -5,6 +5,8 @@
  * Default match engine definitions.
  */
 
+define('MATCH_DEFAULT_CHARS', 3);
+
 /**
  * Interface for defining the logical operators and query criteria used to identify duplicate contacts based on
  * different field types in DefaultMatchingEngine.
@@ -198,7 +200,7 @@ class DefaultMatchingEngine extends CrmCoreMatchEngine {
 // queries results pushed to matches.
 
     $base_config = crm_core_default_matching_engine_load_contact_type_config($contact->type);
-    dpm($base_config, 'Base contact type config');
+//    dpm($base_config, 'Base contact type config');
     // Check if match is enabled for this contact type.
     if ($base_config['status']) {
 
