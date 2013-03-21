@@ -133,6 +133,7 @@ function crm_core_default_matching_engine_form_submit($form, &$form_state) {
       ->condition('field_item', $config['field_item'])
       ->fields(array(
         'contact_type' => $values['contact_type'],
+        'field_type' => $config['field_type'],
         'field_name' => $config['field_name'],
         'field_item' => $config['field_item'],
         'status' => $config['status'],
@@ -158,7 +159,7 @@ function theme_crm_core_default_matching_engine_form($variables) {
       'data' => array(
         drupal_render($form['field_matching'][$key]['status']),
         drupal_render($form['field_matching'][$key]['name']),
-        drupal_render($form['field_matching'][$key]['field_type']),
+        drupal_render($form['field_matching'][$key]['field_type_markup']),
         drupal_render($form['field_matching'][$key]['operator']),
         drupal_render($form['field_matching'][$key]['options']),
         drupal_render($form['field_matching'][$key]['score']),

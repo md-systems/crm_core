@@ -67,14 +67,9 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
 
     $form['field_matching'][$field_name . $field_item]['#weight'] = $config['weight'];
 
-    $form['field_matching'][$field_name . $field_item]['status'] = array(
-      '#type' => 'checkbox',
-      '#default_value' => $config['status'],
-    );
-
-    $form['field_matching'][$field_name . $field_item]['name'] = array(
-      '#type' => 'item',
-      '#markup' => $field_label,
+    $form['field_matching'][$field_name . $field_item]['field_type'] = array(
+      '#type' => 'value',
+      '#value' => $field_info['type'],
     );
 
     $form['field_matching'][$field_name . $field_item]['field_name'] = array(
@@ -87,7 +82,17 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
       '#value' => $field_item,
     );
 
-    $form['field_matching'][$field_name . $field_item]['field_type'] = array(
+    $form['field_matching'][$field_name . $field_item]['status'] = array(
+      '#type' => 'checkbox',
+      '#default_value' => $config['status'],
+    );
+
+    $form['field_matching'][$field_name . $field_item]['name'] = array(
+      '#type' => 'item',
+      '#markup' => $field_label,
+    );
+
+    $form['field_matching'][$field_name . $field_item]['field_type_markup'] = array(
       '#type' => 'item',
       '#markup' => $field_info['type'],
     );
@@ -198,9 +203,16 @@ class DefaultMatchingEngine extends CrmCoreMatchEngine {
     if ($base_config['status']) {
 
       // TODO: first we must get weighted list of matching rules
-      crm_core_default_matching_engine_load_field_config($contact->type);
+      $matching_rules = crm_core_default_matching_engine_load_field_config($contact->type);
+      $contact_fields = field_info_instances('crm_core_contact', $contact->type);
+      foreach ($matching_rules as $matching_rule) {
+        // TODO: Then we must check if field is still attached to contact
+        if (isset($contact_fields[$matching_rule->field_name])) {
 
-      // TODO: Then we must check if field is still attached to contact
+        }
+      }
+
+
 
       // TODO: only then execute field query
 
