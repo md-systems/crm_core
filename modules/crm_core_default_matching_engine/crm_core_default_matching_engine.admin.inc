@@ -71,11 +71,13 @@ function crm_core_default_matching_engine_form($form, &$form_state, $contact_typ
 
     // This returns some additional information about the field.
     $field_info = field_info_field($field_name);
-
+    $field_type = $field_info['type'];
     // We now have enough information about the field to render a row for it. Some fields are going to have multiple
     // rows (for instance, name fields) and need to be handled a little differently.
-    $field_handler = $field_info['type'] . 'MatchField';
-
+    $field_handler = $field_type . 'MatchField';
+    if ($field_type == 'date' || $field_type == 'datetime' || $field_type == 'datestamp') {
+      $field_handler = 'DateMatchField';
+    }
     if (class_exists($field_handler)) {
 
       // @TODO: need to modify interface and classes to accept field and field info need to pass in the form array
@@ -124,13 +126,15 @@ function crm_core_default_matching_engine_form_submit($form, &$form_state) {
       'return_order' => $values['return_order'],
     ))
     ->execute();
-  foreach ($values['field_matching'] as $field_name => $config) {
+  foreach ($values['field_matching'] as $config) {
     db_merge('crm_core_match_contact_type_rules')
       ->condition('contact_type', $values['contact_type'])
-      ->condition('field_name', $field_name)
+      ->condition('field_name', $config['field_name'])
+      ->condition('field_item', $config['field_item'])
       ->fields(array(
         'contact_type' => $values['contact_type'],
-        'field_name' => $field_name,
+        'field_name' => $config['field_name'],
+        'field_item' => $config['field_item'],
         'status' => $config['status'],
         'operator' => $config['operator'],
         'weight' => $config['weight'],
@@ -154,7 +158,7 @@ function theme_crm_core_default_matching_engine_form($variables) {
       'data' => array(
         drupal_render($form['field_matching'][$key]['status']),
         drupal_render($form['field_matching'][$key]['name']),
-        drupal_render($form['field_matching'][$key]['field_name']),
+        drupal_render($form['field_matching'][$key]['field_type']),
         drupal_render($form['field_matching'][$key]['operator']),
         drupal_render($form['field_matching'][$key]['options']),
         drupal_render($form['field_matching'][$key]['score']),
@@ -164,7 +168,15 @@ function theme_crm_core_default_matching_engine_form($variables) {
     );
   }
 
-  $header = array(t('Enabled'), t('Name'), t('Field Type'), t('Operator'), t('Options'), t('Score'), t('Weight'));
+  $header = array(
+    t('Enabled'),
+    t('Name'),
+    t('Field Type'),
+    t('Operator'),
+    t('Options'),
+    t('Score'),
+    t('Weight')
+  );
   $form['field_matching']['content']['#markup'] = theme('table', array(
     'header' => $header,
     'rows' => $rows,
