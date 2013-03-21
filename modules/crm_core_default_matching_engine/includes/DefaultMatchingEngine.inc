@@ -198,6 +198,7 @@ class DefaultMatchingEngine extends CrmCoreMatchEngine {
     if ($base_config['status']) {
 
       // TODO: first we must get weighted list of matching rules
+      crm_core_default_matching_engine_load_field_config($contact->type);
 
       // TODO: Then we must check if field is still attached to contact
 
@@ -222,9 +223,6 @@ class DefaultMatchingEngine extends CrmCoreMatchEngine {
           }
           $field_match_handler = new $field_match_handler_class();
 
-          $field_rule = crm_core_default_matching_engine_load_field_config($contact->type, $field_type, '');
-          dpm($field_rule, $field_name);
-          dpm($field_type, $field_type);
         }
       }
     }

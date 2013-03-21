@@ -102,26 +102,38 @@ function crm_core_default_matching_engine_load_contact_type_config($contact_type
  * @param string $field_item
  *   Field item. Currently used only in name fields.
  * @return array
- *   Field matching rule(config).
+ *   Field matching rule(config) or all rules for specified contact type(field name and item must be empty).
  */
-function crm_core_default_matching_engine_load_field_config($contact_type, $field_name, $field_item) {
-  $config = db_select('crm_core_match_contact_type_rules')
-    ->fields('crm_core_match_contact_type_rules')
-    ->condition('contact_type', $contact_type)
-    ->condition('field_name', $field_name)
-    ->condition('field_item', $field_item)
-    ->execute()
-    ->fetchAssoc();
-  // If no settings stored in DB use defaults.
-  if (!$config) {
-    $config = array(
-      'operator' => '',
-      'status' => 0,
-      'score' => 0,
-      'weight' => 0,
-    );
+function crm_core_default_matching_engine_load_field_config($contact_type, $field_name = '', $field_item = '') {
+  if (empty($field_name) && empty($field_item)) {
+    $rules = db_select('crm_core_match_contact_type_rules')
+      ->fields('crm_core_match_contact_type_rules')
+      ->condition('contact_type', $contact_type)
+      ->condition('status', 1)
+      ->orderBy('weight')
+      ->execute()
+      ->fetchAllAssoc('weight');
+    return $rules;
   }
-  return $config;
+  else {
+    $config = db_select('crm_core_match_contact_type_rules')
+      ->fields('crm_core_match_contact_type_rules')
+      ->condition('contact_type', $contact_type)
+      ->condition('field_name', $field_name)
+      ->condition('field_item', $field_item)
+      ->execute()
+      ->fetchAssoc();
+    // If no settings stored in DB use defaults.
+    if (!$config) {
+      $config = array(
+        'operator' => '',
+        'status' => 0,
+        'score' => 0,
+        'weight' => 0,
+      );
+    }
+    return $config;
+  }
 }
 
 /**
