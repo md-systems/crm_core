@@ -1,0 +1,12 @@
+name = CRM Core Devel
+description = Devel integration to CRM Core.
+package = CRM
+version = VERSION
+core = 7.x
+
+dependencies[] = entity
+dependencies[] = entityreference
+dependencies[] = crm_core_contact
+dependencies[] = taxonomy
+dependencies[] = views
+dependencies[] = devel
