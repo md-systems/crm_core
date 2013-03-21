@@ -42,7 +42,7 @@ interface DefaultMatchingEngineFieldTypeInterface {
    *
    * Used when generating queries to identify matches in the system
    */
-  public function fieldQuery();
+  public function fieldQuery($contact, $rule);
 }
 
 abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFieldTypeInterface {
@@ -202,40 +202,23 @@ class DefaultMatchingEngine extends CrmCoreMatchEngine {
     // Check if match is enabled for this contact type.
     if ($base_config['status']) {
 
-      // TODO: first we must get weighted list of matching rules
       $matching_rules = crm_core_default_matching_engine_load_field_config($contact->type);
       $contact_fields = field_info_instances('crm_core_contact', $contact->type);
       foreach ($matching_rules as $matching_rule) {
-        // TODO: Then we must check if field is still attached to contact
         if (isset($contact_fields[$matching_rule->field_name])) {
+          $rule_matches = array();
+          $field_match_handler_class = $matching_rule->field_type . 'MatchField';
+          if (class_exists($field_match_handler_class)) {
+            $field_match_handler = new $field_match_handler_class();
+            $rule_matches = $field_match_handler->fieldQuery($contact, $matching_rule);
 
-        }
-      }
-
-
-
-      // TODO: only then execute field query
-
-      // TODO: sum returned results, make decision
-
-      // This returns a list of all fields associated with the selected contact type.
-      foreach (field_info_instances('crm_core_contact', $contact->type) as $field_name => $field) {
-
-        // This returns some additional information about the field.
-        $field_info = field_info_field($field_name);
-
-        $field_type = $field_info['type'];
-        // We now have enough information about the field to render a row for it. Some fields are going to have multiple
-        // rows (for instance, name fields) and need to be handled a little differently.
-        $field_match_handler_class = $field_type . 'MatchField';
-
-        if (class_exists($field_match_handler_class)) {
-          // Special handling for name fields.
-          if ($field_type == 'name') {
           }
-          $field_match_handler = new $field_match_handler_class();
 
+          // Rule execution end.
         }
+        // TODO: only then execute field query
+
+        // TODO: sum returned results, make decision
       }
     }
   }

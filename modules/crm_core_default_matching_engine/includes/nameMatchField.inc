@@ -19,12 +19,34 @@ class nameMatchField extends DefaultMatchingEngineFieldType {
    * @see DefaultMatchingEngineFieldType::fieldRenderTemplate()
    */
   public function fieldRender($field, $field_info, &$form) {
-    _crm_core_default_matching_engine_name_field_helper($field, $field_info, $form, __FUNCTION__);
+    foreach ($field_info['columns'] as $item => $info) {
+      if ($field['settings']['inline_css'][$item] != 'display:none') {
+        $field_item['field_name'] = $field['field_name'];
+        $field_item['label'] = $field['label'] . ': ' . $field_info['settings']['labels'][$item];
+        $field_item['bundle'] = $field['bundle'];
+        $field_item['field_item'] = $item;
+
+        if (isset($field['settings'][$item . '_field']) && $field['settings'][$item . '_field'] == 'select') {
+          $item = new selectMatchField();
+          $item->fieldRender($field_item, $field_info, $form);
+        }
+        else {
+          $item = new textMatchField();
+          $item->fieldRender($field_item, $field_info, $form);
+        }
+      }
+    }
   }
 
   public function operators() {
   }
 
-  public function fieldQuery() {
+  public function fieldQuery($contact, $rule) {
+    dpm($rule, 'Matching rule');
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'crm_core_contact')
+      ->entityCondition('bundle', $contact->type);
+    $results = $query->execute();
+    dpm($results, 'EFQ results');
   }
 }
