@@ -126,10 +126,11 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
 
     $form['field_matching'][$field_name . $field_item]['operator'] = $operator;
 
-    // @TODO: add a textfield for any extra information that's needed
     $form['field_matching'][$field_name . $field_item]['options'] = array(
-      '#type' => 'item',
-      '#markup' => '---',
+      '#type' => 'textfield',
+      '#maxlength' => 28,
+      '#size' => 28,
+      '#default_value' => $config['options'],
     );
 
     $form['field_matching'][$field_name . $field_item]['score'] = array(

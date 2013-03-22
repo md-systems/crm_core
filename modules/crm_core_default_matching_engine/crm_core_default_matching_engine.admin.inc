@@ -135,6 +135,7 @@ function crm_core_default_matching_engine_form_submit($form, &$form_state) {
         'field_item' => $config['field_item'],
         'status' => $config['status'],
         'operator' => $config['operator'],
+        'options' => $config['options'],
         'weight' => $config['weight'],
         'score' => $config['score'],
       ))
