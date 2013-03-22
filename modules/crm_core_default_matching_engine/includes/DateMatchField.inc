@@ -33,6 +33,24 @@ class DateMatchField extends DefaultMatchingEngineFieldType {
 
     return $operators;
   }
+
+  public function fieldQuery($contact, $rule) {
+    $results = array();
+    $field_item = 'value';
+    $field = field_get_items('crm_core_contact', $contact, $rule->field_name);
+    $needle = isset($field[0]['value']) ? $field[0]['value'] : '';
+
+    if (!empty($needle)) {
+      $query = new EntityFieldQuery();
+      $query->entityCondition('entity_type', 'crm_core_contact')->entityCondition('bundle', $contact->type)
+        ->entityCondition('entity_id', $contact->contact_id, '<>')
+        ->fieldCondition($rule->field_name, $field_item, $needle);
+
+      $results = $query->execute();
+    }
+
+    return isset($results['crm_core_contact']) ? array_keys($results['crm_core_contact']) : $results;
+  }
 }
 
 /**
