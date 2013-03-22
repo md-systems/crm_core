@@ -75,9 +75,6 @@ function crm_core_default_matching_engine_form($form, &$form_state, $contact_typ
     // We now have enough information about the field to render a row for it. Some fields are going to have multiple
     // rows (for instance, name fields) and need to be handled a little differently.
     $field_handler = $field_type . 'MatchField';
-    if ($field_type == 'date' || $field_type == 'datetime' || $field_type == 'datestamp') {
-      $field_handler = 'DateMatchField';
-    }
     if (class_exists($field_handler)) {
 
       // @TODO: need to modify interface and classes to accept field and field info need to pass in the form array
