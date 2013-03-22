@@ -116,10 +116,10 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
 
       case 'name':
         $class = get_class($this);
-        if ($class == 'selectMatchField') {
+        if ($class == 'SelectMatchField') {
           $operator += array('#options' => $this->operators());
         }
-        elseif ($class == 'textMatchField') {
+        elseif ($class == 'TextMatchField') {
           $operator += array(
             '#options' => $this->operators(),
             '#empty_option' => t('-- Please Select --'),
