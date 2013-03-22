@@ -102,6 +102,8 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
     $operator = array(
       '#type' => 'select',
       '#default_value' => $config['operator'],
+      '#empty_option' => t('-- Please Select --'),
+      '#empty_value' => '',
     );
     switch ($field_info['type']) {
       case 'date':
@@ -109,35 +111,15 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
       case 'datetime':
         $operator += array(
           '#options' => $this->operators($field_info),
-          '#empty_option' => t('-- Please Select --'),
-          '#empty_value' => '',
         );
         break;
 
       case 'name':
-        $class = get_class($this);
-        if ($class == 'SelectMatchField') {
-          $operator += array('#options' => $this->operators());
-        }
-        elseif ($class == 'TextMatchField') {
-          $operator += array(
-            '#options' => $this->operators(),
-            '#empty_option' => t('-- Please Select --'),
-            '#empty_value' => '',
-          );
-        }
-        break;
-
       case 'select':
       case 'email':
-        $operator += array('#options' => $this->operators());
-        break;
-
       case 'text':
         $operator += array(
           '#options' => $this->operators(),
-          '#empty_option' => t('-- Please Select --'),
-          '#empty_value' => '',
         );
         break;
     }
