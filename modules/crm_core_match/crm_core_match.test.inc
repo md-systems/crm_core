@@ -55,13 +55,34 @@ function crm_core_match_testing_page($contact) {
     $engine->execute($contact, $matches);
   }
 
-  // @TODO: Add matches list.
-  $output .= '<h1>Matches:</h1>';
-  $output .= theme('item_list', array(
-    'items' => $matches,
-    'title' => 'Ids of matched contacts',
-    'type' => 'ol',
-  ));
+  if (empty($matches)) {
+    $output .= '<h1>No matches currently available.</h1>';
+  }
+  else {
+    $output .= '<h1>Matches:</h1>';
+
+    // Display matched contacts table.
+    $rows = array();
+    $contacts = crm_core_contact_load_multiple($matches);
+    foreach ($contacts as $matched_contact) {
+      $uri = $matched_contact->uri();
+      $link = l($matched_contact->label(), $uri['path']);
+      $rows[] = array(
+        'data' => array(
+          $matched_contact->contact_id,
+          $link,
+        ),
+      );
+    }
+    $header = array(
+      t('Contact ID'),
+      t('Contact Name'),
+    );
+    $output .= theme('table', array(
+      'header' => $header,
+      'rows' => $rows,
+    ));
+  }
 
   return $output;
 }
