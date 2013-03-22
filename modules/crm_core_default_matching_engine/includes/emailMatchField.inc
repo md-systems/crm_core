@@ -8,7 +8,7 @@
 /**
  * Class for evaluating email fields.
  */
-class emailMatchField extends DefaultMatchingEngineFieldType {
+class EmailMatchField extends DefaultMatchingEngineFieldType {
 
   /**
    * Defines logical operators to use with this field.

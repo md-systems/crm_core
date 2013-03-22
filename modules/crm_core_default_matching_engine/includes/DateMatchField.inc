@@ -34,6 +34,17 @@ class DateMatchField extends DefaultMatchingEngineFieldType {
     return $operators;
   }
 
+  /**
+   * Field query to search matches.
+   *
+   * @param object $contact
+   *   CRM Core contact entity.
+   * @param object $rule
+   *   Matching rule object.
+   *
+   * @return array
+   *   Founded matches.
+   */
   public function fieldQuery($contact, $rule) {
     $results = array();
     $field_item = 'value';

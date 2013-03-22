@@ -166,6 +166,17 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
     );
   }
 
+  /**
+   * Field query to search matches.
+   *
+   * @param object $contact
+   *   CRM Core contact entity.
+   * @param object $rule
+   *   Matching rule object.
+   *
+   * @return array
+   *   Founded matches.
+   */
   public function fieldQuery($contact, $rule) {
     $results = array();
     $contact_wrapper = entity_metadata_wrapper('crm_core_contact', $contact);
@@ -238,8 +249,9 @@ class DefaultMatchingEngine extends CrmCoreMatchEngine {
   public function __construct() {
     $this->name = t('Default Matching Engine');
     $this->machineName = 'default_matching_engine';
-    $this->description = t('This is a simple matching engine from CRM Core. Allows administrators to specify matching'
-      . ' rules for individual contact types on a field-by-field basis.');
+    $description = 'This is a simple matching engine from CRM Core. Allows administrators to specify matching'
+      . ' rules for individual contact types on a field-by-field basis.';
+    $this->description = t($description);
     $this->settings = array();
   }
 

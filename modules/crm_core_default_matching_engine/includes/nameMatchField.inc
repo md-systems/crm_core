@@ -8,7 +8,7 @@
 /**
  * Class for evaluating name fields.
  */
-class nameMatchField extends DefaultMatchingEngineFieldType {
+class NameMatchField extends DefaultMatchingEngineFieldType {
 
   /**
    * This function is going to add a number of fields based on what the name field is configured to display.

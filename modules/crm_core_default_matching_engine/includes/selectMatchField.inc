@@ -8,7 +8,7 @@
 /**
  * Class for handling select fields.
  */
-class selectMatchField extends DefaultMatchingEngineFieldType {
+class SelectMatchField extends DefaultMatchingEngineFieldType {
 
   /**
    * Defines logical operators to use with this field.

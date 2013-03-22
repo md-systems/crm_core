@@ -8,7 +8,7 @@
 /**
  * Class for evaluating text fields.
  */
-class textMatchField extends DefaultMatchingEngineFieldType {
+class TextMatchField extends DefaultMatchingEngineFieldType {
 
   /**
    * Defines logical operators to use with this field.
