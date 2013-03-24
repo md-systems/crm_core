@@ -97,7 +97,7 @@ function crm_core_activity_entity_info_alter(&$entity_info) {
  */
 function crm_core_activity_permission() {
   $permissions = array(
-    'administer crm_core_activity types' => array(
+    'administer activity types' => array(
       'title' => t('Administer activity types'),
       'description' => t('Allows users to configure activity types and their fields.'),
       'restrict access' => TRUE,
