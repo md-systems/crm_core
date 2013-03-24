@@ -94,7 +94,7 @@ function crm_core_contact_ui_menu() {
   if (module_exists('devel')) {
     $items['crm-core/contact/%crm_core_contact/devel'] = array(
       'title' => 'Devel',
-      'page_callback' => 'crm_core_contact_devel_load_object',
+      'page callback' => 'crm_core_contact_devel_load_object',
       'page arguments' => array(2),
       'access arguments' => array('access devel information'),
       'type' => MENU_LOCAL_TASK,
