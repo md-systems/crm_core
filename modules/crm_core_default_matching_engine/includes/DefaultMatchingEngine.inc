@@ -60,41 +60,56 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
    *   Form to be modified
    */
   public function fieldRender($field, $field_info, &$form) {
+    $disabled = FALSE;
+    if (get_class($this) == 'UnsupportedFieldMatchField') {
+      $disabled = TRUE;
+    }
     $field_name = $field['field_name'];
     $field_item = isset($field['field_item']) ? $field['field_item'] : '';
+    $separator = empty($field_item) ? $field_name : $field_name . '_' . $field_item;
     $field_label = $field['label'];
+    if ($disabled) {
+      $field_label .= ' (UNSUPPORTED)';
+    }
     $contact_type = $field['bundle'];
 
     $config = crm_core_default_matching_engine_load_field_config($contact_type, $field_name, $field_item);
+    $weight = $disabled ? 10 : $config['weight'];
 
-    $form['field_matching'][$field_name . $field_item]['#weight'] = $config['weight'];
+    $form['field_matching'][$separator]['#weight'] = $weight;
 
-    $form['field_matching'][$field_name . $field_item]['field_type'] = array(
+    $form['field_matching'][$separator]['supported'] = array(
+      '#type' => 'value',
+      '#value' => $disabled ? FALSE : TRUE,
+    );
+
+    $form['field_matching'][$separator]['field_type'] = array(
       '#type' => 'value',
       '#value' => $field_info['type'],
     );
 
-    $form['field_matching'][$field_name . $field_item]['field_name'] = array(
+    $form['field_matching'][$separator]['field_name'] = array(
       '#type' => 'value',
       '#value' => $field_name,
     );
 
-    $form['field_matching'][$field_name . $field_item]['field_item'] = array(
+    $form['field_matching'][$separator]['field_item'] = array(
       '#type' => 'value',
       '#value' => $field_item,
     );
 
-    $form['field_matching'][$field_name . $field_item]['status'] = array(
+    $form['field_matching'][$separator]['status'] = array(
       '#type' => 'checkbox',
       '#default_value' => $config['status'],
+      '#disabled' => $disabled,
     );
 
-    $form['field_matching'][$field_name . $field_item]['name'] = array(
+    $form['field_matching'][$separator]['name'] = array(
       '#type' => 'item',
-      '#markup' => $field_label,
+      '#markup' => check_plain($field_label),
     );
 
-    $form['field_matching'][$field_name . $field_item]['field_type_markup'] = array(
+    $form['field_matching'][$separator]['field_type_markup'] = array(
       '#type' => 'item',
       '#markup' => $field_info['type'],
     );
@@ -104,6 +119,7 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
       '#default_value' => $config['operator'],
       '#empty_option' => t('-- Please Select --'),
       '#empty_value' => '',
+      '#disabled' => $disabled,
     );
     switch ($field_info['type']) {
       case 'date':
@@ -120,28 +136,31 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
         );
     }
 
-    $form['field_matching'][$field_name . $field_item]['operator'] = $operator;
+    $form['field_matching'][$separator]['operator'] = $operator;
 
-    $form['field_matching'][$field_name . $field_item]['options'] = array(
+    $form['field_matching'][$separator]['options'] = array(
       '#type' => 'textfield',
       '#maxlength' => 28,
       '#size' => 28,
       '#default_value' => $config['options'],
+      '#disabled' => $disabled,
     );
 
-    $form['field_matching'][$field_name . $field_item]['score'] = array(
+    $form['field_matching'][$separator]['score'] = array(
       '#type' => 'textfield',
       '#maxlength' => 28,
       '#size' => 28,
       '#default_value' => $config['score'],
+      '#disabled' => $disabled,
     );
 
-    $form['field_matching'][$field_name . $field_item]['weight'] = array(
+    $form['field_matching'][$separator]['weight'] = array(
       '#type' => 'weight',
-      '#default_value' => $config['weight'],
+      '#default_value' => $weight,
       '#attributes' => array(
         'class' => array('crm-core-match-engine-order-weight'),
       ),
+      '#disabled' => $disabled,
     );
   }
 
@@ -212,6 +231,12 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
    *   Assoc array, keys must be
    */
   public function operators() {
+  }
+}
+
+class UnsupportedFieldMatchField extends DefaultMatchingEngineFieldType {
+  public function operators() {
+    return array();
   }
 }
 

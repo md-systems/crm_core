@@ -85,6 +85,10 @@ function crm_core_default_matching_engine_form($form, &$form_state, $contact_typ
       // @TODO: need to add something that adds the output of fieldRender to the form the output of fieldrender can be
       // one field, or it can be many.
     }
+    else {
+      $obj = new UnsupportedFieldMatchField();
+      $obj->fieldRender($field, $field_info, $form);
+    }
   }
 
   $form['actions'] = array('#type' => 'actions');
@@ -124,22 +128,24 @@ function crm_core_default_matching_engine_form_submit($form, &$form_state) {
     ))
     ->execute();
   foreach ($values['field_matching'] as $config) {
-    db_merge('crm_core_match_contact_type_rules')
-      ->condition('contact_type', $values['contact_type'])
-      ->condition('field_name', $config['field_name'])
-      ->condition('field_item', $config['field_item'])
-      ->fields(array(
-        'contact_type' => $values['contact_type'],
-        'field_type' => $config['field_type'],
-        'field_name' => $config['field_name'],
-        'field_item' => $config['field_item'],
-        'status' => $config['status'],
-        'operator' => $config['operator'],
-        'options' => $config['options'],
-        'weight' => $config['weight'],
-        'score' => $config['score'],
-      ))
-      ->execute();
+    if ($config['supported']) {
+      db_merge('crm_core_match_contact_type_rules')
+        ->condition('contact_type', $values['contact_type'])
+        ->condition('field_name', $config['field_name'])
+        ->condition('field_item', $config['field_item'])
+        ->fields(array(
+          'contact_type' => $values['contact_type'],
+          'field_type' => $config['field_type'],
+          'field_name' => $config['field_name'],
+          'field_item' => $config['field_item'],
+          'status' => $config['status'],
+          'operator' => $config['operator'],
+          'options' => $config['options'],
+          'weight' => $config['weight'],
+          'score' => $config['score'],
+        ))
+        ->execute();
+    }
   }
   drupal_set_message(t('The configuration options have been saved.'));
 }
