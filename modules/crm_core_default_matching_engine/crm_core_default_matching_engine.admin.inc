@@ -109,6 +109,9 @@ function crm_core_default_matching_engine_form_validate($form, &$form_state) {
     if ($config['status'] && empty($config['operator'])) {
       form_set_error('field_matching][' . $field_name . '][operator', t('You must select an operator for enabled field.'));
     }
+    if (!is_numeric($config['score'])) {
+      form_set_error('field_matching][' . $field_name . '][score', t('You must enter number in "Score" column.'));
+    }
   }
 }
 
