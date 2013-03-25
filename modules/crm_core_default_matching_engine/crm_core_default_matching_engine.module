@@ -130,7 +130,7 @@ function crm_core_default_matching_engine_load_field_config($contact_type, $fiel
         'status' => 0,
         'score' => 0,
         'options' => '',
-        'weight' => 0,
+        'weight' => 10,
       );
     }
     return $config;

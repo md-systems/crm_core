@@ -155,7 +155,7 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
 
     $form['field_matching'][$separator]['weight'] = array(
       '#type' => 'weight',
-      '#default_value' => $disabled ? 10 : $config['weight'],
+      '#default_value' => $config['weight'],
       '#attributes' => array(
         'class' => array('crm-core-match-engine-order-weight'),
       ),
