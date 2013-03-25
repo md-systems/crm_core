@@ -6,7 +6,7 @@
  */
 
 /**
- * Class for evaluating name fields.
+ * Class for evaluating addressfield fields.
  */
 class AddressFieldMatchField extends DefaultMatchingEngineFieldType {
 
