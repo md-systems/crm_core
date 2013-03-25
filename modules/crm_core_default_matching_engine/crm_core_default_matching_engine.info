@@ -15,3 +15,4 @@ files[] = includes/textMatchField.inc
 files[] = includes/selectMatchField.inc
 files[] = includes/emailMatchField.inc
 files[] = includes/DateMatchField.inc
+files[] = includes/AddressFieldMatchField.inc

@@ -16,7 +16,7 @@ class NameMatchField extends DefaultMatchingEngineFieldType {
    * The name field uses text and select fields to set values we will need to pass information into other field handlers
    * to get the right records to pass back.
    *
-   * @see DefaultMatchingEngineFieldType::fieldRenderTemplate()
+   * @see DefaultMatchingEngineFieldType::fieldRender()
    */
   public function fieldRender($field, $field_info, &$form) {
     foreach ($field_info['columns'] as $item => $info) {
@@ -37,6 +37,4 @@ class NameMatchField extends DefaultMatchingEngineFieldType {
       }
     }
   }
-
-
 }

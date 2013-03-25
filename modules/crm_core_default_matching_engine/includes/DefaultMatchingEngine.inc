@@ -114,14 +114,10 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
         );
         break;
 
-      case 'name':
-      case 'select':
-      case 'email':
-      case 'text':
+      default:
         $operator += array(
           '#options' => $this->operators(),
         );
-        break;
     }
 
     $form['field_matching'][$field_name . $field_item]['operator'] = $operator;
