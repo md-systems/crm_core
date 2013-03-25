@@ -17,3 +17,4 @@ files[] = includes/emailMatchField.inc
 files[] = includes/DateMatchField.inc
 files[] = includes/AddressFieldMatchField.inc
 files[] = includes/TelephoneMatchField.inc
+files[] = includes/Phone_NumberMatchField.inc

@@ -17,8 +17,6 @@ class AddressFieldMatchField extends DefaultMatchingEngineFieldType {
    */
   public function fieldRender($field, $field_info, &$form) {
     foreach ($field_info['columns'] as $item => $info) {
-      $type = $field_info['type'];
-
       // This separation is rather logical than formal  at the moment.
       $text_items = array(
         'name_line',
