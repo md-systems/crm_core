@@ -74,9 +74,8 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
     $contact_type = $field['bundle'];
 
     $config = crm_core_default_matching_engine_load_field_config($contact_type, $field_name, $field_item);
-    $weight = $disabled ? 10 : $config['weight'];
 
-    $form['field_matching'][$separator]['#weight'] = $weight;
+    $form['field_matching'][$separator]['#weight'] = $disabled ? 100 : $config['weight'];
 
     $form['field_matching'][$separator]['supported'] = array(
       '#type' => 'value',
@@ -156,7 +155,7 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
 
     $form['field_matching'][$separator]['weight'] = array(
       '#type' => 'weight',
-      '#default_value' => $weight,
+      '#default_value' => $disabled ? 10 : $config['weight'],
       '#attributes' => array(
         'class' => array('crm-core-match-engine-order-weight'),
       ),
