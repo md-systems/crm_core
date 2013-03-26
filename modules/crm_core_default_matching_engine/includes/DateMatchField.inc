@@ -25,11 +25,9 @@ class DateMatchField extends DefaultMatchingEngineFieldType {
 
     $operators = array(
       'equals' => t('Equals'),
+      'greater' => t('Greater then'),
+      'less' => t('Less then'),
     );
-
-    if (isset($field_info['columns']['value2'])) {
-      $operators['between'] = t('Between');
-    }
 
     return $operators;
   }
