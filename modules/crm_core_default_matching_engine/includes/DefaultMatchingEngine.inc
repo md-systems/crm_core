@@ -273,7 +273,6 @@ class DefaultMatchingEngine extends CrmCoreMatchEngine {
       // Check if match is enabled for this contact type.
       if ($base_config['status']) {
         $matching_rules = crm_core_default_matching_engine_load_field_config($contact->type);
-        dpm($matching_rules, 'Matching rules');
         $contact_fields = field_info_instances('crm_core_contact', $contact->type);
         $results = array();
         foreach ($matching_rules as $matching_rule) {
@@ -283,14 +282,12 @@ class DefaultMatchingEngine extends CrmCoreMatchEngine {
             if (class_exists($field_match_handler_class)) {
               $field_match_handler = new $field_match_handler_class();
               $rule_matches = $field_match_handler->fieldQuery($contact, $matching_rule);
-
             }
             foreach ($rule_matches as $matched_id) {
               $results[$matched_id][$matching_rule->mrid] = $matching_rule->score;
             }
           }
         }
-        dpm($results, 'Matching results');
         foreach ($results as $id => $rule_matches) {
           $total_score = array_sum($rule_matches);
           if ($total_score >= $base_config['threshold']) {
