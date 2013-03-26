@@ -7,7 +7,7 @@
 
 
 function crm_core_match_testing_page_title($contact) {
-  return t('Matching Rules for @contact_name', array('@contact_name' => $contact->label()));
+  return t('Matching Rules for @contact_name', array('@contact_name' => crm_core_contact_title($contact)));
 }
 
 /**
