@@ -255,7 +255,13 @@ class DefaultMatchingEngine extends CrmCoreMatchEngine {
     $description = 'This is a simple matching engine from CRM Core. Allows administrators to specify matching'
       . ' rules for individual contact types on a field-by-field basis.';
     $this->description = t($description);
-    $this->settings = array();
+    $this->settings = array(
+      array(
+        'name' => 'settings',
+        'path' => 'admin/config/crm-core/match/default_match',
+        'label' => t('Configuration'),
+      ),
+    );
   }
 
   /**

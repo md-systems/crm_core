@@ -21,16 +21,19 @@ function crm_core_default_matching_engine_permission() {
 
 /**
  * Implements hook_menu().
- * 
- * @TODO: improve this, way too many links appearing on the config page
- * 
- * @TODO: links should point to something in the structure section
- *   - this is too important
  */
 function crm_core_default_matching_engine_menu() {
   $items = array();
+  $items['admin/config/crm-core/match/default_match'] = array(
+    'title' => 'Default matching engine configuration',
+    'description' => 'Default matching engine configuration. Per contact type matching rules.',
+    'access arguments' => array('modify default matching engine rules'),
+    'page callback' => 'crm_core_default_matching_engine_config_page',
+    'file' => 'crm_core_default_matching_engine.admin.inc',
+  );
+
   foreach (crm_core_contact_types() as $type => $info) {
-    $items['admin/config/crm-core/default_match/' . $type . '/edit'] = array(
+    $items['admin/config/crm-core/match/default_match/' . $type . '/edit'] = array(
       'title' => 'Matching Rules for @type',
       'title arguments' => array('@type' => $info->name),
       'description' => 'Matching Rules for %type',
@@ -39,6 +42,7 @@ function crm_core_default_matching_engine_menu() {
       'page arguments' => array('crm_core_default_matching_engine_form', 4),
       'access arguments' => array('modify default matching engine rules'),
       'file' => 'crm_core_default_matching_engine.admin.inc',
+      'type' => MENU_CALLBACK,
     );
   }
   return $items;

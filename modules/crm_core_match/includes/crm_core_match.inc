@@ -97,7 +97,7 @@ abstract class CrmCoreMatchEngine implements CrmCoreMatchEngineInterface {
    *  array(
    *   'name' => 'settings', // Machine readable settings page name.
    *   'path' => '<front>', // Internal path to settings page.
-   *   'label' => 'Settings page', // Untranslated label for link.
+   *   'label' => t('Settings page'), // Translated label for link.
    *   ),
    * );
    * @endcode
