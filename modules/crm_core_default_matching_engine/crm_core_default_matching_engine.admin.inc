@@ -104,7 +104,10 @@ function crm_core_default_matching_engine_form($form, &$form_state, $contact_typ
  * Validate handler for crm_core_default_matching_engine_form.
  */
 function crm_core_default_matching_engine_form_validate($form, &$form_state) {
-  $fields_rules = $form_state['values']['field_matching'];
+  $fields_rules = array();
+  if (isset($form_state['values']['field_matching'])) {
+    $fields_rules = $form_state['values']['field_matching'];
+  }
   foreach ($fields_rules as $field_name => $config) {
     if ($config['status'] && empty($config['operator'])) {
       form_set_error('field_matching][' . $field_name . '][operator', t('You must select an operator for enabled field.'));
@@ -119,6 +122,10 @@ function crm_core_default_matching_engine_form_validate($form, &$form_state) {
  * Submit handler for crm_core_default_matching_engine_form.
  */
 function crm_core_default_matching_engine_form_submit($form, &$form_state) {
+  if (!isset($form_state['values'])) {
+    return;
+  }
+
   $values = $form_state['values'];
   db_merge('crm_core_match_contact_types')
     ->condition('contact_type', $values['contact_type'])
@@ -130,24 +137,27 @@ function crm_core_default_matching_engine_form_submit($form, &$form_state) {
       'return_order' => $values['return_order'],
     ))
     ->execute();
-  foreach ($values['field_matching'] as $config) {
-    if ($config['supported']) {
-      db_merge('crm_core_match_contact_type_rules')
-        ->condition('contact_type', $values['contact_type'])
-        ->condition('field_name', $config['field_name'])
-        ->condition('field_item', $config['field_item'])
-        ->fields(array(
-          'contact_type' => $values['contact_type'],
-          'field_type' => $config['field_type'],
-          'field_name' => $config['field_name'],
-          'field_item' => $config['field_item'],
-          'status' => $config['status'],
-          'operator' => $config['operator'],
-          'options' => $config['options'],
-          'weight' => $config['weight'],
-          'score' => $config['score'],
-        ))
-        ->execute();
+
+  if (isset($values['field_matching'])) {
+    foreach ($values['field_matching'] as $config) {
+      if ($config['supported']) {
+        db_merge('crm_core_match_contact_type_rules')
+          ->condition('contact_type', $values['contact_type'])
+          ->condition('field_name', $config['field_name'])
+          ->condition('field_item', $config['field_item'])
+          ->fields(array(
+            'contact_type' => $values['contact_type'],
+            'field_type' => $config['field_type'],
+            'field_name' => $config['field_name'],
+            'field_item' => $config['field_item'],
+            'status' => $config['status'],
+            'operator' => $config['operator'],
+            'options' => $config['options'],
+            'weight' => $config['weight'],
+            'score' => $config['score'],
+          ))
+          ->execute();
+      }
     }
   }
   drupal_set_message(t('The configuration options have been saved.'));
