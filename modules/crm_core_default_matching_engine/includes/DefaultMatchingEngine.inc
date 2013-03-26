@@ -147,8 +147,8 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
 
     $form['field_matching'][$separator]['score'] = array(
       '#type' => 'textfield',
-      '#maxlength' => 28,
-      '#size' => 28,
+      '#maxlength' => 4,
+      '#size' => 3,
       '#default_value' => $config['score'],
       '#disabled' => $disabled,
     );
