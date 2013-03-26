@@ -96,7 +96,7 @@ function crm_core_default_matching_engine_form($form, &$form_state, $contact_typ
     '#type' => 'submit',
     '#value' => t('Save'),
   );
-
+// dpm($form);
   return $form;
 }
 
@@ -211,8 +211,11 @@ function theme_crm_core_default_matching_engine_form($variables) {
  * Helper function for field rules weight comparison.
  */
 function _crm_core_default_matching_engine_load_field_weight_cmp($a, $b) {
-  if (empty($a['#weight']) || empty($b['#weight'])) {
-    return 0;
+  if (empty($a['#weight'])) {
+    return -1;
+  }
+  if (empty($b['#weight'])) {
+    return 1;
   }
   if ($a['#weight'] == $b['#weight']) {
     return 0;
