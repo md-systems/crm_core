@@ -49,6 +49,8 @@ interface DefaultMatchingEngineFieldTypeInterface {
 
 abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFieldTypeInterface {
 
+  const WEIGHT_DELTA = 25;
+
   /**
    * Template used to render fields matching rules configuration form.
    *
@@ -74,8 +76,16 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
     $contact_type = $field['bundle'];
 
     $config = crm_core_default_matching_engine_load_field_config($contact_type, $field_name, $field_item);
+    $display_weight = self::WEIGHT_DELTA;
+    if ($config['weight'] == 0) {
+      // Table row positioned incorrectly if "#weight" is 0.
+      $display_weight = 0.001;
+    }
+    else {
+      $display_weight = $config['weight'];
+    }
 
-    $form['field_matching'][$separator]['#weight'] = $disabled ? 100 : $config['weight'];
+    $form['field_matching'][$separator]['#weight'] = $disabled ? 100 : $display_weight;
 
     $form['field_matching'][$separator]['supported'] = array(
       '#type' => 'value',
@@ -160,6 +170,7 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
         'class' => array('crm-core-match-engine-order-weight'),
       ),
       '#disabled' => $disabled,
+      '#delta' => self::WEIGHT_DELTA,
     );
   }
 
