@@ -2,13 +2,13 @@
 
 /**
  * @file
- * Implementation of DefaultMatchingEngineFieldTypeInterface for text field.
+ * Implementation of DefaultMatchingEngineFieldTypeInterface for select fields.
  */
 
 /**
- * Class for evaluating text fields.
+ * Class for handling select fields.
  */
-class TextMatchField extends DefaultMatchingEngineFieldType {
+class SelectMatchField extends DefaultMatchingEngineFieldType {
 
   /**
    * Defines logical operators to use with this field.
@@ -21,9 +21,6 @@ class TextMatchField extends DefaultMatchingEngineFieldType {
   public function operators() {
     return array(
       'equals' => t('Equals'),
-      'starts' => t('Starts with'),
-      'ends' => t('Ends with'),
-      'contains' => t('Contains'),
     );
   }
 }

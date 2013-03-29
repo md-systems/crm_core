@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Implementation of DefaultMatchingEngineFieldTypeInterface for name field.
+ * Implementation of DefaultMatchingEngineFieldTypeInterface for name fields.
  */
 
 /**
