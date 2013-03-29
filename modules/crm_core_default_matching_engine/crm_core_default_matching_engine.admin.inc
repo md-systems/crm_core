@@ -66,24 +66,13 @@ function crm_core_default_matching_engine_form($form, &$form_state, $contact_typ
     '#tree' => TRUE,
   );
 
-  // This returns a list of all fields associated with the selected contact type.
   foreach (field_info_instances('crm_core_contact', $contact_type) as $field_name => $field) {
-
-    // This returns some additional information about the field.
     $field_info = field_info_field($field_name);
     $field_type = $field_info['type'];
-    // We now have enough information about the field to render a row for it. Some fields are going to have multiple
-    // rows (for instance, name fields) and need to be handled a little differently.
     $field_handler = $field_type . 'MatchField';
     if (class_exists($field_handler)) {
-
-      // @TODO: need to modify interface and classes to accept field and field info need to pass in the form array
-      // by reference and allow it to be modified.
       $obj = new $field_handler();
       $obj->fieldRender($field, $field_info, $form);
-
-      // @TODO: need to add something that adds the output of fieldRender to the form the output of fieldrender can be
-      // one field, or it can be many.
     }
     else {
       $obj = new UnsupportedFieldMatchField();
@@ -206,6 +195,9 @@ function theme_crm_core_default_matching_engine_form($variables) {
   return $output;
 }
 
+/**
+ * Page callback for engine configuration page.
+ */
 function crm_core_default_matching_engine_config_page() {
 
   $item = menu_get_item();
