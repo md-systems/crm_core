@@ -170,8 +170,7 @@ function theme_crm_core_default_matching_engine_form($variables) {
   $form = $variables['form'];
 
   $rows = array();
-  uasort($form['field_matching'], '_crm_core_default_matching_engine_load_field_weight_cmp');
-  foreach (element_children($form['field_matching']) as $key) {
+  foreach (element_children($form['field_matching'], TRUE) as $key) {
     $rows[] = array(
       'data' => array(
         drupal_render($form['field_matching'][$key]['status']),
@@ -205,22 +204,6 @@ function theme_crm_core_default_matching_engine_form($variables) {
   drupal_add_tabledrag('crm-core-match-engine-order', 'order', 'sibling', 'crm-core-match-engine-order-weight');
 
   return $output;
-}
-
-/**
- * Helper function for field rules weight comparison.
- */
-function _crm_core_default_matching_engine_load_field_weight_cmp($a, $b) {
-  if (empty($a['#weight'])) {
-    return -1;
-  }
-  if (empty($b['#weight'])) {
-    return 1;
-  }
-  if ($a['#weight'] == $b['#weight']) {
-    return 0;
-  }
-  return ($a['#weight'] < $b['#weight']) ? -1 : 1;
 }
 
 function crm_core_default_matching_engine_config_page() {
