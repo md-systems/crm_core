@@ -18,6 +18,31 @@
  */
 
 /**
+ * Implemennts hook_crm_core_contact_match
+ * @param array $values: an array containing a contact id and matches to return.
+ */
+function crm_core_match_crm_core_contact_match($values){
+  
+  // get a list of all matching engines for a contact
+  $engines = & drupal_static(__FUNCTION__);
+  
+  if(!is_array($engines)){
+    $engines = crm_core_match_get_engines();
+  }
+
+  // go through each and look for matches
+  if(sizeof($engines) > 0){
+    foreach ($engines as $engine) {
+      $matches = array();
+      $engine->execute($values['contact'], $matches);
+    }
+  }
+  
+  $values['matches'] = array_merge($values['matches'], $matches);
+  
+}
+
+/**
  * Implements hook_hook_info().
  */
 function crm_core_match_hook_info() {
@@ -26,7 +51,6 @@ function crm_core_match_hook_info() {
       'group' => 'crm_core_match',
     ),
   );
-
   return $hooks;
 }
 
