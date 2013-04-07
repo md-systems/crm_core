@@ -294,12 +294,7 @@ class DefaultMatchingEngine extends CrmCoreMatchEngine {
       // Check if match is enabled for this contact type.
       if ($base_config['status']) {
         $matching_rules = crm_core_default_matching_engine_load_field_config($contact->type);
-        
-        dpm($matching_rules);
-        
         $contact_fields = field_info_instances('crm_core_contact', $contact->type);
-        
-        dpm($contact_fields);
         
         $results = array();
         foreach ($matching_rules as $matching_rule) {
