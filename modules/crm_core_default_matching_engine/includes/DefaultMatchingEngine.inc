@@ -206,8 +206,6 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
       $field_item = $rule->field_item;
     }
     
-    dpm('field_item - ' . $field_item);
-    
     if (!empty($needle)) {
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'crm_core_contact')->entityCondition('bundle', $contact->type);
@@ -215,11 +213,7 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
 
       switch ($rule->operator) {
         case 'equals':
-          
-          dpm('match yo yo yo ');
-          dpm($rule);
           $field_item = 'value';
-          
           $query->fieldCondition($rule->field_name, $field_item, $needle);
           break;
 

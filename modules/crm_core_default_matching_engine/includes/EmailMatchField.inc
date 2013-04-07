@@ -24,8 +24,6 @@ class EmailMatchField extends SelectMatchField {
 
     $config = crm_core_default_matching_engine_load_field_config($contact_type, $field_name, $field_item);
     
-    dpm($config);
-    
     $display_weight = self::WEIGHT_DELTA;
     if ($config['weight'] == 0) {
       // Table row positioned incorrectly if "#weight" is 0.
