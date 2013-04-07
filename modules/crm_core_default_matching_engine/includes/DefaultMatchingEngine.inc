@@ -5,7 +5,8 @@
  * Default match engine definitions.
  */
 
-define('MATCH_DEFAULT_CHARS', 3);
+if (!defined('MATCH_DEFAULT_CHARS')) define('MATCH_DEFAULT_CHARS', '3');
+
 
 /**
  * Interface for defining the logical operators and query criteria used to identify duplicate contacts based on
@@ -186,18 +187,27 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
    *   Founded matches.
    */
   public function fieldQuery($contact, $rule) {
+    
     $results = array();
     $contact_wrapper = entity_metadata_wrapper('crm_core_contact', $contact);
     $needle = '';
     $field_item = '';
+    
     if (empty($rule->field_item)) {
       $needle = $contact_wrapper->{$rule->field_name}->value();
       $field_item = 'value';
     }
     else {
-      $needle = $contact_wrapper->{$rule->field_name}->{$rule->field_item}->value();
+      if(isset($contact_wrapper->{$rule->field_name}->{$rule->field_item})){
+        $needle = $contact_wrapper->{$rule->field_name}->{$rule->field_item}->value();
+      } else {
+        $needle = $contact_wrapper->{$rule->field_name}->value();
+      }
       $field_item = $rule->field_item;
     }
+    
+    dpm('field_item - ' . $field_item);
+    
     if (!empty($needle)) {
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'crm_core_contact')->entityCondition('bundle', $contact->type);
@@ -205,6 +215,11 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
 
       switch ($rule->operator) {
         case 'equals':
+          
+          dpm('match yo yo yo ');
+          dpm($rule);
+          $field_item = 'value';
+          
           $query->fieldCondition($rule->field_name, $field_item, $needle);
           break;
 
