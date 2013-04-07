@@ -108,5 +108,65 @@ class EmailMatchField extends SelectMatchField {
       '#delta' => self::WEIGHT_DELTA,
     );
   }
+  
+  
+  /**
+   * Field query to search matches.
+   *
+   * @param object $contact
+   *   CRM Core contact entity.
+   * @param object $rule
+   *   Matching rule object.
+   *
+   * @return array
+   *   Founded matches.
+   */
+  public function fieldQuery($contact, $rule) {
+    
+    $results = array();
+    $contact_wrapper = entity_metadata_wrapper('crm_core_contact', $contact);
+    $needle = '';
+    $field_item = '';
+    
+    
+    if(isset($contact_wrapper->{$rule->field_name}->{$rule->field_item})){
+      $needle = $contact_wrapper->{$rule->field_name}->{$rule->field_item}->value();
+    } else {
+      $needle = $contact_wrapper->{$rule->field_name}->value();
+    }
+    $field_item = $rule->field_item;
+    
+    if (!empty($needle)) {
+      $query = new EntityFieldQuery();
+      $query->entityCondition('entity_type', 'crm_core_contact')->entityCondition('bundle', $contact->type);
+      $query->entityCondition('entity_id', $contact->contact_id, '<>');
+
+      switch ($rule->operator) {
+        case 'equals':
+          $field_item = 'email';
+          $query->fieldCondition($rule->field_name, $field_item, $needle);
+          break;
+
+        case 'starts':
+          $needle = db_like(substr($needle, 0, MATCH_DEFAULT_CHARS)) . '%';
+          $query->fieldCondition($rule->field_name, $field_item, $needle, 'LIKE');
+          break;
+
+        case 'ends':
+          $needle = '%' . db_like(substr($needle, -1, MATCH_DEFAULT_CHARS));
+          $query->fieldCondition($rule->field_name, $field_item, $needle, 'LIKE');
+          break;
+
+        case 'contains':
+          $needle = '%' . db_like($needle) . '%';
+          $query->fieldCondition($rule->field_name, $field_item, $needle, 'LIKE');
+          break;
+      }
+      $results = $query->execute();
+    }
+
+    return isset($results['crm_core_contact']) ? array_keys($results['crm_core_contact']) : $results;
+  }
+  
     
 }
