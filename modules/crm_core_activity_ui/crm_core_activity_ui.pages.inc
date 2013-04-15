@@ -200,17 +200,21 @@ function crm_core_activity_form_delete_confirm_submit($form, &$form_state) {
  *  CRM Core contact.
  */
 function crm_core_activity_ui_add_activity($contact) {
+  global $user;
+
   drupal_set_title(t('Add a activity'));
   _crm_core_activity_ui_set_breadcrumb($contact);
   $items = array();
   $contact_uri = $contact->uri();
   foreach (crm_core_activity_types() as $info) {
-    $items[] = array(
-      'title' => $info->label,
-      'href' => $contact_uri['path'] . '/activity/add/' . $info->type,
-      'localized_options' => array(),
-      'description' => $info->description,
-    );
+    if (entity_access('create', 'crm_core_activity', $info->type, $user)) {
+      $items[] = array(
+        'title' => $info->label,
+        'href' => $contact_uri['path'] . '/activity/add/' . $info->type,
+        'localized_options' => array(),
+        'description' => $info->description,
+      );
+    }
   }
   $empty = 'It is not possible to create Activities yet. Please create Activity Type fist.';
   return empty($items) ? t($empty) : theme('crm_core_contact_ui_add_list', array('content' => $items));

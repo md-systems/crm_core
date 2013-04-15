@@ -14,7 +14,7 @@ function crm_core_activity_ui_menu() {
     'page callback' => 'crm_core_activity_ui_add_activity',
     'page arguments' => array(2),
     'access callback' => 'entity_access',
-    'access arguments' => array('create', 'crm_core_activity'),
+    'access arguments' => array('create_view', 'crm_core_activity'),
     'type' => MENU_LOCAL_ACTION,
     'file' => 'crm_core_activity_ui.pages.inc',
   );
