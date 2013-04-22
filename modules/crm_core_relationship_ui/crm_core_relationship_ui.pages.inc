@@ -22,19 +22,26 @@ function crm_core_relation_entity_ui_get_form_wrapper($contact, $type, $reverse)
     'r_unique' => $current_type->r_unique,
     'source_bundles' => $current_type->source_bundles,
     'target_bundles' => $current_type->target_bundles,
-    'crm_core_contact' => $contact,
     'label' => $current_type->directional && $reverse ? $current_type->reverse_label : $current_type->label,
   );
-  $relation = crm_core_relation_create($values);
-  $contact_uri = $contact->uri();
   $breadcrumb = array(
     l(t('Home'), '<front>'),
     l(t('CRM Core'), 'crm-core'),
-    l(t('Contacts'), 'crm-core/contact'),
-    l(t($contact->label()), $contact_uri['path']),
-    l(t('Add a relationship'), $contact_uri['path'] . '/relationships/add'),
   );
+  if ($contact) {
+    $values['crm_core_contact'] = $contact;
+    $contact_uri = $contact->uri();
+    $breadcrumb[] = l(t('Contacts'), 'crm-core/contact');
+    $breadcrumb[] = l(t($contact->label()), $contact_uri['path']);
+    $breadcrumb[] = l(t('Add a relationship'), $contact_uri['path'] . '/relationships/add');
+  }
+  else {
+    $breadcrumb[] = l(t('Add a relationship'), 'crm-core/relationship/add');
+  }
+
   drupal_set_breadcrumb($breadcrumb);
+  $relation = crm_core_relation_create($values);
+
   return entity_ui_get_form('crm_core_relationship', $relation, 'add');
 }
 
@@ -48,11 +55,13 @@ function crm_core_relationship_form($form, &$form_state, $relation) {
   $form_state['relation'] = $form_state['crm_core_relationship'];
   unset($form_state['crm_core_relationship']);
 
-  // get the contact id of who is trying to add the activity
-  $form['contact_id'] = array(
-    '#type' => 'value',
-    '#value' => arg(2),
-  );
+  if (isset($relation->crm_core_contact)) {
+    // get the contact id of who is trying to add the activity
+    $form['contact_id'] = array(
+      '#type' => 'value',
+      '#value' => arg(2),
+    );
+  }
 
   module_load_include('inc', 'crm_core_relationship_ui');
 
@@ -78,16 +87,27 @@ function crm_core_relationship_form($form, &$form_state, $relation) {
       $contact_type_names[] = t($contact_type->name);
     }
     $contact_type_names = implode(', ', $contact_type_names);
-
-    $form[$reverse_field ? 'destination_contact' : 'source_contact'] = array(
-      '#title' => $reverse_field ? t('Destination contact name') : t('Source contact name'),
-      '#description' => (t('Following contact types allowed: !types.', array('!types' => $contact_type_names))),
-      '#type' => 'textfield',
-      '#default_value' => !($reverse_field ^ $relation->reverse) ? crm_core_contact_title($relation->crm_core_contact) . " [cid:{$relation->crm_core_contact->contact_id}]" : '',
-      '#disabled' => !($reverse_field ^ $relation->reverse),
-      '#required' => TRUE,
-      '#autocomplete_path' => 'crm-core/contact/' . $relation->crm_core_contact->contact_id . '/relationships/add/' . $relation->relation_type . '/' . $reverse_field . '/autocomplete',
-    );
+    if (isset($relation->crm_core_contact)) {
+      $form[$reverse_field ? 'destination_contact' : 'source_contact'] = array(
+        '#title' => $reverse_field ? t('Destination contact name') : t('Source contact name'),
+        '#description' => (t('Following contact types allowed: !types.', array('!types' => $contact_type_names))),
+        '#type' => 'textfield',
+        '#default_value' => !($reverse_field ^ $relation->reverse) ? crm_core_contact_title($relation->crm_core_contact) . " [cid:{$relation->crm_core_contact->contact_id}]" : '',
+        '#disabled' => !($reverse_field ^ $relation->reverse),
+        '#required' => TRUE,
+        '#autocomplete_path' => 'crm-core/contact/' . $relation->crm_core_contact->contact_id . '/relationships/add/' . $relation->relation_type . '/' . $reverse_field . '/autocomplete',
+      );
+    }
+    else {
+      $form[$reverse_field ? 'destination_contact' : 'source_contact'] = array(
+        '#title' => $reverse_field ? t('Destination contact name') : t('Source contact name'),
+        '#description' => (t('Following contact types allowed: !types.', array('!types' => $contact_type_names))),
+        '#type' => 'textfield',
+        '#default_value' => '',
+        '#required' => TRUE,
+        '#autocomplete_path' => 'crm-core/relationships/' . $relation->relation_type . '/' . $reverse_field . '/autocomplete',
+      );
+    }
   }
 
   $form['uid'] = array(
@@ -149,6 +169,7 @@ function crm_core_relationship_form_after_build(&$form, &$form_state) {
   if ($form_state['op'] == 'add') {
     drupal_set_title(t('Add new relationship @label', array('@label' => relation_get_type_label($form_state['relation']))));
   }
+
   return $form;
 }
 
@@ -159,31 +180,49 @@ function crm_core_relationship_form_after_build(&$form, &$form_state) {
  *   Entity object of crm_core_contact type.
  */
 function crm_core_relationship_ui_add_relationship($contact) {
+
   drupal_set_title(t('Add a relationship'));
-
-  _crm_core_relationships_ui_breadcrmub($contact);
-
-  $return = array();
-
   $relationship_type_links = array();
-  foreach (array(0, 1) as $reverse) {
-    $relationship_types = crm_core_relationship_load_relationship_types($contact->type, $reverse);
-
-    foreach ($relationship_types as $relationship_type) {
-      if (user_access('create relation entities of bundle ' . $relationship_type->relation_type) || user_access('create relation entities of any contact relationship')) {
-        $contact_uri = $contact->uri();
-        $href = $contact_uri['path'] . '/relationships/add/' . $relationship_type->relation_type . '/' . $reverse;
-        $title = $reverse ? $relationship_type->reverse_label : $relationship_type->label;
-        $relationship_type_links[$relationship_type->relation_type] = array(
-          'title' => $title,
-          'href' => $href,
-          'localized_options' => array(),
-          'description' => t('Create %kind relationship.', array('%kind' => $title)),
-        );
+  if ($contact) {
+    _crm_core_relationships_ui_breadcrmub($contact);
+    foreach (array(0, 1) as $reverse) {
+      $relationship_types = crm_core_relationship_load_relationship_types($contact->type, $reverse);
+      foreach ($relationship_types as $relationship_type) {
+        if (user_access('create relation entities of bundle ' . $relationship_type->relation_type) || user_access('create relation entities of any contact relationship')) {
+          $contact_uri = $contact->uri();
+          $href = $contact_uri['path'] . '/relationships/add/' . $relationship_type->relation_type . '/' . $reverse;
+          $title = $reverse ? $relationship_type->reverse_label : $relationship_type->label;
+          $relationship_type_links[$relationship_type->relation_type] = array(
+            'title' => $title,
+            'href' => $href,
+            'localized_options' => array(),
+            'description' => t('Create %kind relationship.', array('%kind' => $title)),
+          );
+        }
+      }
+    }
+  }
+  else {
+    foreach (array(0, 1) as $reverse) {
+      foreach (crm_core_contact_types(TRUE) as $contact_type) {
+        $relationship_types = crm_core_relationship_load_relationship_types($contact_type->type, $reverse);
+        foreach ($relationship_types as $relationship_type) {
+          if (user_access('create relation entities of bundle ' . $relationship_type->relation_type) || user_access('create relation entities of any contact relationship')) {
+            $href = 'crm-core/relationship/add/' . $relationship_type->relation_type . '/' . $reverse;
+            $title = $reverse ? $relationship_type->reverse_label : $relationship_type->label;
+            $relationship_type_links[] = array(
+              'title' => $title,
+              'href' => $href,
+              'localized_options' => array(),
+              'description' => t('Create %kind relationship.', array('%kind' => $title)),
+            );
+          }
+        }
       }
     }
   }
 
+  $return = '';
   if (!empty($relationship_type_links)) {
     $return = theme('crm_core_contact_ui_add_list', array('content' => $relationship_type_links));
   }
@@ -202,33 +241,39 @@ function crm_core_relationship_ui_add_relationship_form_validate($form, &$form_s
 
   if (!$relationship_type || !is_object($relationship_type)) {
     form_set_error('relationship_type', t('Relationship type is required.'));
+
     return;
   }
 
   if (!crm_core_relationship_is_relationship_type($relationship_type)) {
     form_set_error('relationship_type', t('Relationship type is not valid CRM relationship type.'));
+
     return;
   }
 
   if (!$source_contact) {
     form_set_error('source_contact', t('Please, input source contact.'));
+
     return;
   }
 
   if (!$destination_contact) {
     form_set_error('destination_contact', t('Please, input destination contact.'));
+
     return;
   }
 
   $source_bundles = array_keys(crm_core_relationship_load_contact_types($relationship_type, 0));
   if (!in_array($source_contact->type, $source_bundles)) {
     form_set_error('source_contact', t('Please, input source contact of proper type.'));
+
     return;
   }
 
   $target_bundles = array_keys(crm_core_relationship_load_contact_types($relationship_type, $relationship_type->directional));
   if (!in_array($destination_contact->type, $target_bundles)) {
     form_set_error('destination_contact', t('Please, input destination contact of proper type.'));
+
     return;
   }
 
@@ -239,13 +284,20 @@ function crm_core_relationship_ui_add_relationship_form_validate($form, &$form_s
   if ($relationship_type->r_unique) {
     if (relation_relation_exists(
       array(
-        array('entity_type' => 'crm_core_contact', 'entity_id' => $source_contact->contact_id),
-        array('entity_type' => 'crm_core_contact', 'entity_id' => $destination_contact->contact_id),
+        array(
+          'entity_type' => 'crm_core_contact',
+          'entity_id' => $source_contact->contact_id
+        ),
+        array(
+          'entity_type' => 'crm_core_contact',
+          'entity_id' => $destination_contact->contact_id
+        ),
       ),
       $relationship_type->relation_type
     )
     ) {
       form_set_error($reverse ? 'source_contact' : 'destination_contact', t('This relationship exists. It should be unique.'));
+
       return;
     }
   }
@@ -353,6 +405,7 @@ function _crm_core_relationship_ui_get_contact_from_autocomplete_field_value($st
   if (empty($contacts)) {
     return FALSE;
   }
+
   return $contacts[$matches[1]];
 }
 
