@@ -42,16 +42,22 @@ function crm_core_user_sync_admin_form($form, &$form_state) {
       '#attributes' => array('class' => array('links', 'inline')),
     );
 
-    $links = &$form['crm_core_user_sync_rules'][$key]['operations']['#links'];
+    $links = & $form['crm_core_user_sync_rules'][$key]['operations']['#links'];
     $path = 'admin/config/crm-core/user-sync/' . $key;
     $links['edit'] = array('title' => 'Edit', 'href' => $path . '/edit');
     $links['delete'] = array('title' => 'Delete', 'href' => $path . '/delete');
 
-    if  ($rule['enabled']) {
-      $links['disable'] = array('title' => 'Disable', 'href' =>$path . '/disable');
+    if ($rule['enabled']) {
+      $links['disable'] = array(
+        'title' => 'Disable',
+        'href' => $path . '/disable'
+      );
     }
     else {
-      $links['enable'] = array('title' => 'Enable', 'href' => $path . '/enable');
+      $links['enable'] = array(
+        'title' => 'Enable',
+        'href' => $path . '/enable'
+      );
     }
   }
 
@@ -84,7 +90,10 @@ function crm_core_user_sync_admin_form($form, &$form_state) {
   );
 
   $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save changes'));
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save changes')
+  );
 
   return $form;
 }
@@ -93,7 +102,6 @@ function crm_core_user_sync_admin_form($form, &$form_state) {
  * Validation callback.
  */
 function crm_core_user_sync_admin_form_validate($form, &$form_state) {
-
 }
 
 /**
@@ -102,7 +110,7 @@ function crm_core_user_sync_admin_form_validate($form, &$form_state) {
 function crm_core_user_sync_admin_form_submit($form, &$form_state) {
   $rules = variable_get('crm_core_user_sync_rules', array());
 
-  foreach ($form_state['values']['crm_core_user_sync_rules']as $key => $values) {
+  foreach ($form_state['values']['crm_core_user_sync_rules'] as $key => $values) {
     if (!empty($values['weight'])) {
       $rules[$key]['weight'] = $values['weight'];
     }
@@ -139,8 +147,18 @@ function theme_crm_core_user_sync_admin_form($variables) {
     );
   }
 
-  $header = array(t('Role'), t('Contact Type'), t('Enabled'), t('Weight'), t('Operations'));
-  $form['crm_core_user_sync_rules']['content']['#markup'] = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'crm-user-sync-settings-order')));
+  $header = array(
+    t('Role'),
+    t('Contact Type'),
+    t('Enabled'),
+    t('Weight'),
+    t('Operations')
+  );
+  $form['crm_core_user_sync_rules']['content']['#markup'] = theme('table', array(
+    'header' => $header,
+    'rows' => $rows,
+    'attributes' => array('id' => 'crm-user-sync-settings-order')
+  ));
   $output = drupal_render_children($form);
 
   drupal_add_tabledrag('crm-user-sync-settings-order', 'order', 'sibling', 'crm-user-sync-settings-order-weight');
@@ -151,7 +169,7 @@ function theme_crm_core_user_sync_admin_form($variables) {
 /**
  * Add new rule form.
  */
-function crm_core_user_sync_admin_edit_rule_form($form, &$form_state, $rule_key = null) {
+function crm_core_user_sync_admin_edit_rule_form($form, &$form_state, $rule_key = NULL) {
   $form = array();
 
   $roles = array('' => t('- Select -')) + user_roles(TRUE);
@@ -178,7 +196,7 @@ function crm_core_user_sync_admin_edit_rule_form($form, &$form_state, $rule_key 
     '#title' => t('User Role'),
     '#options' => $roles,
     '#default_value' => isset($rule['rid']) ? $rule['rid'] : '',
-    '#required' => true,
+    '#required' => TRUE,
   );
 
   $form['contact_type'] = array(
@@ -186,7 +204,7 @@ function crm_core_user_sync_admin_edit_rule_form($form, &$form_state, $rule_key 
     '#title' => t('Contact Type'),
     '#options' => $types_options,
     '#default_value' => isset($rule['contact_type']) ? $rule['contact_type'] : '',
-    '#required' => true,
+    '#required' => TRUE,
   );
 
   $form['weight'] = array(
@@ -196,15 +214,18 @@ function crm_core_user_sync_admin_edit_rule_form($form, &$form_state, $rule_key 
   );
 
   $form['enabled'] = array(
-    '#type' =>'checkbox',
+    '#type' => 'checkbox',
     '#title' => t('Enabled'),
-    '#default_value' => isset($rule['enabled']) ? $rule['enabled'] : true,
+    '#default_value' => isset($rule['enabled']) ? $rule['enabled'] : TRUE,
     '#description' => 'When checked, this rule will be used to synchronize user accounts. When unchecked, it will be ignored throughout the system.'
   );
 
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['save'] = array('#type' => 'submit', '#value' => t('Save'));
-  $form['actions']['cancel'] = array('#type' => 'submit', '#value' => t('Cancel'));
+  $form['actions']['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => t('Cancel')
+  );
 
   return $form;
 }
@@ -281,7 +302,6 @@ function crm_core_user_sync_admin_update_rule_status($rule_key, $status) {
   drupal_goto('admin/config/crm-core/user-sync');
 }
 
-
 /**
  * Contact->User relation edit form.
  */
@@ -298,7 +318,6 @@ function crm_core_user_sync_edit_relation_form($form, &$form_state, $relation) {
       $contact = crm_core_contact_load($_GET['contact_id']);
       $disabled_contact_field = !empty($contact);
     }
-
   }
   else {
     drupal_set_title('Edit relation');
@@ -326,15 +345,15 @@ function crm_core_user_sync_edit_relation_form($form, &$form_state, $relation) {
     '#title' => t('Contact record'),
     '#type' => 'textfield',
     '#default_value' => empty($contact) ? '' : $contact->label() . " [contact_id:{$contact->contact_id}]",
-    '#disabled' => empty($disabled_contact_field) ? false : true,
+    '#disabled' => empty($disabled_contact_field) ? FALSE : TRUE,
     '#autocomplete_path' => 'admin/config/crm-core/user-sync/contact-to-user-management/contact-autocomplete/%',
   );
 
   $form['user'] = array(
     '#title' => t('User record'),
     '#type' => 'textfield',
-    '#default_value' =>  empty($user) ? '' : $user->name . " [uid:{$user->uid}]",
-    '#disabled' => empty($disabled_user_field) ? false : true,
+    '#default_value' => empty($user) ? '' : $user->name . " [uid:{$user->uid}]",
+    '#disabled' => empty($disabled_user_field) ? FALSE : TRUE,
     '#autocomplete_path' => 'admin/config/crm-core/user-sync/contact-to-user-management/user-autocomplete/%',
   );
 
@@ -356,7 +375,7 @@ function crm_core_user_sync_edit_relation_form($form, &$form_state, $relation) {
     '#markup' => l(t('Cancel'), 'admin/config/crm-core/user-sync/contact-to-user-management'),
   );
 
-  return  $form;
+  return $form;
 }
 
 /**
@@ -379,20 +398,17 @@ function crm_core_user_sync_edit_relation_form_validate($form, &$form_state) {
       return;
     }
 
-    if (!crm_core_user_sync_validate($user, $contact)) {
-      form_set_error('', t('The user account could not be syncrhonized with the specified contact accordning to rules.'));
-      return;
-    }
-
     // Check if the same user->contact relation exists when adding or editing relation.
     if (crm_core_user_sync_get_contact_from_uid($user->uid) && (empty($form_state['values']['relation']) ||
-            $form_state['values']['relation']->endpoints[LANGUAGE_NONE][0]['entity_id'] != $user->uid)) {
+      $form_state['values']['relation']->endpoints[LANGUAGE_NONE][0]['entity_id'] != $user->uid)
+    ) {
       form_set_error('user', t('The user account has been already synchronized.'));
     }
 
     // Check if the same user->contact relation exists when adding or editing relation.
     if (crm_core_user_sync_get_user_from_contact_id($contact->contact_id) && (empty($form_state['values']['relation']) ||
-            $form_state['values']['relation']->endpoints[LANGUAGE_NONE][1]['entity_id'] != $contact->contact_id)) {
+      $form_state['values']['relation']->endpoints[LANGUAGE_NONE][1]['entity_id'] != $contact->contact_id)
+    ) {
       form_set_error('contact', t('The contact record has been already synchronized.'));
     }
   }
@@ -415,7 +431,14 @@ function crm_core_user_sync_edit_relation_form_submit($form, &$form_state) {
       relation_save($relation);
     }
     else {
-      crm_core_user_sync_sync($user, $contact);
+      $relation = relation_create('crm_core_user_sync', array(
+        array('entity_type' => 'user', 'entity_id' => $user->uid),
+        array(
+          'entity_type' => 'crm_core_contact',
+          'entity_id' => $contact->contact_id
+        ),
+      ));
+      relation_save($relation);
     }
 
     $form_state['redirect'] = 'admin/config/crm-core/user-sync/contact-to-user-management';
@@ -563,7 +586,8 @@ function _crm_core_user_sync_batch_processing_finished($success, $results, $oper
     drupal_set_message(t('@count users have been associated with contacts.', array('@count' => $results['synced'])));
   }
   else {
-    drupal_set_message(t('Something went wrong. Please check !dblog.', array('!dblog' =>
+    drupal_set_message(t('Something went wrong. Please check !dblog.', array(
+      '!dblog' =>
       l(t('Recent log messages'), 'admin/reports/dblog')
     )), 'error');
   }
