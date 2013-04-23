@@ -10,11 +10,13 @@
  */
 function crm_core_report_hook_info() {
   $hooks = array(
-    // registers reports from submodules within CRM Core, for central display
+    // Registers reports from submodules within CRM Core, for central display.
     'crm_core_report_register' => array(
       'group' => 'crm_core_report',
     ),
   );
+
+  return $hooks;
 }
 
 /**
@@ -36,9 +38,7 @@ function crm_core_report_menu() {
 
   $items = array();
 
-  /**
-   * Provides a listing of all reports registered for CRM Core
-   */
+  // Provides a listing of all reports registered for CRM Core.
   $items['crm-core/reports'] = array(
     'title' => 'Reports',
     'page callback' => 'crm_core_report_list',
@@ -48,7 +48,6 @@ function crm_core_report_menu() {
   );
 
   return $items;
-
 }
 
 /**
@@ -64,7 +63,7 @@ function crm_core_report_theme() {
     'crm_core_report_index' => array(
       'template' => 'crm-core-report-index',
       'variables' => array('reports' => NULL, 'report_items' => array()),
-      'path'			=> drupal_get_path('module', 'crm_core_report') . '/templates',
+      'path' => drupal_get_path('module', 'crm_core_report') . '/templates',
     ),
   );
 }
@@ -81,8 +80,10 @@ function crm_core_report_preprocess_crm_core_report_index(&$variables) {
       foreach ($item['reports'] as $report) {
         $items[] = l($report['title'], $report['path']) . '<br />' . $report['description'];
       }
-      $report_items[] = theme('item_list', array('items' => $items, 'title' => $item['title']));
-
+      $report_items[] = theme('item_list', array(
+        'items' => $items,
+        'title' => $item['title']
+      ));
     }
   }
 
@@ -96,14 +97,12 @@ function crm_core_report_preprocess_crm_core_report_index(&$variables) {
  * and should include appropriate access controls, unless you want
  * everyone with access to the main reports page to see them.
  */
-function hook_crm_core_report_register(){
+function hook_crm_core_report_register() {
   $reports = array();
   foreach (module_implements('crm_core_report_register') as $module) {
     $function = $module . '_crm_core_report_register';
     $reports = array_merge($reports, $function());
   }
+
   return $reports;
 }
-
-
-
