@@ -12,8 +12,8 @@
  */
 function crm_core_default_matching_engine_permission() {
   return array(
-    'modify default matching engine rules' => array(
-      'title' => t('Modify default matching engine rules'),
+    'administer default matching engine' => array(
+      'title' => t('Administer default matching engine'),
       'description' => t('Allow users to modify the rules associated with the CRM Core Match default matching engine.'),
     ),
   );
@@ -27,7 +27,7 @@ function crm_core_default_matching_engine_menu() {
   $items['admin/config/crm-core/match/default_match'] = array(
     'title' => 'Default matching engine configuration',
     'description' => 'Default matching engine configuration. Per contact type matching rules.',
-    'access arguments' => array('modify default matching engine rules'),
+    'access arguments' => array('administer default matching engine'),
     'page callback' => 'crm_core_default_matching_engine_config_page',
     'file' => 'crm_core_default_matching_engine.admin.inc',
   );
@@ -40,14 +40,14 @@ function crm_core_default_matching_engine_menu() {
       'description arguments' => array('%type' => $info->name),
       'page callback' => 'drupal_get_form',
       'page arguments' => array('crm_core_default_matching_engine_form', 5),
-      'access arguments' => array('modify default matching engine rules'),
+      'access arguments' => array('administer default matching engine'),
       'file' => 'crm_core_default_matching_engine.admin.inc',
       'type' => MENU_CALLBACK,
     );
   }
+
   return $items;
 }
-
 
 /**
  * Implements hook_crm_core_match_engine_register().
@@ -105,8 +105,10 @@ function crm_core_default_matching_engine_load_contact_type_config($contact_type
  *   Machine readable field name.
  * @param string $field_item
  *   Field item. Currently used only in name fields.
+ *
  * @return array
- *   Field matching rule(config) or all rules for specified contact type(field name and item must be empty).
+ *   Field matching rule(config) or all rules for specified contact type(field
+ * name and item must be empty).
  */
 function crm_core_default_matching_engine_load_field_config($contact_type, $field_name = '', $field_item = '') {
   if (empty($field_name) && empty($field_item)) {
@@ -117,6 +119,7 @@ function crm_core_default_matching_engine_load_field_config($contact_type, $fiel
       ->orderBy('weight')
       ->execute()
       ->fetchAllAssoc('mrid');
+
     return $rules;
   }
   else {
@@ -137,6 +140,7 @@ function crm_core_default_matching_engine_load_field_config($contact_type, $fiel
         'weight' => 10,
       );
     }
+
     return $config;
   }
 }
