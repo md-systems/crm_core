@@ -189,3 +189,20 @@ function _crm_core_match_engine_weight_cmp($a, $b) {
 
   return ($a->weight < $b->weight) ? -1 : 1;
 }
+
+/**
+ * Implements hook_permission().
+ */
+function crm_core_match_permission() {
+  return array(
+    'administer matching engines' => array(
+      'title' => t('Administer matching engines'),
+    ),
+    'view matching engine rules configuration' => array(
+      'title' => t('View matching engine rules configuration'),
+    ),
+    'view match information' => array(
+      'title' => t('View match information'),
+    ),
+  );
+}
