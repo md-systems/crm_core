@@ -9,37 +9,37 @@
  *
  * - identify duplicate contact records
  * - inject data into contact records being saved
- * - carry out other scripted operations not easily handled in the normal bootstrapping process
+ * - carry out other scripted operations not easily handled in the normal
+ * bootstrapping process.
  *
- * This module does not define any matching engines itself, it only provides the framework
- * through which they can be applied to new contacts being created in the database.
+ * This module does not define any matching engines itself, it only provides the
+ * framework through which they can be applied to new contacts being created in
+ * the database.
  *
  * @TODO: add hooks for altering the submission process
  */
 
 /**
- * Implemennts hook_crm_core_contact_match
- * @param array $values: an array containing a contact id and matches to return.
+ * Implements hook_crm_core_contact_match().
  */
-function crm_core_match_crm_core_contact_match($values){
-  
-  // get a list of all matching engines for a contact
+function crm_core_match_crm_core_contact_match($values) {
+
+  // Get a list of all matching engines for a contact.
   $engines = & drupal_static(__FUNCTION__);
-  
-  if(!is_array($engines)){
+
+  if (!is_array($engines)) {
     $engines = crm_core_match_get_engines();
   }
 
-  // go through each and look for matches
-  if(sizeof($engines) > 0){
+  // Go through each and look for matches.
+  $matches = array();
+  if (count($engines) > 0) {
     foreach ($engines as $engine) {
-      $matches = array();
       $engine->execute($values['contact'], $matches);
     }
   }
-  
+
   $values['matches'] = array_merge($values['matches'], $matches);
-  
 }
 
 /**
@@ -51,6 +51,7 @@ function crm_core_match_hook_info() {
       'group' => 'crm_core_match',
     ),
   );
+
   return $hooks;
 }
 
@@ -163,7 +164,6 @@ function crm_core_match_engine_status_toggle($engine_machine_name, $to_status) {
     case 'disable':
       $status = 0;
       break;
-
   }
   if (isset($status)) {
     db_merge('crm_core_match_engines')
@@ -186,5 +186,6 @@ function _crm_core_match_engine_weight_cmp($a, $b) {
   if ($a->weight == $b->weight) {
     return 0;
   }
+
   return ($a->weight < $b->weight) ? -1 : 1;
 }
