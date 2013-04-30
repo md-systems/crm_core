@@ -10,7 +10,7 @@
  */
 function crm_core_activity_ui_menu() {
   $activity_paths = array(
-    'no_contact' => 'crm-core/activity/add',
+    'no_contact' => 'crm-core/contact/activity-add',
     'contact' => 'crm-core/contact/%crm_core_contact/activity/add',
   );
   foreach ($activity_paths as $key => $path) {
@@ -22,10 +22,8 @@ function crm_core_activity_ui_menu() {
       'access arguments' => array('create_view', 'crm_core_activity'),
       'type' => MENU_LOCAL_ACTION,
       'file' => 'crm_core_activity_ui.pages.inc',
+      'weight' => 5,
     );
-    if ($key == 'no_contact') {
-      $items[$path]['weight'] = 100;
-    }
 
     foreach (crm_core_activity_types() as $type => $info) {
       $items[$path . '/' . $type] = array(

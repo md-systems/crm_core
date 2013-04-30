@@ -72,7 +72,7 @@ function crm_core_contact_ui_menu() {
     'access arguments' => array('create_view', 'crm_core_contact'),
     'type' => MENU_LOCAL_ACTION,
     'context' => MENU_CONTEXT_PAGE,
-    'weight' => 10,
+    'weight' => 0,
     'file' => 'crm_core_contact_ui.pages.inc',
   );
   foreach (crm_core_contact_types() as $type => $contact_type) {
@@ -129,8 +129,6 @@ function crm_core_contact_ui_views_api() {
   );
 }
 
-
-
 /**
  * Implements hook_menu_alter().
  */
@@ -144,7 +142,6 @@ function crm_core_contact_ui_menu_alter(&$items) {
   }
 }
 
-
 /**
  * Implements hook_admin_paths().
  */
@@ -156,7 +153,6 @@ function crm_core_contact_ui_admin_paths() {
 
   return $paths;
 }
-
 
 /**
  * Implements hook_theme().
@@ -190,6 +186,7 @@ function crm_core_contact_ui_view($contact) {
     l(t('Contacts'), 'crm-core/contact'),
   );
   drupal_set_breadcrumb($breadcrumb);
+
   return crm_core_contact_view($contact);
 }
 

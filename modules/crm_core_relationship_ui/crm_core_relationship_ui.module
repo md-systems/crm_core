@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Implements hook_menu()
+ * Implements hook_menu().
  */
 function crm_core_relationship_ui_menu() {
   $items = array();
@@ -9,7 +10,7 @@ function crm_core_relationship_ui_menu() {
    * CRM Contact Relationships
    */
   $relation_paths = array(
-    'no_contact' => 'crm-core/relationship/add',
+    'no_contact' => 'crm-core/contact/relationship-add',
     'contact' => 'crm-core/contact/%crm_core_contact/relationships/add',
   );
   foreach ($relation_paths as $key => $path) {
@@ -21,6 +22,7 @@ function crm_core_relationship_ui_menu() {
       'access callback' => TRUE,
       'type' => MENU_LOCAL_ACTION,
       'file' => 'crm_core_relationship_ui.pages.inc',
+      'weight' => 10,
     );
 
     foreach (crm_core_relationship_get_relationships() as $type => $info) {
