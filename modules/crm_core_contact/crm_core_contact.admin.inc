@@ -56,7 +56,10 @@ function crm_core_contact_type_form($form, &$form_state, $contact_type) {
       '#required' => TRUE,
       '#description' => t('The machine-readable name of this contact type. This name must contain only lowercase letters, numbers, and underscores, it must be unique.'),
       '#attached' => array(
-        'js' => array(drupal_get_path('module', 'system') . '/system.js', $js_settings),
+        'js' => array(
+          drupal_get_path('module', 'system') . '/system.js',
+          $js_settings
+        ),
       ),
     );
   }
@@ -68,6 +71,31 @@ function crm_core_contact_type_form($form, &$form_state, $contact_type) {
     '#default_value' => $contact_type->description,
     '#rows' => 3,
   );
+
+  $form['contact_type']['primary_fields_container'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Primary Fields'),
+  );
+
+  $default_primary_fields = array('email', 'address', 'phone');
+  $primary_fields = variable_get('crm_core_contact_default_primary_fields', $default_primary_fields);
+  $options = array();
+  if (isset($contact_type->type)) {
+    $instances = field_info_instances('crm_core_contact', $contact_type->type);
+    foreach ($instances as $instance) {
+      $options[$instance['field_name']] = $instance['label'];
+    }
+  }
+  foreach ($primary_fields as $primary_field) {
+    $form['contact_type']['primary_fields_container'][$primary_field] = array(
+      '#type' => 'select',
+      '#title' => t('Primary @field field', array('@field' => $primary_field)),
+      '#default_value' => empty($contact_type->primary_fields[$primary_field]) ? '' : $contact_type->primary_fields[$primary_field],
+      '#empty_value' => '',
+      '#empty_option' => t('--Please Select--'),
+      '#options' => $options,
+    );
+  }
 
   $form['actions'] = array(
     '#type' => 'container',
@@ -94,7 +122,6 @@ function crm_core_contact_type_form($form, &$form_state, $contact_type) {
   return $form;
 }
 
-
 /**
  * Validation callback
  */
@@ -109,13 +136,16 @@ function crm_core_contact_type_form_validate($form, &$form_state) {
   }
 }
 
-
 /**
  * Form submit handler: save a contact type.
  */
 function crm_core_contact_type_form_submit($form, &$form_state) {
   $contact_type = $form_state['contact_type'];
   $updated = !empty($contact_type->type);
+
+  // Saving primary fields selection.
+  $contact_type->primary_fields = $form_state['values']['contact_type']['primary_fields_container'];
+  unset($form_state['values']['contact_type']['primary_fields_container']);
 
   foreach ($form_state['values']['contact_type'] as $key => $value) {
     $contact_type->$key = $value;

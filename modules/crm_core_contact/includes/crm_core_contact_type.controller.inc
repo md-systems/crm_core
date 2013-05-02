@@ -4,9 +4,11 @@
  * CRM Contact Type Entity Class.
  */
 class CRMContactType extends Entity {
+
   public $type;
   public $label;
   public $weight = 0;
+  public $primary_fields;
 
   public function __construct($values = array()) {
     parent::__construct($values, 'crm_core_contact_type');
@@ -25,11 +27,13 @@ class CRMContactType extends Entity {
  * special handling for contact objects.
  */
 class CRMCoreContactTypeController extends EntityAPIControllerExportable {
+
   public function create(array $values = array()) {
     $values += array(
       'name' => '',
       'description' => '',
     );
+
     return parent::create($values);
   }
 
@@ -68,5 +72,4 @@ class CRMCoreContactTypeController extends EntityAPIControllerExportable {
     // Reset cache entry, important for usecases like install procedure.
     drupal_static_reset('crm_core_contact_types');
   }
-
 }
