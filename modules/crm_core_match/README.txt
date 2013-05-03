@@ -32,26 +32,7 @@ CRM Core can be installed like any other Drupal module.
 
 1) Download CRM Core to the modules directory for your site.
 
-2) Go to the admin/modules page and enable CRM Core.
-
-From here, select the options most appropriate for your site:
-
-- if you want to use activity management in CRM Core, enable CRM Core Activity. You will probably also
-  want to enable CRM Core Activity UI, but this is not required.
-
-- if you want to use relationship management, enable CRM Core Relationship. You will probably also want to 
-  enable CRM Core Relationship UI, but this is not required.
-  
-- if you want to provide a UI for viewing reports defined by CRM Core features, enable CRM Core Report.
-  Please note, CRM Core does not ship with reports of it's own. This page will be blank until you define
-  reports.
-  
-- if you want to link contact records to user accounts, enable CRM Core User Sync.
-
-- if you want to use matching engines to identify duplicate contacts, enable CRM Core Match.
-
-- if you want to use the default matching engine that ships with CRM Core, enable CRM Core Default Matching
-  Engine.
+2) Go to the admin/modules page and enable CRM Core Match.
   
 -- RELATED MODULES --
 
@@ -110,7 +91,7 @@ A few things to be aware of when creating your own matching engine:
 
 Current maintainers:
 
-* techsoldaten. - http://drupal.org/user/16339
+* techsoldaten - http://drupal.org/user/16339
 
 If you are interested in participating in CRM Core development or help configuring your CRM Core instance,
 please contact me directly through this form.

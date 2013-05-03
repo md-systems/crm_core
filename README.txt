@@ -72,7 +72,7 @@ http://drupal.org/node/1856906 for more details on the configuration and setup p
 
 Current maintainers:
 
-* techsoldaten. - http://drupal.org/user/16339
+* techsoldaten - http://drupal.org/user/16339
 
 If you are interested in participating in CRM Core development or help configuring your CRM Core instance,
 please contact me directly through this form.
