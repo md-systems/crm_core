@@ -93,7 +93,7 @@ Current maintainers:
 
 * techsoldaten - http://drupal.org/user/16339
 
-If you are interested in participating in CRM Core development or help configuring your CRM Core instance,
+If you are interested in participating in CRM Core development or seek assistance with CRM Core,
 please contact me directly through this form.
 
 Development sponsored by Trellon.
