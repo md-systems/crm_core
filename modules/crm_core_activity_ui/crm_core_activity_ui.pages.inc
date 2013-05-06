@@ -240,7 +240,7 @@ function crm_core_activity_ui_add_activity($contact = NULL) {
       if (entity_access('create', 'crm_core_activity', $info->type, $user)) {
         $items[] = array(
           'title' => $info->label,
-          'href' => 'crm-core/activity/add/' . $info->type,
+          'href' => 'crm-core/contact/activity-add/' . $info->type,
           'localized_options' => array(),
           'description' => $info->description,
         );
