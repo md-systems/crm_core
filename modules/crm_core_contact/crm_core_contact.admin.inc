@@ -72,11 +72,25 @@ function crm_core_contact_type_form($form, &$form_state, $contact_type) {
     '#rows' => 3,
   );
 
+  // Primary fields section.
   $form['contact_type']['primary_fields_container'] = array(
     '#type' => 'fieldset',
     '#title' => t('Primary Fields'),
   );
 
+  $form['contact_type']['primary_fields_container']['description_wrapper'] = array(
+    '#type' => 'container',
+  );
+  $primary_fields_description = 'Primary fields are used to tell other modules'
+    . ' what fields to use for common communications tasks such as sending an'
+    . ' email, addressing an envelope, etc. Use the fields below to indicate'
+    . ' the primary fields for this contact type.';
+  $form['contact_type']['primary_fields_container']['description_wrapper'] = array(
+    '#markup' => t($primary_fields_description),
+  );
+
+  // @todo Move primary fields array to some hook. This Would allow extend this
+  // list to other modules. This hook should return arra('key'=>t('Name')).
   $default_primary_fields = array('email', 'address', 'phone');
   $primary_fields = variable_get('crm_core_contact_default_primary_fields', $default_primary_fields);
   $options = array();
