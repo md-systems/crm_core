@@ -347,6 +347,12 @@ function crm_core_contact_update_index() {
 
 /**
  * Entity label callback.
+ *
+ * @param
+ *   A fully loaded $crm_core_contact_type object.
+ *
+ * @return
+ *   Raw formatted string. This should be run through check_plain().
  */
 function crm_core_contact_label($entity) {
   // Check whether bundle type label function exists.
@@ -358,7 +364,7 @@ function crm_core_contact_label($entity) {
     return $function($entity);
   }
   // Default is person's name.
-  $field = field_view_field('crm_core_contact', $entity, 'contact_name', 'inline');
+  $field = field_view_field('crm_core_contact', $entity, 'contact_name', array('settings' => array('output' => 'raw')));
   return $field[0]['#markup'];
 }
 
