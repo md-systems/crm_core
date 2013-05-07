@@ -208,7 +208,7 @@ function crm_core_relationship_ui_add_relationship($contact) {
         $relationship_types = crm_core_relationship_load_relationship_types($contact_type->type, $reverse);
         foreach ($relationship_types as $relationship_type) {
           if (user_access('create relation entities of bundle ' . $relationship_type->relation_type) || user_access('create relation entities of any contact relationship')) {
-            $href = 'crm-core/relationship/add/' . $relationship_type->relation_type . '/' . $reverse;
+            $href = 'crm-core/contact/relationship-add/' . $relationship_type->relation_type . '/' . $reverse;
             $title = $reverse ? $relationship_type->reverse_label : $relationship_type->label;
             $relationship_type_links[] = array(
               'title' => $title,

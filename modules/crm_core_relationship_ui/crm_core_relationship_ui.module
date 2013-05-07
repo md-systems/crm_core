@@ -30,15 +30,7 @@ function crm_core_relationship_ui_menu() {
         'title' => 'Add ' . $info->label,
         'description' => 'Add a relationship to this contact',
         'page callback' => 'crm_core_relation_entity_ui_get_form_wrapper',
-        'page arguments' => ($key == 'contact' ? array(
-          2,
-          5,
-          6
-        ) : array(
-          NULL,
-          3,
-          4
-        )),
+        'page arguments' => ($key == 'contact' ? array( 2, 5, 6) : array(NULL, 3, 4)),
         'access callback' => 'crm_core_relationship_access_permissions',
         'access arguments' => array(NULL, 'create_view'),
         'type' => MENU_NORMAL_ITEM,
