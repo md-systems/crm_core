@@ -1,4 +1,10 @@
-CRM Core 7.x-0.92 (03-May-2013)
+CRM Core 7.x-0.93 (08-May-2013)
+===================================
+
+Fixes release merge issue.
+
+
+CRM Core 7.x-0.92 (08-May-2013)
 ===================================
 
 New features:
