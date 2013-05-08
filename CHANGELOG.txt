@@ -1,0 +1,99 @@
+CRM Core 7.x-0.92 (03-May-2013)
+===================================
+
+New features:
+
+- Improvements for contacts
+  - implemented match method on CRMCoreContactEntity
+  - implemented primary fields for email, phone and address on contacts, for use in feature 
+    development 
+  - added hook_entity_delete for contact records
+  - added support for relationship deletion
+- Improvments for activities
+  - activities can now be created without first selecting a contact
+  - modified logic for activity participants, removed dependency on original contact
+  - modified filters for activity displays, can now filter by all activity types
+- Improvements for relationships
+  - relationships can now be created without first selecting a contact
+- Improvements for CRM Core User Sync
+  - removed dependency on rules configuration for contact to user management
+- New module: CRM Core Match
+  - implements matching engines and logic for identifying duplicate contacts  
+  - implements interface for selecting default matching rules for contacts
+- New module: CRM Core Default Matching Engine
+  - creates matching engine and interface for configuring matching logic
+
+Other commits:
+
+- Corrected several permissions issues affecting the display of contact information
+- Corrected path issues for links coming from various views
+- Improved breadcrumb support for CRM Core Reports
+- Modified filters on various views to support resetting filter criteria
+- Implemented logical operators for contact matching in CRM Core Default Matching Engine
+- Implemented field hanlders for supporting logical operations in CRM Core Default Matching Engine
+- Implemented support for selecting matching engines in CRM Core Match
+- Implemented support for multiple contact types in CRM Core Match
+- Implemented test cases for evaluating contacts in CRM Core Match
+- Implemented security around CRM Core Match test cases
+- Implemented objects for creating custom matching engines and API around them
+- Implemented several relationships in views to account for matches and duplicates
+- Improved documentation in various areas of the code
+- Corrected double encoding of contact labels
+- Corrected missing uid column on contact table
+
+CRM Core 7.x-0.91 (22-Mar-2013)
+===================================
+
+New features:
+
+- Addition of settings screen, with options for controlling the theme, primary links, and contact info for 
+  linked user accounts.
+- Addition of user matching screen, for linking user accounts to contacts.
+- Addition of inactive relationships screen.
+- Addition of navigational menu for CRM Core, and creation of CRM Core Admin menu.
+- Addition of CRM Core Report.
+- Implementation of theming functions and code hinting for all CRM Core entities.
+- Removed from this release:
+
+Removals:
+
+The following modules, which exist in previous development releases, were removed from this release:
+
+- CRM OG Sync
+- CRM Core Case
+- CRM Core Match
+- CRM Core Default Matching Engine
+
+These modules still exist in development versions, they are just not considered stable. These modules will be 
+supported in future official releases of CRM Core. You can find them the --development branch.
+
+Other commits:
+
+- Implemented consistent path schemes for all CRM Core entities.
+- Implemented consistent breadcrumb structure for all CRM Core entities.
+- Removed the default image field for contacts.
+- Removed default contact fields from the user edit form.
+- Corrected bugs with bi-directional relationships.
+- Modified appearance of various screens for adding CRM Core entities to ensure there is a uniform appearance.
+- Modified various page titles for compliance with Drupal standards.
+- Modified no results text on contacts, activities and relationship pages.
+- Added action links for adding CRM Core entities.
+- Added operations columns to screens for displaying CRM Core entities.
+- Modified links for adding new contacts.
+- Added reset buttons and other UI controls for various filters throughout the system.
+- Improved UI for user synchronization.
+- Enhanced user synchronization options - system now allows for weighted rules matching.
+- Enhanced user synchronization options - system now allows for batch processing of user accounts.
+- Enhanced sync form to only display users / contacts with no match.
+- Improved dashboard handling - removed default text.
+- Improved dashboard handling - added UI for configuring dashboard.
+- Improved dashboard handling - added controls to remove links to dashboard when it is not present in the system.
+- Removed unnecessary CSS throughout system.
+- Adjusted paths for adding entities within the dashboard.
+- Business logic - CRM Core now allows contacts to be removed from activities.
+- Business logic - CRM Core now allows multiple contacts to be added to activities.
+- Business logic - UI now displays information about contacts when viewing an activity.
+- Business logic - UI now displays participant names as links to contact records.
+- Business logic - streamlined process for deleting relationships.
+- Dependencies - removed unnecessary dependencies.
+- Template files - removed duplicate template files, added theme hinting.

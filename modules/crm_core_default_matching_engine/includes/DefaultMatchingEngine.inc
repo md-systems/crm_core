@@ -5,7 +5,8 @@
  * Default match engine definitions.
  */
 
-define('MATCH_DEFAULT_CHARS', 3);
+if (!defined('MATCH_DEFAULT_CHARS')) define('MATCH_DEFAULT_CHARS', '3');
+
 
 /**
  * Interface for defining the logical operators and query criteria used to identify duplicate contacts based on
@@ -49,6 +50,8 @@ interface DefaultMatchingEngineFieldTypeInterface {
 
 abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFieldTypeInterface {
 
+  const WEIGHT_DELTA = 25;
+
   /**
    * Template used to render fields matching rules configuration form.
    *
@@ -60,41 +63,63 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
    *   Form to be modified
    */
   public function fieldRender($field, $field_info, &$form) {
+    $disabled = FALSE;
+    if (get_class($this) == 'UnsupportedFieldMatchField') {
+      $disabled = TRUE;
+    }
     $field_name = $field['field_name'];
     $field_item = isset($field['field_item']) ? $field['field_item'] : '';
+    $separator = empty($field_item) ? $field_name : $field_name . '_' . $field_item;
     $field_label = $field['label'];
+    if ($disabled) {
+      $field_label .= ' (UNSUPPORTED)';
+    }
     $contact_type = $field['bundle'];
 
     $config = crm_core_default_matching_engine_load_field_config($contact_type, $field_name, $field_item);
+    $display_weight = self::WEIGHT_DELTA;
+    if ($config['weight'] == 0) {
+      // Table row positioned incorrectly if "#weight" is 0.
+      $display_weight = 0.001;
+    }
+    else {
+      $display_weight = $config['weight'];
+    }
 
-    $form['field_matching'][$field_name . $field_item]['#weight'] = $config['weight'];
+    $form['field_matching'][$separator]['#weight'] = $disabled ? 100 : $display_weight;
 
-    $form['field_matching'][$field_name . $field_item]['field_type'] = array(
+    $form['field_matching'][$separator]['supported'] = array(
+      '#type' => 'value',
+      '#value' => $disabled ? FALSE : TRUE,
+    );
+
+    $form['field_matching'][$separator]['field_type'] = array(
       '#type' => 'value',
       '#value' => $field_info['type'],
     );
 
-    $form['field_matching'][$field_name . $field_item]['field_name'] = array(
+    $form['field_matching'][$separator]['field_name'] = array(
       '#type' => 'value',
       '#value' => $field_name,
     );
 
-    $form['field_matching'][$field_name . $field_item]['field_item'] = array(
+    $form['field_matching'][$separator]['field_item'] = array(
       '#type' => 'value',
       '#value' => $field_item,
     );
 
-    $form['field_matching'][$field_name . $field_item]['status'] = array(
+    $form['field_matching'][$separator]['status'] = array(
       '#type' => 'checkbox',
       '#default_value' => $config['status'],
+      '#disabled' => $disabled,
     );
 
-    $form['field_matching'][$field_name . $field_item]['name'] = array(
+    $form['field_matching'][$separator]['name'] = array(
       '#type' => 'item',
-      '#markup' => $field_label,
+      '#markup' => check_plain($field_label),
     );
 
-    $form['field_matching'][$field_name . $field_item]['field_type_markup'] = array(
+    $form['field_matching'][$separator]['field_type_markup'] = array(
       '#type' => 'item',
       '#markup' => $field_info['type'],
     );
@@ -104,6 +129,7 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
       '#default_value' => $config['operator'],
       '#empty_option' => t('-- Please Select --'),
       '#empty_value' => '',
+      '#disabled' => $disabled,
     );
     switch ($field_info['type']) {
       case 'date':
@@ -114,38 +140,38 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
         );
         break;
 
-      case 'name':
-      case 'select':
-      case 'email':
-      case 'text':
+      default:
         $operator += array(
           '#options' => $this->operators(),
         );
-        break;
     }
 
-    $form['field_matching'][$field_name . $field_item]['operator'] = $operator;
+    $form['field_matching'][$separator]['operator'] = $operator;
 
-    $form['field_matching'][$field_name . $field_item]['options'] = array(
+    $form['field_matching'][$separator]['options'] = array(
       '#type' => 'textfield',
       '#maxlength' => 28,
       '#size' => 28,
       '#default_value' => $config['options'],
+      '#disabled' => $disabled,
     );
 
-    $form['field_matching'][$field_name . $field_item]['score'] = array(
+    $form['field_matching'][$separator]['score'] = array(
       '#type' => 'textfield',
-      '#maxlength' => 28,
-      '#size' => 28,
+      '#maxlength' => 4,
+      '#size' => 3,
       '#default_value' => $config['score'],
+      '#disabled' => $disabled,
     );
 
-    $form['field_matching'][$field_name . $field_item]['weight'] = array(
+    $form['field_matching'][$separator]['weight'] = array(
       '#type' => 'weight',
       '#default_value' => $config['weight'],
       '#attributes' => array(
         'class' => array('crm-core-match-engine-order-weight'),
       ),
+      '#disabled' => $disabled,
+      '#delta' => self::WEIGHT_DELTA,
     );
   }
 
@@ -161,10 +187,12 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
    *   Founded matches.
    */
   public function fieldQuery($contact, $rule) {
+    
     $results = array();
     $contact_wrapper = entity_metadata_wrapper('crm_core_contact', $contact);
     $needle = '';
     $field_item = '';
+    
     if (empty($rule->field_item)) {
       $needle = $contact_wrapper->{$rule->field_name}->value();
       $field_item = 'value';
@@ -173,6 +201,7 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
       $needle = $contact_wrapper->{$rule->field_name}->{$rule->field_item}->value();
       $field_item = $rule->field_item;
     }
+    
     if (!empty($needle)) {
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'crm_core_contact')->entityCondition('bundle', $contact->type);
@@ -219,6 +248,12 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
   }
 }
 
+class UnsupportedFieldMatchField extends DefaultMatchingEngineFieldType {
+  public function operators() {
+    return array();
+  }
+}
+
 /**
  * DefaultMatchingEngine class
  *
@@ -235,7 +270,13 @@ class DefaultMatchingEngine extends CrmCoreMatchEngine {
     $description = 'This is a simple matching engine from CRM Core. Allows administrators to specify matching'
       . ' rules for individual contact types on a field-by-field basis.';
     $this->description = t($description);
-    $this->settings = array();
+    $this->settings = array(
+      array(
+        'name' => 'settings',
+        'path' => 'admin/config/crm-core/match/default_match',
+        'label' => t('Configuration'),
+      ),
+    );
   }
 
   /**
@@ -253,8 +294,8 @@ class DefaultMatchingEngine extends CrmCoreMatchEngine {
       // Check if match is enabled for this contact type.
       if ($base_config['status']) {
         $matching_rules = crm_core_default_matching_engine_load_field_config($contact->type);
-        dpm($matching_rules, 'Matching rules');
         $contact_fields = field_info_instances('crm_core_contact', $contact->type);
+        
         $results = array();
         foreach ($matching_rules as $matching_rule) {
           if (isset($contact_fields[$matching_rule->field_name])) {
@@ -263,14 +304,12 @@ class DefaultMatchingEngine extends CrmCoreMatchEngine {
             if (class_exists($field_match_handler_class)) {
               $field_match_handler = new $field_match_handler_class();
               $rule_matches = $field_match_handler->fieldQuery($contact, $matching_rule);
-
             }
             foreach ($rule_matches as $matched_id) {
               $results[$matched_id][$matching_rule->mrid] = $matching_rule->score;
             }
           }
         }
-        dpm($results, 'Matching results');
         foreach ($results as $id => $rule_matches) {
           $total_score = array_sum($rule_matches);
           if ($total_score >= $base_config['threshold']) {

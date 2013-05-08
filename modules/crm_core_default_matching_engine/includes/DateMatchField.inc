@@ -24,12 +24,10 @@ class DateMatchField extends DefaultMatchingEngineFieldType {
   public function operators($field_info = NULL) {
 
     $operators = array(
-      'equals' => t('Equals'),
+      '=' => t('Equals'),
+      '>=' => t('Greater then'),
+      '<=' => t('Less then'),
     );
-
-    if (isset($field_info['columns']['value2'])) {
-      $operators['between'] = t('Between');
-    }
 
     return $operators;
   }
@@ -55,7 +53,7 @@ class DateMatchField extends DefaultMatchingEngineFieldType {
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'crm_core_contact')->entityCondition('bundle', $contact->type)
         ->entityCondition('entity_id', $contact->contact_id, '<>')
-        ->fieldCondition($rule->field_name, $field_item, $needle);
+        ->fieldCondition($rule->field_name, $field_item, $needle, $rule->operator);
 
       $results = $query->execute();
     }

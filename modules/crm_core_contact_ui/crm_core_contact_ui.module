@@ -72,7 +72,7 @@ function crm_core_contact_ui_menu() {
     'access arguments' => array('create_view', 'crm_core_contact'),
     'type' => MENU_LOCAL_ACTION,
     'context' => MENU_CONTEXT_PAGE,
-    'weight' => 10,
+    'weight' => 0,
     'file' => 'crm_core_contact_ui.pages.inc',
   );
   foreach (crm_core_contact_types() as $type => $contact_type) {
@@ -94,7 +94,7 @@ function crm_core_contact_ui_menu() {
   if (module_exists('devel')) {
     $items['crm-core/contact/%crm_core_contact/devel'] = array(
       'title' => 'Devel',
-      'page_callback' => 'crm_core_contact_devel_load_object',
+      'page callback' => 'crm_core_contact_devel_load_object',
       'page arguments' => array(2),
       'access arguments' => array('access devel information'),
       'type' => MENU_LOCAL_TASK,
@@ -129,8 +129,6 @@ function crm_core_contact_ui_views_api() {
   );
 }
 
-
-
 /**
  * Implements hook_menu_alter().
  */
@@ -144,7 +142,6 @@ function crm_core_contact_ui_menu_alter(&$items) {
   }
 }
 
-
 /**
  * Implements hook_admin_paths().
  */
@@ -156,7 +153,6 @@ function crm_core_contact_ui_admin_paths() {
 
   return $paths;
 }
-
 
 /**
  * Implements hook_theme().
@@ -190,6 +186,7 @@ function crm_core_contact_ui_view($contact) {
     l(t('Contacts'), 'crm-core/contact'),
   );
   drupal_set_breadcrumb($breadcrumb);
+
   return crm_core_contact_view($contact);
 }
 
@@ -200,4 +197,42 @@ function crm_core_contact_ui_save_contact_button_name($contact_type) {
   return t('Save !contact_type', array(
     '!contact_type' => crm_core_contact_type_get_name($contact_type)
   ));
+}
+
+/**
+ * Get CRM Core Contact primary field value.
+ *
+ * @param CRMCoreContactEntity $contact
+ *   CRM Core Contact.
+ * @param string $primary_field
+ *   Primary field name.
+ *
+ * @return string
+ *   Value of specified primary field or empty string.
+ */
+function crm_core_contact_get_primary_field_value(CRMCoreContactEntity $contact, $primary_field) {
+  $contact_type = crm_core_contact_type_load($contact->type);
+  $field = empty($contact_type->primary_fields[$primary_field]) ? '' : $contact_type->primary_fields[$primary_field];
+  $field_value = '';
+  if (empty($field)) {
+    // Check that user has access to configure crm_core_contact.
+    if (user_access('administer contact types')) {
+      // Alert privileged users that requested primary field didn't configured.
+      $path = 'admin/structure/crm-core/contact-types/manage/' . $contact_type->type;
+      $message = "Some module requested value of primary field %field of"
+        . " contact of %contact_type type, but this primary field is not"
+        . " configured for this contact type. You can configure it !here.";
+      drupal_set_message(t($message, array(
+        '%contact_type' => $contact_type->type,
+        '%field' => $primary_field,
+        '!here' => l(t('here'), $path),
+      )), 'warning');
+    }
+  }
+  else {
+    $contact_wrapper = entity_metadata_wrapper('crm_core_contact', $contact);
+    $field_value = $contact_wrapper->{$field}->value();
+  }
+
+  return $field_value;
 }

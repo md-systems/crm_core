@@ -1,6 +1,6 @@
 name = CRM Core Devel Generate
 description = Devel submodule for CRM Core.
-package = CRM
+package = CRM Core
 version = VERSION
 core = 7.x
 

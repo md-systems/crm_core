@@ -12,18 +12,21 @@
  * @param string $type
  */
 function crm_core_activity_entity_ui_get_form_wrapper($contact, $type) {
-  $values = array(
-    'type' => $type,
-    'field_activity_participants' => array(
-      LANGUAGE_NONE => array(array(
+
+  $values = array('type' => $type);
+  if ($contact) {
+    $values['field_activity_participants'] = array(
+      LANGUAGE_NONE => array(
+        array(
           'target_id' => $contact->contact_id,
           'target_type' => 'crm_core_contact',
         ),
       ),
-    ),
-  );
+    );
+  }
 
   $activity = entity_create('crm_core_activity', $values);
+
   return entity_ui_get_form('crm_core_activity', $activity, 'add');
 }
 
@@ -153,13 +156,20 @@ function crm_core_activity_form_submit_delete($form, &$form_state) {
     unset($_GET['destination']);
   }
   $activity = $form_state['crm_core_activity'];
-  $form_state['redirect'] = array('crm-core/activity/' . $activity->activity_id . '/delete', array('query' => $destination));
+  $form_state['redirect'] = array(
+    'crm-core/activity/' . $activity->activity_id . '/delete',
+    array('query' => $destination)
+  );
 }
 
 function crm_core_activity_form_delete_confirm($form, &$form_state, $activity) {
   $form_state['activity'] = $activity;
   // Always provide entity id in the same form key as in the entity edit form.
-  $form['activity_id'] = array('#type' => 'value', '#value' => $activity->activity_id);
+  $form['activity_id'] = array(
+    '#type' => 'value',
+    '#value' => $activity->activity_id
+  );
+
   return confirm_form($form,
     t('Are you sure you want to delete activity %title?', array('%title' => $activity->title)),
     'crm-core/activity/' . $activity->activity_id,
@@ -177,7 +187,10 @@ function crm_core_activity_form_delete_confirm_submit($form, &$form_state) {
     $activity = $form_state['activity'];
     crm_core_activity_delete($activity);
 
-    watchdog('crm_core_activity', '@type: deleted %title.', array('@type' => $activity->type, '%title' => $activity->title));
+    watchdog('crm_core_activity', '@type: deleted %title.', array(
+      '@type' => $activity->type,
+      '%title' => $activity->title
+    ));
     drupal_set_message(t('@type %title has been deleted.', array(
       '@type' => crm_core_activity_type_get_name($activity->type),
       '%title' => $activity->title,
@@ -194,24 +207,48 @@ function crm_core_activity_form_delete_confirm_submit($form, &$form_state) {
 }
 
 /**
- * Add activity page callback
+ * Add activity page callback.
  *
- * @param $contact object
- *  CRM Core contact.
+ * @param object $contact
+ *   CRM Core contact.
+ *
+ * @return string
+ *   Activity types list or empty text.
  */
-function crm_core_activity_ui_add_activity($contact) {
-  drupal_set_title(t('Add a activity'));
-  _crm_core_activity_ui_set_breadcrumb($contact);
+function crm_core_activity_ui_add_activity($contact = NULL) {
+
+  global $user;
   $items = array();
-  $contact_uri = $contact->uri();
-  foreach (crm_core_activity_types() as $info) {
-    $items[] = array(
-      'title' => $info->label,
-      'href' => $contact_uri['path'] . '/activity/add/' . $info->type,
-      'localized_options' => array(),
-      'description' => $info->description,
-    );
+
+  drupal_set_title(t('Add a activity'));
+  if ($contact) {
+    _crm_core_activity_ui_set_breadcrumb($contact);
+    $contact_uri = $contact->uri();
+    foreach (crm_core_activity_types() as $info) {
+      if (entity_access('create', 'crm_core_activity', $info->type, $user)) {
+        $items[] = array(
+          'title' => $info->label,
+          'href' => $contact_uri['path'] . '/activity/add/' . $info->type,
+          'localized_options' => array(),
+          'description' => $info->description,
+        );
+      }
+    }
   }
+  else {
+    foreach (crm_core_activity_types() as $info) {
+      if (entity_access('create', 'crm_core_activity', $info->type, $user)) {
+        $items[] = array(
+          'title' => $info->label,
+          'href' => 'crm-core/contact/activity-add/' . $info->type,
+          'localized_options' => array(),
+          'description' => $info->description,
+        );
+      }
+    }
+  }
+
   $empty = 'It is not possible to create Activities yet. Please create Activity Type fist.';
+
   return empty($items) ? t($empty) : theme('crm_core_contact_ui_add_list', array('content' => $items));
 }

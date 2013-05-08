@@ -9,13 +9,38 @@
  *
  * - identify duplicate contact records
  * - inject data into contact records being saved
- * - carry out other scripted operations not easily handled in the normal bootstrapping process
+ * - carry out other scripted operations not easily handled in the normal
+ * bootstrapping process.
  *
- * This module does not define any matching engines itself, it only provides the framework
- * through which they can be applied to new contacts being created in the database.
+ * This module does not define any matching engines itself, it only provides the
+ * framework through which they can be applied to new contacts being created in
+ * the database.
  *
  * @TODO: add hooks for altering the submission process
  */
+
+/**
+ * Implements hook_crm_core_contact_match().
+ */
+function crm_core_match_crm_core_contact_match($values) {
+
+  // Get a list of all matching engines for a contact.
+  $engines = & drupal_static(__FUNCTION__);
+
+  if (!is_array($engines)) {
+    $engines = crm_core_match_get_engines();
+  }
+
+  // Go through each and look for matches.
+  $matches = array();
+  if (count($engines) > 0) {
+    foreach ($engines as $engine) {
+      $engine->execute($values['contact'], $matches);
+    }
+  }
+
+  $values['matches'] = array_merge($values['matches'], $matches);
+}
 
 /**
  * Implements hook_hook_info().
@@ -34,13 +59,12 @@ function crm_core_match_hook_info() {
  * Implements hook_menu().
  */
 function crm_core_match_menu() {
-  // TODO: Check proper prmissions.
   $items['admin/config/crm-core/match'] = array(
     'title' => 'Matching Engines',
     'description' => 'Configure the default rules for matching duplicate contacts in CRM Core.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('crm_core_match_admin_config_engines_form'),
-    'access callback' => TRUE,
+    'access arguments' => array('administer matching engines'),
     'file' => 'crm_core_match.admin.inc',
   );
 
@@ -54,7 +78,7 @@ function crm_core_match_menu() {
     'type' => MENU_CALLBACK,
     'page callback' => 'crm_core_match_engine_status_toggle',
     'page arguments' => array(5, 6),
-    'access callback' => TRUE,
+    'access arguments' => array('administer matching engines'),
   );
 
   $items['crm-core/crm-core-match/check-rules/%crm_core_contact'] = array(
@@ -62,7 +86,7 @@ function crm_core_match_menu() {
     'page arguments' => array(3),
     'title callback' => 'crm_core_match_testing_page_title',
     'title arguments' => array(3),
-    'access callback' => TRUE,
+    'access arguments' => array('view match information'),
     'type' => MENU_SUGGESTED_ITEM,
     'file' => 'crm_core_match.test.inc',
   );
@@ -70,7 +94,7 @@ function crm_core_match_menu() {
   $items['crm-core/crm-core-match/info'] = array(
     'page callback' => 'crm_core_match_info_page',
     'title' => 'CRM Core Match info',
-    'access callback' => TRUE,
+    'access arguments' => array('view matching engine rules configuration'),
     'type' => MENU_SUGGESTED_ITEM,
     'file' => 'crm_core_match.test.inc',
   );
@@ -139,7 +163,6 @@ function crm_core_match_engine_status_toggle($engine_machine_name, $to_status) {
     case 'disable':
       $status = 0;
       break;
-
   }
   if (isset($status)) {
     db_merge('crm_core_match_engines')
@@ -162,5 +185,23 @@ function _crm_core_match_engine_weight_cmp($a, $b) {
   if ($a->weight == $b->weight) {
     return 0;
   }
+
   return ($a->weight < $b->weight) ? -1 : 1;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function crm_core_match_permission() {
+  return array(
+    'administer matching engines' => array(
+      'title' => t('Administer matching engines'),
+    ),
+    'view matching engine rules configuration' => array(
+      'title' => t('View matching engine rules configuration'),
+    ),
+    'view match information' => array(
+      'title' => t('View match information'),
+    ),
+  );
 }

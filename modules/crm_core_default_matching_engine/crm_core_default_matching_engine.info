@@ -10,8 +10,12 @@ dependencies[] = crm_core_match
 files[] = includes/DefaultMatchingEngine.inc
 
 ; handlers for various field types
-files[] = includes/nameMatchField.inc
-files[] = includes/textMatchField.inc
-files[] = includes/selectMatchField.inc
-files[] = includes/emailMatchField.inc
+files[] = includes/NameMatchField.inc
+files[] = includes/TextMatchField.inc
+files[] = includes/SelectMatchField.inc
+files[] = includes/EmailMatchField.inc
 files[] = includes/DateMatchField.inc
+files[] = includes/AddressFieldMatchField.inc
+files[] = includes/TelephoneMatchField.inc
+files[] = includes/Phone_NumberMatchField.inc
+files[] = includes/Number_IntegerMatchField.inc

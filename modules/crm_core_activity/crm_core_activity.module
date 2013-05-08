@@ -97,7 +97,7 @@ function crm_core_activity_entity_info_alter(&$entity_info) {
  */
 function crm_core_activity_permission() {
   $permissions = array(
-    'administer crm_core_activity types' => array(
+    'administer activity types' => array(
       'title' => t('Administer activity types'),
       'description' => t('Allows users to configure activity types and their fields.'),
       'restrict access' => TRUE,
@@ -157,6 +157,19 @@ function crm_core_activity_access($op, $activity, $account = NULL, $entity_type 
       return (user_access('administer crm_core_activity entities', $account)
         || user_access('delete any crm_core_activity entity', $account)
         || user_access('delete any crm_core_activity entity of bundle ' . $activity_type));
+    case 'create_view':
+      // Check if user has access permission to a view with create activity links.
+      if (user_access('administer crm_core_activity entities', $account)
+        || user_access('create crm_core_activity entities', $account)) {
+        return TRUE;
+      }
+      // Allow access if account has create permissions for any crm core activity type .
+      foreach (array_keys(crm_core_activity_types()) as $type) {
+        if (entity_access('create', 'crm_core_activity', $type, $account)) {
+          return TRUE;
+        }
+      }
+      return FALSE;
   }
 }
 

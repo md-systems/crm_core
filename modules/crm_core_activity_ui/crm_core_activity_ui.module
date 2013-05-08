@@ -9,28 +9,35 @@
  * Implements hook_menu().
  */
 function crm_core_activity_ui_menu() {
-  $items['crm-core/contact/%crm_core_contact/activity/add'] = array(
-    'title' => 'Add an activity',
-    'page callback' => 'crm_core_activity_ui_add_activity',
-    'page arguments' => array(2),
-    'access callback' => 'entity_access',
-    'access arguments' => array('create', 'crm_core_activity'),
-    'type' => MENU_LOCAL_ACTION,
-    'file' => 'crm_core_activity_ui.pages.inc',
+  $activity_paths = array(
+    'no_contact' => 'crm-core/contact/activity-add',
+    'contact' => 'crm-core/contact/%crm_core_contact/activity/add',
   );
-
-  foreach (crm_core_activity_types() as $type => $info) {
-    $items['crm-core/contact/%crm_core_contact/activity/add/' . $type] = array(
-      'title' => 'Add activity @type',
-      'title arguments' => array('@type' => $info->label),
-      'description' => $info->description,
-      'page callback' => 'crm_core_activity_entity_ui_get_form_wrapper',
-      'page arguments' => array(2, 5),
+  foreach ($activity_paths as $key => $path) {
+    $items[$path] = array(
+      'title' => 'Add an activity',
+      'page callback' => 'crm_core_activity_ui_add_activity',
+      'page arguments' => array(($key == 'contact' ? 2 : NULL)),
       'access callback' => 'entity_access',
-      'access arguments' => array('create', 'crm_core_activity', 5),
-      'type' => MENU_NORMAL_ITEM,
+      'access arguments' => array('create_view', 'crm_core_activity'),
+      'type' => MENU_LOCAL_ACTION,
       'file' => 'crm_core_activity_ui.pages.inc',
+      'weight' => 5,
     );
+
+    foreach (crm_core_activity_types() as $type => $info) {
+      $items[$path . '/' . $type] = array(
+        'title' => 'Add activity @type',
+        'title arguments' => array('@type' => $info->label),
+        'description' => $info->description,
+        'page callback' => 'crm_core_activity_entity_ui_get_form_wrapper',
+        'page arguments' => ($key == 'contact' ? array(2, 5) : array(NULL, 3)),
+        'access callback' => 'entity_access',
+        'access arguments' => array('create', 'crm_core_activity', 5),
+        'type' => MENU_NORMAL_ITEM,
+        'file' => 'crm_core_activity_ui.pages.inc',
+      );
+    }
   }
 
   $items['crm-core/activity/%crm_core_activity'] = array(
@@ -145,6 +152,7 @@ function crm_core_activity_ui_admin_menu_map() {
     // Create expansion arguments for the '%crm_core_activity_type' placeholder.
     'arguments' => $arguments,
   );
+
   return $map;
 }
 
@@ -215,5 +223,6 @@ function _crm_core_activity_ui_set_breadcrumb($contact) {
  */
 function crm_core_activity_ui_view($activity, $contact) {
   _crm_core_activity_ui_set_breadcrumb($contact);
+
   return crm_core_activity_view($activity);
 }

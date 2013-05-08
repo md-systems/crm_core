@@ -66,24 +66,17 @@ function crm_core_default_matching_engine_form($form, &$form_state, $contact_typ
     '#tree' => TRUE,
   );
 
-  // This returns a list of all fields associated with the selected contact type.
   foreach (field_info_instances('crm_core_contact', $contact_type) as $field_name => $field) {
-
-    // This returns some additional information about the field.
     $field_info = field_info_field($field_name);
     $field_type = $field_info['type'];
-    // We now have enough information about the field to render a row for it. Some fields are going to have multiple
-    // rows (for instance, name fields) and need to be handled a little differently.
     $field_handler = $field_type . 'MatchField';
     if (class_exists($field_handler)) {
-
-      // @TODO: need to modify interface and classes to accept field and field info need to pass in the form array
-      // by reference and allow it to be modified.
       $obj = new $field_handler();
       $obj->fieldRender($field, $field_info, $form);
-
-      // @TODO: need to add something that adds the output of fieldRender to the form the output of fieldrender can be
-      // one field, or it can be many.
+    }
+    else {
+      $obj = new UnsupportedFieldMatchField();
+      $obj->fieldRender($field, $field_info, $form);
     }
   }
 
@@ -100,10 +93,16 @@ function crm_core_default_matching_engine_form($form, &$form_state, $contact_typ
  * Validate handler for crm_core_default_matching_engine_form.
  */
 function crm_core_default_matching_engine_form_validate($form, &$form_state) {
-  $fields_rules = $form_state['values']['field_matching'];
+  $fields_rules = array();
+  if (isset($form_state['values']['field_matching'])) {
+    $fields_rules = $form_state['values']['field_matching'];
+  }
   foreach ($fields_rules as $field_name => $config) {
     if ($config['status'] && empty($config['operator'])) {
       form_set_error('field_matching][' . $field_name . '][operator', t('You must select an operator for enabled field.'));
+    }
+    if (!is_numeric($config['score'])) {
+      form_set_error('field_matching][' . $field_name . '][score', t('You must enter number in "Score" column.'));
     }
   }
 }
@@ -112,6 +111,10 @@ function crm_core_default_matching_engine_form_validate($form, &$form_state) {
  * Submit handler for crm_core_default_matching_engine_form.
  */
 function crm_core_default_matching_engine_form_submit($form, &$form_state) {
+  if (!isset($form_state['values'])) {
+    return;
+  }
+
   $values = $form_state['values'];
   db_merge('crm_core_match_contact_types')
     ->condition('contact_type', $values['contact_type'])
@@ -123,23 +126,28 @@ function crm_core_default_matching_engine_form_submit($form, &$form_state) {
       'return_order' => $values['return_order'],
     ))
     ->execute();
-  foreach ($values['field_matching'] as $config) {
-    db_merge('crm_core_match_contact_type_rules')
-      ->condition('contact_type', $values['contact_type'])
-      ->condition('field_name', $config['field_name'])
-      ->condition('field_item', $config['field_item'])
-      ->fields(array(
-        'contact_type' => $values['contact_type'],
-        'field_type' => $config['field_type'],
-        'field_name' => $config['field_name'],
-        'field_item' => $config['field_item'],
-        'status' => $config['status'],
-        'operator' => $config['operator'],
-        'options' => $config['options'],
-        'weight' => $config['weight'],
-        'score' => $config['score'],
-      ))
-      ->execute();
+
+  if (isset($values['field_matching'])) {
+    foreach ($values['field_matching'] as $config) {
+      if ($config['supported']) {
+        db_merge('crm_core_match_contact_type_rules')
+          ->condition('contact_type', $values['contact_type'])
+          ->condition('field_name', $config['field_name'])
+          ->condition('field_item', $config['field_item'])
+          ->fields(array(
+            'contact_type' => $values['contact_type'],
+            'field_type' => $config['field_type'],
+            'field_name' => $config['field_name'],
+            'field_item' => $config['field_item'],
+            'status' => $config['status'],
+            'operator' => $config['operator'],
+            'options' => $config['options'],
+            'weight' => $config['weight'],
+            'score' => $config['score'],
+          ))
+          ->execute();
+      }
+    }
   }
   drupal_set_message(t('The configuration options have been saved.'));
 }
@@ -151,8 +159,7 @@ function theme_crm_core_default_matching_engine_form($variables) {
   $form = $variables['form'];
 
   $rows = array();
-  uasort($form['field_matching'], '_crm_core_default_matching_engine_load_field_weight_cmp');
-  foreach (element_children($form['field_matching']) as $key) {
+  foreach (element_children($form['field_matching'], TRUE) as $key) {
     $rows[] = array(
       'data' => array(
         drupal_render($form['field_matching'][$key]['status']),
@@ -189,14 +196,20 @@ function theme_crm_core_default_matching_engine_form($variables) {
 }
 
 /**
- * Helper function for field rules weight comparison.
+ * Page callback for engine configuration page.
  */
-function _crm_core_default_matching_engine_load_field_weight_cmp($a, $b) {
-  if (empty($a['#weight']) || empty($b['#weight'])) {
-    return 0;
+function crm_core_default_matching_engine_config_page() {
+
+  $item = menu_get_item();
+  $types = crm_core_contact_types();
+  $content = array();
+  foreach ($types as $type) {
+    $_content = menu_get_item($item['href'] . '/' . $type->type . '/edit');
+    if ($_content['access']) {
+      $_content['description'] = $_content['title'];
+      $content[] = $_content;
+    }
   }
-  if ($a['#weight'] == $b['#weight']) {
-    return 0;
-  }
-  return ($a['#weight'] < $b['#weight']) ? -1 : 1;
+
+  return theme('crm_core_contact_ui_add_list', array('content' => $content));
 }
