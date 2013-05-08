@@ -1,0 +1,13 @@
+name = CRM Core Devel Generate
+description = Devel submodule for CRM Core.
+package = CRM
+version = VERSION
+core = 7.x
+
+dependencies[] = entity
+dependencies[] = entityreference
+dependencies[] = crm_core_contact
+dependencies[] = taxonomy
+dependencies[] = views
+dependencies[] = crm_core_devel
+dependencies[] = devel

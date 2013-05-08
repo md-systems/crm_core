@@ -1,0 +1,138 @@
+<?php 
+
+/**
+ * @file
+ * The default matching engine for CRM Core.
+ * Identifies duplicate contacts in the system using criteria
+ * defined by users through the configuration tools.
+ */
+
+/**
+ * Implements hook_permissions().
+ */
+function crm_core_default_matching_engine_permission() {
+  return array(
+    'modify default matching engine rules' => array(
+      'title' => t('Modify default matching engine rules'),
+      'description' => t('Allow users to modify the rules associated with the CRM Core Match default matching engine.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ * 
+ * @TODO: improve this, way too many links appearing on the config page
+ * 
+ * @TODO: links should point to something in the structure section
+ *   - this is too important
+ */
+function crm_core_default_matching_engine_menu() {
+  $items = array();
+  foreach (crm_core_contact_types() as $type => $info) {
+    $items['admin/config/crm-core/default_match/' . $type . '/edit'] = array(
+      'title' => 'Matching Rules for @type',
+      'title arguments' => array('@type' => $info->name),
+      'description' => 'Matching Rules for %type',
+      'description arguments' => array('%type' => $info->name),
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('crm_core_default_matching_engine_form', 4),
+      'access arguments' => array('modify default matching engine rules'),
+      'file' => 'crm_core_default_matching_engine.admin.inc',
+    );
+  }
+  return $items;
+}
+
+
+/**
+ * Implements hook_crm_core_match_engine_register().
+ */
+function crm_core_default_matching_engine_crm_core_match_engine_register() {
+  return new DefaultMatchingEngine();
+}
+
+/**
+ * Implements hook_theme().
+ */
+function crm_core_default_matching_engine_theme() {
+  return array(
+    'crm_core_default_matching_engine_form' => array(
+      'render element' => 'form',
+      'file' => 'crm_core_default_matching_engine.admin.inc',
+    ),
+  );
+}
+
+/**
+ * Loads contact type matching configuration from DB.
+ *
+ * @param string $contact_type
+ *   Machine readable contact type name.
+ *
+ * @return array
+ *   Contact type matching configuration.
+ */
+function crm_core_default_matching_engine_load_contact_type_config($contact_type) {
+  $base_settings = db_select('crm_core_match_contact_types')
+    ->fields('crm_core_match_contact_types')
+    ->condition('contact_type', $contact_type)
+    ->execute()
+    ->fetchAssoc();
+  // If no settings stored in DB use defaults.
+  if (!$base_settings) {
+    $base_settings = array(
+      'threshold' => 0,
+      'status' => 0,
+      'strict' => 0,
+      'return_order' => '',
+    );
+  }
+
+  return $base_settings;
+}
+
+/**
+ * Loads field matching rule(config) from DB.
+ *
+ * @param string $contact_type
+ *   Machine readable contact type name.
+ * @param string $field_name
+ *   Machine readable field name.
+ * @param string $field_item
+ *   Field item. Currently used only in name fields.
+ * @return array
+ *   Field matching rule(config) or all rules for specified contact type(field name and item must be empty).
+ */
+function crm_core_default_matching_engine_load_field_config($contact_type, $field_name = '', $field_item = '') {
+  if (empty($field_name) && empty($field_item)) {
+    $rules = db_select('crm_core_match_contact_type_rules')
+      ->fields('crm_core_match_contact_type_rules')
+      ->condition('contact_type', $contact_type)
+      ->condition('status', 1)
+      ->orderBy('weight')
+      ->execute()
+      ->fetchAllAssoc('mrid');
+    return $rules;
+  }
+  else {
+    $config = db_select('crm_core_match_contact_type_rules')
+      ->fields('crm_core_match_contact_type_rules')
+      ->condition('contact_type', $contact_type)
+      ->condition('field_name', $field_name)
+      ->condition('field_item', $field_item)
+      ->execute()
+      ->fetchAssoc();
+    // If no settings stored in DB use defaults.
+    if (!$config) {
+      $config = array(
+        'operator' => '',
+        'status' => 0,
+        'score' => 0,
+        'options' => '',
+        'weight' => 0,
+      );
+    }
+    return $config;
+  }
+}

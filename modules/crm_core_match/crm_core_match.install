@@ -1,0 +1,46 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the CRM Core Match module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function crm_core_match_schema() {
+  $schema['crm_core_match_engines'] = array(
+    'description' => 'Stores information about available matching engines, their status and weight.',
+    'fields' => array(
+      'eid' => array(
+        'description' => 'The primary identifier for an engine.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'machine_name' => array(
+        'description' => 'Machine readable name of matching engine.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+      ),
+      'weight' => array(
+        'description' => 'Order in which engine would be applied.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 10,
+      ),
+      'status' => array(
+        'description' => 'Status of the matching engine. (1 = enabled, 0 = disabled)',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('eid'),
+  );
+
+  return $schema;
+}
