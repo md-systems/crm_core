@@ -208,20 +208,25 @@ function crm_core_contact_ui_save_contact_button_name($contact_type) {
  *   Primary field name.
  *
  * @return string
+ *   Value of specified primary field or empty string.
  */
 function crm_core_contact_get_primary_field_value(CRMCoreContactEntity $contact, $primary_field) {
-  $contactType = crm_core_contact_type_load($contact->type);
-  $field = empty($contactType->primary_fields[$primary_field]) ? '' : $contactType->primary_fields[$primary_field];
+  $contact_type = crm_core_contact_type_load($contact->type);
+  $field = empty($contact_type->primary_fields[$primary_field]) ? '' : $contact_type->primary_fields[$primary_field];
   $field_value = '';
   if (empty($field)) {
-    if(user_access('configure petition email settings')){
-      // Alert privileged users that we can't send emails.
-      // Check that user has access to configure crm_core_contact.
-      $message = "There are no primary contact fields configured for contacts of type @contact_type. The petitions feature cannot send thank-you emails "
-        . "or targeted emails to contacts unless primary fields are configured for this contact type. Goto admin/settings/crm-core/contact-types, and click the ."
-        . "edit link to configure primary contact fields for this contact type in order to enable emails.";
-      drupal_set_message(t($message, array('@contact_type' => $contactType)), 'warning');
-      // @TODO: should this also go into watchdog?
+    // Check that user has access to configure crm_core_contact.
+    if (user_access('administer contact types')) {
+      // Alert privileged users that requested primary field didn't configured.
+      $path = 'admin/structure/crm-core/contact-types/manage/' . $contact_type->type;
+      $message = "Some module requested value of primary field %field of"
+        . " contact of %contact_type type, but this primary field is not"
+        . " configured for this contact type. You can configure it !here.";
+      drupal_set_message(t($message, array(
+        '%contact_type' => $contact_type->type,
+        '%field' => $primary_field,
+        '!here' => l(t('here'), $path),
+      )), 'warning');
     }
   }
   else {
