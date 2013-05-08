@@ -38,7 +38,8 @@ Other commits:
 - Implemented objects for creating custom matching engines and API around them
 - Implemented several relationships in views to account for matches and duplicates
 - Improved documentation in various areas of the code
-
+- Corrected double encoding of contact labels
+- Corrected missing uid column on contact table
 
 CRM Core 7.x-0.91 (22-Mar-2013)
 ===================================
