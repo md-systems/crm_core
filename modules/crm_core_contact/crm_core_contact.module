@@ -1009,7 +1009,7 @@ function crm_core_contact_entity_property_info_alter(&$info) {
     'label' => t('Primary email'),
     'type' => 'text',
     'description' => t('Get primary email of CRM Core Contact.'),
-    'getter callback' => 'crm_core_contact_get_primary_email_field',
+    'getter callback' => 'crm_core_contact_get_primary_email_field_value',
     'computed' => TRUE,
   );
 }
@@ -1017,6 +1017,6 @@ function crm_core_contact_entity_property_info_alter(&$info) {
 /**
  * Returns primary email.
  */
-function crm_core_contact_get_primary_email_field($contact) {
+function crm_core_contact_get_primary_email_field_value($contact) {
   return crm_core_contact_get_primary_field_value($contact, 'email');
 }
