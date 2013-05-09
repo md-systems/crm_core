@@ -1030,6 +1030,48 @@ function crm_core_contact_entity_property_info_alter(&$info) {
   );
 }
 
+
+/**
+ * Get CRM Core Contact primary field value.
+ *
+ * @param CRMCoreContactEntity $contact
+ *   CRM Core Contact.
+ * @param string $primary_field
+ *   Primary field name.
+ *
+ * @return string
+ *   Value of specified primary field or empty string.
+ */
+function crm_core_contact_get_primary_field_value(CRMCoreContactEntity $contact, $primary_field) {
+  $contact_type = crm_core_contact_type_load($contact->type);
+  $field = empty($contact_type->primary_fields[$primary_field]) ? '' : $contact_type->primary_fields[$primary_field];
+  $field_value = '';
+  if (empty($field)) {
+
+    // TODO: use watchdog instead.
+
+    // Check that user has access to configure crm_core_contact.
+    if (user_access('administer contact types')) {
+      // Alert privileged users that requested primary field didn't configured.
+      $path = 'admin/structure/crm-core/contact-types/manage/' . $contact_type->type;
+      $message = "Some module requested value of primary field %field of"
+        . " contact of %contact_type type, but this primary field is not"
+        . " configured for this contact type. You can configure it !here.";
+      drupal_set_message(t($message, array(
+        '%contact_type' => $contact_type->type,
+        '%field' => $primary_field,
+        '!here' => l(t('here'), $path),
+      )), 'warning');
+    }
+  }
+  else {
+    $contact_wrapper = entity_metadata_wrapper('crm_core_contact', $contact);
+    $field_value = $contact_wrapper->{$field}->value();
+  }
+
+  return $field_value;
+}
+
 /**
  * Returns primary email.
  */
