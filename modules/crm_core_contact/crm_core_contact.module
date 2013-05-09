@@ -1005,11 +1005,27 @@ function crm_core_contact_type_initialize($type) {
  * @see entity_metadata_entity_property_info_alter()
  */
 function crm_core_contact_entity_property_info_alter(&$info) {
-  $info['crm_core_contact']['properties']['primary_email_field'] = array(
+  $info['crm_core_contact']['properties']['primary_email'] = array(
     'label' => t('Primary email'),
     'type' => 'text',
     'description' => t('Get primary email of CRM Core Contact.'),
     'getter callback' => 'crm_core_contact_get_primary_email_field_value',
+    'computed' => TRUE,
+  );
+
+  $info['crm_core_contact']['properties']['primary_address'] = array(
+    'label' => t('Primary address'),
+    'type' => 'struct',
+    'description' => t('Get primary address of CRM Core Contact.'),
+    'getter callback' => 'crm_core_contact_get_primary_address_field_value',
+    'computed' => TRUE,
+  );
+
+  $info['crm_core_contact']['properties']['primary_phone'] = array(
+    'label' => t('Primary phone'),
+    'type' => 'struct',
+    'description' => t('Get primary phone of CRM Core Contact.'),
+    'getter callback' => 'crm_core_contact_get_primary_phone_field_value',
     'computed' => TRUE,
   );
 }
@@ -1020,3 +1036,18 @@ function crm_core_contact_entity_property_info_alter(&$info) {
 function crm_core_contact_get_primary_email_field_value($contact) {
   return crm_core_contact_get_primary_field_value($contact, 'email');
 }
+
+/**
+ * Returns primary address.
+ */
+function crm_core_contact_get_primary_address_field_value($contact) {
+  return crm_core_contact_get_primary_field_value($contact, 'address');
+}
+
+/**
+ * Returns primary phone.
+ */
+function crm_core_contact_get_primary_phone_field_value($contact) {
+  return crm_core_contact_get_primary_field_value($contact, 'phone');
+}
+
