@@ -997,3 +997,26 @@ function crm_core_contact_type_initialize($type) {
     }
   }
 }
+
+/**
+ * Add entity metadata properties for contact primary fields.
+ *
+ * Implements hook_entity_property_info_alter() on top of book module.
+ * @see entity_metadata_entity_property_info_alter()
+ */
+function crm_core_contact_entity_property_info_alter(&$info) {
+  $info['crm_core_contact']['properties']['primary_email_field'] = array(
+    'label' => t('Primary email'),
+    'type' => 'text',
+    'description' => t('Get primary email of CRM Core Contact.'),
+    'getter callback' => 'crm_core_contact_get_primary_email_field',
+    'computed' => TRUE,
+  );
+}
+
+/**
+ * Returns primary email.
+ */
+function crm_core_contact_get_primary_email_field($contact) {
+  return crm_core_contact_get_primary_field_value($contact, 'email');
+}
