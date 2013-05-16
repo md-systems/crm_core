@@ -16,7 +16,7 @@ function crm_core_contact_ui_menu() {
    */
   $items['crm-core/contact/%crm_core_contact'] = array(
     'title' => 'Contact',
-    'page callback' => 'crm_core_contact_ui_view',
+    'page callback' => 'crm_core_contact_view',
     'page arguments' => array(2),
     'title callback' => 'crm_core_contact_title',
     'title arguments' => array(2),
@@ -174,20 +174,6 @@ function crm_core_contact_ui_theme() {
   );
 
   return $theme;
-}
-
-/**
- * Helper function to set breadcrumbs before displaying contact.
- */
-function crm_core_contact_ui_view($contact) {
-  $breadcrumb = array(
-    l(t('Home'), '<front>'),
-    l(t('CRM Core'), 'crm-core'),
-    l(t('Contacts'), 'crm-core/contact'),
-  );
-  drupal_set_breadcrumb($breadcrumb);
-
-  return crm_core_contact_view($contact);
 }
 
 /**
