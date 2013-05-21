@@ -1030,6 +1030,10 @@ function crm_core_contact_entity_property_info_alter(&$info) {
   );
 }
 
+function crm_core_contact_get_primary_field_name(CRMCoreContactEntity $contact, $primary_field)  {
+  $contact_type = crm_core_contact_type_load($contact->type);
+  return empty($contact_type->primary_fields[$primary_field]) ? '' : $contact_type->primary_fields[$primary_field];
+}
 
 /**
  * Get CRM Core Contact primary field value.
