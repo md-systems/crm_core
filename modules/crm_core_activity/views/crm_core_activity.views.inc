@@ -9,7 +9,7 @@
  * Implements hook_views_data_alter().
  */
 function crm_core_activity_views_data_alter(&$data) {
-  $data['crm_core_activity']['table']['group'] = $data['crm_core_activity_type']['table']['group'] = t('CRM activity');
+  $data['crm_core_activity']['table']['group'] = $data['crm_core_activity_type']['table']['group'] = t('CRM Activity');
   $data['crm_core_activity_type']['type']['field']['handler'] = 'views_handler_field_activity_type';
   $data['crm_core_activity']['type']['filter']['handler'] = 'views_handler_filter_activity_type';
 
