@@ -220,7 +220,11 @@ function crm_core_activity_ui_add_activity($contact = NULL) {
   global $user;
   $items = array();
 
-  drupal_set_title(t('Add a activity'));
+  // Work around core issue where 'title' isn't set for MENU_LOCAL_ACTION,
+  // see: http://drupal.org/node/891892
+  $trail = menu_get_active_trail();
+  drupal_set_title($trail[count($trail) - 1]['title']);
+
   if ($contact) {
     _crm_core_activity_ui_set_breadcrumb($contact);
     $contact_uri = $contact->uri();
@@ -248,7 +252,11 @@ function crm_core_activity_ui_add_activity($contact = NULL) {
     }
   }
 
-  $empty = 'It is not possible to create Activities yet. Please create Activity Type fist.';
+  if (count($items) == 1) {
+    drupal_goto($items[0]['href'], $items[0]);
+  }
+
+  $empty = 'It is not possible to create Activities yet. Please create an Activity Type first.';
 
   return empty($items) ? t($empty) : theme('crm_core_contact_ui_add_list', array('content' => $items));
 }
