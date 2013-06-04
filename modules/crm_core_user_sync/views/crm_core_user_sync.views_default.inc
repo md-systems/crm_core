@@ -134,16 +134,17 @@ function crm_core_user_sync_views_default_views() {
   $handler->display->display_options['header']['area']['id'] = 'area';
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
-  $handler->display->display_options['header']['area']['content'] = 'Occasionally, a contact will be mismatched with a user account. This tool provides you with manual control over the relations between contact records and user accounts. You can configure the default rules for automated contact synchronization by <a href="/admin/config/crm-core/user-sync">clicking here</a>.';
+  $handler->display->display_options['header']['area']['content'] = 'Occasionally, a contact will be mismatched with a user account. This tool provides you with manual control over the relations between contact records and user accounts. [nothing_4] for automated contact synchronization.';
   $handler->display->display_options['header']['area']['format'] = 'filtered_html';
-  /* Relationship: CRM Contact: Relation: User (crm_core_contact -&gt; user) */
+  $handler->display->display_options['header']['area']['tokenize'] = TRUE;
+  /* Relationship: CRM Contact: Relation: User (crm_core_contact → user) */
   $handler->display->display_options['relationships']['relation_crm_core_user_sync_user']['id'] = 'relation_crm_core_user_sync_user';
   $handler->display->display_options['relationships']['relation_crm_core_user_sync_user']['table'] = 'crm_core_contact';
   $handler->display->display_options['relationships']['relation_crm_core_user_sync_user']['field'] = 'relation_crm_core_user_sync_user';
   $handler->display->display_options['relationships']['relation_crm_core_user_sync_user']['r_index'] = '-1';
   $handler->display->display_options['relationships']['relation_crm_core_user_sync_user']['entity_deduplication_left'] = 0;
   $handler->display->display_options['relationships']['relation_crm_core_user_sync_user']['entity_deduplication_right'] = 0;
-  /* Relationship: User: Relation: Contact (user -> relation) */
+  /* Relationship: User: Relation: Contact (user → relation) */
   $handler->display->display_options['relationships']['relation_base_left_crm_core_user_sync']['id'] = 'relation_base_left_crm_core_user_sync';
   $handler->display->display_options['relationships']['relation_base_left_crm_core_user_sync']['table'] = 'users';
   $handler->display->display_options['relationships']['relation_base_left_crm_core_user_sync']['field'] = 'relation_base_left_crm_core_user_sync';
@@ -286,6 +287,17 @@ function crm_core_user_sync_views_default_views() {
   $handler->display->display_options['fields']['nothing_3']['alter']['text'] = '[uid_1]';
   $handler->display->display_options['fields']['nothing_3']['alter']['trim_whitespace'] = TRUE;
   $handler->display->display_options['fields']['nothing_3']['element_label_colon'] = FALSE;
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing_4']['id'] = 'nothing_4';
+  $handler->display->display_options['fields']['nothing_4']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing_4']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing_4']['label'] = '';
+  $handler->display->display_options['fields']['nothing_4']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['nothing_4']['alter']['text'] = 'Configure the default rules';
+  $handler->display->display_options['fields']['nothing_4']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['nothing_4']['alter']['path'] = 'admin/config/crm-core/user-sync';
+  $handler->display->display_options['fields']['nothing_4']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['nothing_4']['element_default_classes'] = FALSE;
   /* Sort criterion: CRM Contact: Household name (contact_name:given) */
   $handler->display->display_options['sorts']['contact_name_given']['id'] = 'contact_name_given';
   $handler->display->display_options['sorts']['contact_name_given']['table'] = 'field_data_contact_name';
@@ -365,5 +377,6 @@ function crm_core_user_sync_views_default_views() {
   $handler->display->display_options['menu']['context'] = 0;
 
   $views['crm_core_contact_to_user_management'] = $view;
+
   return $views;
 }
