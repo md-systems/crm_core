@@ -58,15 +58,6 @@ function crm_core_ui_menu() {
 }
 
 /**
- * Implements hook_menu_alter().
- */
-function crm_core_ui_menu_alter(&$items) {
-  // Transform the field UI tabs into contextual links.
-  $items['admin/structure/crm-core/activity-types']['type'] = MENU_LOCAL_TASK;
-  $items['admin/structure/crm-core/contact-types']['type'] = MENU_LOCAL_TASK;
-}
-
-/**
  * Implements hook_permission().
  */
 function crm_core_ui_permission() {
@@ -88,7 +79,11 @@ function crm_core_ui_permission() {
 function crm_core_ui_theme() {
   return array(
     'crm_core_ui_ctools_dropbutton' => array(
-      'variables' => array('ops_count' => NULL, 'links' => array(), 'index' => NULL)
+      'variables' => array(
+        'ops_count' => NULL,
+        'links' => array(),
+        'index' => NULL
+      )
     )
   );
 }
@@ -164,6 +159,7 @@ function crm_core_ui_dashboard() {
     if (!empty($menu_item['title'])) {
       drupal_set_title($menu_item['title']);
     }
+
     return $output;
   }
   else {
@@ -205,9 +201,9 @@ function crm_core_ui_ctools_add_dropbutton_files() {
   drupal_add_css(drupal_get_path('module', 'crm_core_ui') . '/css/crm_core_ui.admin.css');
 }
 
- /**
-  * Theme function for operation links
-  */
+/**
+ * Theme function for operation links
+ */
 function theme_crm_core_ui_ctools_dropbutton($variables) {
   $output = '';
 
@@ -218,7 +214,7 @@ function theme_crm_core_ui_ctools_dropbutton($variables) {
   if (is_array($links) && count($links)) {
     $item_list = array();
     for ($i = count($links) - $ops_count; $i < count($links); $i++) {
-       $item_list['items'][] = $links[$i];
+      $item_list['items'][] = $links[$i];
     }
 
     $class = 'ctools-no-js ctools-dropbutton ctools-button';
@@ -243,6 +239,7 @@ function theme_crm_core_ui_ctools_dropbutton($variables) {
  */
 function crm_core_ui_get_menus() {
   $t = get_t();
+
   return array(
     'crm-core-menu' => array(
       'menu_name' => 'crm-core-menu',

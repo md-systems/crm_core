@@ -134,6 +134,7 @@ function crm_core_contact_ui_views_api() {
  */
 function crm_core_contact_ui_menu_alter(&$items) {
   // Transform the field UI tabs into contextual links.
+  $items['admin/structure/crm-core/contact-types']['type'] = MENU_LOCAL_TASK;
   $items['admin/structure/crm-core/contact-types/%crm_core_contact_type/fields']['context'] = MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE;
   $items['admin/structure/crm-core/contact-types/%crm_core_contact_type/display']['context'] = MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE;
   $dashboard_enabled = variable_get('crm_core_dashboard_enabled', FALSE);
