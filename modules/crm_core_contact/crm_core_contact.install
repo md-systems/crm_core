@@ -9,25 +9,26 @@
  * Implements hook_install().
  */
 function crm_core_contact_install() {
-  // Add default contact type for an Individual person
+  $t = get_t();
+  // Add default contact type for an Individual person.
   $individual = crm_core_contact_type_new('individual');
-  $individual->name = st('Individual');
-  $individual->description = st('A single individual.');
+  $individual->name = $t('Individual');
+  $individual->description = $t('A single individual.');
   $individual->is_new = TRUE;
   crm_core_contact_type_save($individual);
   crm_core_contact_type_initialize('individual');
 
-  // Add default contact type for an organization
+  // Add default contact type for an organization.
   $organization = crm_core_contact_type_new('organization');
-  $organization->name = st('Organization');
-  $organization->description = st('A collection of individuals or other organizations that has additional contact data.');
+  $organization->name = $t('Organization');
+  $organization->description = $t('A collection of individuals or other organizations that has additional contact data.');
   crm_core_contact_type_save($organization);
   crm_core_contact_type_initialize('organization');
 
-  // Add default contact type for a household
+  // Add default contact type for a household.
   $household = crm_core_contact_type_new('household');
-  $household->name = st('Household');
-  $household->description = st('A collection of individuals generally located at the same residence.');
+  $household->name = $t('Household');
+  $household->description = $t('A collection of individuals generally located at the same residence.');
   crm_core_contact_type_save($household);
   crm_core_contact_type_initialize('household');
 }
@@ -37,7 +38,7 @@ function crm_core_contact_install() {
  */
 function crm_core_contact_uninstall() {
   // Instance field information field_info_field is not available
-  // because we have already unloaded our module
+  // because we have already unloaded our module.
   $additional_params = array('include_inactive' => TRUE);
   $instances = field_read_instances(array('entity_type' => 'crm_core_contact'), $additional_params);
   foreach ($instances as $instance) {
@@ -282,3 +283,11 @@ function crm_core_contact_update_7003() {
     SET {crm_core_contact}.uid = contact_revisions.uid");
 }
 
+/**
+ * Unlocking 'contact_name' field to permit change instance settings.
+ */
+function crm_core_contact_update_7004() {
+  $field = field_info_field('contact_name');
+  $field['locked'] = FALSE;
+  field_update_field($field);
+}

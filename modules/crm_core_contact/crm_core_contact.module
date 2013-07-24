@@ -944,7 +944,7 @@ function crm_core_contact_type_initialize($type) {
     'type' => 'name',
     'entity_types' => array('crm_core_contact'),
     'translatable' => FALSE,
-    'locked' => TRUE,
+    'locked' => FALSE,
     'settings' => array(
       'minimum_components' => array('given' => 'given'),
     ),
@@ -1100,3 +1100,14 @@ function crm_core_contact_get_primary_phone_field_value($contact) {
   return crm_core_contact_get_primary_field_value($contact, 'phone');
 }
 
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function crm_core_contact_form_field_ui_field_delete_form_alter(&$form, &$form_state, $form_id){
+  if ($form['entity_type']['#value'] == 'crm_core_contact'
+    && $form['field_name']['#value'] == 'contact_name') {
+    $warning = 'Think twice before hit "Delete" button. If you delete this'
+      .  ' field your CRM installation will BROKE!!!';
+    drupal_set_message($warning, 'error');
+  }
+}
