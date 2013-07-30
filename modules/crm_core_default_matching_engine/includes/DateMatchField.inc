@@ -25,8 +25,8 @@ class DateMatchField extends DefaultMatchingEngineFieldType {
 
     $operators = array(
       '=' => t('Equals'),
-      '>=' => t('Greater then'),
-      '<=' => t('Less then'),
+      '>=' => t('Greater than'),
+      '<=' => t('Less than'),
     );
 
     return $operators;

@@ -1008,7 +1008,7 @@ function crm_core_contact_entity_property_info_alter(&$info) {
   $info['crm_core_contact']['properties']['primary_email'] = array(
     'label' => t('Primary email'),
     'type' => 'text',
-    'description' => t('Get primary email of CRM Core Contact.'),
+    'description' => t('Get primary e-mail of CRM Core Contact.'),
     'getter callback' => 'crm_core_contact_get_primary_email_field_value',
     'computed' => TRUE,
   );
@@ -1107,7 +1107,7 @@ function crm_core_contact_form_field_ui_field_delete_form_alter(&$form, &$form_s
   if ($form['entity_type']['#value'] == 'crm_core_contact'
     && $form['field_name']['#value'] == 'contact_name') {
     $warning = 'Think twice before hit "Delete" button. If you delete this'
-      .  ' field your CRM installation will BROKE!!!';
+      .  ' field, your CRM installation will most likely BREAK!';
     drupal_set_message($warning, 'error');
   }
 }
