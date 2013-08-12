@@ -89,4 +89,3 @@ class crm_core_activity_handler_field_link_delete extends crm_core_activity_hand
     }
   }
 }
-

@@ -14,9 +14,6 @@
  */
 function crm_core_contact_type_form($form, &$form_state, $contact_type) {
 
-  // Ensure this include file is loaded when the form is rebuilt from the cache.
-  // $form_state['build_info']['file'] = drupal_get_path('module', 'commerce_product') . '/includes/commerce_product.forms.inc';
-
   // Store the initial product type in the form state.
   $form_state['contact_type'] = $contact_type;
 
@@ -58,7 +55,7 @@ function crm_core_contact_type_form($form, &$form_state, $contact_type) {
       '#attached' => array(
         'js' => array(
           drupal_get_path('module', 'system') . '/system.js',
-          $js_settings
+          $js_settings,
         ),
       ),
     );
@@ -137,7 +134,7 @@ function crm_core_contact_type_form($form, &$form_state, $contact_type) {
 }
 
 /**
- * Validation callback
+ * Validation callback.
  */
 function crm_core_contact_type_form_validate($form, &$form_state) {
   $contact_type = $form_state['contact_type'];

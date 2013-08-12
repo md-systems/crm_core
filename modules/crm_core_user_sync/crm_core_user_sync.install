@@ -4,11 +4,13 @@
  * Implements hook_install()
  */
 function crm_core_user_sync_install() {
+  $t = get_t();
+
   // Add relation type
   $relation_type_info = array(
     'relation_type' => 'crm_core_user_sync',
-    'label' => st('Contact'),
-    'reverse_label' => st('User'),
+    'label' => $t('Contact'),
+    'reverse_label' => $t('User'),
     'source_bundles' => array('user:user'),
     'target_bundles' => array('crm_core_contact:*'),
     'r_unique' => TRUE,

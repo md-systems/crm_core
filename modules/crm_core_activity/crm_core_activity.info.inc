@@ -108,4 +108,3 @@ function crm_core_activity_entity_property_info() {
 
   return $info;
 }
-

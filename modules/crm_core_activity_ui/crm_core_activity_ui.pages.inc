@@ -167,7 +167,7 @@ function crm_core_activity_form_delete_confirm($form, &$form_state, $activity) {
   // Always provide entity id in the same form key as in the entity edit form.
   $form['activity_id'] = array(
     '#type' => 'value',
-    '#value' => $activity->activity_id
+    '#value' => $activity->activity_id,
   );
 
   return confirm_form($form,

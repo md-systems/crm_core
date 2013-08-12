@@ -159,4 +159,3 @@ function crm_core_activity_ui_views_default_views() {
 
   return $views;
 }
-

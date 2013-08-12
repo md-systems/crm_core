@@ -47,6 +47,7 @@ function crm_core_contact_context_page_condition() {
         case '':
           $op = 'view';
           break;
+
         case 'edit':
           $op = 'form';
           break;

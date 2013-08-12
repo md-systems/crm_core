@@ -560,7 +560,7 @@ function crm_core_user_sync_views_pre_execute(&$view) {
 function _crm_core_user_sync_get_entity_id_from_text($text, $entity_type) {
   $entity_info = entity_get_info($entity_type);
 
-  if (empty($entity_info) || empty($entity_info['entity keys']['id'])){
+  if (empty($entity_info) || empty($entity_info['entity keys']['id'])) {
     return FALSE;
   }
 

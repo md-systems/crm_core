@@ -206,6 +206,7 @@ function crm_core_activity_update_7002(&$sandbox) {
 
   if ($sandbox['#finished']) {
     drupal_flush_all_caches();
-    return t('Added and populated field values for new {crm_core_activity}.activity_type_id field');
+    $t = get_t();
+    return $t('Added and populated field values for new {crm_core_activity}.activity_type_id field');
   }
 }

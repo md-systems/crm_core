@@ -9,18 +9,19 @@
  * Implements hook_install().
  */
 function crm_core_relationship_install() {
+  $t = get_t();
   // Add default relationships
   $relation_types_info = array(
     array(
       'relation_type' => 'crm_friend',
-      'label' => st('Friend of'),
+      'label' => $t('Friend of'),
       'source_bundles' => array('crm_core_contact:individual'),
       'r_unique' => TRUE,
     ),
     array(
       'relation_type' => 'crm_employee',
-      'label' => st('Employee of'),
-      'reverse_label' => st('Employer of'),
+      'label' => $t('Employee of'),
+      'reverse_label' => $t('Employer of'),
       'directional' => TRUE,
       'r_unique' => TRUE,
       'source_bundles' => array('crm_core_contact:individual'),
@@ -28,8 +29,8 @@ function crm_core_relationship_install() {
     ),
     array(
       'relation_type' => 'crm_member',
-      'label' => st('Member of'),
-      'reverse_label' => st('Household for'),
+      'label' => $t('Member of'),
+      'reverse_label' => $t('Household for'),
       'directional' => TRUE,
       'r_unique' => TRUE,
       'source_bundles' => array('crm_core_contact:individual'),
@@ -84,11 +85,14 @@ function crm_core_relationship_update_7000() {
   foreach (crm_core_relationship_get_relationships() as $crm_relation) {
     crm_core_relationship_field_attach_create_bundle('relation', $crm_relation->relation_type);
   }
+
+  $t = get_t();
+
   // Rename "Friend" relationship to "Friend of", if not renamed yet.
   $crm_friend = relation_type_load('crm_friend');
   if ($crm_friend->label == 'Friend') {
-    $crm_friend->label = st('Friend of');
-    $crm_friend->reverse_label = st('Friend of');
+    $crm_friend->label = $t('Friend of');
+    $crm_friend->reverse_label = $t('Friend of');
     relation_type_save($crm_friend, array('relation_type'));
   }
   // Fill in "status" field for existing relationships.

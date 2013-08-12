@@ -47,6 +47,14 @@ function crm_core_contact_uninstall() {
 }
 
 /**
+ * Implements hook_enable().
+ */
+function crm_core_contact_enable() {
+  // Clear the cache to display in Feeds as available plugin.
+  cache_clear_all('plugins:feeds:plugins', 'cache');
+}
+
+/**
  * Implements hook_schema().
  */
 function crm_core_contact_schema() {

@@ -9,21 +9,21 @@
  * Class for evaluating email fields.
  */
 class EmailMatchField extends SelectMatchField {
-  
-  
+
+
   public function fieldRender($field, $field_info, &$form) {
-    
+
     $field_name = $field['field_name'];
     $field_item = 'email';
-    
+
     $separator = empty($field_item) ? $field_name : $field_name . '_' . $field_item;
-    
+
     $field_label = $field['label'];
-    
+
     $contact_type = $field['bundle'];
 
     $config = crm_core_default_matching_engine_load_field_config($contact_type, $field_name, $field_item);
-    
+
     $display_weight = self::WEIGHT_DELTA;
     if ($config['weight'] == 0) {
       // Table row positioned incorrectly if "#weight" is 0.
@@ -79,7 +79,7 @@ class EmailMatchField extends SelectMatchField {
       '#disabled' => FALSE,
       '#options' => $this->operators(),
     );
-    
+
     $form['field_matching'][$separator]['operator'] = $operator;
 
     $form['field_matching'][$separator]['options'] = array(
@@ -108,8 +108,8 @@ class EmailMatchField extends SelectMatchField {
       '#delta' => self::WEIGHT_DELTA,
     );
   }
-  
-  
+
+
   /**
    * Field query to search matches.
    *
@@ -122,20 +122,20 @@ class EmailMatchField extends SelectMatchField {
    *   Founded matches.
    */
   public function fieldQuery($contact, $rule) {
-    
+
     $results = array();
     $contact_wrapper = entity_metadata_wrapper('crm_core_contact', $contact);
     $needle = '';
     $field_item = '';
-    
-    
-    if(isset($contact_wrapper->{$rule->field_name}->{$rule->field_item})){
+
+
+    if (isset($contact_wrapper->{$rule->field_name}->{$rule->field_item})) {
       $needle = $contact_wrapper->{$rule->field_name}->{$rule->field_item}->value();
     } else {
       $needle = $contact_wrapper->{$rule->field_name}->value();
     }
     $field_item = $rule->field_item;
-    
+
     if (!empty($needle)) {
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'crm_core_contact')->entityCondition('bundle', $contact->type);
@@ -167,6 +167,6 @@ class EmailMatchField extends SelectMatchField {
 
     return isset($results['crm_core_contact']) ? array_keys($results['crm_core_contact']) : $results;
   }
-  
-    
+
+
 }

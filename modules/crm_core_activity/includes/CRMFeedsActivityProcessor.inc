@@ -65,7 +65,7 @@ class CRMFeedsActivityProcessor extends FeedsProcessor {
   }
 
   /**
-   * Save a activity.
+   * Save an activity.
    */
   public function entitySave($entity) {
     crm_core_activity_save($entity);
@@ -273,6 +273,7 @@ class CRMFeedsActivityProcessor extends FeedsProcessor {
         case 'activity_id':
           $activity_id = db_query("SELECT activity_id FROM {crm_core_activity} WHERE activity_id = :activity_id", array(':activity_id' => $value))->fetchField();
           break;
+
         case 'feeds_source':
           if ($id = feeds_get_importer_id($this->config['activity_type'])) {
             $activity_id = db_query("SELECT fs.feed_activity_id FROM {crm_core_activity} c JOIN {feeds_source} fs ON c.activity_id = fs.feed_activity_id WHERE fs.id = :id AND fs.source = :source", array(':id' => $id, ':source' => $value))->fetchField();
