@@ -18,19 +18,3 @@ function crm_core_ui_install() {
   menu_rebuild();
 }
 
-/**
- * Implements hook_enable().
- */
-function crm_core_ui_enable() {
-  db_delete('block')->condition('delta', 'crm-core-menu')->execute();
-  $fields = array( 'module', 'delta', 'theme', 'status', 'weight', 'region', 'custom', 'visibility', 'pages', 'title', 'cache');
-  $values = array( 'menu', 'crm-core-menu', 'bartik', '1', '0', 'sidebar_first', '0', '0', '', '', '-1');
-  db_insert('block')->fields($fields, $values)->execute();
-}
-
-/**
- * Implements hook_disable().
- */
-function crm_core_ui_disable() {
-  db_delete('block')->condition('delta', 'crm-core-menu')->execute();
-}

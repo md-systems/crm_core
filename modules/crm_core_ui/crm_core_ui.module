@@ -107,6 +107,10 @@ function crm_core_ui_block_info() {
   $blocks['navigation'] = array(
     'info' => t('CRM Navigaiton'),
     'cache' => DRUPAL_CACHE_PER_ROLE,
+    'status' => 1,
+    'region' => 'sidebar_first',
+    'visibility' => BLOCK_VISIBILITY_NOTLISTED,
+    'pages' => 'crm-core/report/*'
   );
 
   return $blocks;
