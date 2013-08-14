@@ -55,10 +55,10 @@ function crm_core_report_menu() {
  */
 function crm_core_report_theme() {
 
-  // we want a themable function for
+  // We want a themable function for
   // - report items
   // - widgets
-  // - report index
+  // - report index.
   return array(
     'crm_core_report_index' => array(
       'template' => 'crm-core-report-index',
@@ -69,7 +69,7 @@ function crm_core_report_theme() {
 }
 
 /**
- * Preprocess report index
+ * Preprocess report index.
  */
 function crm_core_report_preprocess_crm_core_report_index(&$variables) {
   $report_items = array();
@@ -82,7 +82,7 @@ function crm_core_report_preprocess_crm_core_report_index(&$variables) {
       }
       $report_items[] = theme('item_list', array(
         'items' => $items,
-        'title' => $item['title']
+        'title' => $item['title'],
       ));
     }
   }
@@ -91,7 +91,7 @@ function crm_core_report_preprocess_crm_core_report_index(&$variables) {
 }
 
 /**
- * Constructs a list of registered reports and widgets for CRM Core
+ * Constructs a list of registered reports and widgets for CRM Core.
  *
  * Reports registered via this hook will be listed on the reports page
  * and should include appropriate access controls, unless you want
@@ -105,4 +105,15 @@ function hook_crm_core_report_register() {
   }
 
   return $reports;
+}
+
+/**
+ * Implements hook_init().
+ *
+ * Add basic CSS styles for crm-core/reports path.
+ */
+function crm_core_report_init() {
+  if (arg(0) == 'crm-core' && arg(1) == 'reports') {
+    drupal_add_css(drupal_get_path('module', 'crm_core_report') . '/css/reports.css');
+  }
 }
