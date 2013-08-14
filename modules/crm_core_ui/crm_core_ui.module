@@ -101,6 +101,41 @@ function crm_core_ui_admin_paths() {
 }
 
 /**
+ * Implements hook_block_info().
+ */
+function crm_core_ui_block_info() {
+  $blocks['navigation'] = array(
+    'info' => t('CRM Navigaiton'),
+    'cache' => DRUPAL_CACHE_PER_ROLE,
+    'status' => 1,
+    'region' => 'sidebar_first',
+    'visibility' => BLOCK_VISIBILITY_NOTLISTED,
+    'pages' => 'crm-core/report/*'
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function crm_core_ui_block_view($delta) {
+  module_load_include('inc', 'crm_core_ui', 'includes/crm_core_ui.blocks');
+
+  $sub_func = 'crm_core_ui_block_' . $delta . '_subject';
+  $con_func = 'crm_core_ui_block_' . $delta . '_content';
+
+  if (!function_exists($sub_func) || !function_exists($con_func)) {
+    return array();
+  }
+
+  return array(
+    'subject' => $sub_func(),
+    'content' => $con_func(),
+  );
+}
+
+/**
  * Render CRM Core Dashboard, if configured, otherwise redirects to contacts list.
  */
 function crm_core_ui_dashboard() {
