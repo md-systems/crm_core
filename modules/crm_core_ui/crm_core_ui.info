@@ -12,6 +12,7 @@ configure = admin/config/crm-core
 ; Core Dependencies
 dependencies[] = menu
 dependencies[] = crm_core
+dependencies[] = block
 
 ; =======================
 ; Module Files
