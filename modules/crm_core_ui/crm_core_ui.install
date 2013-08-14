@@ -31,6 +31,6 @@ function crm_core_ui_modules_installed($modules) {
 /**
  * Implements hook_disable().
  */
-function crm_core_ui_disable($module_list, FALSE) {
+function crm_core_ui_disable() {
   db_delete('block')->condition('delta', 'crm-core-menu')->execute();
 }
