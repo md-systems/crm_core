@@ -97,4 +97,13 @@ class CRMCoreContactController extends EntityAPIController {
 
     return parent::saveRevision($entity);
   }
+
+  /**
+   * Updates 'changed' property on save.
+   */
+  public function save($entity) {
+    $entity->changed = REQUEST_TIME;
+
+    return parent::save($entity);
+  }
 }
