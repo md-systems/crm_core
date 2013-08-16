@@ -3,11 +3,27 @@ description = Provide case entity.
 package = CRM Core
 core = 7.x
 
-dependencies[] = entity
-dependencies[] = entityreference
+
+; =======================
+; Dependencies
+; =======================
+
+; Core dependencies
 dependencies[] = crm_core_contact
+
+; Contrib dependencies
+dependencies[] = entity
 dependencies[] = taxonomy
 dependencies[] = views
 
-files[] = crm_core_case.controller.inc
+; Field dependencies
+dependencies[] = entityreference
+
+
+; =======================
+; Module Files
+; =======================
+
+; Module includes
+files[] = includes/crm_core_case.controller.inc
 files[] = includes/views/handlers/crm_core_case_handler_filter_crm_core_case_status.inc

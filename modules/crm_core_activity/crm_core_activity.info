@@ -8,10 +8,10 @@ core = 7.x
 ; Dependencies
 ; =======================
 
-; Core Dependencies
+; Core dependencies
 dependencies[] = crm_core_contact
 
-; Field Dependencies
+; Field dependencies
 dependencies[] = entityreference
 dependencies[] = date_api
 dependencies[] = date
@@ -23,7 +23,8 @@ dependencies[] = date_views
 ; Module Files
 ; =======================
 
-files[] = crm_core_activity.controller.inc
+; Module includes
+files[] = includes/crm_core_activity.controller.inc
 
 ; Views handlers
 files[] = views/handlers/crm_core_activity_handler_field_links.inc
