@@ -1310,7 +1310,7 @@ function crm_core_contact_merge_contacts_action($selected_contacts, $context) {
   foreach ($selected_contacts as $cid => $contact) {
     $wrappers[$cid] = entity_metadata_wrapper('crm_core_contact', $contact);
   }
-
+  // Updating primary contact fields from other selected contacts.
   foreach ($data as $field_name => $contact_id) {
     if ($pcid != $contact_id) {
       $pcw->{$field_name}->set($wrappers[$contact_id]->{$field_name}->value());
@@ -1318,7 +1318,7 @@ function crm_core_contact_merge_contacts_action($selected_contacts, $context) {
   }
   $pcw->save();
   foreach (array_keys($selected_contacts) as $contact_id) {
-    // Creating path aliases.
+    // Creating path aliases for contacts that will be deleted.
     $path = array(
       'alias' => 'crm-core/contact/' . $contact_id,
       'source' => 'crm-core/contact/' . $pcid,
@@ -1339,6 +1339,25 @@ function crm_core_contact_merge_contacts_action($selected_contacts, $context) {
         }
         $aw->save();
       }
+    }
+    // Replacing existing relations for contacts been deleted with new ones.
+    $relations = relation_query('crm_core_contact', $contact_id)->execute();
+    foreach ($relations as $relation_info) {
+      $endpoints = array(
+        array('entity_type' => 'crm_core_contact', 'entity_id' => $pcid),
+      );
+      $relation_wrapper = entity_metadata_wrapper('relation', $relation_info->rid);
+      foreach ($relation_wrapper->endpoints->getIterator() as $endpoint_wrapper) {
+        if ($endpoint_wrapper->getIdentifier() != $contact_id) {
+          $endpoints[] = array(
+            'entity_type' => $endpoint_wrapper->type(),
+            'entity_id' => $endpoint_wrapper->getIdentifier(),
+          );
+        }
+      }
+
+      $relation = relation_create($relation_info->relation_type, $endpoints);
+      relation_save($relation);
     }
   }
 
