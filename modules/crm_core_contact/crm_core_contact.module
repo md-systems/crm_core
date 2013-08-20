@@ -545,23 +545,19 @@ function crm_core_contact_type_load($type, $reset = FALSE) {
  * @param object $contact_type
  *   Contact object.
  *
- * @return
+ * @return bool
  *   FALSE if the insert fails and SAVED_NEW or SAVED_UPDATED
- *   based on the operation performed
+ *   based on the operation performed, exception in case of error.
  */
 function crm_core_contact_type_save($contact_type) {
-  $new = empty($contact_type->is_new) ? FALSE : TRUE;
-  entity_save('crm_core_contact_type', $contact_type);
-  if (isset($new)) {
-    crm_core_contact_type_initialize($contact_type->type);
-  }
+  return entity_save('crm_core_contact_type', $contact_type);
 }
 
 /**
  * Delete a contact type.
  *
- * @param object $crm_core_contact_type
- *    A loaded $crm_core_contact_type object
+ * @param string $type_id
+ *   Contact type string.
  */
 function crm_core_contact_type_delete($type_id) {
   entity_get_controller('crm_core_contact_type')->delete(array($type_id));
@@ -580,8 +576,8 @@ function crm_core_contact_type_delete($type_id) {
  *     - modified
  *     - is_new
  *
- * @return
- *   A default contact type
+ * @return object
+ *   A default contact type.
  */
 function crm_core_contact_type_set_defaults($info = array()) {
   $type =& drupal_static(__FUNCTION__);
@@ -611,11 +607,11 @@ function crm_core_contact_type_set_defaults($info = array()) {
 /**
  * Checks to see if a given contact type already exists.
  *
- * @param $type
+ * @param string $type
  *   The string to match against existing types.
  *
- * @return
- *    TRUE or FALSE indicating whether or not the contact type exists.
+ * @return bool
+ *   TRUE or FALSE indicating whether or not the contact type exists.
  */
 function crm_core_contact_type_validate_unique($type) {
   // Look for a match of the type.
@@ -630,9 +626,9 @@ function crm_core_contact_type_validate_unique($type) {
  * @param object $contact
  *   The contact object to be saved
  *
- * @return
- *   a contact object upon successful save
- *   or an exception thrown
+ * @return mixed
+ *   FALSE if the save fails and SAVED_NEW or SAVED_UPDATED
+ *   based on the operation performed, exception in case of error.
  */
 function crm_core_contact_save($contact) {
   return entity_get_controller('crm_core_contact')->save($contact);
@@ -929,76 +925,6 @@ function crm_core_contact_query_crm_core_contact_search_alter(QueryAlterableInte
 function crm_core_contact_ctools_plugin_directory($owner, $plugin_type) {
   if ($owner == 'page_manager' && $plugin_type == 'tasks') {
     return 'plugins/' . $plugin_type;
-  }
-}
-
-/**
- * Initialize new contact type with basic fields.
- *
- * @param string $type
- *   The contact type (machine readable name) going to be
- *   stored in the field instance
- */
-function crm_core_contact_type_initialize($type) {
-  $t = get_t();
-  $fields = array();
-  // Name field.
-  $fields[] = array(
-    'field_name' => 'contact_name',
-    'type' => 'name',
-    'entity_types' => array('crm_core_contact'),
-    'translatable' => FALSE,
-    'locked' => FALSE,
-    'settings' => array(
-      'minimum_components' => array('given' => 'given'),
-    ),
-  );
-  // Create the fields if they don't exist.
-  foreach ($fields as $field) {
-    $info = field_info_field($field['field_name']);
-    if (empty($info)) {
-      field_create_field($field);
-    }
-  }
-  // Create field instances for the type if they don't exist.
-  $instances = array();
-  $instances[] = array(
-    'field_name' => 'contact_name',
-    'entity_type' => 'crm_core_contact',
-    'bundle' => $type,
-    'label' => $t('Name'),
-    'required' => TRUE,
-    'widget' => array(
-      'type' => 'name_widget',
-    ),
-    'display' => array(),
-  );
-  // For household or organizations, the label should be reflected.
-  if ($type == 'organization' || $type == 'household') {
-    $instances[0]['label'] = $t('@type name', array('@type' => ucwords($type)));
-    $instances[0]['settings']['inline_css'] = array(
-      'credentials' => 'display:none',
-      'family' => 'display:none',
-      'generational' => 'display:none',
-      'given' => '',
-      'middle' => 'display:none',
-      'title' => 'display:none',
-    );
-    $instances[0]['settings']['title_display'] = array(
-      'credentials' => 'none',
-      'family' => 'none',
-      'generational' => 'none',
-      'given' => 'none',
-      'middle' => 'none',
-      'title' => 'none',
-    );
-  }
-  // Create field instances if they don't exist.
-  foreach ($instances as $instance) {
-    $info_instance = field_info_instance('crm_core_contact', $instance['field_name'], $type);
-    if (empty($info_instance)) {
-      field_create_instance($instance);
-    }
   }
 }
 
@@ -1375,4 +1301,265 @@ function crm_core_contact_merge_contacts_action($selected_contacts, $context) {
     '%dest' => $primary_contact->label(),
   ));
   drupal_set_message($message);
+}
+
+/**
+ * Field base settings for 'contact_name' field.
+ */
+function _crm_core_contact_contact_name_base() {
+
+  $field_base = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'contact_name',
+    'foreign keys' => array(),
+    'indexes' => array(
+      'family' => array(
+        0 => 'family',
+      ),
+      'given' => array(
+        0 => 'given',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'name',
+    'settings' => array(
+      'allow_family_or_given' => 0,
+      'autocomplete_separator' => array(
+        'credentials' => ', ',
+        'family' => ' -',
+        'generational' => ' ',
+        'given' => ' -',
+        'middle' => ' -',
+        'title' => ' ',
+      ),
+      'autocomplete_source' => array(
+        'credentials' => array(),
+        'family' => array(),
+        'generational' => array(
+          'generational' => 0,
+        ),
+        'given' => array(),
+        'middle' => array(),
+        'title' => array(
+          'title' => 'title',
+        ),
+      ),
+      'components' => array(
+        'credentials' => 'credentials',
+        'family' => 'family',
+        'generational' => 'generational',
+        'given' => 'given',
+        'middle' => 'middle',
+        'title' => 'title',
+      ),
+      'generational_options' => '-- --
+Jr.
+Sr.
+I
+II
+III
+IV
+V
+VI
+VII
+VIII
+IX
+X',
+      'labels' => array(
+        'credentials' => 'Credentials',
+        'family' => 'Last',
+        'generational' => 'Generational',
+        'given' => 'First',
+        'middle' => 'Middle',
+        'title' => 'Title',
+      ),
+      'max_length' => array(
+        'credentials' => 255,
+        'family' => 63,
+        'generational' => 15,
+        'given' => 63,
+        'middle' => 127,
+        'title' => 31,
+      ),
+      'minimum_components' => array(
+        'credentials' => 0,
+        'family' => 'family',
+        'generational' => 0,
+        'given' => 'given',
+        'middle' => 0,
+        'title' => 0,
+      ),
+      'sort_options' => array(
+        'generational' => 0,
+        'title' => 'title',
+      ),
+      'title_options' => '-- --
+Mr.
+Mrs.
+Miss
+Ms.
+Dr.
+Prof.',
+    ),
+    'translatable' => 0,
+    'type' => 'name',
+  );
+
+  return $field_base;
+}
+
+/**
+ * Field instance settings for 'contact_name' field.
+ */
+function _crm_core_contact_contact_name_instance($type, $label) {
+
+  $instance = array(
+    'bundle' => $type,
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'name',
+        'settings' => array(
+          'format' => 'default',
+          'markup' => 0,
+          'multiple' => 'default',
+          'multiple_and' => 'text',
+          'multiple_delimiter' => ', ',
+          'multiple_delimiter_precedes_last' => 'never',
+          'multiple_el_al_first' => 1,
+          'multiple_el_al_min' => 3,
+          'output' => 'default',
+        ),
+        'type' => 'name_formatter',
+      ),
+    ),
+    'entity_type' => 'crm_core_contact',
+    'field_name' => 'contact_name',
+    'label' => $label,
+    'required' => 0,
+    'settings' => array(
+      'component_css' => '',
+      'component_layout' => 'default',
+      'components' => array(
+        'credentials' => 0,
+        'family' => 0,
+        'generational' => 0,
+        'given' => 0,
+        'middle' => 0,
+        'title' => 0,
+      ),
+      'credentials_inline' => 0,
+      'field_type' => array(
+        'credentials' => 'text',
+        'family' => 'text',
+        'generational' => 'select',
+        'given' => 'text',
+        'middle' => 'text',
+        'title' => 'select',
+      ),
+      'generational_field' => 'select',
+      'inline_css' => array(
+        'credentials' => '',
+        'family' => '',
+        'generational' => '',
+        'given' => '',
+        'middle' => '',
+        'title' => '',
+      ),
+      'labels' => array(
+        'credentials' => '',
+        'family' => '',
+        'generational' => '',
+        'given' => '',
+        'middle' => '',
+        'title' => '',
+      ),
+      'minimum_components' => array(
+        'credentials' => 0,
+        'family' => 0,
+        'generational' => 0,
+        'given' => 0,
+        'middle' => 0,
+        'title' => 0,
+      ),
+      'override_format' => 'default',
+      'show_component_required_marker' => 0,
+      'size' => array(
+        'credentials' => 35,
+        'family' => 20,
+        'generational' => 5,
+        'given' => 20,
+        'middle' => 20,
+        'title' => 6,
+      ),
+      'title_display' => array(
+        'credentials' => 'description',
+        'family' => 'description',
+        'generational' => 'description',
+        'given' => 'description',
+        'middle' => 'description',
+        'title' => 'description',
+      ),
+      'title_field' => 'select',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'name',
+      'settings' => array(),
+      'type' => 'name_widget',
+    ),
+  );
+
+  $title_display_settings = array(
+    'credentials' => 'none',
+    'family' => 'description',
+    'generational' => 'none',
+    'given' => 'none',
+    'middle' => 'none',
+    'title' => 'none',
+  );
+
+  switch ($type) {
+    case 'household':
+      $instance['settings']['components']['family'] = 'family';
+      $instance['settings']['labels']['family'] = sprintf('%s name', $label);
+      $instance['settings']['minimum_components']['family'] = 'family';
+      $instance['settings']['title_display'] = $title_display_settings;
+      break;
+
+    case 'organization':
+      $instance['settings']['components']['family'] = 'family';
+      $instance['settings']['labels']['family'] = sprintf('%s name', $label);
+      $instance['settings']['minimum_components']['family'] = 'family';
+      $instance['settings']['title_display'] = $title_display_settings;
+
+      break;
+  }
+
+  return $instance;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ *
+ * Initialize new contact type with 'contact_name' field which CRM Core heavily
+ * rely on.
+ */
+function crm_core_contact_crm_core_contact_type_insert($contact_type) {
+  $info = field_info_field('contact_name');
+  if (empty($info)) {
+    field_create_field(_crm_core_contact_contact_name_base());
+  }
+
+  $info_instance = field_info_instance('crm_core_contact', 'contact_name', $contact_type->type);
+  if (empty($info_instance)) {
+    field_create_instance(_crm_core_contact_contact_name_instance($contact_type->type, $contact_type->name));
+  }
 }

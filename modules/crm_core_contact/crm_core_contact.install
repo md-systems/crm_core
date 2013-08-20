@@ -16,21 +16,18 @@ function crm_core_contact_install() {
   $individual->description = $t('A single individual.');
   $individual->is_new = TRUE;
   crm_core_contact_type_save($individual);
-  crm_core_contact_type_initialize('individual');
 
   // Add default contact type for an organization.
   $organization = crm_core_contact_type_new('organization');
   $organization->name = $t('Organization');
   $organization->description = $t('A collection of individuals or other organizations that has additional contact data.');
   crm_core_contact_type_save($organization);
-  crm_core_contact_type_initialize('organization');
 
   // Add default contact type for a household.
   $household = crm_core_contact_type_new('household');
   $household->name = $t('Household');
   $household->description = $t('A collection of individuals generally located at the same residence.');
   crm_core_contact_type_save($household);
-  crm_core_contact_type_initialize('household');
 }
 
 /**
