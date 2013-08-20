@@ -13,6 +13,9 @@ dependencies[] = crm_core_contact
 dependencies[] = crm_core_ui
 dependencies[] = search
 
+; Contrib
+dependencies[] = views_bulk_operations
+
 ; =======================
 ; Module Files
 ; =======================

@@ -6,6 +6,11 @@
  */
 
 /**
+ * @addtogroup hooks
+ * @{
+ */
+
+/**
  * Deny or allow access to entity CRUD before any other access check.
  *
  * Modules implementing this hook can return FALSE to provide a blanket
@@ -40,3 +45,21 @@ function hook_crm_core_entity_access($op, $entity, $account, $entity_type) {
 function crm_core_contact_CONTACT_BUNDLE_label($entity) {
   // No example.
 }
+
+/**
+ * Respond to CRM Core contacts being merged.
+ *
+ * @param CRMCoreContactEntity $master_contact
+ *   Contact to which data being merged.
+ * @param array $merged_contacts
+ *   Keyed by contact ID array of contacts being merged.
+ *
+ * @see crm_core_contact_merge_contacts_action()
+ */
+function hook_crm_core_contact_merge_contacts(CRMCoreContactEntity $master_contact, array $merged_contacts) {
+
+}
+
+/**
+ * @} End of "addtogroup hooks".
+ */
