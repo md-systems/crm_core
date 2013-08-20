@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * @file
+ * Contains theme implementation.
+ */
+
+/**
+ * Renders list of contact types available for contact creation.
+ */
 function theme_crm_core_contact_ui_add_list($variables) {
   $content = $variables['content'];
   $output = '';

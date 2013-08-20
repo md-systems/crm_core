@@ -11,9 +11,6 @@
 function crm_core_contact_ui_menu() {
   $items = array();
 
-  /**
-   * Contacts
-   */
   $items['crm-core/contact/%crm_core_contact'] = array(
     'title' => 'Contact',
     'page callback' => 'crm_core_contact_view',
@@ -182,6 +179,6 @@ function crm_core_contact_ui_theme() {
  */
 function crm_core_contact_ui_save_contact_button_name($contact_type) {
   return t('Save !contact_type', array(
-    '!contact_type' => crm_core_contact_type_get_name($contact_type)
+    '!contact_type' => crm_core_contact_type_get_name($contact_type),
   ));
 }
