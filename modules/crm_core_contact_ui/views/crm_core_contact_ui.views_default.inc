@@ -154,6 +154,13 @@ function crm_core_contact_ui_views_default_views() {
       'override_label' => 0,
       'label' => '',
     ),
+    'action::crm_core_contact_send_email_action' => array(
+      'selected' => 1,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 1,
+      'override_label' => 0,
+      'label' => '',
+    ),
   );
   /* Field: CRM Contact: Contact ID */
   $handler->display->display_options['fields']['contact_id']['id'] = 'contact_id';
@@ -161,7 +168,7 @@ function crm_core_contact_ui_views_default_views() {
   $handler->display->display_options['fields']['contact_id']['field'] = 'contact_id';
   $handler->display->display_options['fields']['contact_id']['exclude'] = TRUE;
   $handler->display->display_options['fields']['contact_id']['link_to_contact'] = 0;
-  /* Field: CRM Contact: Household name */
+  /* Field: CRM Core Contact: Household name */
   $handler->display->display_options['fields']['contact_name']['id'] = 'contact_name';
   $handler->display->display_options['fields']['contact_name']['table'] = 'field_data_contact_name';
   $handler->display->display_options['fields']['contact_name']['field'] = 'contact_name';
@@ -237,7 +244,7 @@ function crm_core_contact_ui_views_default_views() {
   $handler->display->display_options['filters']['type']['expose']['label'] = 'Contact Type';
   $handler->display->display_options['filters']['type']['expose']['operator'] = 'type_op';
   $handler->display->display_options['filters']['type']['expose']['identifier'] = 'type';
-  /* Filter criterion: CRM Contact: Household name */
+  /* Filter criterion: CRM Core Contact: Household name */
   $handler->display->display_options['filters']['contact_name']['id'] = 'contact_name';
   $handler->display->display_options['filters']['contact_name']['table'] = 'field_data_contact_name';
   $handler->display->display_options['filters']['contact_name']['field'] = 'contact_name';

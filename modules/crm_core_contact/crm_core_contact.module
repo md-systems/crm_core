@@ -14,7 +14,7 @@ module_load_include('inc', 'crm_core_contact', 'crm_core_contact.context');
 function crm_core_contact_entity_info() {
   $return = array(
     'crm_core_contact' => array(
-      'label' => t('CRM Contact'),
+      'label' => t('CRM Core Contact'),
       'entity class' => 'CRMCoreContactEntity',
       'controller class' => 'CRMCoreContactController',
       'base table' => 'crm_core_contact',
@@ -853,9 +853,9 @@ function crm_core_contact_revert($contact, $vid) {
  */
 function crm_core_contact_feeds_plugins() {
   $info['CRMFeedsContactProcessor'] = array(
-    'name' => 'CRM Contact processor',
-    'description' => 'Create and update CRM contacts.',
-    'help' => 'Create and update CRM contacts from parsed content.',
+    'name' => 'CRM Core Contact processor',
+    'description' => 'Create and update CRM Core Contacts.',
+    'help' => 'Create and update CRM Core Contacts from parsed content.',
     'handler' => array(
       'parent' => 'FeedsProcessor',
       'class' => 'CRMFeedsContactProcessor',
@@ -982,8 +982,7 @@ function crm_core_contact_get_primary_field_name(CRMCoreContactEntity $contact, 
  *   Value of specified primary field or empty string.
  */
 function crm_core_contact_get_primary_field_value(CRMCoreContactEntity $contact, $primary_field) {
-  $contact_type = crm_core_contact_type_load($contact->type);
-  $field = empty($contact_type->primary_fields[$primary_field]) ? '' : $contact_type->primary_fields[$primary_field];
+  $field = crm_core_contact_get_primary_field_name($contact, $primary_field);
   $field_value = '';
   if (empty($field)) {
 
@@ -991,12 +990,12 @@ function crm_core_contact_get_primary_field_value(CRMCoreContactEntity $contact,
     // Check that user has access to configure crm_core_contact.
     if (user_access('administer contact types')) {
       // Alert privileged users that requested primary field didn't configured.
-      $path = 'admin/structure/crm-core/contact-types/manage/' . $contact_type->type;
+      $path = 'admin/structure/crm-core/contact-types/manage/' . $contact->type;
       $message = "Some module requested value of primary field %field of"
         . " contact of %contact_type type, but this primary field is not"
         . " configured for this contact type. You can configure it !here.";
       drupal_set_message(t($message, array(
-        '%contact_type' => $contact_type->type,
+        '%contact_type' => $contact->type,
         '%field' => $primary_field,
         '!here' => l(t('here'), $path),
       )), 'warning');
@@ -1065,6 +1064,12 @@ function crm_core_contact_action_info() {
       'configurable' => TRUE,
       'triggers' => array('any'),
       'aggregate' => TRUE,
+    ),
+    'crm_core_contact_send_email_action' => array(
+      'type' => 'crm_core_contact',
+      'label' => t('Send e-mail to contacts'),
+      'configurable' => TRUE,
+      'triggers' => array('any'),
     ),
   );
 }
@@ -1562,4 +1567,87 @@ function crm_core_contact_crm_core_contact_type_insert($contact_type) {
   if (empty($info_instance)) {
     field_create_instance(_crm_core_contact_contact_name_instance($contact_type->type, $contact_type->name));
   }
+}
+
+/**
+ * Form builder for 'crm_core_contact_send_email_action' action.
+ */
+function crm_core_contact_send_email_action_form($context, &$form_state) {
+
+  $form = array();
+  $form['subject'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Subject'),
+    '#description' => t('The subject of the message.'),
+    '#default_value' => isset($form_state['values']['subject']) ? $form_state['values']['subject'] : '',
+  );
+
+  $form['message'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Message'),
+    '#description' => t('The message that should be sent.'),
+    '#default_value' => isset($form_state['values']['message']) ? $form_state['values']['message'] : '',
+  );
+
+  // Display a list of tokens that can be used in the message.
+  if (module_exists('token')) {
+    // Lets extend description of message field.
+    $token_description = 'You may include placeholders here to represent data'
+      . ' that will be different each time message is sent. You can find list'
+      . ' of available placeholder in the table below.';
+    $form['message']['#description'] .= t($token_description);
+
+    // We must load token values here to show them on the options form.
+    drupal_add_js(drupal_get_path('module', 'token') . '/token.js');
+    drupal_add_css(drupal_get_path('module', 'token') . '/token.css');
+    drupal_add_library('token', 'treeTable');
+
+    $form['tokens'] = array(
+      '#theme' => 'token_tree',
+      '#token_types' => array(token_get_entity_mapping('entity', 'crm_core_contact')),
+      '#dialog' => FALSE,
+    );
+  }
+
+  return $form;
+}
+
+/**
+ * Submit handler for 'crm_core_contact_send_email_action' action.
+ */
+function crm_core_contact_send_email_action_submit($form, $form_state) {
+  $subject = $form_state['values']['subject'];
+  $message = $form_state['values']['message'];
+
+  return array('subject' => $subject, 'message' => $message);
+}
+
+/**
+ * Send e-mail to contacts action.
+ */
+function crm_core_contact_send_email_action($contact, $context) {
+
+  // Token replacement preparations.
+  $data = array(
+    'crm_core_contact' => $contact,
+  );
+  $options = array(
+    // Remove tokens that could not be found.
+    'clear' => TRUE,
+  );
+  $subject = token_replace($context['subject'], $data, $options);
+  $message = token_replace($context['message'], $data, $options);
+
+  $contact_wrapper = entity_metadata_wrapper('crm_core_contact', $contact);
+  $email = $contact_wrapper->primary_email->value();
+  $params = array('subject' => $subject, 'message' => $message);
+  drupal_mail('crm_core_contact', 'send_email', $email, language_default(), $params);
+}
+
+/**
+ * Implements hook_mail().
+ */
+function crm_core_contact_mail($key, &$message, $params) {
+  $message['subject'] = $params['subject'];
+  $message['body'][] = $params['message'];
 }
