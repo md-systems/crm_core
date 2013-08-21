@@ -83,18 +83,6 @@ function crm_core_contact_ui_menu() {
       'access arguments' => array('create', 'crm_core_contact', $type),
       'file' => 'crm_core_contact_ui.pages.inc',
     );
-
-    $items['admin/structure/crm-core/contact-types/manage/' . $type] = array(
-      'title' => check_plain($contact_type->name),
-      'description' => $contact_type->description,
-      'page callback' => 'entity_ui_get_form',
-      'page arguments' => array('crm_core_contact_type', 5),
-      'load arguments' => array('crm_core_contact_type'),
-      'access callback' => 'entity_access',
-      'access arguments' => array('update', 'crm_core_contact_type', 5),
-      'file' => 'crm_core_contact.admin.inc',
-      'file path' => drupal_get_path('module', 'crm_core_contact'),
-    );
   }
 
   /*
@@ -142,10 +130,7 @@ function crm_core_contact_ui_views_api() {
  * Implements hook_menu_alter().
  */
 function crm_core_contact_ui_menu_alter(&$items) {
-  // Transform the field UI tabs into contextual links.
   $items['admin/structure/crm-core/contact-types']['type'] = MENU_LOCAL_TASK;
-  $items['admin/structure/crm-core/contact-types/%crm_core_contact_type/fields']['context'] = MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE;
-  $items['admin/structure/crm-core/contact-types/%crm_core_contact_type/display']['context'] = MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE;
   $dashboard_enabled = variable_get('crm_core_dashboard_enabled', FALSE);
   if (!$dashboard_enabled) {
     $items['crm-core/contact']['type'] = MENU_DEFAULT_LOCAL_TASK;
@@ -157,8 +142,8 @@ function crm_core_contact_ui_menu_alter(&$items) {
  */
 function crm_core_contact_ui_admin_paths() {
   $paths = array(
-    'crm-core/admin/contact/types' => TRUE,
-    'crm-core/admin/contact/types/*' => TRUE,
+    'crm-core/admin/contact-types' => TRUE,
+    'crm-core/admin/contact-types/*' => TRUE,
   );
 
   return $paths;
@@ -193,4 +178,27 @@ function crm_core_contact_ui_save_contact_button_name($contact_type) {
   return t('Save !contact_type', array(
     '!contact_type' => crm_core_contact_type_get_name($contact_type),
   ));
+}
+
+/**
+ * Implements hook_admin_menu_map().
+ *
+ * Expands contact types at Structure > CRM Core > CRM Core Contact types.
+ */
+function crm_core_contact_ui_admin_menu_map() {
+
+  $contact_types = array_keys(crm_core_contact_types());
+  $map = array();
+  $map['admin/structure/crm-core/contact-types/manage/%crm_core_contact_type'] = array(
+    'parent' => 'admin/structure/crm-core/contact-types',
+    'hide' => 'admin/structure/crm-core/contact-types/list',
+    'arguments' => array(
+      array(
+        '%entity_object' => $contact_types,
+        '%crm_core_contact_type' => $contact_types,
+      ),
+    ),
+  );
+
+  return $map;
 }
