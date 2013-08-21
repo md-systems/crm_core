@@ -83,6 +83,18 @@ function crm_core_contact_ui_menu() {
       'access arguments' => array('create', 'crm_core_contact', $type),
       'file' => 'crm_core_contact_ui.pages.inc',
     );
+
+    $items['admin/structure/crm-core/contact-types/manage/' . $type] = array(
+      'title' => check_plain($contact_type->name),
+      'description' => $contact_type->description,
+      'page callback' => 'entity_ui_get_form',
+      'page arguments' => array('crm_core_contact_type', 5),
+      'load arguments' => array('crm_core_contact_type'),
+      'access callback' => 'entity_access',
+      'access arguments' => array('update', 'crm_core_contact_type', 5),
+      'file' => 'crm_core_contact.admin.inc',
+      'file path' => drupal_get_path('module', 'crm_core_contact'),
+    );
   }
 
   /*

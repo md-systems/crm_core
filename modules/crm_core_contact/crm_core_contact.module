@@ -46,7 +46,7 @@ function crm_core_contact_entity_info() {
   );
 
   $return['crm_core_contact_type'] = array(
-    'label' => t('CRM Contact Type'),
+    'label' => t('CRM Core Contact type'),
     'entity class' => 'CRMContactType',
     'controller class' => 'CRMCoreContactTypeController',
     'base table' => 'crm_core_contact_type',
