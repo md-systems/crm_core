@@ -62,6 +62,18 @@ function crm_core_activity_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
+      'revision_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => NULL,
+        'description' => 'Primary identifier of this {crm_core_activity_revision}.',
+      ),
+      'uid' => array(
+        'description' => 'The {users}.uid that owns this activity; initially, this is the user that created it.',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
       'type' => array(
         'description' => 'The type (bundle) of this activity.',
         'type' => 'varchar',
@@ -69,17 +81,19 @@ function crm_core_activity_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
+      'activity_type_id' => array(
+        'description' => 'The current {crm_core_activity_type}.id of this activity.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
       'title' => array(
         'description' => 'The title of the activity.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-      ),
-      'uid' => array(
-        'description' => 'ID of Drupal user creator.',
-        'type' => 'int',
-        'not null' => TRUE,
       ),
       'created' => array(
         'description' => 'The Unix timestamp when the activity was created.',
@@ -93,21 +107,75 @@ function crm_core_activity_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
-      'activity_type_id' => array(
-        'description' => 'The current {crm_core_activity_type}.id of this activity.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
+    ),
+    'indexes' => array(
+      'created' => array('created'),
+      'changed' => array('changed'),
     ),
     'foreign keys' => array(
       'activity_type' => array(
         'table' => 'crm_core_activity_type',
         'columns' => array('activity_type_id' => 'id'),
       ),
+      'activity_revision' => array(
+        'table' => 'crm_core_activity_revision',
+        'columns' => array('revision_id' => 'revision_id'),
+      ),
     ),
     'primary key' => array('activity_id'),
+  );
+
+  $schema['crm_core_activity_revision'] = array(
+    'description' => 'Stores information about each saved revision of a {crm_core_activity}',
+    'fields' => array(
+      'revision_id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary identifier of this {crm_core_activity_revision}.',
+      ),
+      'activity_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => NULL,
+        'description' => 'The {crm_core_activity}.activity_id for this revision.',
+      ),
+      'uid' => array(
+        'description' => 'The {users}.uid that created this version.',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+      'title' => array(
+        'description' => 'The title of the activity.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'created' => array(
+        'description' => 'The Unix timestamp when the activity was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'changed' => array(
+        'description' => 'The Unix timestamp when the activity was most recently saved.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'foreign keys' => array(
+      'versioned_activity' => array(
+        'table' => 'crm_core_activity',
+        'columns' => array('activity_id' => 'activity_id'),
+      ),
+      'version_creator' => array(
+        'table' => 'user',
+        'columns' => array('uid' => 'uid'),
+      ),
+    ),
+    'primary key' => array('revision_id'),
   );
 
   $schema['crm_core_activity_type'] = array(
@@ -208,5 +276,95 @@ function crm_core_activity_update_7002(&$sandbox) {
     drupal_flush_all_caches();
     $t = get_t();
     return $t('Added and populated field values for new {crm_core_activity}.activity_type_id field');
+  }
+}
+
+/**
+ * Enabling revisions for activities.
+ */
+function crm_core_activity_update_7003() {
+
+  db_add_field('crm_core_activity', 'revision_id', array(
+    'type' => 'int',
+    'unsigned' => TRUE,
+    'not null' => FALSE,
+    'default' => NULL,
+    'description' => 'Primary identifier of this {crm_core_activity_revision}.',
+  ));
+  db_add_index('crm_core_activity', 'created', array('created'));
+  db_add_index('crm_core_activity', 'changed', array('changed'));
+  // Initialize the revision_id to be the same as the activity_id.
+  db_update('crm_core_activity')
+    ->expression('revision_id', 'activity_id')
+    ->execute();
+  $revision_schema = array(
+    'description' => 'Stores information about each saved revision of a {crm_core_activity}',
+    'fields' => array(
+      'revision_id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary identifier of this {crm_core_activity_revision}.',
+      ),
+      'activity_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => NULL,
+        'description' => 'The {crm_core_activity}.activity_id for this revision.',
+      ),
+      'uid' => array(
+        'description' => 'The {users}.uid that created this version.',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+      'title' => array(
+        'description' => 'The title of the activity.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'created' => array(
+        'description' => 'The Unix timestamp when the activity was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'changed' => array(
+        'description' => 'The Unix timestamp when the activity was most recently saved.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'foreign keys' => array(
+      'versioned_activity' => array(
+        'table' => 'crm_core_activity',
+        'columns' => array('activity_id' => 'activity_id'),
+      ),
+      'version_creator' => array(
+        'table' => 'user',
+        'columns' => array('uid' => 'uid'),
+      ),
+    ),
+    'primary key' => array('revision_id'),
+  );
+  db_create_table('crm_core_activity_revision', $revision_schema);
+  $activities = db_select('crm_core_activity', 'activity')
+    ->fields('activity')
+    ->execute();
+
+  foreach ($activities as $activity) {
+    // Update crm_core_activity_revision table.
+    db_insert('crm_core_activity_revision')
+      ->fields(array(
+        'revision_id' => $activity->activity_id,
+        'activity_id' => $activity->activity_id,
+        'uid' => $activity->uid,
+        'title' => $activity->title,
+        'created' => $activity->created,
+        'changed' => $activity->changed,
+      ))
+      ->execute();
   }
 }

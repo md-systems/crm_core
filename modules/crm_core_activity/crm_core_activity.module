@@ -20,11 +20,13 @@ function crm_core_activity_entity_info() {
       'entity class' => 'CRMCoreActivityEntity',
       'controller class' => 'CRMCoreActivityController',
       'base table' => 'crm_core_activity',
+      'revision table' => 'crm_core_activity_revision',
       'fieldable' => TRUE,
       'entity keys' => array(
         'id' => 'activity_id',
         'bundle' => 'type',
         'label' => 'title',
+        'revision' => 'revision_id',
       ),
       'bundle keys' => array(
         'bundle' => 'type',

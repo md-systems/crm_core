@@ -51,6 +51,15 @@ class CRMCoreActivityController extends EntityAPIController {
 
     return parent::create($values);
   }
+
+  /**
+   * Update activity object before saving revision.
+   */
+  protected function saveRevision($entity) {
+    $entity->is_new_revision = TRUE;
+
+    return parent::saveRevision($entity);
+  }
 }
 
 /**
