@@ -182,11 +182,11 @@ function crm_core_match_engine_status_toggle($engine_machine_name, $to_status) {
  * Helper function for engines weight comparison.
  */
 function _crm_core_match_engine_weight_cmp($a, $b) {
-  if ($a->weight == $b->weight) {
+  if ($a->getWeight() == $b->getWeight()) {
     return 0;
   }
 
-  return ($a->weight < $b->weight) ? -1 : 1;
+  return ($a->getWeight() < $b->getWeight()) ? -1 : 1;
 }
 
 /**
