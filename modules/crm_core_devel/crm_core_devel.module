@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @info
+ */
+
+/**
+ * Implements hook_menu()
+ */
+function crm_core_devel_menu() {
+  $items['admin/structure/crm/devel'] = array(
+    'title' => 'CRM Devel',
+    'description' =>  'Helper functions, pages, and blocks to assist Drupal developers.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_core_devel_admin_settings'),
+    'file' => 'crm_core_devel.admin.inc',
+    'access arguments' => array('administer site configuration'),
+  );  
+  return $items;
+}

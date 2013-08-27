@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @info
+ */
+
+  
+/**
+ * Implements hook_uninstall().
+ */
+function crm_core_devel_generate_uninstall() {
+  variable_del('crm_core_devel_enabled'); 
+}
