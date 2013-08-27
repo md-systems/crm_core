@@ -1,3 +1,19 @@
+CRM Core 7.x-0.952 (27-Aug-2013)
+===================================
+
+Contacts:
+
+-	Added merge contacts functionality. Now in main contact list you can select 2
+  or more contacts and merge them in one, selecting which contact should be
+  updated with data from what contacts.
+- Added menu entries for contact types in admin_menu module.
+- Added action to send e-mails to contacts from main contact list.
+
+Activities:
+
+- Enabled revisions for activities.
+
+
 CRM Core 7.x-0.95 (13-Aug-2013)
 ===================================
 
