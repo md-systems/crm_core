@@ -3,6 +3,7 @@
  * Basic reports styles.
  */
 
-div.label table {
+div.legend table {
   width: auto;
+  margin: 0px;
 }

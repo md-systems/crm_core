@@ -117,3 +117,15 @@ function crm_core_report_init() {
     drupal_add_css(drupal_get_path('module', 'crm_core_report') . '/css/reports.css');
   }
 }
+
+/**
+ * Implements hook_preprocess_page
+ */
+function crm_core_report_preprocess_page($vars){
+  if(arg(0) == 'crm-core'){
+    // dpm('yo yo yo');
+    drupal_add_css(drupal_get_path('module', 'crm_core_report') . '/css/reports.css');
+  }  
+}
+
+

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Admin form for Og Synchronization.
+ * Admin form for Og Synchronization
  */
 function crm_og_sync_admin_form($form, &$form_state) {
 
@@ -12,7 +12,7 @@ function crm_og_sync_admin_form($form, &$form_state) {
     '#default_value' => variable_get('crm_og_sync_reverse', 0),
   );
 
-  // Need to get default value from database as well.
+  // need to get default value from database as well
   $og_nodes = _crm_og_sync_og_types();
   if (empty($og_nodes)) {
     $form['message'] = array(
@@ -58,14 +58,14 @@ function crm_og_sync_admin_form($form, &$form_state) {
       $contact_types[$_contact_type->type] = $_contact_type->name;
     }
     $form[$og_entity_type]['contact_type'] = array(
-      '#type' => 'select',
-      '#title' => t('Contact type to be synced'),
-      '#options' => $contact_types,
-      '#default_value' => (!empty($default_settings)) ? $default_settings['crm_contact_type'] : 'organization',
-      '#ajax' => array(
-        'callback' => 'crm_og_sync_admin_form_ajax_callback',
-        'wrapper' => 'form_target',
-      ),
+       '#type' => 'select',
+       '#title' => t('Contact type to be synced'),
+       '#options' => $contact_types,
+       '#default_value' => (!empty($default_settings)) ? $default_settings['crm_contact_type'] : 'organization',
+       '#ajax' => array(
+         'callback' => 'crm_og_sync_admin_form_ajax_callback',
+         'wrapper' => 'form_target',
+       ),
     );
 
     $form[$og_entity_type]['mapping'] = array(
@@ -82,9 +82,9 @@ function crm_og_sync_admin_form($form, &$form_state) {
       '__none' => t('--Do not sync--'),
     );
 
-    // Ajax callback based on contact type.
+    // ajax callback based on contact type
     if (!empty($selected_contact_type)) {
-      $options += _crm_og_sync_contact_fields($form_state['values'][$og_entity_type]['contact_type']);
+       $options += _crm_og_sync_contact_fields($form_state['values'][$og_entity_type]['contact_type']);
     }
     else {
       $default_contact_type = (isset($default_settings['crm_contact_type'])) ? $default_settings['crm_contact_type'] : 'organization';
@@ -127,7 +127,7 @@ function crm_og_sync_admin_form_validate($form, &$form_state) {
 }
 
 /**
- * Submission handler.
+ * submission handler
  */
 function crm_og_sync_admin_form_submit($form, &$form_state) {
 
@@ -137,16 +137,16 @@ function crm_og_sync_admin_form_submit($form, &$form_state) {
   variable_set('crm_og_sync_reverse', $values['crm_og_sync_reverse']);
 
   foreach ($og_node_types as $og_entity_type) {
-    // Save the record.
-    $record = array(
-      'og_bundle_type' => $og_entity_type,
-      'og_entity_type' => 'node',
-      'crm_contact_type' => $values[$og_entity_type]['contact_type'],
-      'status' => $values[$og_entity_type]['toggle'],
-      'field_mapping' => $values[$og_entity_type]['mapping'],
-    );
+     // save the record
+     $record = array(
+       'og_bundle_type' => $og_entity_type,
+       'og_entity_type' => 'node',
+       'crm_contact_type' => $values[$og_entity_type]['contact_type'],
+       'status' => $values[$og_entity_type]['toggle'],
+       'field_mapping' => $values[$og_entity_type]['mapping'],
+     );
 
-    crm_og_sync_save_config($record, $values[$og_entity_type]['is_new']);
+     crm_og_sync_save_config($record, $values[$og_entity_type]['is_new']);
   }
 
   drupal_set_message(t('Configuration settings saved'));

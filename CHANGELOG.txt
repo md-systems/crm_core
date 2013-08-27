@@ -1,4 +1,65 @@
-CRM Core 7.x-0.92 (03-May-2013)
+CRM Core 7.x-0.95 (13-Aug-2013)
+===================================
+
+The major change for this version of CRM Core deals with the name field.
+
+The name field is now unlocked, users can do with it what they wish. Just
+remember that deleting the name field will make most of the UI modules 
+not work.
+
+There is a patch for the name module (see https://drupal.org/node/2047643)
+that needs to be used for CRM Core to work properly.
+
+General:
+
+- Added support for panels (https://drupal.org/node/2041833)
+- Removed circular dependencies (https://drupal.org/node/1995700)
+
+Activities:
+
+- Addressed issues with access to activity records
+- Added full support for theming individual activity types
+- Addressed a core issue where title is not set for MENU_LOCAL_ACTION
+  (see http://drupal.org/node/891892)
+
+Contacts:
+
+- Addressed an issue with the name field. Until it is updated, CRM Core 
+  requires a patch to properly support different naming conventions for 
+  different contact types (https://drupal.org/node/2047643)
+- Unlocked contact name to allow field permissions settings.
+- Addressed an issue where users were being forced to use CRM Core 
+  Contact UI (https://drupal.org/node/1897892)
+- Addressed an issue where install profiles would fail because of string
+  translations in CRM Core Contact.
+- Revised revision support for contact records.
+- Added entity metadata for specifying primary fields for contact information.
+- Added views handlers to provide support for primary fields.
+- Restored missing uid on the base table (https://drupal.org/node/1914326)
+
+Matching Engines:
+
+- Improved support for custom matching rules
+
+Relationships:
+
+- Addressed an issue where install profiles would fail because of string
+  translations in CRM Core Relationship.
+- Addressed an issue with relationships not displaying properly
+  (https://drupal.org/node/2059309)
+  
+Reports:
+
+- Improved indexing of reports
+
+
+CRM Core 7.x-0.93 (08-May-2013)
+===================================
+
+Fixes release merge issue.
+
+
+CRM Core 7.x-0.92 (08-May-2013)
 ===================================
 
 New features:

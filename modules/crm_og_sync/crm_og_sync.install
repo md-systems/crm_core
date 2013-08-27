@@ -2,17 +2,15 @@
 
 
 /**
- * Implements hook_install().
+ * Implements hook_install()
  */
 function crm_og_sync_install() {
-  $t = get_t();
-
-  // Add relation type.
-  // TODO: this should include more entity type to be synced.
+  // Add relation type
+  // future: this should include more entity type to be synced
   $relation_type_info = array(
     'relation_type' => 'crm_og_sync',
-    'label' => $t('Contact'),
-    'reverse_label' => $t('Organic Group: Node'),
+    'label' => st('Contact'),
+    'reverse_label' => st('Organic Group: Node'),
     'source_bundles' => array('node:*'),
     'target_bundles' => array('crm_core_contact:*'),
     'r_unique' => TRUE,
@@ -23,14 +21,14 @@ function crm_og_sync_install() {
 }
 
 /**
- * Implements hook_install().
+ * Implements hook_install()
  */
 function crm_og_sync_uninstall() {
   relation_type_delete('crm_og_sync');
 }
 
 /**
- * Implements hook_schema().
+ * Implements hook_schema()
  */
 function crm_og_sync_schema() {
   $schema['crm_og_sync_settings'] = array(
@@ -69,8 +67,8 @@ function crm_og_sync_schema() {
         'size' => 'big',
         'serialize' => TRUE,
         'description' => 'A serialized array of field mapping between the entity bundle and the crm contact type',
-      ),
     ),
+  ),
     'primary key' => array('og_bundle_type', 'og_entity_type'),
   );
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Implements hook_menu().
+ * Implements hook_menu()
  */
 function crm_og_sync_menu() {
   $items = array();
@@ -19,7 +19,7 @@ function crm_og_sync_menu() {
 }
 
 /**
- * Implements hook_permission().
+ * Implements hook_permission()
  */
 function crm_og_sync_permission() {
   return array(
@@ -31,37 +31,36 @@ function crm_og_sync_permission() {
 }
 
 /**
- * Implements hook_node_insert().
- * Use this hook to create new contact and relationship to the node.
+ * Implements hook_node_insert
+ * Use this hook to create new contact and relationship to the node
  */
 function crm_og_sync_node_insert($node) {
   crm_og_sync_sync_node($node);
 }
 
 /**
- * Implements hook_node_update().
- * Use this hook to create new contact or update existing contact.
+ * Implements hook_node_update
+ * Use this hook to create new contact or update existing contact
  */
 function crm_og_sync_node_update($node) {
   crm_og_sync_sync_node($node, 'update');
 }
 
 /**
- * Implements hook_node_delete().
- * Use this hook to delete the contact and the relationship reference.
+ * Implements hook_node_delete
+ * Use this hook to delete the contact and the relationship reference
  */
 function crm_og_sync_node_delete($node) {
   crm_og_sync_sync_node($node, 'delete');
 }
 
 /**
- * Implements hook_field_delete_instance().
- * If a field instance has been deleted from the og:node, we will delete it from
- * the configuration.
+ * Implements hook_field_delete_instance
+ * If a field instance has been deleted from the og:node, we will delete it from the configuration
  */
 function crm_og_sync_field_delete_instance($instance) {
   $sync_node_types = array();
-  // All the types.
+  // all the types
   $og_node_types = _crm_og_sync_og_types();
   foreach ($og_node_types as $node_type) {
     $og_node_sync_settings = _crm_og_sync_settings_get($node_type);
@@ -76,109 +75,113 @@ function crm_og_sync_field_delete_instance($instance) {
       $field_mapping = unserialize($settings['field_mapping']);
       unset($field_mapping[$instance['field_name']]);
       $settings['field_mapping'] = $field_mapping;
-      // Re-save the field mapping.
+      // re-save the field mapping
       crm_og_sync_save_config($settings, FALSE);
     }
   }
 }
 
 /**
- * Wrapper function for syncing nodes.
+ * Wrapper function for syncing nodes
  */
 function crm_og_sync_sync_node($node, $op = 'create') {
   $og_node_types = _crm_og_sync_og_types();
-  if (array_key_exists($node->type, $og_node_types)) {
-    $node_type_config = _crm_og_sync_settings_get($node->type);
-    if ((bool) $node_type_config['status']) {
-      crm_og_sync_sync($node, $node_type_config, $op);
-    }
-  }
+ if (array_key_exists($node->type, $og_node_types)) {
+   $node_type_config = _crm_og_sync_settings_get($node->type);
+   if ((bool) $node_type_config['status']) {
+     crm_og_sync_sync($node, $node_type_config, $op);
+   }
+ }
 }
 
 /**
- * Sync og node to crm organization.
+ * Main function that syncs og node to crm organizations
  */
 function crm_og_sync_sync($og_entity, $og_entity_sync_settings, $op = 'create', $entity_type = 'node') {
-  // $og_entity here really refers to the $node object.
+  // $og_entity here really refers to the $node object
   $field_mapping = unserialize($og_entity_sync_settings['field_mapping']);
 
   switch ($op) {
     case 'delete':
       $related_contact = _crm_og_sync_get_related_entity($entity_type, $og_entity->nid, 'crm_og_sync');
       if (!empty($related_contact)) {
-        // Delete the relation and contact.
+         // delete the relation and contact
         $query = relation_query($entity_type, $og_entity->nid);
         $relations = $query->execute();
         foreach ($relations as $relation) {
-          // Just delete the relation type of crm_og_sync.
+          // just delete the relation type of crm_og_sync
           if ($relation->relation_type == 'crm_og_sync') {
             relation_delete($relation->rid);
           }
         }
         crm_core_contact_delete($related_contact->contact_id);
       }
-      break;
+    break;
 
     case 'update':
       $related_contact = _crm_og_sync_get_related_entity($entity_type, $og_entity->nid, 'crm_og_sync');
       if (empty($related_contact)) {
-        // Create a new contact if there is no associated contact.
+        // somehow there is no associated contact, CREATE ONE!
         crm_og_sync_sync($og_entity, $og_entity_sync_settings);
       }
       else {
         $fields = array();
-        // Update contact field data with the entity (node) data.
+        // update contact field data with the entity (node) data.
         foreach ($field_mapping as $og_entity_field_name => $contact_field_name) {
           if ($contact_field_name !== '__none') {
             $fields[$field_mapping[$og_entity_field_name]] = $og_entity->$og_entity_field_name;
           }
         }
-        // Overwrite the contact field data.
+        // overwrite the contact field data
         foreach ($fields as $field_name => $field) {
           $related_contact->$field_name = $field;
         }
-        // Contaft name to node title.
+        // contaft name to node title
         $related_contact->contact_name[$og_entity->language][0]['given'] = $og_entity->title;
 
-        // Save the contact.
-        crm_core_contact_save($related_contact);
+       // save the contact
+       crm_core_contact_save($related_contact);
       }
-      break;
-
+    break;
     case 'create':
     default:
-      $fields = array();
-      foreach ($field_mapping as $og_entity_field_name => $contact_field_name) {
-        if ($contact_field_name !== '__none') {
-          $fields[$field_mapping[$og_entity_field_name]] = $og_entity->$og_entity_field_name;
-        }
-      }
-      // We can always use node title as the contact name.
-      if (!array_key_exists('contact_name', $fields)) {
-        $fields['contact_name'][$og_entity->language][0] = array(
-          'title' => '',
-          'family' => '',
-          'generational' => '',
-          'credentials' => '',
-        );
-        $fields['contact_name'][$og_entity->language][0]['given'] = $og_entity->title;
-      }
+       $fields = array();
+       foreach ($field_mapping as $og_entity_field_name => $contact_field_name) {
+         if ($contact_field_name !== '__none') {
+           $fields[$field_mapping[$og_entity_field_name]] = $og_entity->$og_entity_field_name;
+         }
+       }
+       // we can always use node title as the contact name
+       if (!array_key_exists('contact_name', $fields)) {
+         $fields['contact_name'][$og_entity->language][0] = array(
+           'title' => '',
+           'family' => '',
+           'generational' => '',
+           'credentials' => '',
+         );
+         $fields['contact_name'][$og_entity->language][0]['given'] = $og_entity->title;
+       }
 
-      // Contact creation.
-      $new_contact = _crm_og_sync_contact_create($og_entity_sync_settings['crm_contact_type'], $fields);
-      $saved_contact = crm_core_contact_save($new_contact);
+       // contact creation
+       $new_contact = _crm_og_sync_contact_create($og_entity_sync_settings['crm_contact_type'], $fields);
+       $saved_contact = crm_core_contact_save($new_contact);
 
-      // Create relationship.
-      $source = array('bundle' => $og_entity->type, 'id' => $og_entity->nid);
-      $target = array('id' => $saved_contact->contact_id);
-      _crm_og_sync_create_relation($source, $target);
-      break;
+       // create relationship
+       $source = array('bundle' => $og_entity->type, 'id' => $og_entity->nid);
+       $target = array('id' => $saved_contact->contact_id);
+       _crm_og_sync_create_relation($source, $target);
+    break;
   }
 }
 
 /**
- * Implements hook_crm_core_contact_update().
- * Offering some reverse sync to fields updated from crm_contact back to the organic group.
+ * Implements hook_crm_core_contact_insert
+ */
+function crm_og_sync_crm_core_contact_insert($contact) {}
+
+/**
+ * Implements hook_crm_core_contact_update
+ * Offering some reverse sync to fields updated from crm_contact back to the organic group
  */
 function crm_og_sync_crm_core_contact_update($contact) {
 
@@ -196,45 +199,52 @@ function crm_og_sync_crm_core_contact_update($contact) {
 
   foreach ($field_mapping as $og_entity_field => $contact_field) {
     if ($contact_field !== '__none') {
-      $og_node->$og_entity_field = $contact->$contact_field;
+       $og_node->$og_entity_field = $contact->$contact_field;
     }
   }
-  // Sync the title if needed.
+  // sync the title if needed
   if (isset($contact->contact_name)) {
     $og_node->title = name_format($contact->contact_name['und'][0], '((((t+ig)+im)+if)+is)+jc');
   }
+  // Save the new node
 
-  // Save the new node.
   _crm_og_sync_node_save($og_node);
 }
 
 /**
- * Save a crm_og_sync configuration setting.
- *
+ * Implements hook_crm_core_contact_delete
+ * Not used right now because there are group content.
+ * We do not want to delete the organic group accidently
+ */
+function crm_og_sync_crm_core_contact_delete($contact) {}
+
+function crm_og_sync_init() {}
+
+/**
+ * Save a crm_og_sync configuration setting
  * @param
  * array $record    A record to be saved
  *                  keys: og_bundle_type (i.e. node type)
  *                        og_entity_type (i.e. node)
  *                        status (0 or 1)
  *                        field_mapping (an array of entity to crm contact field mapping)
- * bool $is_new     Designate if this is a new record or not.
+ * bool $is_new     Designate if this is a new record or not
  *
  * @return
- * @see drupal_write_record()
+ * @see drupal_write_record
  */
 function crm_og_sync_save_config($record = array(), $is_new = TRUE) {
-  // Save the record.
-  if ($is_new) {
-    drupal_write_record('crm_og_sync_settings', $record);
-  }
-  else {
-    drupal_write_record('crm_og_sync_settings', $record, array('og_bundle_type', 'og_entity_type'));
-  }
+   // save the record
+   if ($is_new) {
+     drupal_write_record('crm_og_sync_settings', $record);
+   }
+   else {
+     drupal_write_record('crm_og_sync_settings', $record, array('og_bundle_type', 'og_entity_type'));
+   }
 }
 
 /**
- * Create a relation between the node and the contact.
- *
+ * create a relation between the node and the contact
  * @param
  * mixed $source_entity    An array or stdClass object with keys of type, bundle, and id
  * mixed $target_entity    An array or stdClass object with keys of type, bundle, and id
@@ -248,31 +258,30 @@ function _crm_og_sync_create_relation($source_entity, $target_entity) {
   }
 
   // Create the relation
-  $endpoints = array(
-    array(
-      'entity_type' => (isset($source_entity->type)) ? $source_entity->type : 'node',
-      'entity_bundle' => $source_entity->bundle,
-      'entity_id' => $source_entity->id,
-    ),
-    array(
-      'entity_type' => (isset($target_entity->type)) ? $target_entity->type : 'crm_core_contact',
-      'entity_bundle' => (isset($target_entity->bundle)) ? $target_entity->bundle : 'organization',
-      'entity_id' => $target_entity->id,
-    ),
-  );
-  $relation = relation_create('crm_og_sync', $endpoints);
-  relation_save($relation);
+   $endpoints = array(
+     array(
+       'entity_type' => (isset($source_entity->type)) ? $source_entity->type : 'node',
+       'entity_bundle' => $source_entity->bundle,
+       'entity_id' => $source_entity->id,
+     ),
+     array(
+       'entity_type' => (isset($target_entity->type)) ? $target_entity->type : 'crm_core_contact',
+       'entity_bundle' => (isset($target_entity->bundle)) ? $target_entity->bundle : 'organization',
+       'entity_id' => $target_entity->id,
+     ),
+   );
+   $relation = relation_create('crm_og_sync', $endpoints);
+   relation_save($relation);
 }
-
 /**
- * Create a new contact object(not saved).
+ * Instantiate a new contact object to be created (not saved)
  *
  * @params
  * string $type    contact type
  * array $fields   an array of fields to be added to the contact keyed by field name
  *
  * @return
- *   stdClass $contact  A contact object to be created
+ * stdClass $contact  A contact object to be created
  */
 function _crm_og_sync_contact_create($type, $fields) {
   $contact = array(
@@ -288,7 +297,7 @@ function _crm_og_sync_contact_create($type, $fields) {
 }
 
 /**
- * Return og node types.
+ * Return og node types
  */
 function _crm_og_sync_og_types() {
   $og_type = array();
@@ -297,14 +306,14 @@ function _crm_og_sync_og_types() {
 
   foreach ($node_types as $node_type) {
     if (og_is_group_type('node', $node_type)) {
-      $og_type[$node_type] = $node_type;
+       $og_type[$node_type] = $node_type;
     }
   }
   return $og_type;
 }
 
-/**
- * Return contact fields associated with a contact type.
+/*
+ * Return contact fields associated with a contact type
  */
 function _crm_og_sync_contact_fields($contact_type = 'organization', $return_mode = 'options') {
   $return = array();
@@ -315,13 +324,13 @@ function _crm_og_sync_contact_fields($contact_type = 'organization', $return_mod
       foreach ($contact_type_fields as $field_name => $field) {
         $return[$field_name] = $field['label'];
       }
-      break;
+    break;
   }
   return $return;
 }
 
 /**
- * Get sychronization setting for a specific entity/bundle type.
+ * Get sychronization setting for a specific entity/bundle type
  */
 function _crm_og_sync_settings_get($bundle_type, $entity_type = 'node') {
   $data = array();
@@ -339,7 +348,7 @@ function _crm_og_sync_settings_get($bundle_type, $entity_type = 'node') {
 
 /**
  * Copied from relation.module, (beta 1)
- * Gives an error if the entity id is not found, so need to fix that.
+ * gives an error if the entity id is not found, so need to fix that
  */
 function _crm_og_sync_get_related_entity($entity_type, $entity_id, $relation_type = NULL, $r_index = NULL) {
   $query = relation_query($entity_type, $entity_id);
@@ -373,8 +382,8 @@ function _crm_og_sync_get_related_entity($entity_type, $entity_id, $relation_typ
 }
 
 /**
- * Copied from node_save().
- * Remove hooks so reverse sync doesn't create an infinite loop.
+ * copied from node_save
+ * get rid of the hooks so reverse sync don't create an infinite loop
  */
 function _crm_og_sync_node_save($node) {
   $transaction = db_transaction();
