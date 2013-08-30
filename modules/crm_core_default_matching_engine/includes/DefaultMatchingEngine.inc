@@ -5,8 +5,9 @@
  * Default match engine definitions.
  */
 
-if (!defined('MATCH_DEFAULT_CHARS')) define('MATCH_DEFAULT_CHARS', '3');
-
+if (!defined('MATCH_DEFAULT_CHARS')) {
+  define('MATCH_DEFAULT_CHARS', '3');
+}
 
 /**
  * Interface for defining the logical operators and query criteria used to identify duplicate contacts based on
@@ -187,24 +188,28 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
    *   Founded matches.
    */
   public function fieldQuery($contact, $rule) {
-    
+
     $results = array();
     $contact_wrapper = entity_metadata_wrapper('crm_core_contact', $contact);
     $needle = '';
     $field_item = '';
-    
+
     if (empty($rule->field_item)) {
       $needle = $contact_wrapper->{$rule->field_name}->value();
       $field_item = 'value';
     }
     else {
-      $needle = $contact_wrapper->{$rule->field_name}->{$rule->field_item}->value();
-      $field_item = $rule->field_item;
+      $field_value = $contact_wrapper->{$rule->field_name}->value();
+      if (isset($field_value)) {
+        $needle = $contact_wrapper->{$rule->field_name}->{$rule->field_item}->value();
+        $field_item = $rule->field_item;
+      }
     }
-    
+
     if (!empty($needle)) {
       $query = new EntityFieldQuery();
-      $query->entityCondition('entity_type', 'crm_core_contact')->entityCondition('bundle', $contact->type);
+      $query->entityCondition('entity_type', 'crm_core_contact')
+        ->entityCondition('bundle', $contact->type);
       $query->entityCondition('entity_id', $contact->contact_id, '<>');
 
       switch ($rule->operator) {
@@ -249,6 +254,7 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
 }
 
 class UnsupportedFieldMatchField extends DefaultMatchingEngineFieldType {
+
   public function operators() {
     return array();
   }
@@ -295,7 +301,7 @@ class DefaultMatchingEngine extends CrmCoreMatchEngine {
       if ($base_config['status']) {
         $matching_rules = crm_core_default_matching_engine_load_field_config($contact->type);
         $contact_fields = field_info_instances('crm_core_contact', $contact->type);
-        
+
         $results = array();
         foreach ($matching_rules as $matching_rule) {
           if (isset($contact_fields[$matching_rule->field_name])) {
