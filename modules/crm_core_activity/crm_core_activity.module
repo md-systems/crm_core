@@ -351,15 +351,12 @@ function crm_core_activity_forms($form_id, $args) {
 /**
  * Activity view callback.
  */
-function crm_core_activity_view($activity) {
+function crm_core_activity_view($activity, $view_mode = 'full') {
   $langcode = $GLOBALS['language_content']->language;
+  module_invoke_all('entity_view', $activity, 'crm_core_activity', $view_mode, $langcode);
+  $build = $activity->view('full', $langcode);
 
-  return array(
-    '#theme' => 'activity',
-    '#activity' => $activity,
-    '#view_mode' => 'full',
-    '#language' => $langcode,
-  );
+  return $build;
 }
 
 /**
