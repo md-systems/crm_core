@@ -27,7 +27,7 @@ function crm_core_devel_menu() {
  *   File name.
  */
 function crm_core_devel_export($filename) {
-
+  $filename = DRUPAL_ROOT . '/' . $filename;
   if (!empty($filename) && !is_file($filename)) {
     $export = array();
 
@@ -44,8 +44,7 @@ function crm_core_devel_export($filename) {
     foreach ($activities as $activity) {
       $export['crm_core_activity'][$activity->activity_id] = entity_export('crm_core_activity', $activity);
     }
-    require_once DRUPAL_ROOT . '/includes/utility.inc';
     $file = new SplFileObject($filename, 'a');
-    $file->fwrite(drupal_var_export($export));
+    $file->fwrite(var_export($export, TRUE));
   }
 }
