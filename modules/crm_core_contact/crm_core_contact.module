@@ -711,22 +711,9 @@ function crm_core_contact_delete_multiple($contact_ids = array()) {
  * View a single contact record.
  */
 function crm_core_contact_view($contact, $view_mode = 'full') {
-  $contact->content = array();
-  $langcode = LANGUAGE_NONE;
-  field_attach_prepare_view('crm_core_contact', array($contact->contact_id => $contact), $view_mode);
-  // Add content added by fields.
-  $contact->content += field_attach_view('crm_core_contact', $contact, $view_mode);
+  $langcode = $GLOBALS['language_content']->language;
   module_invoke_all('entity_view', $contact, 'crm_core_contact', $view_mode, $langcode);
-  $contact->content += array(
-    '#theme' => 'contact',
-    '#contact' => $contact,
-    '#content' => $contact->content,
-    '#cid' => $contact->contact_id,
-    '#type' => $contact->type,
-    '#view_mode' => $view_mode,
-    '#language' => $langcode,
-  );
-  $build = $contact->content;
+  $build = $contact->view($view_mode, $langcode);
 
   return $build;
 }
@@ -1255,40 +1242,46 @@ function crm_core_contact_merge_contacts_action($selected_contacts, $context) {
       'source' => 'crm-core/contact/' . $pcid,
     );
     path_save($path);
-    // Replacing participant in existing activities.
-    $query = new EntityFieldQuery();
-    $activities = $query->entityCondition('entity_type', 'crm_core_activity')
-      ->fieldCondition('field_activity_participants', 'target_id', $contact_id)
-      ->execute();
-    if (is_array($activities) && isset($activities['crm_core_activity'])) {
-      foreach (array_keys($activities['crm_core_activity']) as $activity_id) {
-        $aw = entity_metadata_wrapper('crm_core_activity', $activity_id);
-        foreach ($aw->field_activity_participants->getIterator() as $delta => $cw) {
-          if ($cw->getIdentifier() == $contact_id) {
-            $aw->field_activity_participants[$delta]->set($pcid);
+
+    if (module_exists('crm_core_activity')) {
+      // Replacing participant in existing activities.
+      $query = new EntityFieldQuery();
+      $activities = $query->entityCondition('entity_type', 'crm_core_activity')
+        ->fieldCondition('field_activity_participants', 'target_id', $contact_id)
+        ->execute();
+      if (is_array($activities) && isset($activities['crm_core_activity'])) {
+        foreach (array_keys($activities['crm_core_activity']) as $activity_id) {
+          $aw = entity_metadata_wrapper('crm_core_activity', $activity_id);
+          foreach ($aw->field_activity_participants->getIterator() as $delta => $cw) {
+            if ($cw->getIdentifier() == $contact_id) {
+              $aw->field_activity_participants[$delta]->set($pcid);
+            }
           }
+          $aw->save();
         }
-        $aw->save();
       }
     }
-    // Replacing existing relations for contacts been deleted with new ones.
-    $relations = relation_query('crm_core_contact', $contact_id)->execute();
-    foreach ($relations as $relation_info) {
-      $endpoints = array(
-        array('entity_type' => 'crm_core_contact', 'entity_id' => $pcid),
-      );
-      $relation_wrapper = entity_metadata_wrapper('relation', $relation_info->rid);
-      foreach ($relation_wrapper->endpoints->getIterator() as $endpoint_wrapper) {
-        if ($endpoint_wrapper->getIdentifier() != $contact_id) {
-          $endpoints[] = array(
-            'entity_type' => $endpoint_wrapper->type(),
-            'entity_id' => $endpoint_wrapper->getIdentifier(),
-          );
-        }
-      }
 
-      $relation = relation_create($relation_info->relation_type, $endpoints);
-      relation_save($relation);
+    if (module_exists('relation')) {
+      // Replacing existing relations for contacts been deleted with new ones.
+      $relations = relation_query('crm_core_contact', $contact_id)->execute();
+      foreach ($relations as $relation_info) {
+        $endpoints = array(
+          array('entity_type' => 'crm_core_contact', 'entity_id' => $pcid),
+        );
+        $relation_wrapper = entity_metadata_wrapper('relation', $relation_info->rid);
+        foreach ($relation_wrapper->endpoints->getIterator() as $endpoint_wrapper) {
+          if ($endpoint_wrapper->getIdentifier() != $contact_id) {
+            $endpoints[] = array(
+              'entity_type' => $endpoint_wrapper->type(),
+              'entity_id' => $endpoint_wrapper->getIdentifier(),
+            );
+          }
+        }
+
+        $relation = relation_create($relation_info->relation_type, $endpoints);
+        relation_save($relation);
+      }
     }
   }
 
