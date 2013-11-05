@@ -225,6 +225,14 @@ function crm_core_contact_schema() {
     ),
   );
 
+  if (module_exists('uuid')) {
+    $field = uuid_schema_field_definition();
+    $schema['crm_core_contact']['fields']['uuid'] = $field;
+    $schema['crm_core_contact']['indexes']['uuid'] = array('uuid');
+    $schema['crm_core_contact_revision']['fields']['vuuid'] = $field;
+    $schema['crm_core_contact_revision']['indexes']['vuuid'] = array('vuuid');
+  }
+
   return $schema;
 }
 
@@ -295,4 +303,27 @@ function crm_core_contact_update_7004() {
   $field = field_info_field('contact_name');
   $field['locked'] = FALSE;
   field_update_field($field);
+}
+
+/**
+ * UUID integration.
+ */
+function crm_core_contact_update_7005() {
+  if (module_exists('uuid')) {
+    $field = uuid_schema_field_definition();
+    $schema['crm_core_contact']['fields']['uuid'] = $field;
+    $schema['crm_core_contact']['indexes']['uuid'] = array('uuid');
+    $schema['crm_core_contact_revision']['fields']['vuuid'] = $field;
+    $schema['crm_core_contact_revision']['indexes']['vuuid'] = array('vuuid');
+
+    if (!db_field_exists('crm_core_contact', 'uuid')) {
+      db_add_field('crm_core_contact', 'uuid', $field);
+      db_add_index('crm_core_contact', 'uuid', array('uuid'));
+    }
+    if (!db_field_exists('crm_core_contact_revision', 'vuuid')) {
+      db_add_field('crm_core_contact_revision', 'vuuid', $field);
+      db_add_index('crm_core_contact_revision', 'vuuid', array('vuuid'));
+    }
+    uuid_sync_all();
+  }
 }
