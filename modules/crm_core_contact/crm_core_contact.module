@@ -1704,7 +1704,7 @@ function crm_core_contact_services_resources() {
             'module' => 'crm_core_contact',
             'name' => 'includes/crm_core_contact_resource',
           ),
-          'callback' => 'crm_core_contact_create',
+          'callback' => '_crm_core_contact_resource_create',
           'args' => array(
             array(
               'name' => 'crm_core_contact',
@@ -1724,7 +1724,7 @@ function crm_core_contact_services_resources() {
             'module' => 'crm_core_contact',
             'name' => 'includes/crm_core_contact_resource',
           ),
-          'callback' => '_node_resource_update',
+          'callback' => '_crm_core_contact_resource_update',
           'args' => array(
             array(
               'name' => 'contact_id',

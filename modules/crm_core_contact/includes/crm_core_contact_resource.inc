@@ -10,16 +10,16 @@
  *
  * @param string $op
  *   Operation, access for which should be checked.
- * @param array $args
- *   Resource arguments passed through from the original request.
+ * @param int $contact_id
+ *   Contact ID.
  *
  * @return bool
  *   Boolean.
  *
  * @see crm_core_contact_access()
  */
-function _crm_core_contact_resource_access($op = 'view', $args = array()) {
-  $crm_core_contact = crm_core_contact_load($args[0]);
+function _crm_core_contact_resource_access($op, $contact_id) {
+  $crm_core_contact = crm_core_contact_load($contact_id);
 
   return crm_core_contact_access($op, $crm_core_contact);
 }
@@ -36,12 +36,38 @@ function _crm_core_contact_resource_access($op = 'view', $args = array()) {
  *   An array of node objects.
  */
 function _crm_core_contact_resource_index($page, $page_size) {
-  dpm(func_get_args(), 'Index params');
-  $results = db_select('crm_core_contact', 'c')
+  $cids = db_select('crm_core_contact', 'c')
     ->orderBy('created', 'DESC')
-    ->fields('c')
+    ->fields('c', array('contact_id'))
     ->range($page * $page_size, $page_size)
-    ->execute();
+    ->execute()
+    ->fetchCol();
 
-  return services_resource_build_index_list($results, 'crm_core_contact', 'contact_id');
+  $contacts = crm_core_contact_load_multiple($cids);
+
+  return services_resource_build_index_list($contacts, 'crm_core_contact', 'contact_id');
+}
+
+/**
+ * Callback for the 'create' method.
+ */
+function _crm_core_contact_resource_create($contact_data) {
+  try {
+    $contact = entity_create('crm_core_contact', $contact_data);
+    unset($contact->is_new);
+    crm_core_contact_save($contact);
+
+    return $contact;
+  }
+  catch (Exception $exception) {
+    watchdog_exception('crm_core_contact', $exception);
+    return services_error($exception, 406, $contact_data);
+  }
+}
+
+/**
+ * Callback for the 'update' method.
+ */
+function _crm_core_contact_resource_update($contact_id, $contact_data) {
+  return _crm_core_contact_resource_create($contact_data);
 }
