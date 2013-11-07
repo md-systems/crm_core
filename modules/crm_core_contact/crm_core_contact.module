@@ -1674,6 +1674,7 @@ function crm_core_contact_mail($key, &$message, $params) {
  * Implements hook_services_resources().
  */
 function crm_core_contact_services_resources() {
+  // @todo Check access to resources.
   $resources = array(
     '#api_version' => 3002,
     'crm_core_contact' => array(

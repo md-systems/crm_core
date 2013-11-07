@@ -229,6 +229,8 @@ function crm_core_activity_save($activity) {
 /**
  * Delete single activity.
  *
+ * @todo This function should accept activity_id, but activity object.
+ *
  * @param object $activity
  *   Entity object of crm_core_activity type.
  */
@@ -598,4 +600,136 @@ function crm_core_activity_preprocess_activity(&$variables) {
   $entity = $variables['activity'];
   $variables['theme_hook_suggestions'][] = 'activity__' . $entity->type;
   $variables['theme_hook_suggestions'][] = 'activity__' . $entity->activity_id;
+}
+
+
+/**
+ * Implements hook_services_resources().
+ */
+function crm_core_activity_services_resources() {
+  // @todo Check access to resources.
+  $resources = array(
+    '#api_version' => 3002,
+    'crm_core_activity' => array(
+      'operations' => array(
+        'retrieve' => array(
+          'file' => array(
+            'type' => 'inc',
+            'module' => 'crm_core_activity',
+            'name' => 'includes/crm_core_activity_resource',
+          ),
+          'callback' => 'crm_core_activity_load',
+          'args' => array(
+            array(
+              'name' => 'activity_id',
+              'optional' => FALSE,
+              'source' => array('path' => 0),
+              'type' => 'int',
+              'description' => t('The activity_id of the contact to get.'),
+            ),
+          ),
+          'access callback' => '_crm_core_activity_resource_access',
+          'access arguments' => array('view'),
+          'access arguments append' => TRUE,
+        ),
+        'create' => array(
+          'file' => array(
+            'type' => 'inc',
+            'module' => 'crm_core_activity',
+            'name' => 'includes/crm_core_activity_resource',
+          ),
+          'callback' => '_crm_core_activity_resource_create',
+          'args' => array(
+            array(
+              'name' => 'crm_core_activity',
+              'optional' => FALSE,
+              'source' => 'data',
+              'description' => t('The crm_core_activity data to create.'),
+              'type' => 'array',
+            ),
+          ),
+          'access callback' => '_crm_core_activity_resource_access',
+          'access arguments' => array('create'),
+          'access arguments append' => TRUE,
+        ),
+        'update' => array(
+          'file' => array(
+            'type' => 'inc',
+            'module' => 'crm_core_activity',
+            'name' => 'includes/crm_core_activity_resource',
+          ),
+          'callback' => '_node_resource_update',
+          'args' => array(
+            array(
+              'name' => 'activity_id',
+              'optional' => FALSE,
+              'source' => array('path' => 0),
+              'type' => 'int',
+              'description' => t('The activity_id of the contact to get.'),
+            ),
+            array(
+              'name' => 'crm_core_activity',
+              'optional' => FALSE,
+              'source' => 'data',
+              'description' => t('The crm_core_activity data to create.'),
+              'type' => 'array',
+            ),
+          ),
+          'access callback' => '_crm_core_activity_resource_access',
+          'access arguments' => array('update'),
+          'access arguments append' => TRUE,
+        ),
+        'delete' => array(
+          'file' => array(
+            'type' => 'inc',
+            'module' => 'crm_core_activity',
+            'name' => 'includes/crm_core_activity_resource',
+          ),
+          'callback' => '_crm_core_activity_resource_delete',
+          'args' => array(
+            array(
+              'name' => 'activity_id',
+              'optional' => FALSE,
+              'source' => array('path' => 0),
+              'type' => 'int',
+              'description' => t('The activity_id of the contact to delete.'),
+            ),
+          ),
+          'access callback' => '_crm_core_activity_resource_access',
+          'access arguments' => array('delete'),
+          'access arguments append' => TRUE,
+        ),
+        'index' => array(
+          'file' => array(
+            'type' => 'inc',
+            'module' => 'crm_core_activity',
+            'name' => 'includes/crm_core_activity_resource',
+          ),
+          'callback' => '_crm_core_activity_resource_index',
+          'args' => array(
+            array(
+              'name' => 'page',
+              'optional' => TRUE,
+              'type' => 'int',
+              'description' => 'The zero-based index of the page to get, defaults to 0.',
+              'default value' => 0,
+              'source' => array('param' => 'page'),
+            ),
+            array(
+              'name' => 'pagesize',
+              'optional' => TRUE,
+              'type' => 'int',
+              'description' => 'Number of records to get per page, defaults to 25.',
+              'default value' => 25,
+              'source' => array('param' => 'pagesize'),
+            ),
+          ),
+          'access callback' => '_crm_core_activity_resource_access',
+          'access arguments' => array('view'),
+        ),
+      ),
+    ),
+  );
+
+  return $resources;
 }
