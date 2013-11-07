@@ -72,6 +72,12 @@ function crm_core_activity_entity_info() {
     'access callback' => 'crm_core_activity_type_access',
   );
 
+  if (module_exists('uuid')) {
+    $return['crm_core_activity']['uuid'] = TRUE;
+    $return['crm_core_activity']['entity keys']['uuid'] = 'uuid';
+    $return['crm_core_activity']['entity keys']['revision uuid'] = 'vuuid';
+  }
+
   return $return;
 }
 

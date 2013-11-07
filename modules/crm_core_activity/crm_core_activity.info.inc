@@ -70,6 +70,22 @@ function crm_core_activity_entity_property_info() {
     'schema field' => 'activity_type_id',
   );
 
+  if (module_exists('uuid')) {
+    $properties['uuid'] = array(
+      'label' => t('UUID'),
+      'type' => 'text',
+      'description' => t('The universally unique ID.'),
+      'schema field' => 'uuid',
+    );
+
+    $properties['vuuid'] = array(
+      'label' => t('Revision UUID'),
+      'type' => 'text',
+      'description' => t("The revision's universally unique ID."),
+      'schema field' => 'vuuid',
+    );
+  }
+
   // Metadata of Activity Type.
   $properties = &$info['crm_core_activity_type']['properties'];
 
