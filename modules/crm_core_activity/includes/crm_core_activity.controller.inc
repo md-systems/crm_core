@@ -28,20 +28,6 @@ class CRMCoreActivityEntity extends Entity {
  */
 class CRMCoreActivityController extends EntityAPIController {
   public function create(array $values = array()) {
-    $query = new EntityFieldQuery();
-    $results = $query
-      ->entityCondition('entity_type', 'crm_core_activity_type')
-      ->propertyCondition('type', $values['type'])
-      ->execute();
-    if (!empty($results)) {
-      $type_id = 0;
-      foreach (array_keys($results['crm_core_activity_type']) as $id) {
-        $type_id = $id;
-      }
-      $values += array(
-        'activity_type_id' => $type_id,
-      );
-    }
     $values += array(
       'title' => '',
       'created' => REQUEST_TIME,

@@ -26,7 +26,7 @@ function crm_core_activity_entity_property_info() {
     'type' => 'token',
     'setter callback' => 'entity_property_verbatim_set',
     'setter permission' => 'administer site configuration',
-    'options list' => 'crm_core_activity_type_get_name',
+    'options list' => 'crm_core_activity_type_get_names',
     'required' => TRUE,
     'schema field' => 'type',
   );
@@ -62,12 +62,6 @@ function crm_core_activity_entity_property_info() {
     'setter callback' => 'entity_property_verbatim_set',
     'setter permission' => 'Administer site configuration',
     'schema field' => 'changed',
-  );
-  $properties['activity_type_id'] = array(
-    'label' => t('Activity type ID'),
-    'description' => t('The activity type ID referenced by this activity.'),
-    'type' => 'integer',
-    'schema field' => 'activity_type_id',
   );
 
   if (module_exists('uuid')) {

@@ -81,13 +81,6 @@ function crm_core_activity_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'activity_type_id' => array(
-        'description' => 'The current {crm_core_activity_type}.id of this activity.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
       'title' => array(
         'description' => 'The title of the activity.',
         'type' => 'varchar',
@@ -115,7 +108,7 @@ function crm_core_activity_schema() {
     'foreign keys' => array(
       'activity_type' => array(
         'table' => 'crm_core_activity_type',
-        'columns' => array('activity_type_id' => 'id'),
+        'columns' => array('type' => 'type'),
       ),
       'activity_revision' => array(
         'table' => 'crm_core_activity_revision',
@@ -394,4 +387,11 @@ function crm_core_activity_update_7004() {
     }
     uuid_sync_all();
   }
+}
+
+/**
+ * Drop 'activity_type_id' field.
+ */
+function crm_core_activity_update_7005() {
+  db_drop_field('crm_core_activity', 'activity_type_id');
 }

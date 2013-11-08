@@ -114,7 +114,7 @@ class CRMFeedsActivityProcessor extends FeedsProcessor {
    * Override parent::configDefaults().
    */
   public function configDefaults() {
-    $types = crm_core_activity_type_get_name();
+    $types = crm_core_activity_type_get_names();
     $type = key($types);
     return array(
       'activity_type' => $type,
@@ -127,8 +127,7 @@ class CRMFeedsActivityProcessor extends FeedsProcessor {
    * Override parent::configForm().
    */
   public function configForm(&$form_state) {
-    $types = crm_core_activity_type_get_name();
-    array_walk($types, 'check_plain');
+    $types = crm_core_activity_type_get_names();
     $form = parent::configForm($form_state);
     $form['activity_type'] = array(
       '#type' => 'select',
