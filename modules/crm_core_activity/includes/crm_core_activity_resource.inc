@@ -19,16 +19,17 @@
  * @see crm_core_activity_access()
  */
 function _crm_core_activity_resource_access($op, $arg = NULL) {
-  return TRUE;
   if (is_array($arg[0])) {
     $activity_data = array_shift($arg);
+
     return crm_core_activity_access($op, $activity_data['type']);
   }
-  elseif(is_numeric($arg[0])) {
+  elseif (is_numeric($arg[0])) {
     $crm_core_activity = crm_core_activity_load($arg[0]);
+
     return crm_core_activity_access($op, $crm_core_activity);
   }
-  elseif(!isset($arg)) {
+  elseif (!isset($arg)) {
     return (user_access('administer crm_core_activity entities') || user_access('view any crm_core_activity entity'));
   }
 

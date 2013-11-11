@@ -10,18 +10,30 @@
  *
  * @param string $op
  *   Operation, access for which should be checked.
- * @param int $contact_id
- *   Contact ID.
+ * @param mixed $arg
+ *   Contact ID or contact data array, in case $op is 'create'.
  *
  * @return bool
  *   Boolean.
  *
  * @see crm_core_contact_access()
  */
-function _crm_core_contact_resource_access($op, $contact_id) {
-  $crm_core_contact = crm_core_contact_load($contact_id);
+function _crm_core_contact_resource_access($op, $arg) {
+  if (is_array($arg[0])) {
+    $contact_data = array_shift($arg);
 
-  return crm_core_contact_access($op, $crm_core_contact);
+    return crm_core_contact_access($op, $contact_data['type']);
+  }
+  elseif (is_numeric($arg[0])) {
+    $crm_core_contact = crm_core_contact_load($arg[0]);
+
+    return crm_core_contact_access($op, $crm_core_contact);
+  }
+  elseif (!isset($arg)) {
+    return (user_access('administer crm_core_contact entities') || user_access('view any crm_core_contact entity'));
+  }
+
+  return FALSE;
 }
 
 /**
