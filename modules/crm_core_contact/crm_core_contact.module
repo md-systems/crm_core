@@ -1800,3 +1800,31 @@ function crm_core_contact_services_resources() {
 
   return $resources;
 }
+
+/**
+ * Helper to check uuid fields existence.
+ */
+function _crm_core_contact_check_uuid() {
+  $schema_changed = FALSE;
+  $field = uuid_schema_field_definition();
+  if (!db_field_exists('crm_core_contact', 'uuid')) {
+    db_add_field('crm_core_contact', 'uuid', $field);
+    db_add_index('crm_core_contact', 'uuid', array('uuid'));
+    $schema_changed = TRUE;
+  }
+  if (!db_field_exists('crm_core_contact_revision', 'vuuid')) {
+    db_add_field('crm_core_contact_revision', 'vuuid', $field);
+    db_add_index('crm_core_contact_revision', 'vuuid', array('vuuid'));
+    $schema_changed = TRUE;
+  }
+  if ($schema_changed) {
+    drupal_get_schema(NULL, TRUE);
+  }
+}
+
+/**
+ * Implements hook_uuid_sync().
+ */
+function crm_core_contact_uuid_sync() {
+  _crm_core_contact_check_uuid();
+}

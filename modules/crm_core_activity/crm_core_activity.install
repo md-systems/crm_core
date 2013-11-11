@@ -375,23 +375,8 @@ function crm_core_activity_update_7003() {
  */
 function crm_core_activity_update_7004() {
   if (module_exists('uuid')) {
-    $field = uuid_schema_field_definition();
-
-    if (!db_field_exists('crm_core_activity', 'uuid')) {
-      db_add_field('crm_core_activity', 'uuid', $field);
-      db_add_index('crm_core_activity', 'uuid', array('uuid'));
-    }
-    if (!db_field_exists('crm_core_activity_revision', 'vuuid')) {
-      db_add_field('crm_core_activity_revision', 'vuuid', $field);
-      db_add_index('crm_core_activity_revision', 'vuuid', array('vuuid'));
-    }
+    _crm_core_activity_check_uuid();
     uuid_sync_all();
   }
-}
-
-/**
- * Drop 'activity_type_id' field.
- */
-function crm_core_activity_update_7005() {
   db_drop_field('crm_core_activity', 'activity_type_id');
 }
