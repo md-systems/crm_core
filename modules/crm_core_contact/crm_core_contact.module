@@ -1828,3 +1828,25 @@ function _crm_core_contact_check_uuid() {
 function crm_core_contact_uuid_sync() {
   _crm_core_contact_check_uuid();
 }
+
+/**
+ * Implements hook_entity_dependencies().
+ *
+ * Adding contact activities as dependencies.
+ */
+function crm_core_contact_entity_dependencies($entity, $entity_type) {
+  $dependencies = array();
+  if ($entity_type == 'crm_core_contact') {
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'crm_core_activity');
+    $query->fieldCondition('field_activity_participants', 'target_id', $entity->contact_id);
+    $result = $query->execute();
+    if (!empty($result['crm_core_activity'])) {
+      foreach (array_keys($result['crm_core_activity']) as $activity_id) {
+        $dependencies[] = array('type' => 'crm_core_activity', 'id' => $activity_id);
+      }
+    }
+  }
+
+  return $dependencies;
+}
