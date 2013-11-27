@@ -1832,18 +1832,33 @@ function crm_core_contact_uuid_sync() {
 /**
  * Implements hook_entity_dependencies().
  *
- * Adding contact activities as dependencies.
+ * Adding contact activities and relationships as dependencies.
  */
 function crm_core_contact_entity_dependencies($entity, $entity_type) {
   $dependencies = array();
   if ($entity_type == 'crm_core_contact') {
-    $query = new EntityFieldQuery();
-    $query->entityCondition('entity_type', 'crm_core_activity');
-    $query->fieldCondition('field_activity_participants', 'target_id', $entity->contact_id);
-    $result = $query->execute();
-    if (!empty($result['crm_core_activity'])) {
-      foreach (array_keys($result['crm_core_activity']) as $activity_id) {
-        $dependencies[] = array('type' => 'crm_core_activity', 'id' => $activity_id);
+    // Lets check activities.
+    if (module_exists('crm_core_activity')) {
+      $query = new EntityFieldQuery();
+      $query->entityCondition('entity_type', 'crm_core_activity');
+      $query->fieldCondition('field_activity_participants', 'target_id', $entity->contact_id);
+      $result = $query->execute();
+      if (!empty($result['crm_core_activity'])) {
+        foreach (array_keys($result['crm_core_activity']) as $activity_id) {
+          $dependencies[] = array('type' => 'crm_core_activity', 'id' => $activity_id);
+        }
+      }
+    }
+    // Lets check relations.
+    if (module_exists('relation')) {
+      $query = new EntityFieldQuery();
+      $query->entityCondition('entity_type', 'relation');
+      $query->fieldCondition('endpoints', 'entity_id', $entity->contact_id);
+      $result = $query->execute();
+      if (!empty($result['relation'])) {
+        foreach (array_keys($result['relation']) as $rid) {
+          $dependencies[] = array('type' => 'relation', 'id' => $rid);
+        }
       }
     }
   }
