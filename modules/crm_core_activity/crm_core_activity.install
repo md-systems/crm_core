@@ -40,10 +40,10 @@ function crm_core_activity_enable() {
  * Implements hook_uninstall().
  */
 function crm_core_activity_uninstall() {
-  // @todo These are the default fields only. What if there are more?
-  module_load_include('inc', 'crm_core_activity', 'crm_core_activity.fields');
-  foreach (_crm_core_activity_type_default_fields() as $field) {
-    field_delete_field($field['field_name']);
+  $additional_params = array('include_inactive' => TRUE);
+  $instances = field_read_instances(array('entity_type' => 'crm_core_activity'), $additional_params);
+  foreach ($instances as $instance) {
+    field_delete_instance($instance);
   }
 }
 
