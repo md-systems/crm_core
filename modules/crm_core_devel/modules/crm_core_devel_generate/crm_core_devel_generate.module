@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @info
+ */
+
+
+/**
+ * Implements hook_menu()
+ */
+function crm_core_devel_generate_menu() {
+  $items['admin/structure/crm/devel/generate/settings'] = array(
+    'title' => 'Generate settings',
+    'description' =>  'Helper functions, pages, and blocks to assist Drupal developers.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_core_devel_generate_admin_settings'),
+    'file' => 'crm_core_devel_generate.admin.inc',
+    'access arguments' => array('administer site configuration'),
+  );
+  $items['admin/structure/crm/devel/generate/entities'] = array(
+    'title' => 'Generate CRM Core data',
+    'description' =>  'Functions which provide content generation.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('crm_core_devel_generate_content_form'),
+    'file' => 'includes/crm_core_devel_generate.entity.inc',
+    'access arguments' => array('administer site configuration'),
+  );
+  return $items;
+}

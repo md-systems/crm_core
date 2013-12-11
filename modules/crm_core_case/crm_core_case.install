@@ -1,0 +1,136 @@
+<?php
+
+
+/**
+ * Implements hook_install()
+ */
+function crm_core_case_install() {
+  // Create location taxonomy vocabulary.
+  $vocabulary = (object)array(
+    'name' => 'Site Location',
+    'machine_name' => 'site_location',
+    'description' => '',
+    'hierarchy' => '0',
+    'module' => 'crm_core_case',
+    'weight' => '0',
+  );
+  taxonomy_vocabulary_save($vocabulary);
+
+  // create a default meeting case type
+//  $meeting = crm_core_case_type_new();
+//  $meeting->type = 'meeting';
+//  $meeting->label = t('Meeting');
+//  $meeting->description = t('A meeting between 2 or more contacts');
+//  $meeting->is_new = TRUE;
+//  crm_core_case_type_save($meeting);
+
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function crm_core_case_uninstall() {
+  module_load_include('inc', 'crm_core_case', 'crm_core_case.fields');
+  foreach (_crm_core_case_type_default_fields() as $field) {
+    field_delete_field($field['field_name']);
+  }
+}
+
+/**
+ * Implements hook_schema().
+ */
+function crm_core_case_schema() {
+  $schema = array();
+
+  $schema['crm_core_case'] = array(
+    'description' => 'The base table for activities.',
+    'fields' => array(
+      'cid' => array(
+        'description' => 'The primary identifier for the Case.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'type' => array(
+        'description' => 'The type (bundle) of this Case.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'title' => array(
+        'description' => 'The title of the case.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'uid' => array(
+        'description' => 'ID of Drupal user creator.',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+      'created' => array(
+        'description' => 'The Unix timestamp when the case was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'changed' => array(
+        'description' => 'The Unix timestamp when the case was most recently saved.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'description' => array(
+        'description' => 'Case description.',
+        'type' => 'text',
+      ),
+      'status' => array(
+        'description' => 'Case status.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('cid'),
+  );
+
+  $schema['crm_core_case_type'] = array(
+    'description' => 'Stores information about all defined case types.',
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique case type ID.',
+      ),
+      'type' => array(
+        'description' => 'The machine-readable name of this type.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+      ),
+      'label' => array(
+        'description' => 'The human-readable name of this type.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'description' => array(
+        'description' => 'A brief description of this type.',
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'medium',
+        'translatable' => TRUE,
+      ),
+    ) + entity_exportable_schema_fields(),
+    'primary key' => array('id'),
+    'unique keys' => array(
+      'type' => array('type'),
+    ),
+  );
+
+  return $schema;
+}
