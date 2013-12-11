@@ -9,7 +9,7 @@
  * Implements hook_views_data_alter().
  */
 function crm_core_activity_views_data_alter(&$data) {
-  $data['crm_core_activity']['table']['group'] = $data['crm_core_activity_type']['table']['group'] = t('CRM Activity');
+  $data['crm_core_activity']['table']['group'] = t('CRM Core Activity');
   $data['crm_core_activity_type']['type']['field']['handler'] = 'views_handler_field_activity_type';
   $data['crm_core_activity']['type']['filter']['handler'] = 'views_handler_filter_activity_type';
 
@@ -57,9 +57,18 @@ function crm_core_activity_views_data_alter(&$data) {
     'type' => 'INNER',
   );
 
-  // Implicit join for activity_type.
-  $data['crm_core_activity_type']['table']['join']['crm_core_activity'] = array(
-    'left_field' => 'activity_type_id',
-    'field' => 'id',
+  $data['crm_core_activity_type']['table']['join'] = array(
+    'crm_core_activity' => array(
+      'left_field' => 'type',
+      'field' => 'type',
+    ),
+  );
+
+  $data['crm_core_activity_type']['activity_string'] = array(
+    'field' => array(
+      'title' => t('Activity string'),
+      'help' => t('Text describing the relationship between the contact and this activity.'),
+      'handler' => 'views_handler_field',
+    ),
   );
 }

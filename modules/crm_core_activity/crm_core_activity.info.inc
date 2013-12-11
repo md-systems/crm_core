@@ -26,7 +26,7 @@ function crm_core_activity_entity_property_info() {
     'type' => 'token',
     'setter callback' => 'entity_property_verbatim_set',
     'setter permission' => 'administer site configuration',
-    'options list' => 'crm_core_activity_type_get_name',
+    'options list' => 'crm_core_activity_type_get_names',
     'required' => TRUE,
     'schema field' => 'type',
   );
@@ -63,12 +63,22 @@ function crm_core_activity_entity_property_info() {
     'setter permission' => 'Administer site configuration',
     'schema field' => 'changed',
   );
-  $properties['activity_type_id'] = array(
-    'label' => t('Activity type ID'),
-    'description' => t('The activity type ID referenced by this activity.'),
-    'type' => 'integer',
-    'schema field' => 'activity_type_id',
-  );
+
+  if (module_exists('uuid')) {
+    $properties['uuid'] = array(
+      'label' => t('UUID'),
+      'type' => 'text',
+      'description' => t('The universally unique ID.'),
+      'schema field' => 'uuid',
+    );
+
+    $properties['vuuid'] = array(
+      'label' => t('Revision UUID'),
+      'type' => 'text',
+      'description' => t("The revision's universally unique ID."),
+      'schema field' => 'vuuid',
+    );
+  }
 
   // Metadata of Activity Type.
   $properties = &$info['crm_core_activity_type']['properties'];

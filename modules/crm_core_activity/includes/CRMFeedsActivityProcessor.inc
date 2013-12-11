@@ -29,14 +29,14 @@ class CRMFeedsActivityProcessor extends FeedsProcessor {
    * Creates a new activity in memory and returns it.
    */
   protected function newEntity(FeedsSource $source) {
-    $activity = new stdClass();
-    $activity->type = $this->config['activity_type'];
-    $activity->changed = REQUEST_TIME;
-    $activity->created = REQUEST_TIME;
-    $activity->language = LANGUAGE_NONE;
-    $activity->log = t('Imported by feeds.');
-    $activity->uid = $this->config['author'];
-    return $activity;
+
+    $values = array(
+      'type' => $this->config['activity_type'],
+      'log' => t('Imported by feeds.'),
+      'uid' => $this->config['author'],
+    );
+
+    return entity_create('crm_core_activity', $values);
   }
 
   /**
@@ -72,7 +72,7 @@ class CRMFeedsActivityProcessor extends FeedsProcessor {
   }
 
   /**
-   * Delete a series of activitys.
+   * Delete a series of activities.
    */
   protected function entityDeleteMultiple($activity_ids) {
     crm_core_activity_delete_multiple($activity_ids);
@@ -114,7 +114,7 @@ class CRMFeedsActivityProcessor extends FeedsProcessor {
    * Override parent::configDefaults().
    */
   public function configDefaults() {
-    $types = crm_core_activity_type_get_name();
+    $types = crm_core_activity_type_get_names();
     $type = key($types);
     return array(
       'activity_type' => $type,
@@ -127,8 +127,7 @@ class CRMFeedsActivityProcessor extends FeedsProcessor {
    * Override parent::configForm().
    */
   public function configForm(&$form_state) {
-    $types = crm_core_activity_type_get_name();
-    array_walk($types, 'check_plain');
+    $types = crm_core_activity_type_get_names();
     $form = parent::configForm($form_state);
     $form['activity_type'] = array(
       '#type' => 'select',
@@ -143,7 +142,7 @@ class CRMFeedsActivityProcessor extends FeedsProcessor {
       '#title' => t('Author'),
       '#description' => t('Select the author of the activities to be created - leave empty to assign "anonymous".'),
       '#autocomplete_path' => 'user/autocomplete',
-      '#default_value' => empty($author->name) ?  'anonymous' : check_plain($author->name),
+      '#default_value' => empty($author->name) ? 'anonymous' : check_plain($author->name),
     );
     $period = drupal_map_assoc(array(FEEDS_EXPIRE_NEVER, 3600, 10800, 21600,
       43200, 86400, 259200, 604800, 2592000, 2592000 * 3, 2592000 * 6, 31536000),
@@ -186,7 +185,7 @@ class CRMFeedsActivityProcessor extends FeedsProcessor {
   }
 
   /**
-   * Override setTargetElement to operate on a target item that is a activity.
+   * Override setTargetElement to operate on a target item that is an activity.
    */
   public function setTargetElement(FeedsSource $source, $target_activity, $target_element, $value) {
     switch ($target_element) {

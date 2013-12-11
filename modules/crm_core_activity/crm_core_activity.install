@@ -40,10 +40,10 @@ function crm_core_activity_enable() {
  * Implements hook_uninstall().
  */
 function crm_core_activity_uninstall() {
-  // @todo These are the default fields only. What if there are more?
-  module_load_include('inc', 'crm_core_activity', 'crm_core_activity.fields');
-  foreach (_crm_core_activity_type_default_fields() as $field) {
-    field_delete_field($field['field_name']);
+  $additional_params = array('include_inactive' => TRUE);
+  $instances = field_read_instances(array('entity_type' => 'crm_core_activity'), $additional_params);
+  foreach ($instances as $instance) {
+    field_delete_instance($instance);
   }
 }
 
@@ -81,13 +81,6 @@ function crm_core_activity_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'activity_type_id' => array(
-        'description' => 'The current {crm_core_activity_type}.id of this activity.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
       'title' => array(
         'description' => 'The title of the activity.',
         'type' => 'varchar',
@@ -115,7 +108,7 @@ function crm_core_activity_schema() {
     'foreign keys' => array(
       'activity_type' => array(
         'table' => 'crm_core_activity_type',
-        'columns' => array('activity_type_id' => 'id'),
+        'columns' => array('type' => 'type'),
       ),
       'activity_revision' => array(
         'table' => 'crm_core_activity_revision',
@@ -206,12 +199,28 @@ function crm_core_activity_schema() {
         'size' => 'medium',
         'translatable' => TRUE,
       ),
+      'activity_string' => array(
+        'description' => 'Text describing the relationship between the contact and this activity.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'translatable' => TRUE,
+      ),
     ) + entity_exportable_schema_fields(),
     'primary key' => array('id'),
     'unique keys' => array(
       'type' => array('type'),
     ),
   );
+
+  if (module_exists('uuid')) {
+    $field = uuid_schema_field_definition();
+    $schema['crm_core_activity']['fields']['uuid'] = $field;
+    $schema['crm_core_activity']['indexes']['uuid'] = array('uuid');
+    $schema['crm_core_activity_revision']['fields']['vuuid'] = $field;
+    $schema['crm_core_activity_revision']['indexes']['vuuid'] = array('vuuid');
+  }
 
   return $schema;
 }
@@ -367,4 +376,28 @@ function crm_core_activity_update_7003() {
       ))
       ->execute();
   }
+}
+
+/**
+ * UUID integration.
+ */
+function crm_core_activity_update_7004() {
+  if (module_exists('uuid')) {
+    _crm_core_activity_check_uuid();
+    uuid_sync_all();
+  }
+  db_drop_field('crm_core_activity', 'activity_type_id');
+}
+
+/**
+ * Adding 'activity string' as property of activity type.
+ */
+function crm_core_activity_update_7005() {
+  db_add_field('crm_core_activity_type', 'activity_string', array(
+    'description' => 'Text describing the relationship between the contact and this activity.',
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => TRUE,
+    'default' => '',
+  ));
 }

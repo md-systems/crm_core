@@ -68,6 +68,12 @@ function crm_core_contact_entity_info() {
     'access callback' => 'crm_core_contact_type_access',
   );
 
+  if (module_exists('uuid')) {
+    $return['crm_core_contact']['uuid'] = TRUE;
+    $return['crm_core_contact']['entity keys']['uuid'] = 'uuid';
+    $return['crm_core_contact']['entity keys']['revision uuid'] = 'vuuid';
+  }
+
   return $return;
 }
 
@@ -89,6 +95,127 @@ function crm_core_contact_entity_info_alter(&$entity_info) {
       ),
     );
   }
+}
+
+/**
+ * Implements hook_entity_property_info().
+ *
+ * Add entity metadata properties for contact primary fields and UUID
+ * integration, if UUID is enabled.
+ *
+ * @see entity_metadata_entity_property_info()
+ */
+function crm_core_contact_entity_property_info() {
+  $info['crm_core_contact']['properties']['primary_email'] = array(
+    'label' => t('Primary email'),
+    'type' => 'text',
+    'description' => t('Get primary e-mail of CRM Core Contact.'),
+    'getter callback' => 'crm_core_contact_get_primary_email_field_value',
+    'computed' => TRUE,
+  );
+
+  $info['crm_core_contact']['properties']['primary_address'] = array(
+    'label' => t('Primary address'),
+    'type' => 'struct',
+    'description' => t('Get primary address of CRM Core Contact.'),
+    'getter callback' => 'crm_core_contact_get_primary_address_field_value',
+    'computed' => TRUE,
+  );
+
+  $info['crm_core_contact']['properties']['primary_phone'] = array(
+    'label' => t('Primary phone'),
+    'type' => 'struct',
+    'description' => t('Get primary phone of CRM Core Contact.'),
+    'getter callback' => 'crm_core_contact_get_primary_phone_field_value',
+    'computed' => TRUE,
+  );
+
+  if (module_exists('uuid')) {
+    $info['crm_core_contact']['properties']['uuid'] = array(
+      'label' => t('UUID'),
+      'type' => 'text',
+      'description' => t('The universally unique ID.'),
+      'schema field' => 'uuid',
+    );
+
+    $info['crm_core_contact']['properties']['vuuid'] = array(
+      'label' => t('Revision UUID'),
+      'type' => 'text',
+      'description' => t("The revision's universally unique ID."),
+      'schema field' => 'vuuid',
+    );
+  }
+
+  return $info;
+}
+
+/**
+ * Get CRM Core Contact primary field name.
+ */
+function crm_core_contact_get_primary_field_name(CRMCoreContactEntity $contact, $primary_field) {
+  $contact_type = crm_core_contact_type_load($contact->type);
+
+  return empty($contact_type->primary_fields[$primary_field]) ? '' : $contact_type->primary_fields[$primary_field];
+}
+
+/**
+ * Get CRM Core Contact primary field value.
+ *
+ * @param CRMCoreContactEntity $contact
+ *   CRM Core Contact.
+ * @param string $primary_field
+ *   Primary field name.
+ *
+ * @return string
+ *   Value of specified primary field or empty string.
+ */
+function crm_core_contact_get_primary_field_value(CRMCoreContactEntity $contact, $primary_field) {
+  $field = crm_core_contact_get_primary_field_name($contact, $primary_field);
+  $field_value = '';
+  if (empty($field)) {
+
+    // TODO: use watchdog instead.
+    // Check that user has access to configure crm_core_contact.
+    if (user_access('administer contact types')) {
+      // Alert privileged users that requested primary field didn't configured.
+      $path = 'admin/structure/crm-core/contact-types/manage/' . $contact->type;
+      $message = "Some module requested value of primary field %field of"
+        . " contact of %contact_type type, but this primary field is not"
+        . " configured for this contact type. You can configure it !here.";
+      drupal_set_message(t($message, array(
+        '%contact_type' => $contact->type,
+        '%field' => $primary_field,
+        '!here' => l(t('here'), $path),
+      )), 'warning');
+    }
+  }
+  else {
+    $contact_wrapper = entity_metadata_wrapper('crm_core_contact', $contact);
+    $field_value = $contact_wrapper->{$field}->value();
+  }
+
+  return $field_value;
+}
+
+/**
+ * Returns primary email.
+ */
+function crm_core_contact_get_primary_email_field_value($contact) {
+  return crm_core_contact_get_primary_field_value($contact, 'email');
+}
+
+/**
+ * Returns primary address.
+ */
+function crm_core_contact_get_primary_address_field_value($contact) {
+  return crm_core_contact_get_primary_field_value($contact, 'address');
+}
+
+/**
+ * Returns primary phone.
+ */
+function crm_core_contact_get_primary_phone_field_value($contact) {
+  return crm_core_contact_get_primary_field_value($contact, 'phone');
 }
 
 /**
@@ -916,108 +1043,6 @@ function crm_core_contact_ctools_plugin_directory($owner, $plugin_type) {
 }
 
 /**
- * Add entity metadata properties for contact primary fields.
- *
- * Implements hook_entity_property_info_alter() on top of book module.
- *
- * @see entity_metadata_entity_property_info_alter()
- */
-function crm_core_contact_entity_property_info_alter(&$info) {
-  $info['crm_core_contact']['properties']['primary_email'] = array(
-    'label' => t('Primary email'),
-    'type' => 'text',
-    'description' => t('Get primary e-mail of CRM Core Contact.'),
-    'getter callback' => 'crm_core_contact_get_primary_email_field_value',
-    'computed' => TRUE,
-  );
-
-  $info['crm_core_contact']['properties']['primary_address'] = array(
-    'label' => t('Primary address'),
-    'type' => 'struct',
-    'description' => t('Get primary address of CRM Core Contact.'),
-    'getter callback' => 'crm_core_contact_get_primary_address_field_value',
-    'computed' => TRUE,
-  );
-
-  $info['crm_core_contact']['properties']['primary_phone'] = array(
-    'label' => t('Primary phone'),
-    'type' => 'struct',
-    'description' => t('Get primary phone of CRM Core Contact.'),
-    'getter callback' => 'crm_core_contact_get_primary_phone_field_value',
-    'computed' => TRUE,
-  );
-}
-
-/**
- * Get CRM Core Contact primary field name.
- */
-function crm_core_contact_get_primary_field_name(CRMCoreContactEntity $contact, $primary_field) {
-  $contact_type = crm_core_contact_type_load($contact->type);
-
-  return empty($contact_type->primary_fields[$primary_field]) ? '' : $contact_type->primary_fields[$primary_field];
-}
-
-/**
- * Get CRM Core Contact primary field value.
- *
- * @param CRMCoreContactEntity $contact
- *   CRM Core Contact.
- * @param string $primary_field
- *   Primary field name.
- *
- * @return string
- *   Value of specified primary field or empty string.
- */
-function crm_core_contact_get_primary_field_value(CRMCoreContactEntity $contact, $primary_field) {
-  $field = crm_core_contact_get_primary_field_name($contact, $primary_field);
-  $field_value = '';
-  if (empty($field)) {
-
-    // TODO: use watchdog instead.
-    // Check that user has access to configure crm_core_contact.
-    if (user_access('administer contact types')) {
-      // Alert privileged users that requested primary field didn't configured.
-      $path = 'admin/structure/crm-core/contact-types/manage/' . $contact->type;
-      $message = "Some module requested value of primary field %field of"
-        . " contact of %contact_type type, but this primary field is not"
-        . " configured for this contact type. You can configure it !here.";
-      drupal_set_message(t($message, array(
-        '%contact_type' => $contact->type,
-        '%field' => $primary_field,
-        '!here' => l(t('here'), $path),
-      )), 'warning');
-    }
-  }
-  else {
-    $contact_wrapper = entity_metadata_wrapper('crm_core_contact', $contact);
-    $field_value = $contact_wrapper->{$field}->value();
-  }
-
-  return $field_value;
-}
-
-/**
- * Returns primary email.
- */
-function crm_core_contact_get_primary_email_field_value($contact) {
-  return crm_core_contact_get_primary_field_value($contact, 'email');
-}
-
-/**
- * Returns primary address.
- */
-function crm_core_contact_get_primary_address_field_value($contact) {
-  return crm_core_contact_get_primary_field_value($contact, 'address');
-}
-
-/**
- * Returns primary phone.
- */
-function crm_core_contact_get_primary_phone_field_value($contact) {
-  return crm_core_contact_get_primary_field_value($contact, 'phone');
-}
-
-/**
  * Implements hook_form_FORM_ID_alter().
  */
 function crm_core_contact_form_field_ui_field_delete_form_alter(&$form, &$form_state, $form_id) {
@@ -1643,4 +1668,200 @@ function crm_core_contact_send_email_action($contact, $context) {
 function crm_core_contact_mail($key, &$message, $params) {
   $message['subject'] = $params['subject'];
   $message['body'][] = $params['message'];
+}
+
+/**
+ * Implements hook_services_resources().
+ */
+function crm_core_contact_services_resources() {
+  // @todo Check access to resources.
+  $resources = array(
+    '#api_version' => 3002,
+    'crm_core_contact' => array(
+      'operations' => array(
+        'retrieve' => array(
+          'file' => array(
+            'type' => 'inc',
+            'module' => 'crm_core_contact',
+            'name' => 'includes/crm_core_contact_resource',
+          ),
+          'callback' => 'crm_core_contact_load',
+          'args' => array(
+            array(
+              'name' => 'contact_id',
+              'optional' => FALSE,
+              'source' => array('path' => 0),
+              'type' => 'int',
+              'description' => t('The contact_id of the contact to get.'),
+            ),
+          ),
+          'access callback' => '_crm_core_contact_resource_access',
+          'access arguments' => array('view'),
+          'access arguments append' => TRUE,
+        ),
+        'create' => array(
+          'file' => array(
+            'type' => 'inc',
+            'module' => 'crm_core_contact',
+            'name' => 'includes/crm_core_contact_resource',
+          ),
+          'callback' => '_crm_core_contact_resource_create',
+          'args' => array(
+            array(
+              'name' => 'crm_core_contact',
+              'optional' => FALSE,
+              'source' => 'data',
+              'description' => t('The crm_core_contact data to create.'),
+              'type' => 'array',
+            ),
+          ),
+          'access callback' => '_crm_core_contact_resource_access',
+          'access arguments' => array('create'),
+          'access arguments append' => TRUE,
+        ),
+        'update' => array(
+          'file' => array(
+            'type' => 'inc',
+            'module' => 'crm_core_contact',
+            'name' => 'includes/crm_core_contact_resource',
+          ),
+          'callback' => '_crm_core_contact_resource_update',
+          'args' => array(
+            array(
+              'name' => 'contact_id',
+              'optional' => FALSE,
+              'source' => array('path' => 0),
+              'type' => 'int',
+              'description' => t('The contact_id of the contact to get.'),
+            ),
+            array(
+              'name' => 'crm_core_contact',
+              'optional' => FALSE,
+              'source' => 'data',
+              'description' => t('The crm_core_contact data to create.'),
+              'type' => 'array',
+            ),
+          ),
+          'access callback' => '_crm_core_contact_resource_access',
+          'access arguments' => array('update'),
+          'access arguments append' => TRUE,
+        ),
+        'delete' => array(
+          'file' => array(
+            'type' => 'inc',
+            'module' => 'crm_core_contact',
+            'name' => 'includes/crm_core_contact_resource',
+          ),
+          'callback' => 'crm_core_contact_delete',
+          'args' => array(
+            array(
+              'name' => 'contact_id',
+              'optional' => FALSE,
+              'source' => array('path' => 0),
+              'type' => 'int',
+              'description' => t('The contact_id of the contact to delete.'),
+            ),
+          ),
+          'access callback' => '_crm_core_contact_resource_access',
+          'access arguments' => array('delete'),
+          'access arguments append' => TRUE,
+        ),
+        'index' => array(
+          'file' => array(
+            'type' => 'inc',
+            'module' => 'crm_core_contact',
+            'name' => 'includes/crm_core_contact_resource',
+          ),
+          'callback' => '_crm_core_contact_resource_index',
+          'args' => array(
+            array(
+              'name' => 'page',
+              'optional' => TRUE,
+              'type' => 'int',
+              'description' => 'The zero-based index of the page to get, defaults to 0.',
+              'default value' => 0,
+              'source' => array('param' => 'page'),
+            ),
+            array(
+              'name' => 'pagesize',
+              'optional' => TRUE,
+              'type' => 'int',
+              'description' => 'Number of records to get per page, defaults to 25.',
+              'default value' => 25,
+              'source' => array('param' => 'pagesize'),
+            ),
+          ),
+          'access callback' => '_crm_core_contact_resource_access',
+          'access arguments' => array('view'),
+        ),
+      ),
+    ),
+  );
+
+  return $resources;
+}
+
+/**
+ * Helper to check uuid fields existence.
+ */
+function _crm_core_contact_check_uuid() {
+  $schema_changed = FALSE;
+  $field = uuid_schema_field_definition();
+  if (!db_field_exists('crm_core_contact', 'uuid')) {
+    db_add_field('crm_core_contact', 'uuid', $field);
+    db_add_index('crm_core_contact', 'uuid', array('uuid'));
+    $schema_changed = TRUE;
+  }
+  if (!db_field_exists('crm_core_contact_revision', 'vuuid')) {
+    db_add_field('crm_core_contact_revision', 'vuuid', $field);
+    db_add_index('crm_core_contact_revision', 'vuuid', array('vuuid'));
+    $schema_changed = TRUE;
+  }
+  if ($schema_changed) {
+    drupal_get_schema(NULL, TRUE);
+  }
+}
+
+/**
+ * Implements hook_uuid_sync().
+ */
+function crm_core_contact_uuid_sync() {
+  _crm_core_contact_check_uuid();
+}
+
+/**
+ * Implements hook_entity_dependencies().
+ *
+ * Adding contact activities and relationships as dependencies.
+ */
+function crm_core_contact_entity_dependencies($entity, $entity_type) {
+  $dependencies = array();
+  if ($entity_type == 'crm_core_contact') {
+    // Lets check activities.
+    if (module_exists('crm_core_activity')) {
+      $query = new EntityFieldQuery();
+      $query->entityCondition('entity_type', 'crm_core_activity');
+      $query->fieldCondition('field_activity_participants', 'target_id', $entity->contact_id);
+      $result = $query->execute();
+      if (!empty($result['crm_core_activity'])) {
+        foreach (array_keys($result['crm_core_activity']) as $activity_id) {
+          $dependencies[] = array('type' => 'crm_core_activity', 'id' => $activity_id);
+        }
+      }
+    }
+    // Lets check relations.
+    if (module_exists('relation')) {
+      $query = new EntityFieldQuery();
+      $query->entityCondition('entity_type', 'relation');
+      $query->fieldCondition('endpoints', 'entity_id', $entity->contact_id);
+      $result = $query->execute();
+      if (!empty($result['relation'])) {
+        foreach (array_keys($result['relation']) as $rid) {
+          $dependencies[] = array('type' => 'relation', 'id' => $rid);
+        }
+      }
+    }
+  }
+
+  return $dependencies;
 }

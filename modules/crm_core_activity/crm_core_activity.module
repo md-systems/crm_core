@@ -72,6 +72,12 @@ function crm_core_activity_entity_info() {
     'access callback' => 'crm_core_activity_type_access',
   );
 
+  if (module_exists('uuid')) {
+    $return['crm_core_activity']['uuid'] = TRUE;
+    $return['crm_core_activity']['entity keys']['uuid'] = 'uuid';
+    $return['crm_core_activity']['entity keys']['revision uuid'] = 'vuuid';
+  }
+
   return $return;
 }
 
@@ -223,6 +229,8 @@ function crm_core_activity_save($activity) {
 /**
  * Delete single activity.
  *
+ * @todo This function should accept activity_id, but activity object.
+ *
  * @param object $activity
  *   Entity object of crm_core_activity type.
  */
@@ -281,32 +289,41 @@ function crm_core_activity_types($type_name = NULL) {
 }
 
 /**
- * Returns the human-readable name of an activity type.
- *
- * @param string|null $type_name
- *   (Optional) The machine name for an activity type.
- *   Leave NULL to return all activity types.
+ * Returns the human-readable names of an activity types.
  *
  * @return array
- *   An array of human readable names for the activity type.
+ *   An array as used by hook_options_list().
  */
-function crm_core_activity_type_get_name($type_name = NULL) {
-  $types = crm_core_activity_types();
-
-  $names = array();
-  foreach ($types as $type) {
-    $names[$type->type] = $type->label;
-  }
-
-  if (!empty($type_name)) {
-    if (isset($names[$type_name])) {
-      return $names[$type_name];
-    }
-    else {
-      return FALSE;
+function crm_core_activity_type_get_names() {
+  $names =& drupal_static(__FUNCTION__, array());
+  if (empty($names)) {
+    $types = crm_core_activity_types();
+    foreach ($types as $type) {
+      $names[$type->type] = check_plain($type->label);
     }
   }
+
   return $names;
+}
+
+
+/**
+ * Returns the human-readable name of an activity type.
+ *
+ * @param string $type_name
+ *   The machine name for an activity type.
+ *
+ * @return string
+ *   A human readable name for the activity type or FALSE.
+ */
+function crm_core_activity_type_get_name($type_name) {
+  $names = crm_core_activity_type_get_names();
+  if (isset($names[$type_name])) {
+    return $names[$type_name];
+  }
+  else {
+    return FALSE;
+  }
 }
 
 /**
@@ -487,7 +504,7 @@ function crm_core_activity_search_execute($keys = NULL, $conditions = NULL) {
     $uri = entity_uri('crm_core_activity', $activity);
     $results[] = array(
       'link' => url($uri['path'], array_merge($uri['options'], array('absolute' => TRUE))),
-      'type' => check_plain(crm_core_activity_type_get_name($activity->type)),
+      'type' => crm_core_activity_type_get_name($activity->type),
       'title' => check_plain($activity->title),
       'user' => theme('username', array('account' => user_load($activity->uid))),
       'date' => $activity->changed,
@@ -592,4 +609,162 @@ function crm_core_activity_preprocess_activity(&$variables) {
   $entity = $variables['activity'];
   $variables['theme_hook_suggestions'][] = 'activity__' . $entity->type;
   $variables['theme_hook_suggestions'][] = 'activity__' . $entity->activity_id;
+}
+
+
+/**
+ * Implements hook_services_resources().
+ */
+function crm_core_activity_services_resources() {
+  // @todo Check access to resources.
+  $resources = array(
+    '#api_version' => 3002,
+    'crm_core_activity' => array(
+      'operations' => array(
+        'retrieve' => array(
+          'file' => array(
+            'type' => 'inc',
+            'module' => 'crm_core_activity',
+            'name' => 'includes/crm_core_activity_resource',
+          ),
+          'callback' => 'crm_core_activity_load',
+          'args' => array(
+            array(
+              'name' => 'activity_id',
+              'optional' => FALSE,
+              'source' => array('path' => 0),
+              'type' => 'int',
+              'description' => t('The activity_id of the contact to get.'),
+            ),
+          ),
+          'access callback' => '_crm_core_activity_resource_access',
+          'access arguments' => array('view'),
+          'access arguments append' => TRUE,
+        ),
+        'create' => array(
+          'file' => array(
+            'type' => 'inc',
+            'module' => 'crm_core_activity',
+            'name' => 'includes/crm_core_activity_resource',
+          ),
+          'callback' => '_crm_core_activity_resource_create',
+          'args' => array(
+            array(
+              'name' => 'crm_core_activity',
+              'optional' => FALSE,
+              'source' => 'data',
+              'description' => t('The crm_core_activity data to create.'),
+              'type' => 'array',
+            ),
+          ),
+          'access callback' => '_crm_core_activity_resource_access',
+          'access arguments' => array('create'),
+          'access arguments append' => TRUE,
+        ),
+        'update' => array(
+          'file' => array(
+            'type' => 'inc',
+            'module' => 'crm_core_activity',
+            'name' => 'includes/crm_core_activity_resource',
+          ),
+          'callback' => '_node_resource_update',
+          'args' => array(
+            array(
+              'name' => 'activity_id',
+              'optional' => FALSE,
+              'source' => array('path' => 0),
+              'type' => 'int',
+              'description' => t('The activity_id of the contact to get.'),
+            ),
+            array(
+              'name' => 'crm_core_activity',
+              'optional' => FALSE,
+              'source' => 'data',
+              'description' => t('The crm_core_activity data to create.'),
+              'type' => 'array',
+            ),
+          ),
+          'access callback' => '_crm_core_activity_resource_access',
+          'access arguments' => array('update'),
+          'access arguments append' => TRUE,
+        ),
+        'delete' => array(
+          'file' => array(
+            'type' => 'inc',
+            'module' => 'crm_core_activity',
+            'name' => 'includes/crm_core_activity_resource',
+          ),
+          'callback' => '_crm_core_activity_resource_delete',
+          'args' => array(
+            array(
+              'name' => 'activity_id',
+              'optional' => FALSE,
+              'source' => array('path' => 0),
+              'type' => 'int',
+              'description' => t('The activity_id of the contact to delete.'),
+            ),
+          ),
+          'access callback' => '_crm_core_activity_resource_access',
+          'access arguments' => array('delete'),
+          'access arguments append' => TRUE,
+        ),
+        'index' => array(
+          'file' => array(
+            'type' => 'inc',
+            'module' => 'crm_core_activity',
+            'name' => 'includes/crm_core_activity_resource',
+          ),
+          'callback' => '_crm_core_activity_resource_index',
+          'args' => array(
+            array(
+              'name' => 'page',
+              'optional' => TRUE,
+              'type' => 'int',
+              'description' => 'The zero-based index of the page to get, defaults to 0.',
+              'default value' => 0,
+              'source' => array('param' => 'page'),
+            ),
+            array(
+              'name' => 'pagesize',
+              'optional' => TRUE,
+              'type' => 'int',
+              'description' => 'Number of records to get per page, defaults to 25.',
+              'default value' => 25,
+              'source' => array('param' => 'pagesize'),
+            ),
+          ),
+          'access callback' => '_crm_core_activity_resource_access',
+          'access arguments' => array('view'),
+        ),
+      ),
+    ),
+  );
+
+  return $resources;
+}
+
+/**
+ * Helper to check uuid fields existence.
+ */
+function _crm_core_activity_check_uuid() {
+  $schema_changed = FALSE;
+  $field = uuid_schema_field_definition();
+  if (!db_field_exists('crm_core_activity', 'uuid')) {
+    db_add_field('crm_core_activity', 'uuid', $field);
+    db_add_index('crm_core_activity', 'uuid', array('uuid'));
+  }
+  if (!db_field_exists('crm_core_activity_revision', 'vuuid')) {
+    db_add_field('crm_core_activity_revision', 'vuuid', $field);
+    db_add_index('crm_core_activity_revision', 'vuuid', array('vuuid'));
+  }
+  if ($schema_changed) {
+    drupal_get_schema(NULL, TRUE);
+  }
+}
+
+/**
+ * Implements hook_uuid_sync().
+ */
+function crm_core_activity_uuid_sync() {
+  _crm_core_activity_check_uuid();
 }
