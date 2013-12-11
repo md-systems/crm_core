@@ -1806,6 +1806,7 @@ function crm_core_contact_services_resources() {
  */
 function _crm_core_contact_check_uuid() {
   $schema_changed = FALSE;
+  module_load_include('install', 'uuid', 'uuid');
   $field = uuid_schema_field_definition();
   if (!db_field_exists('crm_core_contact', 'uuid')) {
     db_add_field('crm_core_contact', 'uuid', $field);
