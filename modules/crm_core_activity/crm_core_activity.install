@@ -199,6 +199,14 @@ function crm_core_activity_schema() {
         'size' => 'medium',
         'translatable' => TRUE,
       ),
+      'activity_string' => array(
+        'description' => 'Text describing the relationship between the contact and this activity.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'translatable' => TRUE,
+      ),
     ) + entity_exportable_schema_fields(),
     'primary key' => array('id'),
     'unique keys' => array(
@@ -379,4 +387,17 @@ function crm_core_activity_update_7004() {
     uuid_sync_all();
   }
   db_drop_field('crm_core_activity', 'activity_type_id');
+}
+
+/**
+ * Adding 'activity string' as property of activity type.
+ */
+function crm_core_activity_update_7005() {
+  db_add_field('crm_core_activity_type', 'activity_string', array(
+    'description' => 'Text describing the relationship between the contact and this activity.',
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => TRUE,
+    'default' => '',
+  ));
 }

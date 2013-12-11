@@ -57,4 +57,18 @@ function crm_core_activity_views_data_alter(&$data) {
     'type' => 'INNER',
   );
 
+  $data['crm_core_activity_type']['table']['join'] = array(
+    'crm_core_activity' => array(
+      'left_field' => 'type',
+      'field' => 'type',
+    ),
+  );
+
+  $data['crm_core_activity_type']['activity_string'] = array(
+    'field' => array(
+      'title' => t('Activity string'),
+      'help' => t('Text describing the relationship between the contact and this activity.'),
+      'handler' => 'views_handler_field',
+    ),
+  );
 }

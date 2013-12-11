@@ -57,6 +57,7 @@ class CRMActivityType extends Entity {
   public $type;
   public $label;
   public $weight = 0;
+  public $activity_string;
 
   public function __construct($values = array()) {
     parent::__construct($values, 'crm_core_activity_type');
