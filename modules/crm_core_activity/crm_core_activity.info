@@ -30,3 +30,6 @@ files[] = includes/crm_core_activity.controller.inc
 files[] = views/handlers/crm_core_activity_handler_field_links.inc
 files[] = views/handlers/views_handler_field_activity_type.inc
 files[] = views/handlers/views_handler_filter_activity_type.inc
+
+; Other includes
+files[] = includes/crm_core_activity.migrate.inc

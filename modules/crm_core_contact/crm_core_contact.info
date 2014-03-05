@@ -44,3 +44,4 @@ files[] = includes/views/handlers/crm_core_contact_handler_field_contact_type.in
 
 ; Other includes
 files[] = includes/crm_core_contact_entityreference.inc
+files[] = includes/crm_core_contact.migrate.inc
