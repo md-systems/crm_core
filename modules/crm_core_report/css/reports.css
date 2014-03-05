@@ -1,9 +1,40 @@
 /**
  * @file
- * Basic reports styles.
+ * CRM Core Report styles - including the tooltip for flot charts
  */
-
 div.legend table {
   width: auto;
   margin: 0px;
+}
+#flot-tooltip {
+  position: absolute;
+  border: 1px solid #3697ee;
+  padding: .2em .4em;
+  background-color: #3697ee;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
+  text-align: center;
+  min-width: 20px;
+  color: White;
+  font-size: 0.8em;
+}
+#flot-tooltip:after {
+  position: absolute;
+  display: block;
+  content: "";
+  border-color: #3697ee transparent transparent transparent;
+  border-style: solid;
+  border-width: 10px;
+  height: 0px;
+  width: 0px;
+  bottom: -20px;
+  left: 50%;
+  margin-left: -12px;
+}
+#flot-tooltip .report-tooltip-label {
+  white-space: nowrap;
+}
+#flot-tooltip .report-tooltip-data {
+  white-space: nowrap;
 }

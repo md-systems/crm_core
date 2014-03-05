@@ -123,8 +123,8 @@ function crm_core_report_init() {
  */
 function crm_core_report_preprocess_page($vars){
   if(arg(0) == 'crm-core'){
-    // dpm('yo yo yo');
     drupal_add_css(drupal_get_path('module', 'crm_core_report') . '/css/reports.css');
+    drupal_add_js(drupal_get_path('module', 'crm_core_report') . '/js/script.js');
   }  
 }
 
