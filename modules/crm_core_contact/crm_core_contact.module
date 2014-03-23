@@ -1011,13 +1011,13 @@ function crm_core_contact_query_crm_core_contact_search_alter(QueryAlterableInte
   $value = '%' . db_like($query->alterMetaData['match']) . '%';
   $placeholder = ':' . $table . '_fulltext';
 
-  $coalesce = '';
+  $field_list = array();
   foreach ($fields as $field_name => $column) {
-    $coalesce[] = "COALESCE({$table}.{$column}, ''), ' '";
+    $field_list[] = "IF({$table}.{$column} = '', NULL, {$table}.{$column})";
   }
-  $coalesce = implode(', ', $coalesce);
+  $field_list = implode(', ', $field_list);
 
-  $where_expression = "LOWER(CONCAT(' ', $coalesce)) LIKE $placeholder";
+  $where_expression = "LOWER(CONCAT_WS(' ', $field_list)) LIKE $placeholder";
   $query->innerJoin($table, $table, "crm_core_contact.contact_id = {$table}.entity_id");
   $query->where($where_expression, array($placeholder => $value));
   // If set $query->addMetaData('user', TRUE); select contacts which have
