@@ -94,6 +94,7 @@ class CRMCoreContactController extends EntityAPIController {
   protected function saveRevision($entity) {
     $entity->log = '';
     $entity->is_new_revision = TRUE;
+    $entity->uid = $GLOBALS['user']->uid;
 
     return parent::saveRevision($entity);
   }

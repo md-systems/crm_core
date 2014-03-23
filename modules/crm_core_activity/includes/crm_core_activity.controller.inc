@@ -42,6 +42,7 @@ class CRMCoreActivityController extends EntityAPIController {
    * Update activity object before saving revision.
    */
   protected function saveRevision($entity) {
+    $entity->uid = $GLOBALS['user']->uid;
     $entity->is_new_revision = TRUE;
 
     return parent::saveRevision($entity);
