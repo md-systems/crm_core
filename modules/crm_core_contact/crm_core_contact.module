@@ -337,6 +337,11 @@ function crm_core_contact_access($op, $contact, $account = NULL, $entity_type = 
 
     case 'create':
     default:
+      
+      // make sure we are getting a contact type back
+      if(empty($contact_type)){
+        return false;
+      }
       // Must be able to create contact of any type (OR) specific type
       // (AND) have an active contact type.
       // IMPORTANT, here $contact is padded in as a string of the contact type.
