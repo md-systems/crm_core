@@ -106,6 +106,7 @@ function crm_core_activity_type_add_default_fields($activity_type) {
 
   module_load_include('inc', 'crm_core_activity', 'crm_core_activity.fields');
   $fields = _crm_core_activity_type_default_fields();
+  drupal_alter('crm_core_activity_type_add_fields', $fields, $activity_type);
 
   foreach ($fields as $field) {
     $info = field_info_field($field['field_name']);
@@ -115,6 +116,7 @@ function crm_core_activity_type_add_default_fields($activity_type) {
   }
 
   $instances = _crm_core_activity_type_default_field_instances($type);
+  drupal_alter('crm_core_activity_type_add_field_instances', $instances, $activity_type);
 
   foreach ($instances as $instance) {
     $info_instance = field_info_instance('crm_core_activity', $instance['field_name'], $type);

@@ -61,5 +61,48 @@ function hook_crm_core_contact_merge_contacts(CRMCoreContactEntity $master_conta
 }
 
 /**
+ * Provides possibility to change default fields that will be added to the
+ * recently created bundle of activity.
+ *
+ * @param $fields
+ *   Array with fields that are going to be added to the activity bundle.
+ * @param CRMActivityType $activity_type
+ *   Bundle of activity entity that was recently created.
+ *
+ * @see field_create_field()
+ * @see _crm_core_activity_type_default_fields()
+ */
+function hook_crm_core_activity_type_add_fields_alter(&$fields, CRMActivityType $activity_type) {
+  // Prevent field_activity_date from creation.
+  foreach ($fields as $key => $field) {
+    if ($field['field_name'] == 'field_activity_date') {
+      unset($fields[$key]);
+    }
+  }
+}
+
+/**
+ * Provides possibility to change default field instances that will be added to
+ * the recently created bundle of activity.
+ *
+ * @param $instances
+ *   Array with field instances that are going to be added to the activity
+ *   bundle.
+ * @param CRMActivityType $activity_type
+ *   Bundle of activity entity that was recently created.
+ *
+ * @see field_create_instance()
+ * @see _crm_core_activity_type_default_field_instances()
+ */
+function hook_crm_core_activity_type_add_field_instances_alter(&$instances, CRMActivityType $activity_type) {
+  // Prevent field_activity_date from adding to an activity bundle.
+  foreach ($instances as $key => $instance) {
+    if ($instance['field_name'] == 'field_activity_date') {
+      unset($instances[$key]);
+    }
+  }
+}
+
+/**
  * @} End of "addtogroup hooks".
  */
