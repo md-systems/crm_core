@@ -1,3 +1,59 @@
+CRM Core 7.x-0.964 (23-March-2014)
+===================================
+
+Seems like some of the CHANGELOG history has been lost in past commits. Going to
+try to recreate some of it. See 7.x-0.963 if you want details about UUID / services
+integration for CRM Core contacts, activities and relationships.
+
+This is a bugfix release that addresses a spectrum of issues related to maintaining
+contacts, relationships and activities.
+
+Contacts:
+
+- Issue #2142911 by kristofferrom: fixing issue with access checks on content types
+- Issue #2217843 by dsnopek: fixing issue with spaces between names in autocomplete 
+
+Activities:
+
+- Issue #2216295 by Spleshka: making activity fields optional
+
+Relationships:
+
+- Issue #2191173: support for non-unique relationships
+
+Reports:
+
+- Adding support for tooltips on flot charts 
+
+General: 
+
+- Issue #2201165 by attiks: added uid to revisions
+- Issue #2211587 by Dane Powell: Added Migrate destinations for activities and contacts.
+- Removing hook_enable and hook_disable from CRM Core UI, this means no more crm core 
+  menu appearing automatically.
+  
+  
+CRM Core 7.x-0.964 (12-Dec-2013)
+===================================
+
+Adding enhancements related to synchronizing contacts across sites. Fixing bugs.
+
+Activities:
+
+- Added activity_string property to activity type.
+- Updated crm_activities_by_contact view.
+
+General:
+
+- Added UUID Support
+- Fixed uninstall functions in crm_core_contact and crm_core_activity.
+- Added relations as dependencies for CRM Core.
+- Fixed resources access check.
+- Adding contact activities as dependencies.
+- Fixed bug preventing crm_core_activity from consistent export with services.
+- Added 'create' and 'update' functionality for services integration.
+- Fixed saving activity_type_id on feed import.
+
 
 CRM Core 7.x-0.952 (27-Aug-2013)
 ===================================
