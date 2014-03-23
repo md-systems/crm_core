@@ -139,8 +139,10 @@ function crm_core_relationship_ui_type_form($form, &$form_state, $relation_type 
     '#default_value'  => 0,
   );
   $form['r_unique'] = array(
-    '#type'           => 'value',
-    '#default_value'  => 1,
+    '#type'           => 'checkbox',
+    '#title'          => t('Unique'),
+    '#description'    => t('Whether relations of this type are unique (ie. they can not contain exactly the same end points as other relations of this type).'),
+    '#default_value'  => $relation_type->r_unique,
   );
   // these should probably be changed to numerical (validated) textfields.
   $options = array('2' => '2', '3' => '3', '4' => '4', '5' => '5', '8' => '8');

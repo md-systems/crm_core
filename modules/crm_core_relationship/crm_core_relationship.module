@@ -209,8 +209,7 @@ function crm_core_relationship_is_relationship_type($relation_type) {
     if ($relation_type_object->directional) {
       $ret = $ret && crm_core_relationship_is_contact_bundles($relation_type_object->target_bundles);
     }
-    // It should be unique
-    $ret = $ret && $relation_type_object->r_unique;
+    
     // Arity should be equal to 2
     $ret = $ret && ($relation_type_object->min_arity == 2) && ($relation_type_object->max_arity == 2);
 
