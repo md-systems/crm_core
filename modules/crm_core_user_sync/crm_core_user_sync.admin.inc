@@ -346,7 +346,7 @@ function crm_core_user_sync_edit_relation_form($form, &$form_state, $relation) {
     '#type' => 'textfield',
     '#default_value' => empty($contact) ? '' : $contact->label() . " [contact_id:{$contact->contact_id}]",
     '#disabled' => empty($disabled_contact_field) ? FALSE : TRUE,
-    '#autocomplete_path' => 'admin/config/crm-core/user-sync/contact-to-user-management/contact-autocomplete/%',
+    '#autocomplete_path' => 'admin/config/crm-core/user-sync/contact-to-user-management/contact-autocomplete',
   );
 
   $form['user'] = array(
@@ -354,7 +354,7 @@ function crm_core_user_sync_edit_relation_form($form, &$form_state, $relation) {
     '#type' => 'textfield',
     '#default_value' => empty($user) ? '' : $user->name . " [uid:{$user->uid}]",
     '#disabled' => empty($disabled_user_field) ? FALSE : TRUE,
-    '#autocomplete_path' => 'admin/config/crm-core/user-sync/contact-to-user-management/user-autocomplete/%',
+    '#autocomplete_path' => 'admin/config/crm-core/user-sync/contact-to-user-management/user-autocomplete',
   );
 
   $form['actions'] = array('#type' => 'actions');

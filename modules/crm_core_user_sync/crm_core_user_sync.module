@@ -93,7 +93,6 @@ function crm_core_user_sync_menu() {
 
     $items['admin/config/crm-core/user-sync/contact-to-user-management/user-autocomplete/%'] = array(
       'page callback' => 'crm_core_user_sync_user_autocomplete',
-      'page arguments', array(6),
       'access arguments' => array('administer user-sync'),
       'file' => 'crm_core_user_sync.admin.inc',
       'type' => MENU_CALLBACK,
@@ -101,7 +100,6 @@ function crm_core_user_sync_menu() {
 
     $items['admin/config/crm-core/user-sync/contact-to-user-management/contact-autocomplete/%'] = array(
       'page callback' => 'crm_core_user_sync_contact_autocomplete',
-      'page arguments', array(6),
       'access arguments' => array('administer user-sync'),
       'file' => 'crm_core_user_sync.admin.inc',
       'type' => MENU_CALLBACK,
