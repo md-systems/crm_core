@@ -23,7 +23,7 @@ function crm_core_user_sync_menu() {
     );
 
     $items['admin/config/crm-core/user-sync/new'] = array(
-      'title' => t('Add a new rule'),
+      'title' => 'Add a new rule',
       'page callback' => 'drupal_get_form',
       'page arguments' => array('crm_core_user_sync_admin_edit_rule_form', NULL),
       'access arguments' => array('administer user-sync'),
@@ -32,7 +32,7 @@ function crm_core_user_sync_menu() {
     );
 
     $items['admin/config/crm-core/user-sync/%/edit'] = array(
-      'title' => t('Edit a rule'),
+      'title' => 'Edit a rule',
       'page callback' => 'drupal_get_form',
       'page arguments' => array('crm_core_user_sync_admin_edit_rule_form', 4),
       'access arguments' => array('administer user-sync'),
@@ -41,7 +41,7 @@ function crm_core_user_sync_menu() {
     );
 
     $items['admin/config/crm-core/user-sync/%/delete'] = array(
-      'title' => t('Delete a rule'),
+      'title' => 'Delete a rule',
       'page callback' => 'drupal_get_form',
       'page arguments' => array('crm_core_user_sync_admin_delete_rule_form', 4),
       'access arguments' => array('administer user-sync'),
@@ -49,7 +49,7 @@ function crm_core_user_sync_menu() {
     );
 
     $items['admin/config/crm-core/user-sync/%/enable'] = array(
-      'title' => t('Delete a rule'),
+      'title' => 'Delete a rule',
       'page callback' => 'crm_core_user_sync_admin_update_rule_status',
       'page arguments' => array(4, TRUE),
       'access arguments' => array('administer user-sync'),
@@ -57,7 +57,7 @@ function crm_core_user_sync_menu() {
     );
 
     $items['admin/config/crm-core/user-sync/%/disable'] = array(
-      'title' => t('Delete a rule'),
+      'title' => 'Delete a rule',
       'page callback' => 'crm_core_user_sync_admin_update_rule_status',
       'page arguments' => array(4, FALSE),
       'access arguments' => array('administer user-sync'),
