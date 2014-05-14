@@ -24,7 +24,7 @@ Drupal.behaviors.crm_core_report = {
           var previousPoint = null, pageX, pageY, followMouse, flotTooltipWidth, flotTooltipHeight, tooltip;
           
           // track the mouse so we always know where to put the tooltip
-          $(document).bind('mousemove',function(e){ 
+          $(document).bind('mousemove',function(event){
             pageX = event.pageX;
             pageY = event.pageY;
             if(tooltip && followMouse == true){
