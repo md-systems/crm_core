@@ -1,0 +1,11 @@
+name: CRM Core Match
+type: module
+description: 'Provides framework for identifying duplicate contacts in CRM Core contact records.'
+package: CRM Core
+version: 8.x-1.x-dev
+core: 8.x
+
+configure: crm_core_match.match
+
+dependencies:
+  - crm_core_contact

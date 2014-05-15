@@ -1,4 +1,0 @@
-name = CRM Core
-description = Provides basic functionality for a CRM Core.
-package = CRM Core
-core = 7.x

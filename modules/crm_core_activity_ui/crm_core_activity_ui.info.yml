@@ -1,0 +1,17 @@
+name: CRM Core Activity UI
+type: module
+description: 'User Interface for activities.'
+package: CRM Core
+version: 8.x-1.x-dev
+core: 8.x
+
+configure: crm_core_activity_ui.activity_types
+
+dependencies:
+ # Core Dependencies
+  - crm_core_activity
+  - crm_core_contact_ui
+
+stylescheets:
+  all:
+    - crm_core_activity_ui.css

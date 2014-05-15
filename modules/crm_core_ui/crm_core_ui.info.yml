@@ -1,0 +1,15 @@
+name: CRM Core UI
+type: module
+description: 'User Interface for CRM Core.'
+package: CRM Core
+version: 8.x-1.x-dev
+core: 8.x
+
+configure: crm_core.config
+
+
+dependencies:
+  # Core Dependencies
+  - menu
+  - crm_core
+  - block

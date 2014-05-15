@@ -1,0 +1,15 @@
+name: CRM Core Relationship
+type: module
+description: '.Provide relationship between contacts'
+package: CRM Core
+version: 8.x-1.x-dev
+core: 8.x
+
+dependendies:
+  - list
+
+  # Core Dependencies
+  - crm_core_contact
+
+  # Contrib Dependencies
+  - relation

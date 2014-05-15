@@ -1,0 +1,11 @@
+name: CRM Core Report
+type: module
+description: 'Provides a basic structure for creating reports in CRM Core. Provides a reports tab that displays registered reports.'
+package: CRM Core
+version: 8.x-1.x-dev
+core: 8.x
+
+configure: crm_core_report.report_types
+
+dependencies:
+  - crm_core

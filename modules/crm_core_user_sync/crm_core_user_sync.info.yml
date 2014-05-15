@@ -1,0 +1,16 @@
+name: CRM Core User Synchronization
+type: module
+description: 'Synchronizes crm contacts with users.'
+package: CRM Core
+version: 8.x-1.x-dev
+core: 8.x
+
+configure: crm_core_user_sync.sync
+
+
+dependencies:
+  # Core Dependencies
+  - crm_core_contact
+
+  # Contrib Dependencies
+  - relation

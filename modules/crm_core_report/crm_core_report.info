@@ -1,8 +1,0 @@
-name = CRM Core Report
-description = Provides a basic structure for creating reports in CRM Core. Provides a reports tab that displays registered reports.
-package = CRM Core
-core = 7.x
-configure = admin/structure/crm
-
-dependencies[] = crm_core
-
