@@ -16,7 +16,7 @@ module_load_include('inc', 'crm_core_activity', 'crm_core_activity.info');
 function crm_core_activity_entity_info() {
   $return = array(
     'crm_core_activity' => array(
-      'label' => t('CRM Activity'),
+      'label' => t('CRM Core Activity'),
       'entity class' => 'CRMCoreActivityEntity',
       'controller class' => 'CRMCoreActivityController',
       'base table' => 'crm_core_activity',
@@ -50,7 +50,7 @@ function crm_core_activity_entity_info() {
     ),
   );
   $return['crm_core_activity_type'] = array(
-    'label' => t('CRM Activity Type'),
+    'label' => t('CRM Core Activity Type'),
     'entity class' => 'CRMActivityType',
     'controller class' => 'CRMCoreActivityTypeController',
     'base table' => 'crm_core_activity_type',
