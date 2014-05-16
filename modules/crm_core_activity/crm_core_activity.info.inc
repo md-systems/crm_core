@@ -40,9 +40,9 @@ function crm_core_activity_entity_property_info() {
     'schema field' => 'title',
   );
   $properties['uid'] = array(
-    'label' => t('User ID'),
+    'label' => t('User'),
     'type' => 'integer',
-    'description' => t("The unique ID of the user created activity."),
+    'description' => t('Relate a CRM Core Activity revision to the user who created the revision.'),
     'setter callback' => 'entity_property_verbatim_set',
     'setter permission' => 'administer site configuration',
     'schema field' => 'uid',

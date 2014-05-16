@@ -39,8 +39,8 @@ function crm_core_activity_views_data_alter(&$data) {
 
   // Expose the creator uid.
   $data['crm_core_activity']['uid'] = array(
-    'title' => t('UID'),
-    'help' => t('The Activity creator user ID.'),
+    'title' => t('Author'),
+    'help' => t('Relate CRM Core Activities to the user who created it.'),
     'field' => array(
       'handler' => 'views_handler_field_numeric',
       'click sortable' => TRUE,
@@ -56,8 +56,8 @@ function crm_core_activity_views_data_alter(&$data) {
       'handler' => 'views_handler_sort',
     ),
     'relationship' => array(
-      'label' => 'crm_core_activity creator',
-      'title' => t('CRM Core Activity creator'),
+      'label' => 'crm_core_activity author',
+      'title' => t('Author'),
       'base' => 'users',
       'base field' => 'uid',
     ),

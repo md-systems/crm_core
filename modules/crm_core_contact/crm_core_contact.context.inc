@@ -28,7 +28,7 @@ function crm_core_contact_context_registry() {
   return array(
     'conditions' => array(
       'crm_core_contact_context_condition_contact_type' => array(
-        'title' => t('CRM contact type'),
+        'title' => t('CRM Core Contact Type'),
         'plugin' => 'crm_core_contact_context_condition_contact_type',
       ),
     ),
