@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Rules integration for crm.
+ * Rules integration for CRM Core Contact.
  */
 
 
@@ -11,24 +11,25 @@
  */
 function crm_core_contact_rules_event_info() {
   $events = array();
+  $group = t('CRM Core Contact');
 
   $events['crm_core_contact_update'] = array(
     'label' => t('Contact has been updated'),
-    'group' => t('CRM Contact'),
+    'group' => $group,
     'variables' => crm_core_contact_rules_event_variables(),
     'access callback' => '',
   );
 
   $events['crm_core_contact_insert'] = array(
     'label' => t('Contact has been created'),
-    'group' => t('CRM Contact'),
+    'group' => $group,
     'variables' => crm_core_contact_rules_event_variables(),
     'access callback' => '',
   );
 
   $events['crm_core_contact_delete'] = array(
     'label' => t('Contact has been deleted'),
-    'group' => t('CRM Contact'),
+    'group' => $group,
     'variables' => crm_core_contact_rules_event_variables(),
     'access callback' => '',
   );
@@ -47,5 +48,6 @@ function crm_core_contact_rules_event_variables() {
       'label' => t('CRM Core Contact'),
     ),
   );
+
   return $variables;
 }

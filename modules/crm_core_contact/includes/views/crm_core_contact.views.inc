@@ -11,11 +11,11 @@
 function crm_core_contact_views_data() {
   $data = array();
 
-  $data['crm_core_contact']['table']['group'] = t('CRM Contact');
+  $data['crm_core_contact']['table']['group'] = t('CRM Core Contact');
 
   $data['crm_core_contact']['table']['base'] = array(
     'field' => 'contact_id',
-    'title' => t('CRM Contact'),
+    'title' => t('CRM Core Contact'),
     'help' => t('Contacts from the CRM.'),
   );
 
