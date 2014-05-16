@@ -57,16 +57,30 @@ function crm_core_contact_views_data() {
   );
 
   // Expose the creator uid.
-  //  $data['crm_core_contact']['uid'] = array(
-  //    'title' => t('Creator'),
-  //    'help' => t('Relate a contact to the user who created it.'),
-  //    'relationship' => array(
-  //      'handler' => 'views_handler_relationship',
-  //      'base' => 'users',
-  //      'field' => 'uid',
-  //      'label' => t('Contact creator'),
-  //    ),
-  //  );
+  $data['crm_core_contact']['uid'] = array(
+    'title' => t('UID'),
+    'help' => t('The Contact creator user ID.'),
+    'field' => array(
+      'handler' => 'views_handler_field_numeric',
+      'click sortable' => TRUE,
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+      'numeric' => TRUE,
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'relationship' => array(
+      'label' => 'crm_core_contact creator',
+      'title' => t('CRM Core Contact creator'),
+      'base' => 'users',
+      'base field' => 'uid',
+    ),
+  );
 
   // Expose the created and changed timestamps.
   $data['crm_core_contact']['created'] = array(
