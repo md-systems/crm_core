@@ -37,6 +37,32 @@ function crm_core_activity_views_data_alter(&$data) {
     ),
   );
 
+  // Expose the creator uid.
+  $data['crm_core_activity']['uid'] = array(
+    'title' => t('UID'),
+    'help' => t('The Activity creator user ID.'),
+    'field' => array(
+      'handler' => 'views_handler_field_numeric',
+      'click sortable' => TRUE,
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+      'numeric' => TRUE,
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'relationship' => array(
+      'label' => 'crm_core_activity creator',
+      'title' => t('CRM Core Activity creator'),
+      'base' => 'users',
+      'base field' => 'uid',
+    ),
+  );
+
   // Integration with Drupal search index.
   $data['search_index']['table']['join']['crm_core_activity'] = array(
     'left_field' => 'activity_id ',
