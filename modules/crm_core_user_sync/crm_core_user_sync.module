@@ -244,7 +244,8 @@ function crm_core_user_sync_validate($account, $contact_type) {
  * @return contact object
  */
 function crm_core_user_sync_sync($account, $contact = NULL) {
-  if (empty($contact)) {
+  // Property crm_core_no_auto_sync skips creation of contact.
+  if (empty($contact) && empty($account->crm_core_no_auto_sync)) {
 
     // Get corresponding contact type
     $contact_type = crm_core_user_sync_get_contact_type_for_account($account);
