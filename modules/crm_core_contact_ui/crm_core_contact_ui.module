@@ -78,17 +78,13 @@ function crm_core_contact_ui_menu_alter(&$items) {
  */
 function crm_core_contact_ui_theme() {
   $theme = array(
-    'crm_core_contact_ui_type_overview' => array(
-      'variables' => array('contact_type' => NULL),
-      'file' => 'theme/crm_core_contact_ui_type.theme.inc',
-    ),
     'crm_core_contact_ui_add_list' => array(
       'variables' => array('content' => array()),
-      'file' => 'theme/crm_core_contact_ui.theme.inc',
+      'file' => 'crm_core_contact_ui.pages.inc',
+      'template' => 'crm-core-contact-ui-add-list',
     ),
     'crm_core_contact_ui_revsions' => array(
       'variables' => array('contact_revisions' => array()),
-      'file' => 'theme/crm_core_contact_ui.theme.inc',
     ),
   );
 

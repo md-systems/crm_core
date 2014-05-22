@@ -3,6 +3,9 @@
 /*
  *
  */
+
+use Drupal\Component\Utility\Xss;
+
 function crm_core_contact_ui_form_wrapper($contact) {
   return drupal_get_form('crm_core_contact_ui_form', $contact);
 }
@@ -46,4 +49,26 @@ function crm_core_contact_ui_revert_form_submit($form, &$form_state) {
     drupal_set_message(t('Contact reverted.'));
   }
   $form_state['redirect'] = 'crm-core/contact/' . $contact->contact_id . '/revisions';
+}
+
+/**
+ * Prepares variables for list of available contact type templates.
+ *
+ * Default template: crm-core-contact-ui-add-list.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - content: An array of contact types.
+ */
+function template_preprocess_crm_core_contact_ui_add_list(&$variables) {
+  $variables['types'] = array();
+  if (!empty($variables['content'])) {
+    foreach ($variables['content'] as $type) {
+      $variables['types'][$type->id()] = array(
+        'type' => $type->id(),
+        'add_link' => l($type->label(), 'crm-core/contact/add/' . $type->id()),
+        'description' => Xss::filterAdmin($type->description),
+      );
+    }
+  }
 }
