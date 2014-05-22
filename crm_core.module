@@ -5,6 +5,8 @@
  * Provides basic functionality for a CRM Core.
  */
 
+use Drupal\Core\Entity\EntityTypeInterface;
+
 /**
  * Implements hook_hook_info().
  */
@@ -20,8 +22,8 @@ function crm_core_hook_info() {
  * Return permission names for a given entity type.
  */
 function crm_core_entity_access_permissions($entity_type) {
-  $entity_info = entity_get_info($entity_type);
-  $labels = $entity_info['permission labels'];
+  $entity_info = \Drupal::entityManager()->getDefinition($entity_type);
+  $labels = crm_core_entity_info_get_permission_labels($entity_info);
 
   $permissions = array();
 
@@ -36,7 +38,7 @@ function crm_core_entity_access_permissions($entity_type) {
   $permissions['create ' . $entity_type . ' entities'] = array(
     'title' => t('Create @entity_type of any type', array('@entity_type' => $labels['plural'])),
   );
-  if (!empty($entity_info['access arguments']['user key'])) {
+  if ($entity_info->hasKey('user')) {
     $permissions['edit own ' . $entity_type . ' entities'] = array(
       'title' => t('Edit own @entity_type of any type', array('@entity_type' => $labels['plural'])),
     );
@@ -45,7 +47,7 @@ function crm_core_entity_access_permissions($entity_type) {
     'title' => t('Edit any @entity_type of any type', array('@entity_type' => $labels['singular'])),
     'restrict access' => TRUE,
   );
-  if (!empty($entity_info['access arguments']['user key'])) {
+  if ($entity_info->hasKey('user')) {
     $permissions['view own ' . $entity_type . ' entities'] = array(
       'title' => t('View own @entity_type of any type', array('@entity_type' => $labels['plural'])),
     );
@@ -56,9 +58,10 @@ function crm_core_entity_access_permissions($entity_type) {
   );
 
   // Per-bundle create and edit permissions.
-  if (!empty($entity_info['entity keys']['bundle'])) {
-    foreach ($entity_info['bundles'] as $bundle_name => $bundle_info) {
-      $permissions += crm_core_bundle_access_permissions($bundle_name, $bundle_info, $entity_type, $entity_info);
+  if ($entity_info->hasKey('bundle')) {
+    $bundles = \Drupal::entityManager()->getBundleInfo($entity_type);
+    foreach ($bundles as $bundle_name => $bundle_info) {
+      $permissions += crm_core_bundle_access_permissions($bundle_name, $bundle_info, $entity_info);
     }
 
   }
@@ -69,39 +72,65 @@ function crm_core_entity_access_permissions($entity_type) {
 /**
  * Define per-bundle permissions.
  */
-function crm_core_bundle_access_permissions($bundle_name, $bundle_info, $entity_type, $entity_info = array()) {
-  $labels = $entity_info['permission labels'];
+function crm_core_bundle_access_permissions($bundle_name, array $bundle_info, EntityTypeInterface $entity_info) {
+  $labels = crm_core_entity_info_get_permission_labels($entity_info);
 
-  $permissions['create ' . $entity_type . ' entities of bundle ' . $bundle_name] = array(
+  $permissions['create ' . $entity_info->id() . ' entities of bundle ' . $bundle_name] = array(
     'title' => t('Create %bundle @entity_type', array('@entity_type' => $labels['plural'], '%bundle' => $bundle_info['label'])),
   );
-  if (!empty($entity_info['access arguments']['user key'])) {
-    $permissions['edit own ' . $entity_type . ' entities of bundle ' . $bundle_name] = array(
+  if ($entity_info->hasKey('user')) {
+    $permissions['edit own ' . $entity_info->id() . ' entities of bundle ' . $bundle_name] = array(
       'title' => t('Edit own %bundle @entity_type', array('@entity_type' => $labels['plural'], '%bundle' => $bundle_info['label'])),
     );
   }
-  $permissions['edit any ' . $entity_type . ' entity of bundle ' . $bundle_name] = array(
+  $permissions['edit any ' . $entity_info->id() . ' entity of bundle ' . $bundle_name] = array(
     'title' => t('Edit any %bundle @entity_type', array('@entity_type' => $labels['singular'], '%bundle' => $bundle_info['label'])),
     'restrict access' => TRUE,
   );
-  if (!empty($entity_info['access arguments']['user key'])) {
-    $permissions['delete own ' . $entity_type . ' entities of bundle ' . $bundle_name] = array(
+  if ($entity_info->hasKey('user')) {
+    $permissions['delete own ' . $entity_info->id() . ' entities of bundle ' . $bundle_name] = array(
       'title' => t('Delete own %bundle @entity_type', array('@entity_type' => $labels['plural'], '%bundle' => $bundle_info['label'])),
     );
   }
-  $permissions['delete any ' . $entity_type . ' entity of bundle ' . $bundle_name] = array(
+  $permissions['delete any ' . $entity_info->id() . ' entity of bundle ' . $bundle_name] = array(
     'title' => t('Delete any %bundle @entity_type', array('@entity_type' => $labels['singular'], '%bundle' => $bundle_info['label'])),
     'restrict access' => TRUE,
   );
-  if (!empty($entity_info['access arguments']['user key'])) {
-    $permissions['view own ' . $entity_type . ' entities of bundle ' . $bundle_name] = array(
+  if ($entity_info->hasKey('user')) {
+    $permissions['view own ' . $entity_info->id() . ' entities of bundle ' . $bundle_name] = array(
       'title' => t('View own %bundle @entity_type', array('@entity_type' => $labels['plural'], '%bundle' => $bundle_info['label'])),
     );
   }
-  $permissions['view any ' . $entity_type . ' entity of bundle ' . $bundle_name] = array(
+  $permissions['view any ' . $entity_info->id() . ' entity of bundle ' . $bundle_name] = array(
     'title' => t('View any %bundle @entity_type', array('@entity_type' => $labels['singular'], '%bundle' => $bundle_info['label'])),
     'restrict access' => TRUE,
   );
 
   return $permissions;
+}
+
+/**
+ * Gets the permission labels.
+ *
+ * Extracts the singular and plural permission labels from an entity definition.
+ * If no permission labels are defined, fallback to the entity label.
+ *
+ * @param EntityTypeInterface $entity_info
+ *   The entity definition.
+ *
+ * @return array
+ *   An associative array containing the singular and plural permission label.
+ */
+function crm_core_entity_info_get_permission_labels(EntityTypeInterface $entity_info) {
+  $labels = $entity_info->get("permission_labels");
+
+  if (!isset($labels['singular'])) {
+    $labels['singular'] = $entity_info->getLabel();
+  }
+
+  if (!isset($labels['plural'])) {
+    $labels['plural'] = $entity_info->getLabel();
+  }
+
+  return $labels;
 }

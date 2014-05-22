@@ -16,6 +16,8 @@ function crm_core_contact_enable() {
 
 /**
  * Implements hook_schema().
+ *
+ * @todo Remove in favour of https://drupal.org/node/2183231.
  */
 function crm_core_contact_schema() {
   $schema['crm_core_contact'] = array(
@@ -87,6 +89,12 @@ function crm_core_contact_schema() {
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
+      ),
+      'uuid' => array(
+        'description' => 'Unique Key: Universally unique identifier for this entity.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
       ),
       'log' => array(
         'description' => 'The log entry explaining the changes in this version.',

@@ -6,6 +6,7 @@
  */
 
 // Integration with context.
+use Drupal\crm_core_contact\Entity\Contact;
 use Drupal\crm_core_contact\Entity\ContactType;
 
 module_load_include('inc', 'crm_core_contact', 'crm_core_contact.context');
@@ -154,8 +155,8 @@ function crm_core_contact_entity_property_info() {
 /**
  * Get CRM Core Contact primary field name.
  */
-function crm_core_contact_get_primary_field_name(CRMCoreContactEntity $contact, $primary_field) {
-  $contact_type = crm_core_contact_type_load($contact->type);
+function crm_core_contact_get_primary_field_name(Contact $contact, $primary_field) {
+  $contact_type = ContactType::load($contact->type);
 
   return empty($contact_type->primary_fields[$primary_field]) ? '' : $contact_type->primary_fields[$primary_field];
 }
@@ -163,7 +164,7 @@ function crm_core_contact_get_primary_field_name(CRMCoreContactEntity $contact, 
 /**
  * Get CRM Core Contact primary field value.
  *
- * @param CRMCoreContactEntity $contact
+ * @param \Drupal\crm_core_contact\Entity\Contact $contact
  *   CRM Core Contact.
  * @param string $primary_field
  *   Primary field name.
@@ -171,7 +172,7 @@ function crm_core_contact_get_primary_field_name(CRMCoreContactEntity $contact, 
  * @return string
  *   Value of specified primary field or empty string.
  */
-function crm_core_contact_get_primary_field_value(CRMCoreContactEntity $contact, $primary_field) {
+function crm_core_contact_get_primary_field_value(Contact $contact, $primary_field) {
   $field = crm_core_contact_get_primary_field_name($contact, $primary_field);
   $field_value = '';
   if (empty($field)) {
@@ -221,15 +222,6 @@ function crm_core_contact_get_primary_phone_field_value($contact) {
 }
 
 /**
- * Create empty contact entity.
- *
- * @deprecated since contacts moved to entity api.
- */
-function crm_core_contact_create($values) {
-  return entity_get_controller('crm_core_contact')->create($values);
-}
-
-/**
  * Implements hook_permission().
  */
 function crm_core_contact_permission() {
@@ -251,103 +243,6 @@ function crm_core_contact_permission() {
   $permissions += crm_core_entity_access_permissions('crm_core_contact');
 
   return $permissions;
-}
-
-/**
- * Check permission for various contact operations.
- *
- * @param $op
- *   Operation being performed.
- * @param object $contact
- *   A crm_core_contact_type object.
- *
- * @return bool
- *   TRUE if access is granted/FALSE is access is denied.
- */
-function crm_core_contact_access($op, $contact, $account = NULL, $entity_type = NULL) {
-  global $user;
-
-  if (!isset($account)) {
-    $account = $user;
-  }
-  if (is_object($contact)) {
-    $contact_type = $contact->type;
-  }
-  else {
-    $contact_type = $contact;
-  }
-
-  if ($op != 'view' && $op != 'create_view') {
-    // First grant access to the entity for the specified operation if no other
-    // module denies it and at least one other module says to grant access.
-    $access_results = module_invoke_all('crm_core_entity_access', $op, $contact, $account, $entity_type);
-
-    if (in_array(FALSE, $access_results, TRUE)) {
-      return FALSE;
-    }
-    elseif (in_array(TRUE, $access_results, TRUE)) {
-      return TRUE;
-    }
-  }
-
-  $administer_contact = user_access('administer crm_core_contact entities', $account);
-
-  switch ($op) {
-    case 'view':
-      $view_any_contact = user_access('view any crm_core_contact entity', $account);
-      $view_type_contact = user_access('view any crm_core_contact entity of bundle ' . $contact_type, $account);
-
-      return ($administer_contact || $view_any_contact || $view_type_contact);
-
-    case 'edit':
-      $edit_any_contact = user_access('edit any crm_core_contact entity', $account);
-      $edit_type_contact = user_access('edit any crm_core_contact entity of bundle ' . $contact_type, $account);
-
-      return ($administer_contact || $edit_any_contact || $edit_type_contact);
-
-    case 'delete':
-      $delete_any_contact = user_access('delete any crm_core_contact entity', $account);
-      $delete_type_contact = user_access('delete any crm_core_contact entity of bundle ' . $contact_type, $account);
-
-      return ($administer_contact || $delete_any_contact || $delete_type_contact);
-
-    case 'revert':
-      // @todo: more fine grained will be adjusting dynamic permission
-      // generation for reverting bundles of contact.
-      $revert_any_contact = user_access('revert contact record', $account);
-
-      return ($administer_contact || $revert_any_contact);
-
-    case 'create_view':
-      // Any of the create permissions.
-      $create_any_contact = user_access('create crm_core_contact entities', $account);
-      $contact_types = array_keys(crm_core_contact_types(TRUE));
-      foreach ($contact_types as $type) {
-        $create_type_contact[] = entity_access('create', 'crm_core_contact', $type, $account);
-      }
-      // Any type of contact type create permission.
-      $create_type_contact_flag = in_array(TRUE, $create_type_contact);
-
-      return ($administer_contact || $create_any_contact || $create_type_contact_flag);
-
-    case 'create':
-    default:
-      
-      // make sure we are getting a contact type back
-      if(empty($contact_type)){
-        return false;
-      }
-      // Must be able to create contact of any type (OR) specific type
-      // (AND) have an active contact type.
-      // IMPORTANT, here $contact is padded in as a string of the contact type.
-      $create_any_contact = user_access('create crm_core_contact entities', $account);
-      $create_type_contact = user_access('create crm_core_contact entities of bundle ' . $contact_type, $account);
-      // Load the contact type entity.
-      $contact_type_entity = crm_core_contact_type_load($contact_type);
-      $contact_type_is_active = (!(bool) $contact_type_entity->disabled);
-
-      return (($administer_contact || $create_any_contact || $create_type_contact) && $contact_type_is_active);
-  }
 }
 
 /**
@@ -483,30 +378,6 @@ function crm_core_contact_update_index() {
     // Update index.
     search_index($contact->contact_id, 'crm_core_contact', $text);
   }
-}
-
-/**
- * Entity label callback.
- *
- * @param $entity
- *  A fully loaded $crm_core_contact_type object.
- *
- * @return String
- *   Raw formatted string. This should be run through check_plain().
- */
-function crm_core_contact_label($entity) {
-  // Check whether bundle type label function exists.
-  // This is needed if we want to have different labels per contact type.
-  // For example Individual contact's label is person's Name.
-  // But for Organization -- organization's name.
-  $function = 'crm_core_contact_' . $entity->type . '_label';
-  if (function_exists($function)) {
-    return $function($entity);
-  }
-  // Default is person's name.
-  $field = field_view_field('crm_core_contact', $entity, 'contact_name', array('settings' => array('output' => 'raw')));
-
-  return $field[0]['#markup'];
 }
 
 /**
