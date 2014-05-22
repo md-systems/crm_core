@@ -6,6 +6,8 @@
  */
 
 // Integration with context.
+use Drupal\crm_core_contact\Entity\ContactType;
+
 module_load_include('inc', 'crm_core_contact', 'crm_core_contact.context');
 
 /**
@@ -216,13 +218,6 @@ function crm_core_contact_get_primary_address_field_value($contact) {
  */
 function crm_core_contact_get_primary_phone_field_value($contact) {
   return crm_core_contact_get_primary_field_value($contact, 'phone');
-}
-
-/**
- * Access callback for crm_core_contact_type entities.
- */
-function crm_core_contact_type_access($op, $entity, $account, $entity_type) {
-  return user_access('administer contact types', $account);
 }
 
 /**
@@ -645,57 +640,6 @@ function crm_core_contact_type_get_name($type = NULL) {
 }
 
 /**
- * Return a new contact type with initialize fields.
- *
- * @param string $type
- *   The machine-readable name of the contact type. Example: individual
- *
- * @return
- *   A stdClass object with contact type fields
- */
-function crm_core_contact_type_new($type = '') {
-  $values = array('type' => $type, 'locked' => 1);
-
-  return entity_create('crm_core_contact_type', $values);
-}
-
-/**
- * Loads a contact type.
- *
- * @param string $type
- *   The machine-readable name of the contact type.
- */
-function crm_core_contact_type_load($type, $reset = FALSE) {
-  $results = entity_load('crm_core_contact_type', FALSE, array('type' => $type), $reset);
-
-  return reset($results);
-}
-
-/**
- * Saves a contact type.
- *
- * @param object $contact_type
- *   Contact object.
- *
- * @return bool
- *   FALSE if the insert fails and SAVED_NEW or SAVED_UPDATED
- *   based on the operation performed, exception in case of error.
- */
-function crm_core_contact_type_save($contact_type) {
-  return entity_save('crm_core_contact_type', $contact_type);
-}
-
-/**
- * Delete a contact type.
- *
- * @param string $type_id
- *   Contact type string.
- */
-function crm_core_contact_type_delete($type_id) {
-  entity_get_controller('crm_core_contact_type')->delete(array($type_id));
-}
-
-/**
  * Sets the default contact type.
  *
  * @param array $info
@@ -734,22 +678,6 @@ function crm_core_contact_type_set_defaults($info = array()) {
   $new_type->orig_type = isset($info['type']) ? $info['type'] : '';
 
   return $new_type;
-}
-
-/**
- * Checks to see if a given contact type already exists.
- *
- * @param string $type
- *   The string to match against existing types.
- *
- * @return bool
- *   TRUE or FALSE indicating whether or not the contact type exists.
- */
-function crm_core_contact_type_validate_unique($type) {
-  // Look for a match of the type.
-  $match_id = db_query('SELECT type FROM {crm_core_contact_type} WHERE type = :type', array(':type' => $type))->fetchField();
-
-  return !$match_id;
 }
 
 /**
@@ -1572,24 +1500,6 @@ function _crm_core_contact_contact_name_instance($type, $label) {
   }
 
   return $instance;
-}
-
-/**
- * Implements hook_ENTITY_TYPE_insert().
- *
- * Initialize new contact type with 'contact_name' field which CRM Core heavily
- * rely on.
- */
-function crm_core_contact_crm_core_contact_type_insert($contact_type) {
-  $info = field_info_field('contact_name');
-  if (empty($info)) {
-    field_create_field(_crm_core_contact_contact_name_base());
-  }
-
-  $info_instance = field_info_instance('crm_core_contact', 'contact_name', $contact_type->type);
-  if (empty($info_instance)) {
-    field_create_instance(_crm_core_contact_contact_name_instance($contact_type->type, $contact_type->name));
-  }
 }
 
 /**

@@ -6,44 +6,6 @@
  */
 
 /**
- * Implements hook_install().
- */
-function crm_core_contact_install() {
-  $t = get_t();
-  // Add default contact type for an Individual person.
-  $individual = crm_core_contact_type_new('individual');
-  $individual->name = $t('Individual');
-  $individual->description = $t('A single individual.');
-  $individual->is_new = TRUE;
-  crm_core_contact_type_save($individual);
-
-  // Add default contact type for an organization.
-  $organization = crm_core_contact_type_new('organization');
-  $organization->name = $t('Organization');
-  $organization->description = $t('A collection of individuals or other organizations that has additional contact data.');
-  crm_core_contact_type_save($organization);
-
-  // Add default contact type for a household.
-  $household = crm_core_contact_type_new('household');
-  $household->name = $t('Household');
-  $household->description = $t('A collection of individuals generally located at the same residence.');
-  crm_core_contact_type_save($household);
-}
-
-/**
- * Implements hook_uninstall().
- */
-function crm_core_contact_uninstall() {
-  // Instance field information field_info_field is not available
-  // because we have already unloaded our module.
-  $additional_params = array('include_inactive' => TRUE);
-  $instances = field_read_instances(array('entity_type' => 'crm_core_contact'), $additional_params);
-  foreach ($instances as $instance) {
-    field_delete_instance($instance);
-  }
-}
-
-/**
  * Implements hook_enable().
  */
 function crm_core_contact_enable() {
@@ -163,76 +125,6 @@ function crm_core_contact_schema() {
     ),
     'primary key' => array('vid'),
   );
-
-  $schema['crm_core_contact_type'] = array(
-    'description' => 'Stores information about all defined contact types.',
-    'fields' => array(
-      'id' => array(
-        'type' => 'serial',
-        'not null' => TRUE,
-        'description' => 'Primary Key: Unique contact type ID.',
-      ),
-      'type' => array(
-        'description' => 'The machine-readable name of this type.',
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-      ),
-      'name' => array(
-        'description' => 'The human-readable name of this type.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'translatable' => TRUE,
-      ),
-      'description' => array(
-        'description' => 'A brief description of this type.',
-        'type' => 'text',
-        'not null' => TRUE,
-        'size' => 'medium',
-        'translatable' => TRUE,
-      ),
-      'custom' => array(
-        'description' => 'A boolean indicating whether this type is defined by a module (FALSE) or by a user via Add content type (TRUE).',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-      ),
-      'disabled' => array(
-        'description' => 'A boolean indicating whether this type is disabled or not, disabled contact type contacts will not show up in the list of contacts',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-      ),
-      'locked' => array(
-        'description' => 'A boolean indicating whether this type is locked or not, locked contact type cannot be edited or disabled/deleted',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-      ),
-      'primary_fields' => array(
-        'description' => 'Serialized array of key-value pairs, where key is the primary field type and value is real field name used for this type.',
-        'type' => 'blob',
-        'serialize' => TRUE,
-      ),
-    ) + entity_exportable_schema_fields(),
-    'primary key' => array('id'),
-    'unique keys' => array(
-      'type' => array('type'),
-    ),
-  );
-
-  if (module_exists('uuid')) {
-    $field = uuid_schema_field_definition();
-    $schema['crm_core_contact']['fields']['uuid'] = $field;
-    $schema['crm_core_contact']['indexes']['uuid'] = array('uuid');
-    $schema['crm_core_contact_revision']['fields']['vuuid'] = $field;
-    $schema['crm_core_contact_revision']['indexes']['vuuid'] = array('vuuid');
-  }
 
   return $schema;
 }
