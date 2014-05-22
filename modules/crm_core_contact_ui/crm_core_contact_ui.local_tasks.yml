@@ -1,0 +1,14 @@
+crm_core_contact.view:
+  title: View
+  route_name: crm_core_contact.view
+  base_route: crm_core_contact.view
+
+crm_core_contact.edit:
+  title: Edit
+  route_name: crm_core_contact.edit
+  base_route: crm_core_contact.view
+
+crm_core_contact.type_edit:
+  title: Edit
+  route_name: crm_core_contact.type_edit
+  base_route: crm_core_contact.type_edit

@@ -1,0 +1,96 @@
+crm_core_contact.list:
+  path: '/crm-core/contact'
+  defaults:
+    _content: '\Drupal\Core\Entity\Controller\EntityListController::listing'
+    entity_type: 'crm_core_contact'
+    _title: 'Contacts'
+  requirements:
+    _permission: 'administer contact types'
+
+crm_core_contact.view:
+  path: '/crm-core/contact/{crm_core_contact}'
+  defaults:
+    _entity_form: 'crm_core_contact.default'
+  requirements:
+    _permission: 'administer contact types'
+
+crm_core_contact.edit:
+  path: '/crm-core/contact/{crm_core_contact}/edit'
+  defaults:
+    _entity_form: 'crm_core_contact.default'
+  requirements:
+    _permission: 'administer contact types'
+
+crm_core_contact.delete_confirm:
+  path: '/crm-core/contact/{crm_core_contact}/delete'
+  defaults:
+    _entity_form: 'crm_core_contact.delete'
+    _title: 'Delete contact type'
+  requirements:
+    _entity_access: 'crm_core_contact.delete'
+
+crm_core_contact.add_page:
+  path: '/crm-core/contact/add'
+  defaults:
+    _title: 'Add contact'
+    _content: '\Drupal\crm_core_contact_ui\Controller\ContactController::addPage'
+  requirements:
+    _permission: 'administer contact types'
+
+crm_core_contact.add:
+  path: '/crm-core/contact/add/{crm_core_contact_type}'
+  defaults:
+    _content: '\Drupal\crm_core_contact_ui\Controller\ContactController::add'
+    _title_callback: '\Drupal\crm_core_contact_ui\Controller\ContactController::addPageTitle'
+  requirements:
+    _permission: 'administer contact types'
+
+crm_core_contact.type_list:
+  path: '/admin/crm-core/contact-types'
+  defaults:
+    _content: '\Drupal\Core\Entity\Controller\EntityListController::listing'
+    entity_type: 'crm_core_contact_type'
+    _title: 'Contact types'
+  requirements:
+    _permission: 'administer contact types'
+
+crm_core_contact.type_add:
+  path: '/admin/crm-core/contact-types/add'
+  defaults:
+    _entity_form: 'crm_core_contact_type.default'
+    _title: 'Add contact type'
+  requirements:
+    _permission: 'administer contact types'
+
+crm_core_contact.type_edit:
+  path: '/admin/crm-core/contact-types/{crm_core_contact_type}'
+  defaults:
+    _entity_form: 'crm_core_contact_type.default'
+  requirements:
+    _permission: 'administer contact types'
+
+crm_core_contact.type_delete:
+  path: '/admin/crm-core/contact-types/{crm_core_contact_type}/delete'
+  defaults:
+    _entity_form: 'crm_core_contact_type.delete'
+    _title: 'Delete contact type'
+  requirements:
+    _entity_access: 'crm_core_contact_type.delete'
+
+crm_core_contact.type_enable:
+  path: '/admin/crm-core/contact-types/{crm_core_contact_type}/enable'
+  defaults:
+    _entity_form: 'crm_core_contact_type.toggle'
+    _title: 'Enable contact type'
+    op: 'enable'
+  requirements:
+    _permission: 'administer contact types'
+
+crm_core_contact.type_disable:
+  path: '/admin/crm-core/contact-types/{crm_core_contact_type}/disable'
+  defaults:
+    _entity_form: 'crm_core_contact_type.toggle'
+    _title: 'Disable contact type'
+    op: 'disable'
+  requirements:
+    _permission: 'administer contact types'
