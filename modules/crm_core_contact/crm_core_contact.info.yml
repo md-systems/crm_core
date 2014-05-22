@@ -15,5 +15,6 @@ dependencies:
   - views
 
   # Field dependencies
-  - field_group
-  - name
+  # @todo Readd once awaillable and still needed.
+#  - field_group
+#  - name

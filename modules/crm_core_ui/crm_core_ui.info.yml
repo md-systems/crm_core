@@ -10,6 +10,6 @@ configure: crm_core.config
 
 dependencies:
   # Core Dependencies
-  - menu
+  - menu_ui
   - crm_core
   - block
