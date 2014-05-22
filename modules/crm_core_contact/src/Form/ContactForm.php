@@ -31,4 +31,15 @@ class ContactForm extends ContentEntityForm {
 
     $form_state['redirect_route']['route_name'] = 'crm_core_contact.list';
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function actions(array $form, array &$form_state) {
+    $actions = parent::actions($form, $form_state);
+    $actions['submit']['#value'] = $this->t('Save !contact_type', array(
+      '!contact_type' => $this->entity->get('type')->entity->label(),
+    ));
+    return $actions;
+  }
 }

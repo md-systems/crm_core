@@ -172,15 +172,6 @@ function crm_core_contact_ui_theme() {
 }
 
 /**
- * Returns save contact button name depending on contact type.
- */
-function crm_core_contact_ui_save_contact_button_name($contact_type) {
-  return t('Save !contact_type', array(
-    '!contact_type' => crm_core_contact_type_get_name($contact_type),
-  ));
-}
-
-/**
  * Implements hook_admin_menu_map().
  *
  * Expands contact types at Structure > CRM Core > CRM Core Contact types.
