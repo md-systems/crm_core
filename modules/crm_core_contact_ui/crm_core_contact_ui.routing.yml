@@ -5,21 +5,21 @@ crm_core_contact.list:
     entity_type: 'crm_core_contact'
     _title: 'Contacts'
   requirements:
-    _permission: 'administer contact types'
+    _permission: 'view any crm_core_contact entity'
 
 crm_core_contact.view:
   path: '/crm-core/contact/{crm_core_contact}'
   defaults:
     _entity_form: 'crm_core_contact.default'
   requirements:
-    _permission: 'administer contact types'
+    _entity_access: 'crm_core_contact.create'
 
 crm_core_contact.edit:
   path: '/crm-core/contact/{crm_core_contact}/edit'
   defaults:
     _entity_form: 'crm_core_contact.default'
   requirements:
-    _permission: 'administer contact types'
+    _entity_access: 'crm_core_contact.update'
 
 crm_core_contact.delete_confirm:
   path: '/crm-core/contact/{crm_core_contact}/delete'
@@ -35,7 +35,7 @@ crm_core_contact.add_page:
     _title: 'Add contact'
     _content: '\Drupal\crm_core_contact_ui\Controller\ContactController::addPage'
   requirements:
-    _permission: 'administer contact types'
+    _entity_create_access: 'crm_core_contact'
 
 crm_core_contact.add:
   path: '/crm-core/contact/add/{crm_core_contact_type}'
@@ -43,7 +43,7 @@ crm_core_contact.add:
     _content: '\Drupal\crm_core_contact_ui\Controller\ContactController::add'
     _title_callback: '\Drupal\crm_core_contact_ui\Controller\ContactController::addPageTitle'
   requirements:
-    _permission: 'administer contact types'
+    _entity_create_access: 'crm_core_contact:{crm_core_contact_type}'
 
 crm_core_contact.type_list:
   path: '/admin/crm-core/contact-types'

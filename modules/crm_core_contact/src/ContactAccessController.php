@@ -65,20 +65,20 @@ class ContactAccessController extends EntityAccessController {
 
     $administer_contact = $account->hasPermission('administer crm_core_contact entities');
 
-    // Make sure we are getting a contact type back.
-    if (empty($entity_bundle)) {
-      return FALSE;
-    }
-
     // Must be able to create contact of any type (OR) specific type
     // (AND) have an active contact type.
     // IMPORTANT, here $contact is padded in as a string of the contact type.
     $create_any_contact = $account->hasPermission('create crm_core_contact entities');
     $create_type_contact = $account->hasPermission('create crm_core_contact entities of bundle ' . $entity_bundle);
 
+    $contact_type_is_active = empty($entity_bundle);
+
     // Load the contact type entity.
-    $contact_type_entity = ContactType::load($entity_bundle);
-    $contact_type_is_active = (!(bool) $contact_type_entity->disabled);
+    if (!empty($entity_bundle)) {
+      /* @var \Drupal\crm_core_contact\Entity\ContactType $contact_type_entity */
+      $contact_type_entity = ContactType::load($entity_bundle);
+      $contact_type_is_active = $contact_type_entity->status();
+    }
 
     return (($administer_contact || $create_any_contact || $create_type_contact) && $contact_type_is_active);
   }
