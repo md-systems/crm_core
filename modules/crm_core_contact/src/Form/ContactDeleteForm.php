@@ -59,7 +59,7 @@ class ContactDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getConfirmText() {
-    return t('Delete');
+    return t('Yes');
   }
 
   /**

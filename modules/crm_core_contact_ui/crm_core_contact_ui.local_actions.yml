@@ -1,6 +1,6 @@
 crm_core_contact.add:
   route_name: crm_core_contact.add_page
-  title: 'Add contact'
+  title: 'Add a contact'
   appears_on:
     - crm_core_contact.list
 

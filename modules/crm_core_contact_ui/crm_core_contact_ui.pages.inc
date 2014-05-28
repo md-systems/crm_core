@@ -66,7 +66,7 @@ function template_preprocess_crm_core_contact_ui_add_list(&$variables) {
     foreach ($variables['content'] as $type) {
       $variables['types'][$type->id()] = array(
         'type' => $type->id(),
-        'add_link' => l($type->label(), 'crm-core/contact/add/' . $type->id()),
+        'add_link' => l(t('Add @type', array('@type' => $type->label())), 'crm-core/contact/add/' . $type->id()),
         'description' => Xss::filterAdmin($type->description),
       );
     }
