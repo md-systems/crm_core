@@ -202,26 +202,12 @@ class Contact extends ContentEntityBase {
   public function preSaveRevision(EntityStorageInterface $storage, \stdClass $record) {
     parent::preSaveRevision($storage, $record);
 
-    if ($this->newRevision) {
-      // When inserting either a new node or a new node revision, $node->log
-      // must be set because {node_field_revision}.log is a text column and
-      // therefore cannot have a default value. However, it might not be set at
-      // this point (for example, if the user submitting a node form does not
-      // have permission to create revisions), so we ensure that it is at least
-      // an empty string in that case.
-      // @todo Make the {node_field_revision}.log column nullable so that we
-      //   can remove this check.
-      if (!isset($record->log)) {
-        $record->log = '';
-      }
+    if (!isset($record->log)) {
+      $record->log = '';
     }
-    elseif (isset($this->original) && (!isset($record->log) || $record->log === '')) {
-      // If we are updating an existing node without adding a new revision, we
-      // need to make sure $entity->log is reset whenever it is empty.
-      // Therefore, this code allows us to avoid clobbering an existing log
-      // entry with an empty one.
-      $record->log = $this->original->log->value;
-    }
+
+    $account = \Drupal::currentUser();
+    $record->uid = $account->id();
   }
 
   /**
