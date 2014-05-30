@@ -69,25 +69,6 @@ class ContactType extends ConfigEntityBase {
   public $description;
 
   /**
-   * Whether or not this type was defined by a module or added via form.
-   *
-   * A boolean indicating whether this type is defined by a module (FALSE) or
-   * by a user via Add content type (TRUE).
-   * @var boolean
-   */
-  public $custom;
-
-  /**
-   * Whether or not this type is disabled.
-   *
-   * A boolean indicating whether this type is disabled or not, disabled contact
-   * type contacts will not show up in the list of contacts.
-   *
-   * @var boolean
-   */
-  public $disabled;
-
-  /**
    * Whether or not this type is locked.
    *
    * A boolean indicating whether this type is locked or not, locked contact
@@ -96,8 +77,6 @@ class ContactType extends ConfigEntityBase {
    * @var boolean
    */
   public $locked;
-
-  public $weight = 0;
 
   /**
    * Primary fields.
@@ -181,7 +160,7 @@ class ContactType extends ConfigEntityBase {
 
     // Ensure default values are set.
     $values = NestedArray::mergeDeep(array(
-      'locked' => TRUE,
+      'locked' => FALSE,
     ), $values);
   }
 

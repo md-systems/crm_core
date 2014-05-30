@@ -1,10 +1,7 @@
 type: individual
 name: Individual
 description: 'A single individual.'
-custom: null
-disabled: null
-locked: true
-weight: 0
+locked: false
 primary_fields: null
 status: true
 uuid: 28191553-fbfc-45ce-8701-1cb7dbaab715
