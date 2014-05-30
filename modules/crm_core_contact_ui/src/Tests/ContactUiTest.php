@@ -6,6 +6,7 @@
 
 namespace Drupal\crm_core_contact_ui\Tests;
 
+use Drupal\crm_core_contact\Entity\Contact;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -162,6 +163,76 @@ class ContactUiTest extends WebTestBase {
   }
 
   /**
+   * Tests the contact type operations.
+   *
+   * User with permissions 'administer contact types' should be able to
+   * create/edit/delete contact types.
+   */
+  public function testContactTypeOperations() {
+    // Given I am logged in as a user with permission 'administer contact types'
+    $user = $this->drupalCreateUser(array('administer contact types'));
+    $this->drupalLogin($user);
+
+    // When I visit the contact type admin page.
+    $this->drupalGet('admin/structure/crm-core/contact-types');
+
+    // Then I should see edit, enable, delete but no enable links for existing
+    // contacts.
+    $this->assertContactTypeLink('household', t('Edit link for household.'));
+    $this->assertContactTypeLink('household/disable', t('Disable link for household.'));
+    $this->assertNoContactTypeLink('household/enable', t('No enable link for household.'));
+    $this->assertContactTypeLink('household/delete', t('Delete link for household.'));
+
+    $this->assertcontacttypelink('individual', t('Edit link for individual.'));
+    $this->assertcontacttypelink('individual/disable', t('Disable link for individual.'));
+    $this->assertNoContacttypelink('individual/enable', t('No enable link for individual.'));
+    $this->assertcontacttypelink('individual/delete', t('Delete link for individual.'));
+
+    $this->assertcontacttypelink('organization', t('Edit link for organization.'));
+    $this->assertcontacttypelink('organization/disable', t('Disable link for organization.'));
+    $this->assertNoContacttypelink('organization/enable', t('No enable link for organization.'));
+    $this->assertcontacttypelink('organization/delete', t('Delete link for organization.'));
+
+    // Given the 'household' contact type is disabled.
+    $this->drupalPostForm('admin/structure/crm-core/contact-types/household/disable', array(), t('Disable'));
+
+    // When I visit the contact type admin page.
+    $this->drupalGet('admin/structure/crm-core/contact-types');
+
+    // Then I should see an enable link.
+    $this->assertContactTypeLink('household/enable', t('Enable link for household.'));
+    // And I should not see a disable link.
+    $this->assertNoContactTypeLink('household/disable', t('No disable link for household.'));
+
+    // When I enable 'household'
+    $this->drupalPostForm('admin/structure/crm-core/contact-types/household/enable', array(), t('Enable'));
+
+    // Then I should see a disable link.
+    $this->assertContactTypeLink('household/disable', t('Disable link for household.'));
+
+    // Given there is a contact of type 'individual.'.
+    Contact::create(array('type' => 'individual'))->save();
+
+    // When I visit the contact type admin page.
+    $this->drupalGet('admin/structure/crm-core/contact-types');
+
+    // Then I should not see a delete link.
+    $this->assertNoContactTypeLink('individual/delete', t('No delete link for individual.'));
+
+    // When I edit the organization type.
+    $this->drupalGet('admin/structure/crm-core/contact-types/organization');
+
+    // Then I should see a delete link.
+    $this->assertContactTypeLink('organization/delete', t('Delete link on organization type form.'));
+
+    // When I edit the individual type.
+    $this->drupalGet('admin/structure/crm-core/contact-types/organization');
+
+    // Then I should not see a delete link.
+    $this->assertNoContactTypeLink('individual/delete', t('No delete link on individual type form.'));
+  }
+
+  /**
    * Returns the title of an individual contact.
    */
   public static function getIndividualContactTitle($post_array) {
@@ -213,5 +284,29 @@ class ContactUiTest extends WebTestBase {
       'contact_name[0][value]' => $this->randomName(),
 //      'contact_name[und][0][given]' => $this->randomName(),
     );
+  }
+
+  /**
+   * Asserts a contact type link.
+   *
+   * The path 'admin/structure/crm-core/contact-types/' gets prepended to the
+   * path provided.
+   *
+   * @see WebTestBase::assertLinkByHref()
+   */
+  public function assertContactTypeLink($href, $message = '') {
+    $this->assertLinkByHref('admin/structure/crm-core/contact-types/' . $href, 0, $message);
+  }
+
+  /**
+   * Asserts no contact type link.
+   *
+   * The path 'admin/structure/crm-core/contact-types/' gets prepended to the
+   * path provided.
+   *
+   * @see WebTestBase::assertNoLinkByHref()
+   */
+  public function assertNoContactTypeLink($href, $message = '') {
+    $this->assertNoLinkByHref('admin/structure/crm-core/contact-types/' . $href, $message);
   }
 }
