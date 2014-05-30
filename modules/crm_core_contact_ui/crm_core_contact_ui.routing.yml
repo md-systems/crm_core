@@ -46,7 +46,7 @@ crm_core_contact.add:
     _entity_create_access: 'crm_core_contact:{crm_core_contact_type}'
 
 crm_core_contact.type_list:
-  path: '/admin/crm-core/contact-types'
+  path: '/admin/structure/crm-core/contact-types'
   defaults:
     _content: '\Drupal\Core\Entity\Controller\EntityListController::listing'
     entity_type: 'crm_core_contact_type'
@@ -55,22 +55,22 @@ crm_core_contact.type_list:
     _permission: 'administer contact types'
 
 crm_core_contact.type_add:
-  path: '/admin/crm-core/contact-types/add'
+  path: '/admin/structure/crm-core/contact-types/add'
   defaults:
     _entity_form: 'crm_core_contact_type.default'
     _title: 'Add contact type'
   requirements:
-    _permission: 'administer contact types'
+    _entity_create_access: 'crm_core_contact_type'
 
 crm_core_contact.type_edit:
-  path: '/admin/crm-core/contact-types/{crm_core_contact_type}'
+  path: '/admin/structure/crm-core/contact-types/{crm_core_contact_type}'
   defaults:
     _entity_form: 'crm_core_contact_type.default'
   requirements:
-    _permission: 'administer contact types'
+    _entity_access: 'crm_core_contact_type.edit'
 
 crm_core_contact.type_delete:
-  path: '/admin/crm-core/contact-types/{crm_core_contact_type}/delete'
+  path: '/admin/structure/crm-core/contact-types/{crm_core_contact_type}/delete'
   defaults:
     _entity_form: 'crm_core_contact_type.delete'
     _title: 'Delete contact type'
@@ -78,19 +78,19 @@ crm_core_contact.type_delete:
     _entity_access: 'crm_core_contact_type.delete'
 
 crm_core_contact.type_enable:
-  path: '/admin/crm-core/contact-types/{crm_core_contact_type}/enable'
+  path: '/admin/structure/crm-core/contact-types/{crm_core_contact_type}/enable'
   defaults:
     _entity_form: 'crm_core_contact_type.toggle'
     _title: 'Enable contact type'
     op: 'enable'
   requirements:
-    _permission: 'administer contact types'
+    _entity_access: 'crm_core_contact_type.enable'
 
 crm_core_contact.type_disable:
-  path: '/admin/crm-core/contact-types/{crm_core_contact_type}/disable'
+  path: '/admin/structure/crm-core/contact-types/{crm_core_contact_type}/disable'
   defaults:
     _entity_form: 'crm_core_contact_type.toggle'
     _title: 'Disable contact type'
     op: 'disable'
   requirements:
-    _permission: 'administer contact types'
+    _entity_access: 'crm_core_contact_type.disable'
