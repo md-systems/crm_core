@@ -208,6 +208,20 @@ class ContactType extends ConfigEntityBase {
   }
 
   /**
+   * Loads all enabled Contact Types.
+   *
+   * @return \Drupal\crm_core_contact\Entity\ContactType[]
+   *   An array of contact types indexed by their IDs.
+   */
+  public static function loadActive() {
+    $ids = \Drupal::entityQuery('crm_core_contact')
+      ->condition('status', TRUE)
+      ->execute();
+
+    return ContactType::loadMultiple($ids);
+  }
+
+  /**
    * Adds the default name field to a contact type.
    *
    * @param string $label
