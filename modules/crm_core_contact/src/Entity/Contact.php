@@ -225,4 +225,53 @@ class Contact extends ContentEntityBase {
   public static function create(array $values = array()) {
     return \Drupal::entityManager()->getStorage('crm_core_contact')->create($values);
   }
+
+  /**
+   * Gets the primary address.
+   *
+   * @return \Drupal\Core\Field\FieldItemListInterface|\Drupal\Core\TypedData\TypedDataInterface
+   *   The address property object.
+   */
+  public function getPrimaryAddress() {
+    return $this->getPrimaryField('address');
+  }
+
+  /**
+   * Gets the primary email.
+   *
+   * @return \Drupal\Core\Field\FieldItemListInterface|\Drupal\Core\TypedData\TypedDataInterface
+   *   The email property object.
+   */
+  public function getPrimaryEmail() {
+    return $this->getPrimaryField('email');
+  }
+
+  /**
+   * Gets the primary phone.
+   *
+   * @return \Drupal\Core\Field\FieldItemListInterface|\Drupal\Core\TypedData\TypedDataInterface
+   *   The phone property object.
+   */
+  public function getPrimaryPhone() {
+    return $this->getPrimaryField('phone');
+  }
+
+  /**
+   * Gets the primary field.
+   *
+   * @param string $field
+   *   The primary field name.
+   *
+   * @return \Drupal\Core\Field\FieldItemListInterface|\Drupal\Core\TypedData\TypedDataInterface
+   *   The primary field property object.
+   *
+   * @throws \InvalidArgumentException
+   *   If no primary field is configured.
+   *   If the configured primary field does not exist.
+   */
+  public function getPrimaryField($field) {
+    $type = ContactType::load($this->bundle());
+    $name = empty($type->primary_fields[$field]) ? '' : $type->primary_fields[$field];
+    return $this->get($name);
+  }
 }
