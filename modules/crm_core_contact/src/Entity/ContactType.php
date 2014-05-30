@@ -22,6 +22,7 @@ use Drupal\field\Entity\FieldInstanceConfig;
  *   bundle_of = "crm_core_contact",
  *   config_prefix = "type",
  *   controllers = {
+ *     "access" = "Drupal\crm_core_contact\ContactTypeAccessController",
  *     "form" = {
  *       "default" = "Drupal\crm_core_contact\Form\ContactTypeForm",
  *       "delete" = "Drupal\crm_core_contact\Form\ContactTypeDeleteForm",
@@ -29,7 +30,6 @@ use Drupal\field\Entity\FieldInstanceConfig;
  *     },
  *     "list_builder" = "Drupal\crm_core_contact\ContactTypeListBuilder",
  *   },
- *   admin_permission = "administer contact types",
  *   entity_keys = {
  *     "id" = "type",
  *     "label" = "name",
