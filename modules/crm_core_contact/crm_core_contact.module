@@ -5,10 +5,10 @@
  * Provides default CRM Core Contact entities and the ability to create more.
  */
 
-// Integration with context.
 use Drupal\crm_core_contact\Entity\Contact;
 use Drupal\crm_core_contact\Entity\ContactType;
 
+// Integration with context.
 module_load_include('inc', 'crm_core_contact', 'crm_core_contact.context');
 
 /**
