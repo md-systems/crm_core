@@ -4,26 +4,3 @@
  * @file
  * Install, update, and uninstall functions for the CRM Core Activity module.
  */
-
-/**
- * Implements hook_install().
- */
-function crm_core_activity_install() {
-  $t = get_t();
-
-  // Create a default meeting activity type.
-  $meeting = entity_create('crm_core_activity_type', array(
-    'type' => 'meeting',
-    'label' => $t('Meeting'),
-    'description' => $t('A meeting between 2 or more contacts'),
-  ));
-  crm_core_activity_type_save($meeting);
-
-  // Create a phone call activity type.
-  $phone_call = entity_create('crm_core_activity_type', array(
-    'type' => 'phone_call',
-    'label' => $t('Phone call'),
-    'description' => $t('A phone call between 2 or more contacts'),
-  ));
-  crm_core_activity_type_save($phone_call);
-}

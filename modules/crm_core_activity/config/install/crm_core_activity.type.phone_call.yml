@@ -1,0 +1,8 @@
+type: phone_call
+name: Phone call
+description: 'A phone call between 2 or more contacts.'
+activity_string: null
+status: true
+uuid: 72fcfbe5-c417-4065-8f7a-d220bd02ec75
+langcode: en
+dependencies: {  }
