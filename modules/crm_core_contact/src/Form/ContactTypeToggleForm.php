@@ -8,6 +8,7 @@
 namespace Drupal\crm_core_contact\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
+use Drupal\Core\Url;
 
 class ContactTypeToggleForm extends EntityConfirmFormBase {
 
@@ -50,9 +51,7 @@ class ContactTypeToggleForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'crm_core_contact.type_list',
-    );
+    return new Url('crm_core_contact.type_list');
   }
 
   /**

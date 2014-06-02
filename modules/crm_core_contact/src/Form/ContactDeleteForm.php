@@ -9,6 +9,7 @@ namespace Drupal\crm_core_contact\Form;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityConfirmFormBase;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ContactDeleteForm extends EntityConfirmFormBase {
@@ -50,9 +51,7 @@ class ContactDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'crm_core_contact.type_list',
-    );
+    return new Url('crm_core_contact.type_list');
   }
 
   /**
