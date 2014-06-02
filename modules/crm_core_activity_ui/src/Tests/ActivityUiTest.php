@@ -7,6 +7,7 @@
 
 namespace Drupal\crm_core_activity_ui\Tests;
 
+use Drupal\crm_core_contact\Entity\Contact;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -41,19 +42,21 @@ class ActivityUiTest extends WebTestBase {
    * Delete every activity. Assert they disappeared from listing page.
    */
   public function testActivityOperations() {
-    // Create and login user. User should be able to create contacts and activities.
+    // Create and login user. User should be able to create contacts and
+    // activities.
     $user = $this->drupalCreateUser(array(
       'administer crm_core_contact entities',
       'view any crm_core_contact entity',
-      'administer crm_core_activity entities'
+      'administer crm_core_activity entities',
     ));
     $this->drupalLogin($user);
 
-    // Create Houshold contact.
-    $household_contact = array(
-      'contact_name[und][0][given]' => $this->randomName(),
-    );
-    $this->drupalPost('crm-core/contact/add/household', $household_contact, t('Save Household'));
+    // Create Household contact.
+    $household = Contact::create(array(
+      'contact_name[0][name]' => $this->randomName(),
+      'type' => 'household',
+    ));
+    $household->save();
 
     $this->drupalGet('crm-core/contact/1/activity');
     $this->assertText(t('There are no activities available.'), t('No activities avaiable for newly created contact.'));
