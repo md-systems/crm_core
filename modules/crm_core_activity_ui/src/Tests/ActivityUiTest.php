@@ -2,28 +2,34 @@
 
 /**
  * @file
- * Tests for Activity UI module.
+ * Contains \Drupal\crm_core_activity_ui\Tests\ActivityUiTest.
  */
+
+namespace Drupal\crm_core_activity_ui\Tests;
+
+use Drupal\simpletest\WebTestBase;
 
 /**
  * Activity UI test case.
  */
-class CRMCoreActivityUITestCase extends DrupalWebTestCase {
+class ActivityUiTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array(
+    'crm_core_activity',
+    'crm_core_activity_ui',
+  );
+
   public static function getInfo() {
     return array(
       'name' => t('Activity UI'),
       'description' => t('Test create/edit/delete activities.'),
       'group' => t('CRM Core'),
     );
-  }
-
-  /**
-   * Enabled dependency modules.
-   */
-  public function setUp() {
-    parent::setUp(array('ctools', 'entity', 'views', 'image', 'name', 'entityreference', 'date', 'date_popup', 'date_views', 'crm_core', 'crm_core_ui'));
-    module_enable(array('crm_core_contact', 'crm_core_contact_ui', 'crm_core_activity', 'crm_core_activity_ui'));
-    $this->resetAll();
   }
 
   /**
