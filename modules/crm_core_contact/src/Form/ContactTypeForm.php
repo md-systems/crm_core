@@ -10,7 +10,6 @@ namespace Drupal\crm_core_contact\Form;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\field\Entity\FieldInstanceConfig;
-use Drupal\field\Field;
 
 /**
  * Class ContactTypeForm
@@ -73,7 +72,7 @@ class ContactTypeForm extends EntityForm {
     $options = array();
     if (isset($type->type)) {
       /* @var FieldInstanceConfig[] $instances */
-      $instances = Field::fieldInfo()->getInstances('crm_core_contact');
+      $instances = \Drupal::entityManager()->getFieldDefinitions('crm_core_contact', $type->type);
       $instances = isset($instances[$type->type]) ? $instances[$type->type] : array();
       foreach ($instances as $instance) {
         $options[$instance->getName()] = $instance->getLabel();
