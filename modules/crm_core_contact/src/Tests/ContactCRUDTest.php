@@ -44,6 +44,8 @@ class ContactCRUDTest extends KernelTestBase {
    * Tests CRUD of contact types.
    */
   public function testContactType() {
+    $this->installEntitySchema('crm_core_contact');
+
     $type = 'dog';
 
     // Create.
@@ -77,8 +79,8 @@ class ContactCRUDTest extends KernelTestBase {
    * @todo Check if working once https://drupal.org/node/2239969 got committed.
    */
   public function testContact() {
-    $this->installSchema('crm_core_contact', array('crm_core_contact', 'crm_core_contact_revision'));
-    $this->installSchema('user', array('users', 'users_data', 'users_roles'));
+    $this->installEntitySchema('crm_core_contact');
+    $this->installEntitySchema('user');
     $type = ContactType::create(array('type' => 'test'));
     $type->save();
 

@@ -177,6 +177,12 @@ class Contact extends ContentEntityBase {
         'default_value' => 0,
       ));
 
+    $fields['log'] = FieldDefinition::create('string_long')
+      ->setLabel(t('Log'))
+      ->setDescription(t('The log entry explaining the changes in this revision.'))
+      ->setRevisionable(TRUE)
+      ->setTranslatable(TRUE);
+
     return $fields;
   }
 

@@ -14,125 +14,125 @@ function crm_core_contact_enable() {
   // cache_clear_all('plugins:feeds:plugins', 'cache');
 }
 
-/**
- * Implements hook_schema().
- *
- * @todo Remove in favour of https://drupal.org/node/2183231.
- */
-function crm_core_contact_schema() {
-  $schema['crm_core_contact'] = array(
-    'description' => 'Stores contact data.',
-    'fields' => array(
-      'contact_id' => array(
-        'description' => 'The primary identifer for a contact.',
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'vid' => array(
-        'description' => 'The current {crm_core_contact_revision}.vid of this contact.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'type' => array(
-        'description' => 'The {crm_core_contact_type}.type of contact.',
-        'type' => 'varchar',
-        'length' => 40,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'created' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'Timestamp for when contact was created.',
-      ),
-      'changed' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'Timestamp for when contact was last changed',
-      ),
-      'uid' => array(
-        'description' => 'The {users}.uid that owns this contact; initially, this is the user that created it.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-    ),
-    'indexes' => array(
-      'created' => array('created'),
-      'changed' => array('changed'),
-    ),
-    'foreign keys' => array(
-      'contact_revision' => array(
-        'table' => 'crm_core_contact_revision',
-        'columns' => array('vid' => 'vid'),
-      ),
-    ),
-    'primary key' => array('contact_id'),
-  );
-
-  $schema['crm_core_contact_revision'] = array(
-    'description' => 'Saves information about each saved revision of a {crm_core_contact}',
-    'fields' => array(
-      'vid' => array(
-        'description' => 'The primary identifier of this {crm_core_contact_revision}.',
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'contact_id' => array(
-        'description' => 'The {crm_core_contact}.contact_id for this revision.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'uuid' => array(
-        'description' => 'Unique Key: Universally unique identifier for this entity.',
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => FALSE,
-      ),
-      'log' => array(
-        'description' => 'The log entry explaining the changes in this version.',
-        'type' => 'text',
-        'not null' => TRUE,
-        'size' => 'big',
-      ),
-      'created' => array(
-        'description' => 'The unix timestamp for when this revision was created.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'changed' => array(
-        'description' => 'The unix timestamp for when this revision was last changed.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'uid' => array(
-        'description' => 'The {users}.uid that created this version.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-    ),
-    'foreign keys' => array(
-      'versioned_contact' => array(
-        'table' => 'crm_core_contact',
-        'columns' => array('contact_id' => 'contact_id'),
-      ),
-      'version_creator' => array(
-        'table' => 'user',
-        'columns' => array('uid' => 'uid'),
-      ),
-    ),
-    'primary key' => array('vid'),
-  );
-
-  return $schema;
-}
+///**
+// * Implements hook_schema().
+// *
+// * @todo Remove in favour of https://drupal.org/node/2183231.
+// */
+//function crm_core_contact_schema() {
+//  $schema['crm_core_contact'] = array(
+//    'description' => 'Stores contact data.',
+//    'fields' => array(
+//      'contact_id' => array(
+//        'description' => 'The primary identifer for a contact.',
+//        'type' => 'serial',
+//        'unsigned' => TRUE,
+//        'not null' => TRUE,
+//      ),
+//      'vid' => array(
+//        'description' => 'The current {crm_core_contact_revision}.vid of this contact.',
+//        'type' => 'int',
+//        'unsigned' => TRUE,
+//        'not null' => TRUE,
+//        'default' => 0,
+//      ),
+//      'type' => array(
+//        'description' => 'The {crm_core_contact_type}.type of contact.',
+//        'type' => 'varchar',
+//        'length' => 40,
+//        'not null' => TRUE,
+//        'default' => '',
+//      ),
+//      'created' => array(
+//        'type' => 'int',
+//        'not null' => TRUE,
+//        'default' => 0,
+//        'description' => 'Timestamp for when contact was created.',
+//      ),
+//      'changed' => array(
+//        'type' => 'int',
+//        'not null' => TRUE,
+//        'default' => 0,
+//        'description' => 'Timestamp for when contact was last changed',
+//      ),
+//      'uid' => array(
+//        'description' => 'The {users}.uid that owns this contact; initially, this is the user that created it.',
+//        'type' => 'int',
+//        'not null' => TRUE,
+//        'default' => 0,
+//      ),
+//    ),
+//    'indexes' => array(
+//      'created' => array('created'),
+//      'changed' => array('changed'),
+//    ),
+//    'foreign keys' => array(
+//      'contact_revision' => array(
+//        'table' => 'crm_core_contact_revision',
+//        'columns' => array('vid' => 'vid'),
+//      ),
+//    ),
+//    'primary key' => array('contact_id'),
+//  );
+//
+//  $schema['crm_core_contact_revision'] = array(
+//    'description' => 'Saves information about each saved revision of a {crm_core_contact}',
+//    'fields' => array(
+//      'vid' => array(
+//        'description' => 'The primary identifier of this {crm_core_contact_revision}.',
+//        'type' => 'serial',
+//        'unsigned' => TRUE,
+//        'not null' => TRUE,
+//      ),
+//      'contact_id' => array(
+//        'description' => 'The {crm_core_contact}.contact_id for this revision.',
+//        'type' => 'int',
+//        'unsigned' => TRUE,
+//        'not null' => TRUE,
+//      ),
+//      'uuid' => array(
+//        'description' => 'Unique Key: Universally unique identifier for this entity.',
+//        'type' => 'varchar',
+//        'length' => 128,
+//        'not null' => FALSE,
+//      ),
+//      'log' => array(
+//        'description' => 'The log entry explaining the changes in this version.',
+//        'type' => 'text',
+//        'not null' => TRUE,
+//        'size' => 'big',
+//      ),
+//      'created' => array(
+//        'description' => 'The unix timestamp for when this revision was created.',
+//        'type' => 'int',
+//        'unsigned' => TRUE,
+//        'not null' => TRUE,
+//      ),
+//      'changed' => array(
+//        'description' => 'The unix timestamp for when this revision was last changed.',
+//        'type' => 'int',
+//        'unsigned' => TRUE,
+//        'not null' => TRUE,
+//      ),
+//      'uid' => array(
+//        'description' => 'The {users}.uid that created this version.',
+//        'type' => 'int',
+//        'not null' => TRUE,
+//        'default' => 0,
+//      ),
+//    ),
+//    'foreign keys' => array(
+//      'versioned_contact' => array(
+//        'table' => 'crm_core_contact',
+//        'columns' => array('contact_id' => 'contact_id'),
+//      ),
+//      'version_creator' => array(
+//        'table' => 'user',
+//        'columns' => array('uid' => 'uid'),
+//      ),
+//    ),
+//    'primary key' => array('vid'),
+//  );
+//
+//  return $schema;
+//}
