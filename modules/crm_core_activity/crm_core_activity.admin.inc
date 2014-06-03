@@ -82,11 +82,6 @@ function crm_core_activity_type_form_submit(&$form, &$form_state) {
   // Save and go back.
   $crm_activity_type->save();
 
-  // If we create new activity type we need to add default fields to it.
-  if ($form_state['op'] == 'add') {
-    crm_core_activity_type_add_default_fields($crm_activity_type);
-  }
-
   // Redirect user back to list of activity types.
   $form_state['redirect'] = 'admin/structure/crm-core/activity-types';
 }
@@ -96,32 +91,4 @@ function crm_core_activity_type_form_submit(&$form, &$form_state) {
  */
 function crm_core_activity_type_form_submit_delete(&$form, &$form_state) {
   $form_state['redirect'] = 'admin/structure/crm-core/activity-types/manage/' . $form_state['crm_core_activity_type']->type . '/delete';
-}
-
-/**
- * Add default fields to newly created activity type.
- */
-function crm_core_activity_type_add_default_fields($activity_type) {
-  $type = $activity_type->type;
-
-  module_load_include('inc', 'crm_core_activity', 'crm_core_activity.fields');
-  $fields = _crm_core_activity_type_default_fields();
-  drupal_alter('crm_core_activity_type_add_fields', $fields, $activity_type);
-
-  foreach ($fields as $field) {
-    $info = field_info_field($field['field_name']);
-    if (empty($info)) {
-      field_create_field($field);
-    }
-  }
-
-  $instances = _crm_core_activity_type_default_field_instances($type);
-  drupal_alter('crm_core_activity_type_add_field_instances', $instances, $activity_type);
-
-  foreach ($instances as $instance) {
-    $info_instance = field_info_instance('crm_core_activity', $instance['field_name'], $type);
-    if (empty($info_instance)) {
-      field_create_instance($instance);
-    }
-  }
 }

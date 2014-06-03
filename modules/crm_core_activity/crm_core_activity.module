@@ -337,14 +337,6 @@ function crm_core_activity_type_save($activity_type) {
 }
 
 /**
- * Implements hook_crm_core_activity_type_insert().
- */
-function crm_core_activity_crm_core_activity_type_insert($activity_type) {
-  module_load_include('inc', 'crm_core_activity', 'crm_core_activity.admin');
-  crm_core_activity_type_add_default_fields($activity_type);
-}
-
-/**
  * Implements hook_forms().
  *
  * Create form for adding/editing crm_activity.
