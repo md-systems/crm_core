@@ -14,17 +14,6 @@ function crm_core_activity_ui_menu() {
     'contact' => 'crm-core/contact/%crm_core_contact/activity/add',
   );
   foreach ($activity_paths as $key => $path) {
-    $items[$path] = array(
-      'title' => 'Add an activity',
-      'page callback' => 'crm_core_activity_ui_add_activity',
-      'page arguments' => array(($key == 'contact' ? 2 : NULL)),
-      'access callback' => 'entity_access',
-      'access arguments' => array('create_view', 'crm_core_activity'),
-      'type' => MENU_LOCAL_ACTION,
-      'file' => 'crm_core_activity_ui.pages.inc',
-      'weight' => 5,
-    );
-
     foreach (crm_core_activity_types() as $type => $info) {
       $items[$path . '/' . $type] = array(
         'title' => 'Add activity @type',

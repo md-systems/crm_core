@@ -204,61 +204,6 @@ function crm_core_activity_form_delete_confirm_submit($form, &$form_state) {
 }
 
 /**
- * Add activity page callback.
- *
- * @param object $contact
- *   CRM Core contact.
- *
- * @return string
- *   Activity types list or empty text.
- */
-function crm_core_activity_ui_add_activity($contact = NULL) {
-
-  global $user;
-  $items = array();
-
-  // Work around core issue where 'title' isn't set for MENU_LOCAL_ACTION,
-  // see: http://drupal.org/node/891892
-  $trail = menu_get_active_trail();
-  drupal_set_title($trail[count($trail) - 1]['title']);
-
-  if ($contact) {
-    _crm_core_activity_ui_set_breadcrumb($contact);
-    $contact_uri = $contact->uri();
-    foreach (crm_core_activity_types() as $info) {
-      if (entity_access('create', 'crm_core_activity', $info->type, $user)) {
-        $items[] = array(
-          'title' => $info->label,
-          'href' => $contact_uri['path'] . '/activity/add/' . $info->type,
-          'localized_options' => array(),
-          'description' => $info->description,
-        );
-      }
-    }
-  }
-  else {
-    foreach (crm_core_activity_types() as $info) {
-      if (entity_access('create', 'crm_core_activity', $info->type, $user)) {
-        $items[] = array(
-          'title' => $info->label,
-          'href' => 'crm-core/contact/activity-add/' . $info->type,
-          'localized_options' => array(),
-          'description' => $info->description,
-        );
-      }
-    }
-  }
-
-  if (count($items) == 1) {
-    drupal_goto($items[0]['href'], $items[0]);
-  }
-
-  $empty = 'It is not possible to create Activities yet. Please create an Activity Type first.';
-
-  return empty($items) ? t($empty) : theme('crm_core_contact_ui_add_list', array('content' => $items));
-}
-
-/**
  * Prepares variables for list of available activity type templates.
  *
  * Default template: crm-core-activity-ui-add-list.html.twig.
