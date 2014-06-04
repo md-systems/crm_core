@@ -103,7 +103,17 @@ class Activity extends ContentEntityBase {
       ->setRequired(TRUE)
       ->setRevisionable(TRUE)
       ->setSetting('default_value', '')
-      ->setSetting('max_length', 255);
+      ->setSetting('max_length', 255)
+      ->setDisplayOptions('view', array(
+        'label' => 'hidden',
+        'type' => 'string',
+        'weight' => -5,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'string',
+        'weight' => -5,
+      ))
+      ->setDisplayConfigurable('form', TRUE);
 
     $fields['created'] = FieldDefinition::create('created')
       ->setLabel(t('Created'))

@@ -15,3 +15,13 @@ crm_core_activity.add_page:
     _content: 'Drupal\crm_core_activity_ui\Controller\ActivityController::addPage'
   requirements:
     _entity_create_access: 'crm_core_activity'
+
+# @todo: Also support '/crm-core/contact/activity-add/{crm_core_activity_type}'
+crm_core_activity.add:
+  path: '/crm-core/contact/{crm_core_contact}/activity/add/{crm_core_activity_type}'
+  defaults:
+    _content: '\Drupal\crm_core_activity_ui\Controller\ActivityController::add'
+    _title_callback: '\Drupal\crm_core_activity_ui\Controller\ActivityController::addPageTitle'
+  requirements:
+#    _permission: 'view any crm_core_contact entity'
+    _entity_create_access: 'crm_core_activity:{crm_core_activity_type}'
