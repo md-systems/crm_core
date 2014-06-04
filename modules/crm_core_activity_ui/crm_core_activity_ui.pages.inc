@@ -4,6 +4,7 @@
  * @file
  * User page callbacks for the Activity UI module.
  */
+use Drupal\Component\Utility\Xss;
 
 /**
  * Create new crm_activity entity and pass it to entity_ui_get_form().
@@ -255,4 +256,35 @@ function crm_core_activity_ui_add_activity($contact = NULL) {
   $empty = 'It is not possible to create Activities yet. Please create an Activity Type first.';
 
   return empty($items) ? t($empty) : theme('crm_core_contact_ui_add_list', array('content' => $items));
+}
+
+/**
+ * Prepares variables for list of available activity type templates.
+ *
+ * Default template: crm-core-activity-ui-add-list.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - type_entities: An array of activity types.
+ */
+function template_preprocess_crm_core_activity_ui_add_list(&$variables) {
+  $variables['types'] = array();
+  if (!empty($variables['type_entities'])) {
+    /* @var \Drupal\crm_core_activity\Entity\ActivityType $type */
+    foreach ($variables['type_entities'] as $type) {
+      if (!empty($variables['contact'])) {
+        /* @var \Drupal\crm_core_contact\Entity\Contact $contact */
+        $contact = $variables['contact'];
+        $path = $contact->urlInfo()->getPath() . '/activity/add/' . $type->id();
+      }
+      else {
+        $path = 'crm-core/contact/activity-add/' . $type->id();
+      }
+      $variables['types'][$type->id()] = array(
+        'type' => $type->id(),
+        'add_link' => l(t('Add @type', array('@type' => $type->label())), $path),
+        'description' => Xss::filterAdmin($type->description),
+      );
+    }
+  }
 }

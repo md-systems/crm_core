@@ -157,6 +157,21 @@ function crm_core_activity_ui_admin_menu_map() {
 }
 
 /**
+ * Implements hook_theme().
+ */
+function crm_core_activity_ui_theme() {
+  $theme = array();
+
+  $theme['crm_core_activity_ui_add_list'] = array(
+    'variables' => array('type_entities' => array(), 'contact'),
+    'file' => 'crm_core_activity_ui.pages.inc',
+    'template' => 'crm-core-activity-ui-add-list',
+  );
+
+  return $theme;
+}
+
+/**
  * Implements hook_form_alter().
  */
 function crm_core_activity_ui_form_alter(&$form, &$form_state, $form_id) {
