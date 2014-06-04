@@ -155,10 +155,6 @@ class Activity extends ContentEntityBase {
   public function preSaveRevision(EntityStorageInterface $storage, \stdClass $record) {
     parent::preSaveRevision($storage, $record);
 
-    if (!isset($record->log)) {
-      $record->log = '';
-    }
-
     $account = \Drupal::currentUser();
     $record->uid = $account->id();
   }
