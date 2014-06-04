@@ -1,0 +1,17 @@
+crm_core_activity.list:
+  path: '/crm-core/contact/{crm_core_contact}/activity'
+  defaults:
+    _content: '\Drupal\Core\Entity\Controller\EntityListController::listing'
+    entity_type: 'crm_core_activity'
+    _title: 'Activities'
+  requirements:
+    _permission: 'view any crm_core_contact entity'
+
+# @todo: Also support '/crm-core/contact/activity-add/'
+crm_core_activity.add_page:
+  path: '/crm-core/contact/{crm_core_contact}/activity/add'
+  defaults:
+    _title: 'Add an activity'
+    _content: 'Drupal\crm_core_activity_ui\Controller\ActivityController::addPage'
+  requirements:
+    _entity_create_access: 'crm_core_activity'

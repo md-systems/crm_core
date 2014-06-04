@@ -63,8 +63,8 @@ class ActivityUiTest extends WebTestBase {
     $this->assertLink(t('Add an activity'));
 
     $this->drupalGet('crm-core/contact/1/activity/add');
-    $this->assertLink(t('Meeting'));
-    $this->assertLink(t('Phone call'));
+    $this->assertLink(t('Add Meeting'));
+    $this->assertLink(t('Add Phone call'));
 
     // Create Meeting activity. Ensure it it listed.
     $meeting_activity = array(
