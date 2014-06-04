@@ -69,9 +69,9 @@ class ActivityUiTest extends WebTestBase {
     // Create Meeting activity. Ensure it it listed.
     $meeting_activity = array(
       'title[0][value]' => 'Pellentesque',
-      'field_activity_date[und][0][value][date]' => $this->randomDate(),
-      'field_activity_date[und][0][value][time]' => $this->randomTime(),
-      'field_activity_notes[und][0][value]' => $this->randomString(),
+      'activity_date[0][value][date]' => $this->randomDate(),
+      'activity_date[0][value][time]' => $this->randomTime(),
+      'activity_notes[0][value]' => $this->randomString(),
     );
     $this->drupalPostForm('crm-core/contact/1/activity/add/meeting', $meeting_activity, t('Save Activity'));
     $this->assertText('Activity Pellentesque created.', t('No errors after adding new activity.'));

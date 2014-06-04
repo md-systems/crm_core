@@ -5,4 +5,8 @@ activity_string: null
 status: true
 uuid: 72fcfbe5-c417-4065-8f7a-d220bd02ec75
 langcode: en
-dependencies: {  }
+dependencies:
+  entity:
+    - field.field.crm_core_activity.activity_date
+    - field.field.crm_core_activity.activity_notes
+    - field.field.crm_core_activity.activity_participants

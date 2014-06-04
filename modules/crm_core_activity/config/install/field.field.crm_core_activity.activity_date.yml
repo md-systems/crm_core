@@ -1,0 +1,28 @@
+id: crm_core_activity.activity_date
+uuid: 7ea452d8-4bfa-49f4-a100-ca5186796729
+status: true
+langcode: en
+name: activity_date
+entity_type: crm_core_activity
+type: datetime
+settings:
+  repeat: 0
+  granularity:
+    month: month
+    day: day
+    hour: hour
+    minute: minute
+    year: year
+    second: 0
+  tz_handling: site
+  timezone_db: UTC
+  todate: ''
+  datetime_type: datetime
+locked: true
+cardinality: 1
+translatable: false
+indexes: {  }
+dependencies:
+  module:
+    - crm_core_activity
+    - datetime
