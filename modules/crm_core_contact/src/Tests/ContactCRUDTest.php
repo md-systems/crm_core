@@ -44,6 +44,7 @@ class ContactCRUDTest extends KernelTestBase {
    * Tests CRUD of contact types.
    */
   public function testContactType() {
+    $this->installConfig(array('field'));
     $this->installEntitySchema('crm_core_contact');
 
     $type = 'dog';

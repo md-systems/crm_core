@@ -6,4 +6,6 @@ primary_fields: null
 status: true
 uuid: a9dd51b1-2ded-4a03-9559-8951b5a7f597
 langcode: en
-dependencies: {  }
+dependencies:
+  entity:
+    - field.field.crm_core_contact.contact_name

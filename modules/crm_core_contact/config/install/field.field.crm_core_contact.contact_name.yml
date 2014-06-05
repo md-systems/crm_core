@@ -1,0 +1,18 @@
+id: crm_core_contact.contact_name
+uuid: 31cf0b5f-4084-483a-a000-e91e6584676a
+status: true
+langcode: en
+name: contact_name
+entity_type: crm_core_contact
+type: text
+settings:
+  max_length: 255
+module: text
+locked: true
+cardinality: 1
+translatable: false
+indexes: {  }
+dependencies:
+  module:
+    - crm_core_contact
+    - text

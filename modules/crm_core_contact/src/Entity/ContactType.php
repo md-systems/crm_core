@@ -231,20 +231,13 @@ class ContactType extends ConfigEntityBase {
    *   Name field instance.
    */
   protected function addContactNameField($label = 'Name') {
+    $field_name = 'contact_name';
     // Add or remove the body field, as needed.
-    $field = FieldConfig::loadByName('crm_core_contact', 'contact_name');
-    $instance = FieldInstanceConfig::loadByName('crm_core_contact', $this->id(), 'contact_name');
-    if (empty($field)) {
-      $field = entity_create('field_config', array(
-        'name' => 'contact_name',
-        'entity_type' => 'crm_core_contact',
-        'type' => 'text',
-      ));
-      $field->save();
-    }
+    $instance = FieldInstanceConfig::loadByName('crm_core_contact', $this->id(), $field_name);
+
     if (empty($instance)) {
       $instance = entity_create('field_instance_config', array(
-        'field_name' => 'contact_name',
+        'field_name' => $field_name,
         'entity_type' => 'crm_core_contact',
         'bundle' => $this->id(),
         'label' => $label,
@@ -254,16 +247,18 @@ class ContactType extends ConfigEntityBase {
 
       // Assign widget settings for the 'default' form mode.
       entity_get_form_display('crm_core_contact', $this->id(), 'default')
-        ->setComponent('contact_name', array(
+        ->setComponent($field_name, array(
           'type' => 'text_textfield',
+          'weight' => 0,
         ))
         ->save();
 
       // Assign display settings for the 'default' and 'teaser' view modes.
       entity_get_display('crm_core_contact', $this->id(), 'default')
-        ->setComponent('contact_name', array(
+        ->setComponent($field_name, array(
           'label' => 'hidden',
           'type' => 'text_default',
+          'weight' => 0,
         ))
         ->save();
     }
