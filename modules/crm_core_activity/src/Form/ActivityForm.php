@@ -18,7 +18,7 @@ class ActivityForm  extends ContentEntityForm {
     parent::validate($form, $form_state);
 
     /* @var \Drupal\crm_core_activity\Entity\Activity $activity */
-    $activity = $this->entity;
+    $activity = $this->buildEntity($form, $form_state);
 
     if ($activity->get('activity_participants')->isEmpty()) {
       $message = $this->t('Participants field should include at least one participant.');

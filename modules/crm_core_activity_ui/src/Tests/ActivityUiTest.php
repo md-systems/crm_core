@@ -58,11 +58,11 @@ class ActivityUiTest extends WebTestBase {
     ));
     $household->save();
 
-    $this->drupalGet('crm-core/contact/1/activity');
-    $this->assertText(t('There are no activities available.'), t('No activities avaiable for newly created contact.'));
+    $this->drupalGet('crm-core/activity');
+    $this->assertText(t('There are no activities available.'), t('No activities available.'));
     $this->assertLink(t('Add an activity'));
 
-    $this->drupalGet('crm-core/contact/1/activity/add');
+    $this->drupalGet('crm-core/activity/add');
     $this->assertLink(t('Add Meeting'));
     $this->assertLink(t('Add Phone call'));
 
@@ -72,8 +72,9 @@ class ActivityUiTest extends WebTestBase {
       'activity_date[0][value][date]' => $this->randomDate(),
       'activity_date[0][value][time]' => $this->randomTime(),
       'activity_notes[0][value]' => $this->randomString(),
+      'activity_participants[0][target_id]' => $household->label() . ' (' . $household->id() . ')',
     );
-    $this->drupalPostForm('crm-core/contact/1/activity/add/meeting', $meeting_activity, t('Save Activity'));
+    $this->drupalPostForm('crm-core/activity/add/meeting', $meeting_activity, t('Save Activity'));
     $this->assertText('Activity Pellentesque created.', t('No errors after adding new activity.'));
 
     // Create Meeting activity. Ensure it it listed.
@@ -82,33 +83,28 @@ class ActivityUiTest extends WebTestBase {
       'activity_date[0][value][date]' => $this->randomDate(),
       'activity_date[0][value][time]' => $this->randomTime(),
       'activity_notes[0][value]' => $this->randomString(),
+      'activity_participants[0][target_id]' => $household->label() . ' (' . $household->id() . ')',
     );
-    $this->drupalPostForm('crm-core/contact/1/activity/add/phone_call', $phonecall_activity, t('Save Activity'));
+    $this->drupalPostForm('crm-core/activity/add/phone_call', $phonecall_activity, t('Save Activity'));
     $this->assertText('Activity Mollis created.', t('No errors after adding new activity.'));
 
     // Update activity and assert its title changed on the list.
     $meeting_activity = array(
       'title[0][value]' => 'Vestibulum',
-      'activity_date[0][value][date]' => $this->randomDate(),
-      'activity_date[0][value][time]' => $this->randomTime(),
-      'activity_notes[0][value]' => $this->randomString(),
     );
     $this->drupalPostForm('crm-core/activity/1/edit', $meeting_activity, t('Save Activity'));
     $this->assertText('Vestibulum', t('Activity updated.'));
-    $this->drupalGet('crm-core/contact/1/activity');
-    $this->assertText('Vestibulum', t('Updated activity listed properly.'));
+    $this->drupalGet('crm-core/activity');
+    $this->assertLink('Vestibulum', 0, t('Updated activity listed properly.'));
 
     // Update phone call activity and assert its title changed on the list.
     $phonecall_activity = array(
       'title[0][value]' => 'Commodo',
-      'activity_date[0][value][date]' => $this->randomDate(),
-      'activity_date[0][value][time]' => $this->randomTime(),
-      'activity_notes[0][value]' => $this->randomString(),
     );
     $this->drupalPostForm('crm-core/activity/2/edit', $phonecall_activity, t('Save Activity'));
     $this->assertText('Commodo', t('Activity updated.'));
-    $this->drupalGet('crm-core/contact/1/activity');
-    $this->assertText('Commodo', t('Updated activity listed properly.'));
+    $this->drupalGet('crm-core/activity');
+    $this->assertLink('Commodo', 0, t('Updated activity listed properly.'));
 
     // Delete Meeting activity.
     $this->drupalPost('crm-core/activity/1/delete', array(), t('Delete'));
