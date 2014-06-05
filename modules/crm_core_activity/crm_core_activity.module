@@ -4,6 +4,7 @@
  * @file
  * Provides an entity for recording a contact's activities.
  */
+use Drupal\crm_core_activity\Entity\Activity;
 
 /**
  * Include file with hook_property_info().
@@ -122,67 +123,12 @@ function crm_core_activity_permission() {
  * ************************************************************************* */
 
 /**
- * Load a CRM Activity object.
- */
-function crm_core_activity_load($activity_id, $reset = FALSE) {
-  if (empty($activity_id)) {
-    return array();
-  }
-
-  if ($activity_id !== FALSE) {
-    $activity_id = array($activity_id);
-  }
-
-  $activities = crm_core_activity_load_multiple($activity_id, array(), $reset);
-  return reset($activities);
-}
-
-/**
- * Load multiple activities based on certain conditions.
- */
-function crm_core_activity_load_multiple($activity_ids = array(), $conditions = array(), $reset = FALSE) {
-  return entity_load('crm_core_activity', $activity_ids, $conditions, $reset);
-}
-
-/**
- * Save single activity object to db. Wrapper for controller.
- *
- * @param object $activity
- *   Entity object of crm_core_activity type.
- */
-function crm_core_activity_save($activity) {
-  return entity_get_controller('crm_core_activity')->save($activity);
-}
-
-/**
- * Delete single activity.
- *
- * @todo This function should accept activity_id, but activity object.
- *
- * @param object $activity
- *   Entity object of crm_core_activity type.
- */
-function crm_core_activity_delete($activity) {
-  crm_core_activity_delete_multiple(array($activity->activity_id));
-}
-
-/**
- * Delete multiple activities. Wrapper for controller.
- *
- * @param array $activity_ids
- *   array of entity ids that should be deleted.
- */
-function crm_core_activity_delete_multiple($activity_ids) {
-  entity_get_controller('crm_core_activity')->delete($activity_ids);
-}
-
-/**
  * Implements hook_field_extra_fields().
  */
 function crm_core_activity_field_extra_fields() {
   $extra = array();
 
-  foreach (crm_core_activity_types() as $type) {
+  foreach (ActivityType::loadMultiple() as $type) {
     $extra['crm_core_activity'][$type->type] = array(
       'form' => array(
         'title' => array(
@@ -200,69 +146,6 @@ function crm_core_activity_field_extra_fields() {
 /* ***************************************************************************
  * ***  CRM Activity Type helpers  *******************************************
  * ************************************************************************* */
-
-/**
- * Load Activity Type.
- */
-function crm_core_activity_type_load($activity_type) {
-  return crm_core_activity_types($activity_type);
-}
-
-/**
- * List of Activity Types.
- */
-function crm_core_activity_types($type_name = NULL) {
-  $types = entity_load_multiple_by_name('crm_core_activity_type', isset($type_name) ? array($type_name) : FALSE);
-  return isset($type_name) ? reset($types) : $types;
-}
-
-/**
- * Returns the human-readable names of an activity types.
- *
- * @return array
- *   An array as used by hook_options_list().
- */
-function crm_core_activity_type_get_names() {
-  $names =& drupal_static(__FUNCTION__, array());
-  if (empty($names)) {
-    $types = crm_core_activity_types();
-    foreach ($types as $type) {
-      $names[$type->type] = check_plain($type->label);
-    }
-  }
-
-  return $names;
-}
-
-
-/**
- * Returns the human-readable name of an activity type.
- *
- * @param string $type_name
- *   The machine name for an activity type.
- *
- * @return string
- *   A human readable name for the activity type or FALSE.
- */
-function crm_core_activity_type_get_name($type_name) {
-  $names = crm_core_activity_type_get_names();
-  if (isset($names[$type_name])) {
-    return $names[$type_name];
-  }
-  else {
-    return FALSE;
-  }
-}
-
-/**
- * Creates or saves an activity type.
- *
- * @param object $activity_type
- *   The activity type info to be saved
- */
-function crm_core_activity_type_save($activity_type) {
-  return entity_get_controller('crm_core_activity_type')->save($activity_type);
-}
 
 /**
  * Implements hook_forms().
@@ -325,7 +208,7 @@ function crm_core_activity_crm_core_contact_delete($crm_core_contact) {
 
   // Load fully populated Activity objects to analyze/update.
   $activity_ids = array_keys($results['crm_core_activity']);
-  $crm_core_activities = crm_core_activity_load_multiple($activity_ids);
+  $crm_core_activities = Activity::loadMultiple($activity_ids);
 
   $activities_to_remove = array();
 
@@ -343,7 +226,7 @@ function crm_core_activity_crm_core_contact_delete($crm_core_contact) {
     else {
       // Save Activity with renewed list.
       $wrapped_activity->field_activity_participants->set($participants);
-      crm_core_activity_save($crm_core_activity);
+      $crm_core_activity->save();
     }
   }
 
@@ -353,7 +236,7 @@ function crm_core_activity_crm_core_contact_delete($crm_core_contact) {
         '!count' => count($activities_to_remove),
         '%contact_id' => $crm_core_contact->contact_id,
       ), WATCHDOG_INFO);
-    crm_core_activity_delete_multiple($activities_to_remove);
+    \Drupal::entityManager()->getStorage('crm_core_activity')->delete($activities_to_remove);
   }
 }
 
@@ -417,14 +300,14 @@ function crm_core_activity_search_execute($keys = NULL, $conditions = NULL) {
   $results = array();
   foreach ($find as $item) {
     // Render the contact.
-    $activity = crm_core_activity_load($item->sid);
+    $activity = Activity::load($item->sid);
     $build = crm_core_activity_view($activity);
     unset($build['#theme']);
     $activity->rendered = drupal_render($build);
     $uri = entity_uri('crm_core_activity', $activity);
     $results[] = array(
       'link' => url($uri['path'], array_merge($uri['options'], array('absolute' => TRUE))),
-      'type' => crm_core_activity_type_get_name($activity->type),
+      'type' => $activity->get('type')->entity->label(),
       'title' => check_plain($activity->title),
       'user' => theme('username', array('account' => user_load($activity->uid))),
       'date' => $activity->changed,
@@ -465,7 +348,7 @@ function crm_core_activity_update_index() {
   $result = db_query_range("SELECT a.activity_id FROM {crm_core_activity} a LEFT JOIN {search_dataset} d ON d.type = 'crm_core_activity' AND d.sid = a.activity_id WHERE d.sid IS NULL OR d.reindex <> 0 ORDER BY d.reindex ASC, a.activity_id ASC", 0, $limit);
 
   foreach ($result as $activity) {
-    $activity = crm_core_activity_load($activity->activity_id);
+    $activity = Activity::load($activity->activity_id);
     variable_set('crm_core_activity_cron_last', $activity->changed);
 
     // Render the activity.

@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\crm_core_activity\Entity\Activity;
+
 class MigrateDestinationCRMCoreActivity extends MigrateDestinationEntity {
   static public function getKeySchema() {
     return array(
@@ -56,7 +58,7 @@ class MigrateDestinationCRMCoreActivity extends MigrateDestinationEntity {
   public function bulkRollback(array $activity_ids) {
     migrate_instrument_start('crm_core_activity_delete_multiple');
     $this->prepareRollback($activity_ids);
-    crm_core_activity_delete_multiple($activity_ids);
+    \Drupal::entityManager()->getStorage('crm_core_activity')->delete($activity_ids);
     $this->completeRollback($activity_ids);
     migrate_instrument_stop('crm_core_activity_delete_multiple');
   }
@@ -96,7 +98,7 @@ class MigrateDestinationCRMCoreActivity extends MigrateDestinationEntity {
       if (!isset($activity->activity_id)) {
         throw new MigrateException(t('System-of-record is DESTINATION, but no destination activity_id provided'));
       }
-      $old_activity = crm_core_activity_load($activity->activity_id);
+      $old_activity = Activity::load($activity->activity_id);
       if (empty($old_activity)) {
         $string = 'System-of-record is DESTINATION, but activity !activity_id does not exist';
         $params = array('!activity_id' => $activity->activity_id);
@@ -127,7 +129,7 @@ class MigrateDestinationCRMCoreActivity extends MigrateDestinationEntity {
     }
 
     migrate_instrument_start('activity_save');
-    crm_core_activity_save($activity);
+    $activity->save();
     migrate_instrument_stop('activity_save');
 
     if (isset($activity->activity_id)) {
