@@ -26,6 +26,7 @@ use Drupal\Core\Field\FieldDefinition;
  *       "delete" = "Drupal\crm_core_activity\Form\ActivityDeleteForm",
  *     },
  *     "list_builder" = "Drupal\crm_core_activity\ActivityListBuilder",
+ *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
  *   },
  *   base_table = "crm_core_activity",
  *   revision_table = "crm_core_activity_revision",

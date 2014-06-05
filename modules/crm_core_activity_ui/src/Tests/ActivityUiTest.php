@@ -78,39 +78,37 @@ class ActivityUiTest extends WebTestBase {
 
     // Create Meeting activity. Ensure it it listed.
     $phonecall_activity = array(
-      'title' => $this->randomName(),
-      'field_activity_date[und][0][value][date]' => $this->randomDate(),
-      'field_activity_date[und][0][value][time]' => $this->randomTime(),
-      'field_activity_notes[und][0][value]' => $this->randomString(),
+      'title[0][value]' => 'Mollis',
+      'activity_date[0][value][date]' => $this->randomDate(),
+      'activity_date[0][value][time]' => $this->randomTime(),
+      'activity_notes[0][value]' => $this->randomString(),
     );
-    $this->drupalPost('crm-core/contact/1/activity/add/phone_call', $phonecall_activity, t('Save Activity'));
-    $this->assertNoRaw('<div class="messages error">', t('No errors after adding new activity.'));
+    $this->drupalPostForm('crm-core/contact/1/activity/add/phone_call', $phonecall_activity, t('Save Activity'));
+    $this->assertText('Activity Mollis created.', t('No errors after adding new activity.'));
 
     // Update activity and assert its title changed on the list.
     $meeting_activity = array(
-      'title' => $this->randomName(),
-      'field_activity_date[und][0][value][date]' => $this->randomDate(),
-      'field_activity_date[und][0][value][time]' => $this->randomTime(),
-      'field_activity_notes[und][0][value]' => $this->randomString(),
+      'title[0][value]' => 'Vestibulum',
+      'activity_date[0][value][date]' => $this->randomDate(),
+      'activity_date[0][value][time]' => $this->randomTime(),
+      'activity_notes[0][value]' => $this->randomString(),
     );
-    $this->drupalPost('crm-core/activity/1/edit', $meeting_activity, t('Save Activity'));
-    $this->assertNoRaw('<div class="messages error">', t('No errors after updating activity.'));
-    $this->assertText($meeting_activity['title'], t('Activity updated.'));
+    $this->drupalPostForm('crm-core/activity/1/edit', $meeting_activity, t('Save Activity'));
+    $this->assertText('Vestibulum', t('Activity updated.'));
     $this->drupalGet('crm-core/contact/1/activity');
-    $this->assertRaw($meeting_activity['title'], t('Updated activity listed properly.'));
+    $this->assertText('Vestibulum', t('Updated activity listed properly.'));
 
     // Update phone call activity and assert its title changed on the list.
     $phonecall_activity = array(
-      'title' => $this->randomName(),
-      'field_activity_date[und][0][value][date]' => $this->randomDate(),
-      'field_activity_date[und][0][value][time]' => $this->randomTime(),
-      'field_activity_notes[und][0][value]' => $this->randomString(),
+      'title[0][value]' => 'Commodo',
+      'activity_date[0][value][date]' => $this->randomDate(),
+      'activity_date[0][value][time]' => $this->randomTime(),
+      'activity_notes[0][value]' => $this->randomString(),
     );
-    $this->drupalPost('crm-core/activity/2/edit', $phonecall_activity, t('Save Activity'));
-    $this->assertNoRaw('<div class="messages error">', t('No errors after updating activity.'));
-    $this->assertText($phonecall_activity['title'], t('Activity updated.'));
+    $this->drupalPostForm('crm-core/activity/2/edit', $phonecall_activity, t('Save Activity'));
+    $this->assertText('Commodo', t('Activity updated.'));
     $this->drupalGet('crm-core/contact/1/activity');
-    $this->assertRaw($phonecall_activity['title'], t('Updated activity listed properly.'));
+    $this->assertText('Commodo', t('Updated activity listed properly.'));
 
     // Delete Meeting activity.
     $this->drupalPost('crm-core/activity/1/delete', array(), t('Delete'));
@@ -132,13 +130,13 @@ class ActivityUiTest extends WebTestBase {
    * Generate random Date for form element input.
    */
   function randomDate() {
-    return format_date(REQUEST_TIME + rand(0, 100000), 'custom', 'm/d/Y');
+    return format_date(REQUEST_TIME + rand(0, 100000), 'custom', 'Y-m-d');
   }
 
   /**
    * Generate random Time for form element input.
    */
   function randomTime() {
-    return rand(0, 23) . ':' . rand(0, 60);
+    return format_date(REQUEST_TIME + rand(0, 100000), 'custom', 'H:m:s');
   }
 }

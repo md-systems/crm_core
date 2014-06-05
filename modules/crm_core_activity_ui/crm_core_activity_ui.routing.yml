@@ -25,3 +25,24 @@ crm_core_activity.add:
   requirements:
 #    _permission: 'view any crm_core_contact entity'
     _entity_create_access: 'crm_core_activity:{crm_core_activity_type}'
+
+crm_core_activity.view:
+  path: '/crm-core/activity/{crm_core_activity}'
+  defaults:
+    _entity_view: 'crm_core_activity.full'
+  requirements:
+    _entity_access: 'crm_core_activity.view'
+
+crm_core_activity.edit:
+  path: '/crm-core/activity/{crm_core_activity}/edit'
+  defaults:
+    _entity_form: 'crm_core_activity.default'
+  requirements:
+    _entity_access: 'crm_core_activity.edit'
+
+crm_core_activity.delete_confirm:
+  path: '/crm-core/activity/{crm_core_activity}/delete'
+  defaults:
+    _entity_form: 'crm_core_activity.delete'
+  requirements:
+    _entity_access: 'crm_core_activity.delete'
