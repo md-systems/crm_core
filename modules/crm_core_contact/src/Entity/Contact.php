@@ -66,20 +66,27 @@ class Contact extends ContentEntityBase {
    * @return string
    *   Raw formatted string. This should be run through check_plain().
    */
-  public static function defaultLabel(Contact $contact) {
+  public function defaultLabel(Contact $contact) {
+    return $contact->label();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function label() {
     // Check whether bundle type label function exists.
     // This is needed if we want to have different labels per contact type.
     // For example Individual contact's label is person's Name.
     // But for Organization -- organization's name.
-    $function = 'crm_core_contact_' . $contact->bundle() . '_label';
+    $function = 'crm_core_contact_' . $this->bundle() . '_label';
     if (function_exists($function)) {
-      return $function($contact);
+      return $function($this);
     }
 
     // @todo Use rendered field
     // The Drupal 7 version of CRM Core returns the rendered value of the name
     // field. Restore that behaviour once the name field module is used again.
-    return $contact->get('contact_name')->value;
+    return $this->get('contact_name')->value;
   }
 
   /**
