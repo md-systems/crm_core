@@ -117,13 +117,6 @@ function crm_core_activity_permission() {
   return $permissions;
 }
 
-/**
- * Activity type access callback.
- */
-function crm_core_activity_type_access() {
-  return user_access('administer activity types');
-}
-
 /* ***************************************************************************
  * ***  CRM Activity helpers  ************************************************
  * ************************************************************************* */

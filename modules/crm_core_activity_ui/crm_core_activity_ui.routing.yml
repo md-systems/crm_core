@@ -45,3 +45,27 @@ crm_core_activity.delete_confirm:
     _entity_form: 'crm_core_activity.delete'
   requirements:
     _entity_access: 'crm_core_activity.delete'
+
+crm_core_activity.type_list:
+  path: '/admin/structure/crm-core/activity-types'
+  defaults:
+    _content: '\Drupal\Core\Entity\Controller\EntityListController::listing'
+    entity_type: 'crm_core_activity_type'
+    _title: 'Activity types'
+  requirements:
+    _permission: 'administer activity types'
+
+crm_core_activity.type_edit:
+  path: '/admin/structure/crm-core/activity-types/{crm_core_activity_type}'
+  defaults:
+    _entity_form: 'crm_core_activity_type.default'
+  requirements:
+    _entity_access: 'crm_core_activity_type.edit'
+
+crm_core_activity.type_delete:
+  path: '/admin/structure/crm-core/activity-types/{crm_core_activity_type}/delete'
+  defaults:
+    _entity_form: 'crm_core_activity_type.delete'
+    _title: 'Delete activity type'
+  requirements:
+    _entity_access: 'crm_core_activity_type.delete'
