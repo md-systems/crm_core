@@ -107,18 +107,19 @@ class ActivityUiTest extends WebTestBase {
     $this->assertLink('Commodo', 0, t('Updated activity listed properly.'));
 
     // Delete Meeting activity.
-    $this->drupalPost('crm-core/activity/1/delete', array(), t('Delete'));
-    $this->assertNoRaw('<div class="messages error">', t('No errors after deleting activity.'));
-    $this->assertNoRaw($meeting_activity['title'] . ' </td>', t('Deleted activity is no more listed.'));
+    $this->drupalPostForm('crm-core/activity/1/delete', array(), t('Delete'));
+    $this->assertText('Meeting Vestibulum has been deleted.', t('No errors after deleting activity.'));
+    $this->drupalGet('crm-core/activity');
+    $this->assertNoLink('Vestibulum', t('Deleted activity is no more listed.'));
 
     // Delete Phone call activity.
-    $this->drupalPost('crm-core/activity/2/delete', array(), t('Delete'));
-    $this->assertNoRaw('<div class="messages error">', t('No errors after deleting activity.'));
-    $this->drupalGet('crm-core/contact/1/activity');
-    $this->assertNoRaw($phonecall_activity['title'] . ' </td>', t('Deleted activity is no more listed.'));
+    $this->drupalPostForm('crm-core/activity/2/delete', array(), t('Delete'));
+    $this->assertText('Phone call Commodo has been deleted.', t('No errors after deleting activity.'));
+    $this->drupalGet('crm-core/activity');
+    $this->assertNoLink('Commodo', t('Deleted activity is no more listed.'));
 
     // Assert there is no activities left.
-    $this->drupalGet('crm-core/contact/1/activity');
+    $this->drupalGet('crm-core/activity');
     $this->assertText(t('There are no activities available.'), t('No activities listed.'));
   }
 
