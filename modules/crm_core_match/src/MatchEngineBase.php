@@ -2,41 +2,19 @@
 
 /**
  * @file
- * Contains the matching engine.
+ * Contains \Drupal\crm_core_match\MatchEngineBase.
  */
 
-/*
- * Interface for matching engines
- *
- * CRM Core matching engines can implement this interface.
- *
- */
-interface CrmCoreMatchEngineInterface {
-// @TODO: Pull all method definitions to interface.
-  /**
-   * Constructor.
-   */
-  public function __construct();
+namespace Drupal\crm_core_match;
 
-  /**
-   * This function will be executed by CRM Core Match each time the engine is executed.
-   *
-   * Accepts contact data and a list of ids for identifying matches.
-   *
-   * @param object $contact
-   *   A contact object used to pass data for identifying a match
-   * @param array $ids
-   *   An array of entity ids for potential matches.
-   */
-  public function execute(&$contact, &$ids = array());
-}
+use Drupal\crm_core_contact\Entity\Contact;
 
 /**
- * Default implementation of CrmCoreMatchEngineInterface
+ * Default implementation of MatchEngineInterface
  *
  * Safe for use by most matching engines.
  */
-abstract class CrmCoreMatchEngine implements CrmCoreMatchEngineInterface {
+abstract class MatchEngineBase implements MatchEngineInterface {
 
   /**
    * The human readable name for the matching engine
@@ -210,14 +188,10 @@ abstract class CrmCoreMatchEngine implements CrmCoreMatchEngineInterface {
   /**
    * Applies logical rules for identifying matches in the database.
    *
-   * Any matching engine should implement this to apply it's unique matching logic.
-   * Variables are passed in by reference, so it's not necessary to return anything.
+   * Any matching engine should implement this to apply it's unique matching
+   * logic.
    *
-   * Accepts a list of matches and contact information to identify potential duplicates.
-   *
-   * @see CrmCoreMatchEngineInterface::execute()
+   * @see MatchEngineInterface::execute()
    */
-  public function execute(&$contact, &$ids = array()) {
-    return FALSE;
-  }
+  public abstract function match(Contact $contact);
 }

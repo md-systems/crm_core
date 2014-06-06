@@ -1,0 +1,3 @@
+services:
+  crm_core_match.matcher:
+    class: Drupal\crm_core_match\Matcher
