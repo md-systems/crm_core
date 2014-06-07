@@ -8,10 +8,14 @@ core: 8.x
 dependencies:
   # Core dependencies
   - crm_core_contact
+  - text
+  - entity_reference
+  - datetime
 
+  # @todo: Readd if needed and availlable.
   # Field dependencies
-  - entityreference
-  - date_api
-  - date
-  - date_popup
-  - date_views
+#  - entityreference
+#  - date_api
+#  - date
+#  - date_popup
+#  - date_views

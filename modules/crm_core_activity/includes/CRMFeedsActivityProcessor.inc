@@ -5,6 +5,9 @@
  * Class definition of CRMFeedsActivityProcessor.
  */
 
+use Drupal\crm_core_activity\Entity\Activity;
+use Drupal\crm_core_activity\Entity\ActivityType;
+
 /**
  * Creates activities from feed items.
  */
@@ -47,7 +50,7 @@ class CRMFeedsActivityProcessor extends FeedsProcessor {
    */
   protected function entityLoad(FeedsSource $source, $activity_id) {
     if ($this->config['update_existing'] == FEEDS_UPDATE_EXISTING) {
-      $activity = crm_core_activity_load($activity_id, TRUE);
+      $activity = Activity::load($activity_id, TRUE);
     }
     else {
       // We're replacing the existing activity. Only save the necessary.
@@ -68,14 +71,14 @@ class CRMFeedsActivityProcessor extends FeedsProcessor {
    * Save an activity.
    */
   public function entitySave($entity) {
-    crm_core_activity_save($entity);
+    $entity->save();
   }
 
   /**
    * Delete a series of activities.
    */
   protected function entityDeleteMultiple($activity_ids) {
-    crm_core_activity_delete_multiple($activity_ids);
+    \Drupal::entityManager()->getStorage('crm_core_activity')->delete($activity_ids);
   }
 
   /**
@@ -111,10 +114,27 @@ class CRMFeedsActivityProcessor extends FeedsProcessor {
   }
 
   /**
+   * Returns the human-readable names of an activity types.
+   *
+   * @return array
+   *   An array as used by hook_options_list().
+   */
+  private function getActivitytypeNames() {
+    $names =& drupal_static(__FUNCTION__, array());
+    if (empty($names)) {
+      foreach (ActivityType::loadMultiple() as $type) {
+        $names[$type->type] = $type->label();
+      }
+    }
+
+    return $names;
+  }
+
+  /**
    * Override parent::configDefaults().
    */
   public function configDefaults() {
-    $types = crm_core_activity_type_get_names();
+    $types = $this->getActivitytypeNames();
     $type = key($types);
     return array(
       'activity_type' => $type,
@@ -127,7 +147,7 @@ class CRMFeedsActivityProcessor extends FeedsProcessor {
    * Override parent::configForm().
    */
   public function configForm(&$form_state) {
-    $types = crm_core_activity_type_get_names();
+    $types = $this->getActivitytypeNames();
     $form = parent::configForm($form_state);
     $form['activity_type'] = array(
       '#type' => 'select',
@@ -215,7 +235,7 @@ class CRMFeedsActivityProcessor extends FeedsProcessor {
    * Return available mapping targets.
    */
   public function getMappingTargets() {
-    $types = crm_core_activity_types();
+    $types = ActivityType::loadMultiple();
     $type = $types[$this->config['activity_type']];
     $targets = parent::getMappingTargets();
 

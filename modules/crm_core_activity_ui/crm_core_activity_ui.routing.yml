@@ -1,0 +1,71 @@
+crm_core_activity.list:
+  path: '/crm-core/activity'
+  defaults:
+    _content: '\Drupal\Core\Entity\Controller\EntityListController::listing'
+    entity_type: 'crm_core_activity'
+    _title: 'Activities'
+  requirements:
+    _permission: 'view any crm_core_contact entity'
+
+# @todo: Also support '/crm-core/contact/activity-add/'
+crm_core_activity.add_page:
+  path: '/crm-core/activity/add'
+  defaults:
+    _title: 'Add an activity'
+    _content: 'Drupal\crm_core_activity_ui\Controller\ActivityController::addPage'
+  requirements:
+    _entity_create_access: 'crm_core_activity'
+
+# @todo: Also support '/crm-core/contact/activity-add/{crm_core_activity_type}'
+crm_core_activity.add:
+  path: '/crm-core/activity/add/{crm_core_activity_type}'
+  defaults:
+    _content: '\Drupal\crm_core_activity_ui\Controller\ActivityController::add'
+    _title_callback: '\Drupal\crm_core_activity_ui\Controller\ActivityController::addPageTitle'
+  requirements:
+    _entity_create_access: 'crm_core_activity:{crm_core_activity_type}'
+
+crm_core_activity.view:
+  path: '/crm-core/activity/{crm_core_activity}'
+  defaults:
+    _entity_view: 'crm_core_activity.full'
+  requirements:
+    _entity_access: 'crm_core_activity.view'
+
+crm_core_activity.edit:
+  path: '/crm-core/activity/{crm_core_activity}/edit'
+  defaults:
+    _entity_form: 'crm_core_activity.default'
+  requirements:
+    _entity_access: 'crm_core_activity.edit'
+
+crm_core_activity.delete_confirm:
+  path: '/crm-core/activity/{crm_core_activity}/delete'
+  defaults:
+    _entity_form: 'crm_core_activity.delete'
+  requirements:
+    _entity_access: 'crm_core_activity.delete'
+
+crm_core_activity.type_list:
+  path: '/admin/structure/crm-core/activity-types'
+  defaults:
+    _content: '\Drupal\Core\Entity\Controller\EntityListController::listing'
+    entity_type: 'crm_core_activity_type'
+    _title: 'Activity types'
+  requirements:
+    _permission: 'administer activity types'
+
+crm_core_activity.type_edit:
+  path: '/admin/structure/crm-core/activity-types/{crm_core_activity_type}'
+  defaults:
+    _entity_form: 'crm_core_activity_type.default'
+  requirements:
+    _entity_access: 'crm_core_activity_type.edit'
+
+crm_core_activity.type_delete:
+  path: '/admin/structure/crm-core/activity-types/{crm_core_activity_type}/delete'
+  defaults:
+    _entity_form: 'crm_core_activity_type.delete'
+    _title: 'Delete activity type'
+  requirements:
+    _entity_access: 'crm_core_activity_type.delete'

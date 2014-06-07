@@ -1,0 +1,32 @@
+{#
+/**
+ * @file
+ * Default theme implementation to list activity types available for adding activities.
+ *
+ * This list is displayed on the Add activity admin page.
+ *
+ * Available variables:
+ * - types: A list of activity types, each with the following properties:
+ *   - add_link: Link to create a activity of this type.
+ *   - description: Description of this type of activity.
+ *
+ * @see template_preprocess_crm_core_activity_add_list()
+ *
+ * @ingroup themeable
+ */
+#}
+{% if types is not empty %}
+  <dl class="crm-core-activity-type-list">
+    {% for type in types %}
+      <dt>{{ type.add_link }}</dt>
+      <dd>{{ type.description }}</dd>
+    {% endfor %}
+  </dl>
+{% else %}
+  <p>
+    {% set create_activity_types = url('admin/structure/types/add') %}
+    {% trans %}
+      You have not created any activity types yet. Go to the <a href="{{ create_activity_types }}">activity type creation page</a> to add a new activity type.
+    {% endtrans %}
+  </p>
+{% endif %}

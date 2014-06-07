@@ -5,100 +5,8 @@
  * Provides an entity for recording a contact's activities.
  */
 
-/**
- * Include file with hook_property_info().
- */
-module_load_include('inc', 'crm_core_activity', 'crm_core_activity.info');
-
-/**
- * Implements hook_entity_info().
- */
-function crm_core_activity_entity_info() {
-  $return = array(
-    'crm_core_activity' => array(
-      'label' => t('CRM Core Activity'),
-      'entity class' => 'CRMCoreActivityEntity',
-      'controller class' => 'CRMCoreActivityController',
-      'base table' => 'crm_core_activity',
-      'revision table' => 'crm_core_activity_revision',
-      'fieldable' => TRUE,
-      'entity keys' => array(
-        'id' => 'activity_id',
-        'bundle' => 'type',
-        'label' => 'title',
-        'revision' => 'revision_id',
-      ),
-      'bundle keys' => array(
-        'bundle' => 'type',
-      ),
-      'bundles' => array(),
-      'load hook' => 'crm_core_activity_load',
-      'view modes' => array(
-        'full' => array(
-          'label' => t('Full content'),
-          'custom settings' => FALSE,
-        ),
-      ),
-      'label callback' => 'entity_class_label',
-      'uri callback' => 'entity_class_uri',
-      'access callback' => 'crm_core_activity_access',
-      'module' => 'crm_core_activity',
-      'permission labels' => array(
-        'singular' => t('activity'),
-        'plural' => t('activities'),
-      ),
-    ),
-  );
-  $return['crm_core_activity_type'] = array(
-    'label' => t('CRM Core Activity Type'),
-    'entity class' => 'CRMActivityType',
-    'controller class' => 'CRMCoreActivityTypeController',
-    'base table' => 'crm_core_activity_type',
-    'fieldable' => FALSE,
-    'bundle of' => 'crm_core_activity',
-    'exportable' => TRUE,
-    'entity keys' => array(
-      'id' => 'id',
-      'name' => 'type',
-      'label' => 'label',
-    ),
-    'module' => 'crm_core_activity',
-    // Enable the entity API's admin UI.
-    'admin ui' => array(
-      'path' => 'admin/structure/crm-core/activity-types',
-      'file' => 'crm_core_activity.admin.inc',
-      'controller class' => 'EntityDefaultUIController',
-    ),
-    'access callback' => 'crm_core_activity_type_access',
-  );
-
-  if (module_exists('uuid')) {
-    $return['crm_core_activity']['uuid'] = TRUE;
-    $return['crm_core_activity']['entity keys']['uuid'] = 'uuid';
-    $return['crm_core_activity']['entity keys']['revision uuid'] = 'vuuid';
-  }
-
-  return $return;
-}
-
-/**
- * Implements hook_entity_info_alter().
- *
- * Use this hook to specify profile bundles to avoid a recursion, as loading
- * the profile types needs the entity info too.
- */
-function crm_core_activity_entity_info_alter(&$entity_info) {
-  foreach (crm_core_activity_types() as $type => $info) {
-    $entity_info['crm_core_activity']['bundles'][$type] = array(
-      'label' => $info->label,
-      'admin' => array(
-        'path' => 'admin/structure/crm-core/activity-types/manage/%crm_core_activity_type',
-        'real path' => 'admin/structure/crm-core/activity-types/manage/' . $type,
-        'bundle argument' => 5,
-      ),
-    );
-  }
-}
+use Drupal\crm_core_activity\Entity\Activity;
+use Drupal\crm_core_activity\Entity\ActivityType;
 
 /**
  * Implements hook_permission().
@@ -117,136 +25,9 @@ function crm_core_activity_permission() {
   return $permissions;
 }
 
-/**
- * Access callback for activity.
- */
-function crm_core_activity_access($op, $activity, $account = NULL, $entity_type = NULL) {
-  if (!isset($account)) {
-    $account = $GLOBALS['user'];
-  }
-  if (is_object($activity)) {
-    $activity_type = $activity->type;
-  }
-  else {
-    $activity_type = $activity;
-  }
-
-  if ($op != 'view') {
-    // First grant access to the entity for the specified operation if no other
-    // module denies it and at least one other module says to grant access.
-    $access_results = module_invoke_all('crm_core_entity_access', $op, $activity, $account, $entity_type);
-
-    if (in_array(FALSE, $access_results, TRUE)) {
-      return FALSE;
-    }
-    elseif (in_array(TRUE, $access_results, TRUE)) {
-      return TRUE;
-    }
-  }
-
-  switch ($op) {
-    case 'create':
-      return (user_access('administer crm_core_activity entities', $account)
-        || user_access('create crm_core_activity entities', $account)
-        || user_access('create crm_core_activity entities of bundle ' . $activity_type, $account));
-
-    case 'view':
-      return (user_access('administer crm_core_activity entities', $account)
-        || user_access('view any crm_core_activity entity', $account)
-        || user_access('view any crm_core_activity entity of bundle ' . $activity_type, $account));
-
-    case 'edit':
-    case 'update':
-      return (user_access('administer crm_core_activity entities', $account)
-        || user_access('edit any crm_core_activity entity', $account)
-        || user_access('edit any crm_core_activity entity of bundle ' . $activity_type));
-
-    case 'delete':
-      return (user_access('administer crm_core_activity entities', $account)
-        || user_access('delete any crm_core_activity entity', $account)
-        || user_access('delete any crm_core_activity entity of bundle ' . $activity_type));
-
-    case 'create_view':
-      // Check if user has access permission to a view with create activity links.
-      if (user_access('administer crm_core_activity entities', $account)
-        || user_access('create crm_core_activity entities', $account)) {
-        return TRUE;
-      }
-      // Allow access if account has create permissions for any crm core activity type.
-      foreach (array_keys(crm_core_activity_types()) as $type) {
-        if (entity_access('create', 'crm_core_activity', $type, $account)) {
-          return TRUE;
-        }
-      }
-      return FALSE;
-  }
-}
-
-/**
- * Activity type access callback.
- */
-function crm_core_activity_type_access() {
-  return user_access('administer activity types');
-}
-
 /* ***************************************************************************
  * ***  CRM Activity helpers  ************************************************
  * ************************************************************************* */
-
-/**
- * Load a CRM Activity object.
- */
-function crm_core_activity_load($activity_id, $reset = FALSE) {
-  if (empty($activity_id)) {
-    return array();
-  }
-
-  if ($activity_id !== FALSE) {
-    $activity_id = array($activity_id);
-  }
-
-  $activities = crm_core_activity_load_multiple($activity_id, array(), $reset);
-  return reset($activities);
-}
-
-/**
- * Load multiple activities based on certain conditions.
- */
-function crm_core_activity_load_multiple($activity_ids = array(), $conditions = array(), $reset = FALSE) {
-  return entity_load('crm_core_activity', $activity_ids, $conditions, $reset);
-}
-
-/**
- * Save single activity object to db. Wrapper for controller.
- *
- * @param object $activity
- *   Entity object of crm_core_activity type.
- */
-function crm_core_activity_save($activity) {
-  return entity_get_controller('crm_core_activity')->save($activity);
-}
-
-/**
- * Delete single activity.
- *
- * @todo This function should accept activity_id, but activity object.
- *
- * @param object $activity
- *   Entity object of crm_core_activity type.
- */
-function crm_core_activity_delete($activity) {
-  crm_core_activity_delete_multiple(array($activity->activity_id));
-}
-
-/**
- * Delete multiple activities. Wrapper for controller.
- *
- * @param array $activity_ids
- *   array of entity ids that should be deleted.
- */
-function crm_core_activity_delete_multiple($activity_ids) {
-  entity_get_controller('crm_core_activity')->delete($activity_ids);
-}
 
 /**
  * Implements hook_field_extra_fields().
@@ -254,7 +35,7 @@ function crm_core_activity_delete_multiple($activity_ids) {
 function crm_core_activity_field_extra_fields() {
   $extra = array();
 
-  foreach (crm_core_activity_types() as $type) {
+  foreach (ActivityType::loadMultiple() as $type) {
     $extra['crm_core_activity'][$type->type] = array(
       'form' => array(
         'title' => array(
@@ -272,77 +53,6 @@ function crm_core_activity_field_extra_fields() {
 /* ***************************************************************************
  * ***  CRM Activity Type helpers  *******************************************
  * ************************************************************************* */
-
-/**
- * Load Activity Type.
- */
-function crm_core_activity_type_load($activity_type) {
-  return crm_core_activity_types($activity_type);
-}
-
-/**
- * List of Activity Types.
- */
-function crm_core_activity_types($type_name = NULL) {
-  $types = entity_load_multiple_by_name('crm_core_activity_type', isset($type_name) ? array($type_name) : FALSE);
-  return isset($type_name) ? reset($types) : $types;
-}
-
-/**
- * Returns the human-readable names of an activity types.
- *
- * @return array
- *   An array as used by hook_options_list().
- */
-function crm_core_activity_type_get_names() {
-  $names =& drupal_static(__FUNCTION__, array());
-  if (empty($names)) {
-    $types = crm_core_activity_types();
-    foreach ($types as $type) {
-      $names[$type->type] = check_plain($type->label);
-    }
-  }
-
-  return $names;
-}
-
-
-/**
- * Returns the human-readable name of an activity type.
- *
- * @param string $type_name
- *   The machine name for an activity type.
- *
- * @return string
- *   A human readable name for the activity type or FALSE.
- */
-function crm_core_activity_type_get_name($type_name) {
-  $names = crm_core_activity_type_get_names();
-  if (isset($names[$type_name])) {
-    return $names[$type_name];
-  }
-  else {
-    return FALSE;
-  }
-}
-
-/**
- * Creates or saves an activity type.
- *
- * @param object $activity_type
- *   The activity type info to be saved
- */
-function crm_core_activity_type_save($activity_type) {
-  return entity_get_controller('crm_core_activity_type')->save($activity_type);
-}
-
-/**
- * Implements hook_crm_core_activity_type_insert().
- */
-function crm_core_activity_crm_core_activity_type_insert($activity_type) {
-  module_load_include('inc', 'crm_core_activity', 'crm_core_activity.admin');
-  crm_core_activity_type_add_default_fields($activity_type);
-}
 
 /**
  * Implements hook_forms().
@@ -405,7 +115,7 @@ function crm_core_activity_crm_core_contact_delete($crm_core_contact) {
 
   // Load fully populated Activity objects to analyze/update.
   $activity_ids = array_keys($results['crm_core_activity']);
-  $crm_core_activities = crm_core_activity_load_multiple($activity_ids);
+  $crm_core_activities = Activity::loadMultiple($activity_ids);
 
   $activities_to_remove = array();
 
@@ -423,7 +133,7 @@ function crm_core_activity_crm_core_contact_delete($crm_core_contact) {
     else {
       // Save Activity with renewed list.
       $wrapped_activity->field_activity_participants->set($participants);
-      crm_core_activity_save($crm_core_activity);
+      $crm_core_activity->save();
     }
   }
 
@@ -433,7 +143,7 @@ function crm_core_activity_crm_core_contact_delete($crm_core_contact) {
         '!count' => count($activities_to_remove),
         '%contact_id' => $crm_core_contact->contact_id,
       ), WATCHDOG_INFO);
-    crm_core_activity_delete_multiple($activities_to_remove);
+    \Drupal::entityManager()->getStorage('crm_core_activity')->delete($activities_to_remove);
   }
 }
 
@@ -497,14 +207,14 @@ function crm_core_activity_search_execute($keys = NULL, $conditions = NULL) {
   $results = array();
   foreach ($find as $item) {
     // Render the contact.
-    $activity = crm_core_activity_load($item->sid);
+    $activity = Activity::load($item->sid);
     $build = crm_core_activity_view($activity);
     unset($build['#theme']);
     $activity->rendered = drupal_render($build);
     $uri = entity_uri('crm_core_activity', $activity);
     $results[] = array(
       'link' => url($uri['path'], array_merge($uri['options'], array('absolute' => TRUE))),
-      'type' => crm_core_activity_type_get_name($activity->type),
+      'type' => $activity->get('type')->entity->label(),
       'title' => check_plain($activity->title),
       'user' => theme('username', array('account' => user_load($activity->uid))),
       'date' => $activity->changed,
@@ -545,7 +255,7 @@ function crm_core_activity_update_index() {
   $result = db_query_range("SELECT a.activity_id FROM {crm_core_activity} a LEFT JOIN {search_dataset} d ON d.type = 'crm_core_activity' AND d.sid = a.activity_id WHERE d.sid IS NULL OR d.reindex <> 0 ORDER BY d.reindex ASC, a.activity_id ASC", 0, $limit);
 
   foreach ($result as $activity) {
-    $activity = crm_core_activity_load($activity->activity_id);
+    $activity = Activity::load($activity->activity_id);
     variable_set('crm_core_activity_cron_last', $activity->changed);
 
     // Render the activity.
@@ -575,42 +285,11 @@ function crm_core_activity_feeds_plugins() {
 /**
  * Implements hook_file_download_access().
  */
-function crm_core_activity_file_download_access($file_item, $entity_type, $entity) {
-  if ($entity_type == 'crm_core_activity') {
-    return crm_core_activity_access('view', $entity);
+function crm_core_activity_file_download_access($field, Drupal\Core\Entity\EntityInterface $entity, Drupal\file\FileInterface $file) {
+  if ($entity->bundle() == 'crm_core_activity') {
+    return $entity->access('view');
   }
 }
-
-/**
- * Implements hook_theme().
- */
-function crm_core_activity_theme($existing, $type, $theme, $path) {
-  return array(
-    'activity' => array(
-      'render element' => 'elements',
-      'template' => 'activity',
-      'path' => $path . '/templates',
-    ),
-  );
-}
-
-/**
- * Implements hook_preprocess().
- */
-function crm_core_activity_preprocess_activity(&$variables) {
-  $variables['view_mode'] = $variables['elements']['#view_mode'];
-  $variables['activity'] = $variables['elements']['#activity'];
-  $variables['content'] = entity_build_content('crm_core_activity', $variables['activity']);
-
-  // Add classes based upon activity type.
-  $variables['classes_array'][] = 'activity';
-  $variables['classes_array'][] = 'activity-' . $variables['activity']->type;
-
-  $entity = $variables['activity'];
-  $variables['theme_hook_suggestions'][] = 'activity__' . $entity->type;
-  $variables['theme_hook_suggestions'][] = 'activity__' . $entity->activity_id;
-}
-
 
 /**
  * Implements hook_services_resources().
@@ -741,33 +420,4 @@ function crm_core_activity_services_resources() {
   );
 
   return $resources;
-}
-
-/**
- * Helper to check uuid fields existence.
- */
-function _crm_core_activity_check_uuid() {
-  $schema_changed = FALSE;
-  module_load_include('install', 'uuid', 'uuid');
-  $field = uuid_schema_field_definition();
-  if (!db_field_exists('crm_core_activity', 'uuid')) {
-    db_add_field('crm_core_activity', 'uuid', $field);
-    db_add_index('crm_core_activity', 'uuid', array('uuid'));
-    $schema_changed = TRUE;
-  }
-  if (!db_field_exists('crm_core_activity_revision', 'vuuid')) {
-    db_add_field('crm_core_activity_revision', 'vuuid', $field);
-    db_add_index('crm_core_activity_revision', 'vuuid', array('vuuid'));
-    $schema_changed = TRUE;
-  }
-  if ($schema_changed) {
-    drupal_get_schema(NULL, TRUE);
-  }
-}
-
-/**
- * Implements hook_uuid_sync().
- */
-function crm_core_activity_uuid_sync() {
-  _crm_core_activity_check_uuid();
 }

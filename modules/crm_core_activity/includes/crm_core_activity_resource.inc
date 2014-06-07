@@ -5,6 +5,8 @@
  * Resource definitions for services module.
  */
 
+use Drupal\crm_core_activity\Entity\Activity;
+
 /**
  * Determine whether the current user can access a crm_core_activity resource.
  *
@@ -25,7 +27,7 @@ function _crm_core_activity_resource_access($op, $arg = NULL) {
     return crm_core_activity_access($op, $activity_data['type']);
   }
   elseif (is_numeric($arg[0])) {
-    $crm_core_activity = crm_core_activity_load($arg[0]);
+    $crm_core_activity = Activity::load($arg[0]);
 
     return crm_core_activity_access($op, $crm_core_activity);
   }
@@ -55,7 +57,7 @@ function _crm_core_activity_resource_index($page, $page_size) {
     ->execute()
     ->fetchCol();
 
-  $activities = crm_core_activity_load_multiple($aids);
+  $activities = Activity::loadMultiple($aids);
 
   return services_resource_build_index_list($activities, 'crm_core_activity', 'activity_id');
 }
@@ -67,7 +69,7 @@ function _crm_core_activity_resource_create($activity_data) {
   try {
     $activity = entity_create('crm_core_activity', $activity_data);
     unset($activity->is_new);
-    crm_core_activity_save($activity);
+    $activity->save();
 
     return $activity;
   }
@@ -88,5 +90,5 @@ function _crm_core_activity_resource_update($activity_id, $activity_data) {
  * Callback for the 'delete' method.
  */
 function _crm_core_activity_resource_delete($activity_id) {
-  return crm_core_activity_delete_multiple(array($activity_id));
+  return \Drupal::entityManager()->getStorage('crm_core_activity')->delete(array($activity_id));
 }

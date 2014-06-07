@@ -1,0 +1,105 @@
+<?php
+
+/**
+ * @file
+ * Contains \Drupal\crm_core_activity\Form\ActivityTypeForm.
+ */
+
+namespace Drupal\crm_core_activity\Form;
+
+use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Entity\EntityTypeInterface;
+
+/**
+ * Class ActivityTypeForm
+ *
+ * Form for edit activity types.
+ *
+ * @package Drupal\crm_core_activity\Form
+ */
+class ActivityTypeForm extends EntityForm {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function form(array $form, array &$form_state) {
+    $form = parent::form($form, $form_state);
+
+    /* @var \Drupal\crm_core_activity\Entity\ActivityType $type */
+    $type = $this->entity;
+
+    $form['name'] = array(
+      '#title' => t('Name'),
+      '#type' => 'textfield',
+      '#default_value' => $type->name,
+      '#description' => t('The human-readable name of this activity type. It is recommended that this name begin with a capital letter and contain only letters, numbers, and spaces. This name must be unique.'),
+      '#required' => TRUE,
+      '#size' => 32,
+    );
+
+    $form['type'] = array(
+      '#type' => 'machine_name',
+      '#default_value' => $type->id(),
+      '#maxlength' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
+//      '#disabled' => $type->isLocked(),
+      '#machine_name' => array(
+        'exists' => 'Drupal\crm_core_activity\Entity\ActivityType::load',
+        'source' => array('name'),
+      ),
+      '#description' => t('A unique machine-readable name for this activity type. It must only contain lowercase letters, numbers, and underscores.'),
+    );
+
+    $form['description'] = array(
+      '#title' => t('Description'),
+      '#type' => 'textarea',
+      '#default_value' => $type->description,
+      '#description' => t('Describe this activity type.'),
+    );
+
+    // Primary fields section.
+    $form['activity_string_container'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Display settings'),
+    );
+
+    $form['activity_string_container']['activity_string'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Activity string'),
+      '#description' => t('Enter text describing the relationship between the contact and this activity. For example: Someone Somewhere registered for this activity.'),
+      '#default_value' => empty($type->activity_string) ? '' : $type->activity_string,
+    );
+
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function actions(array $form, array &$form_state) {
+    $actions = parent::actions($form, $form_state);
+    $actions['submit']['#value'] = t('Save activity type');
+    $actions['delete']['#title'] = t('Delete activity type');
+    return $actions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function save(array $form, array &$form_state) {
+    $type = $this->entity;
+
+    $status = $type->save();
+
+    $t_args = array('%name' => $type->label());
+
+    if ($status == SAVED_UPDATED) {
+      drupal_set_message(t('The activity type %name has been updated.', $t_args));
+    }
+    elseif ($status == SAVED_NEW) {
+      drupal_set_message(t('The activity type %name has been added.', $t_args));
+      watchdog('crm_core_activity', 'Added activity type %name.', $t_args, WATCHDOG_NOTICE, l(t('View'), 'admin/structure/crm-core/activity-types'));
+    }
+
+    $form_state['redirect_route']['route_name'] = 'crm_core_activity.type_list';
+  }
+}
