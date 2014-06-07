@@ -7,8 +7,37 @@
 namespace Drupal\crm_core_default_matching_engine\Form;
 
 use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\crm_core_default_matching_engine\Plugin\MatchFieldPluginManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class MatchingRuleForm extends EntityForm {
+
+  /**
+   * The match field plugin manager.
+   *
+   * @var \Drupal\crm_core_default_matching_engine\Plugin\MatchFieldPluginManager.
+   */
+  protected $matchFieldManager;
+
+  /**
+   * Constructs a new form for the matching config rule entity.
+   *
+   * @param MatchFieldPluginManager $match_field_manager
+   *   The plugin manager for match fields.
+   */
+  public function __construct(MatchFieldPluginManager $match_field_manager) {
+    $this->matchFieldManager = $match_field_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('plugin.manager.crm_core_match.match_field')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -62,20 +91,28 @@ EOF
       '#default_value' => $this->entity->strict,
     );
 
-    $form['fields'] = array(
+    $form['field_matching'] = array(
       '#type' => 'item',
       '#title' => $this->t('Field Matching'),
     );
 
-    $form['field_matching'] = array(
+    $form['fields'] = array(
       '#type' => 'container',
       '#tree' => TRUE,
     );
 
-    /* @var \Drupal\field\Entity\FieldInstanceConfig[] $instances */
     $instances = \Drupal::entityManager()->getFieldDefinitions('crm_core_contact', $this->entity->id());
     foreach ($instances as $instance) {
-      // @todo Load field match plugin for field and get its form.
+      $config = empty($this->entity->fields[$instance->getName()]) ? array() : $this->entity->fields[$instance->getName()];
+
+      $match_field_id = 'unsupported';
+      if ($this->matchFieldManager->hasDefinition($instance->getType())) {
+        $match_field_id = $instance->getType();
+      }
+
+      /* @var \Drupal\crm_core_default_matching_engine\Plugin\MatchFieldInterface $match_field */
+      $match_field = $this->matchFieldManager->createInstance($match_field_id, $config);
+      $form['fields'] += $match_field->fieldRender($instance);
     }
 
     return $form;
@@ -88,8 +125,8 @@ EOF
     parent::validate($form, $form_state);
 
     $fields_rules = array();
-    if (isset($form_state['values']['field_matching'])) {
-      $fields_rules = $form_state['values']['field_matching'];
+    if (isset($form_state['values']['fields'])) {
+      $fields_rules = $form_state['values']['fields'];
     }
     foreach ($fields_rules as $field_name => $config) {
       if ($config['status'] && empty($config['operator'])) {

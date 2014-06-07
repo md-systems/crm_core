@@ -7,14 +7,12 @@
 
 namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField;
 
-use Drupal\crm_core_default_matching_engine\Plugin\DefaultMatchingEngineFieldType;
-
 /**
  * Class for evaluating addressfield fields.
  *
- * Implementation of DefaultMatchingEngineFieldTypeInterface for address field.
+ * Implementation of MatchFieldInterface for address field.
  */
-class AddressFieldMatchField extends DefaultMatchingEngineFieldType {
+class AddressFieldMatchField extends MatchFieldBase {
 
   /**
    * This function is going to add all addressfield components..

@@ -2,17 +2,15 @@
 
 /**
  * @file
- * Implementation of DefaultMatchingEngineFieldTypeInterface for select fields.
+ * Implementation of MatchFieldInterface for select fields.
  */
 
 namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField;
 
-use Drupal\crm_core_default_matching_engine\Plugin\DefaultMatchingEngineFieldType;
-
 /**
  * Class for handling select fields.
  */
-class SelectMatchField extends DefaultMatchingEngineFieldType {
+class SelectMatchField extends MatchFieldBase {
 
   /**
    * Defines logical operators to use with this field.

@@ -2,16 +2,18 @@
 
 /**
  * @file
- * Contains ${NAMESPACE}${NAME}.
+ * Contains \Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField\MatchFieldInterface.
  */
 
-namespace Drupal\crm_core_default_matching_engine\Plugin;
+namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField;
+
+use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
  * Interface for defining the logical operators and query criteria used to identify duplicate contacts based on
  * different field types in DefaultMatchingEngine.
  */
-interface DefaultMatchingEngineFieldTypeInterface {
+interface MatchFieldInterface {
 
   /**
    * Field Renderer.
@@ -19,14 +21,13 @@ interface DefaultMatchingEngineFieldTypeInterface {
    * Used for complex field types such as name.
    * Renders them into component parts for use in applying logical operators and ordering functions.
    *
-   * @param array $field
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field
    *   The field being rendered
-   * @param array $field_info
-   *   Info of the field  being rendered
-   * @param array $form
-   *   Form to be modified.
+   *
+   * @return array
+   *   The form elements.
    */
-  public function fieldRender($field, $field_info, &$form);
+  public function fieldRender(FieldDefinitionInterface $field);
 
   /**
    * Operators.

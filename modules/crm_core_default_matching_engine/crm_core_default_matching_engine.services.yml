@@ -1,0 +1,4 @@
+services:
+  plugin.manager.crm_core_match.match_field:
+    class: Drupal\crm_core_default_matching_engine\Plugin\MatchFieldPluginManager
+    arguments: ['@container.namespaces', '@cache.discovery', '@language_manager', '@module_handler']

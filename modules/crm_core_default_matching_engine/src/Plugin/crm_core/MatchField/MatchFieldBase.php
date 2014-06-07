@@ -2,100 +2,133 @@
 
 /**
  * @file
- * Contains Drupal\crm_core_default_matching_engine\Plugin\DefaultMatchingEngineFieldType.
+ * Contains \Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField\MatchFieldBase.
  */
 
-namespace Drupal\crm_core_default_matching_engine\Plugin;
+namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField;
 
-abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFieldTypeInterface {
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
+abstract class MatchFieldBase implements MatchFieldInterface, ContainerFactoryPluginInterface {
 
   const WEIGHT_DELTA = 25;
 
   /**
-   * Template used to render fields matching rules configuration form.
+   * The plugin id.
    *
-   * @param array $field
-   *   Field to render config for.
-   * @param array $field_info
-   *   Field info.
-   * @param array $form
-   *   Form to be modified
+   * @var string
    */
-  public function fieldRender($field, $field_info, &$form) {
-    $disabled = FALSE;
-    if (get_class($this) == 'UnsupportedFieldMatchField') {
-      $disabled = TRUE;
-    }
-    $field_name = $field['field_name'];
-    $field_item = isset($field['field_item']) ? $field['field_item'] : '';
-    $separator = empty($field_item) ? $field_name : $field_name . '_' . $field_item;
-    $field_label = $field['label'];
-    if ($disabled) {
-      $field_label .= ' (UNSUPPORTED)';
-    }
-    $contact_type = $field['bundle'];
+  protected $id;
 
-    $config = crm_core_default_matching_engine_load_field_config($contact_type, $field_name, $field_item);
-    $display_weight = self::WEIGHT_DELTA;
-    if ($config['weight'] == 0) {
+  /**
+   * The plugin definition.
+   *
+   * @var array
+   */
+  protected $definition;
+
+  /**
+   * The configuration.
+   *
+   * @var array
+   */
+  protected $configuration;
+
+  /**
+   * Constructs an plugin instance.
+   */
+  public function __construct($configuration, $id, $definition) {
+    $this->configuration = $configuration + array(
+      'weight' => self::WEIGHT_DELTA,
+      'status' => FALSE,
+      'operator' => NULL,
+      'options' => '',
+      'score' => 0,
+    );
+    $this->definition = $definition;
+    $this->id = $id;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition
+    );
+  }
+
+
+  /**
+   * {@inheritdoc}
+   */
+  public function fieldRender(FieldDefinitionInterface $field) {
+    $form = array();
+
+    $field_name = $field->getName();
+    $field_label = $field->getLabel();
+
+    if ($this->configuration['weight'] == 0) {
       // Table row positioned incorrectly if "#weight" is 0.
       $display_weight = 0.001;
     }
     else {
-      $display_weight = $config['weight'];
+      $display_weight = $this->configuration['weight'];
     }
 
-    $form['field_matching'][$separator]['#weight'] = $disabled ? 100 : $display_weight;
+    $form[$field_name]['#weight'] = $display_weight;
 
-    $form['field_matching'][$separator]['supported'] = array(
+    $form[$field_name]['supported'] = array(
       '#type' => 'value',
-      '#value' => $disabled ? FALSE : TRUE,
+      '#value' => TRUE,
     );
 
-    $form['field_matching'][$separator]['field_type'] = array(
+    $form[$field_name]['field_type'] = array(
       '#type' => 'value',
-      '#value' => $field_info['type'],
+      '#value' => $field->getType(),
     );
 
-    $form['field_matching'][$separator]['field_name'] = array(
+    $form[$field_name]['field_name'] = array(
       '#type' => 'value',
       '#value' => $field_name,
     );
 
-    $form['field_matching'][$separator]['field_item'] = array(
+    $form[$field_name]['field_item'] = array(
       '#type' => 'value',
-      '#value' => $field_item,
+      '#value' => '',
     );
 
-    $form['field_matching'][$separator]['status'] = array(
+    $form[$field_name]['status'] = array(
       '#type' => 'checkbox',
-      '#default_value' => $config['status'],
-      '#disabled' => $disabled,
+      '#default_value' => $this->configuration['status'],
     );
 
-    $form['field_matching'][$separator]['name'] = array(
+    $form[$field_name]['name'] = array(
       '#type' => 'item',
       '#markup' => check_plain($field_label),
     );
 
-    $form['field_matching'][$separator]['field_type_markup'] = array(
+    $form[$field_name]['field_type_markup'] = array(
       '#type' => 'item',
-      '#markup' => $field_info['type'],
+      '#markup' => $field->getType(),
     );
 
     $operator = array(
       '#type' => 'select',
-      '#default_value' => $config['operator'],
+      '#default_value' => $this->configuration['operator'],
       '#empty_option' => t('-- Please Select --'),
       '#empty_value' => '',
-      '#disabled' => $disabled,
     );
-    switch ($field_info['type']) {
+    switch ($field->getType()) {
       case 'date':
       case 'datestamp':
       case 'datetime':
         $operator += array(
-          '#options' => $this->operators($field_info),
+          '#options' => $this->operators($field),
         );
         break;
 
@@ -105,33 +138,32 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
         );
     }
 
-    $form['field_matching'][$separator]['operator'] = $operator;
+    $form[$field_name]['operator'] = $operator;
 
-    $form['field_matching'][$separator]['options'] = array(
+    $form[$field_name]['options'] = array(
       '#type' => 'textfield',
       '#maxlength' => 28,
       '#size' => 28,
-      '#default_value' => $config['options'],
-      '#disabled' => $disabled,
+      '#default_value' => $this->configuration['options'],
     );
 
-    $form['field_matching'][$separator]['score'] = array(
+    $form[$field_name]['score'] = array(
       '#type' => 'textfield',
       '#maxlength' => 4,
       '#size' => 3,
-      '#default_value' => $config['score'],
-      '#disabled' => $disabled,
+      '#default_value' => $this->configuration['score'],
     );
 
-    $form['field_matching'][$separator]['weight'] = array(
+    $form[$field_name]['weight'] = array(
       '#type' => 'weight',
-      '#default_value' => $config['weight'],
+      '#default_value' => $this->configuration['weight'],
       '#attributes' => array(
         'class' => array('crm-core-match-engine-order-weight'),
       ),
-      '#disabled' => $disabled,
       '#delta' => self::WEIGHT_DELTA,
     );
+
+    return $form;
   }
 
   /**
@@ -202,7 +234,7 @@ abstract class DefaultMatchingEngineFieldType implements DefaultMatchingEngineFi
    * Must return associative array of supported operators for current field.
    * By default now supports only this keys: 'equals', 'starts', 'ends',
    * 'contains'. In case you need additional operators you must implement
-   * this method and DefaultMatchingEngineFieldTypeInterface::fieldQuery.
+   * this method and MatchFieldInterface::fieldQuery.
    *
    * @return array
    *   Assoc array, keys must be

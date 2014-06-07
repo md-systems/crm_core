@@ -2,17 +2,15 @@
 
 /**
  * @file
- * Implementation of DefaultMatchingEngineFieldTypeInterface for date fields.
+ * Implementation of MatchFieldInterface for date fields.
  */
 
 namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField;
 
-use Drupal\crm_core_default_matching_engine\Plugin\DefaultMatchingEngineFieldType;
-
 /**
  * Class for evaluating date fields.
  */
-class DateMatchField extends DefaultMatchingEngineFieldType {
+class DateMatchField extends MatchFieldBase {
 
   /**
    * Defines logical operators to use with this field.

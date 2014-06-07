@@ -2,25 +2,18 @@
 
 /**
  * @file
- * Implementation of DefaultMatchingEngineFieldTypeInterface for text fields.
+ * Contains \Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField\Text.
  */
 
 namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField;
 
-use Drupal\crm_core_default_matching_engine\Plugin\DefaultMatchingEngineFieldType;
-
 /**
  * Class for evaluating text fields.
  */
-class TextMatchField extends DefaultMatchingEngineFieldType {
+class Text extends MatchFieldBase {
 
   /**
-   * Defines logical operators to use with this field.
-   *
-   * This operators would be interpreted in fieldQuery() method.
-   *
-   * @return array
-   *   Assoc array of operators.
+   * {@inheritdoc}
    */
   public function operators() {
     return array(
