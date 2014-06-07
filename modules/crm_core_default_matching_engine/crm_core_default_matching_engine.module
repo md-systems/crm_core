@@ -52,13 +52,6 @@ function crm_core_default_matching_engine_menu() {
 }
 
 /**
- * Implements hook_crm_core_match_engine_register().
- */
-function crm_core_default_matching_engine_crm_core_match_engine_register() {
-  return new DefaultMatchingEngine();
-}
-
-/**
  * Implements hook_theme().
  */
 function crm_core_default_matching_engine_theme() {
