@@ -1,3 +1,8 @@
 services:
   crm_core_match.matcher:
     class: Drupal\crm_core_match\Matcher
+    arcuments: ['@plugin.manager.crm_core_match.engine']
+
+  plugin.manager.crm_core_match.engine:
+    class: Drupal\crm_core_match\Plugin\MatchEnginePluginManager
+    arguments: ['@container.namespaces', '@cache.discovery', '@language_manager', '@module_handler']

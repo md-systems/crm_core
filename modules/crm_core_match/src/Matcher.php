@@ -13,6 +13,13 @@ use Drupal\crm_core_match\Plugin\crm_core_match\engine\MatchEngineInterface;
 class Matcher implements MatchEngineInterface, MatcherInterface {
 
   /**
+   * The engine plugin manager.
+   *
+   * @var \Drupal\crm_core_match\Plugin\MatchEnginePluginManager
+   */
+  protected $pluginManager;
+
+  /**
    * Array of all registered match engines, keyed by ID.
    *
    * @var \Drupal\crm_core_match\Plugin\crm_core_match\engine\MatchEngineInterface[]
@@ -34,9 +41,40 @@ class Matcher implements MatchEngineInterface, MatcherInterface {
   protected $sortedEngines;
 
   /**
-   * {@inheritdoc}
+   * Constructs a matcher instance.
+   *
+   * @param \Drupal\crm_core_match\Plugin\MatchEnginePluginManager $plugin_manager
+   *   The plugin manager used to discover engines.
    */
-  public function addMatchEngine($engine_id, MatchEngineInterface $engine, $priority = 0) {
+  public function __construct($plugin_manager) {
+    $this->pluginManager = $plugin_manager;
+  }
+
+  /**
+   * Discovers the engines and creates instances of the active ones.
+   */
+  protected function loadEngines() {
+    $engine_definitions = $this->pluginManager->getDefinitions();
+    foreach ($engine_definitions as $id => $definition) {
+      // @todo Check if engine is enabled.
+      // Assume all engines are enabled for now.
+      $engine = $this->pluginManager->createInstance($id, $definition);
+      // @todo Check if priority was overwritten.
+      $this->addMatchEngine($id, $engine, $definition['priority']);
+    }
+  }
+
+  /**
+   * Adds a match engine to the array of registered engines.
+   *
+   * @param string $engine_id
+   *   Identifier of the match engine.
+   * @param \Drupal\crm_core_match\Plugin\crm_core_match\engine\MatchEngineInterface $engine
+   *   The engine object.
+   * @param int $priority
+   *   The engines priority.
+   */
+  protected function addMatchEngine($engine_id, MatchEngineInterface $engine, $priority = 0) {
     $this->engines[$engine_id] = $engine;
     $this->engineOrders[$priority][$engine_id] = $engine;
     // Force the builders to be re-sorted.
@@ -48,6 +86,7 @@ class Matcher implements MatchEngineInterface, MatcherInterface {
    */
   public function getEngines() {
     if (!isset($this->sortedEngines)) {
+      $this->loadEngines();
       // Sort the builders according to priority.
       krsort($this->engineOrders);
       // Merge nested engines from $this->engines into $this->sortedEngines.
