@@ -47,22 +47,3 @@ function theme_crm_core_default_matching_engine_form($variables) {
 
   return $output;
 }
-
-/**
- * Page callback for engine configuration page.
- */
-function crm_core_default_matching_engine_config_page() {
-
-  $item = menu_get_item();
-  $types = crm_core_contact_types();
-  $content = array();
-  foreach ($types as $type) {
-    $_content = menu_get_item($item['href'] . '/' . $type->type . '/edit');
-    if ($_content['access']) {
-      $_content['description'] = $_content['title'];
-      $content[] = $_content;
-    }
-  }
-
-  return theme('crm_core_contact_ui_add_list', array('content' => $content));
-}
