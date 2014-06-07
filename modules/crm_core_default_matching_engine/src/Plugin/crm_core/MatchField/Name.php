@@ -5,6 +5,10 @@
  * Implementation of DefaultMatchingEngineFieldTypeInterface for name fields.
  */
 
+namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField;
+
+use Drupal\crm_core_default_matching_engine\Plugin\DefaultMatchingEngineFieldType;
+
 /**
  * Class for evaluating name fields.
  */
