@@ -1,0 +1,6 @@
+crm_core_default_matching_engine.rule_edit:
+  path: '/admin/config/crm-core/match/default/{crm_core_default_engine_rule}'
+  defaults:
+    _entity_form: 'crm_core_default_engine_rule.default'
+  requirements:
+    _permission: 'administer default matching engine'
