@@ -50,9 +50,9 @@ class MatcherTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $this->engine['a'] = $this->getMock('Drupal\crm_core_match\MatchEngineInterface');
-    $this->engine['b'] = $this->getMock('Drupal\crm_core_match\MatchEngineInterface');
-    $this->engine['c'] = $this->getMock('Drupal\crm_core_match\MatchEngineInterface');
+    $this->engine['a'] = $this->getMock('Drupal\crm_core_match\Plugin\crm_core_match\engine\MatchEngineInterface');
+    $this->engine['b'] = $this->getMock('Drupal\crm_core_match\Plugin\crm_core_match\engine\MatchEngineInterface');
+    $this->engine['c'] = $this->getMock('Drupal\crm_core_match\Plugin\crm_core_match\engine\MatchEngineInterface');
 
     $this->matcher = new Matcher();
 
@@ -69,7 +69,7 @@ class MatcherTest extends UnitTestCase {
     $this->matcher->addMatchEngine('b', $this->engine['b'], 11);
     $this->matcher->addMatchEngine('c', $this->engine['c'], -1);
 
-    $engines = $this->matcher->getSortedEngines();
+    $engines = $this->matcher->getEngines();
 
     $this->assertTrue(is_array($engines));
     $this->assertTrue(count($engines) == 3);

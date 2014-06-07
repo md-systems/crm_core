@@ -8,13 +8,14 @@
 namespace Drupal\crm_core_match;
 
 use Drupal\crm_core_contact\Entity\Contact;
+use Drupal\crm_core_match\Plugin\crm_core_match\engine\MatchEngineInterface;
 
 class Matcher implements MatchEngineInterface, MatcherInterface {
 
   /**
    * Array of all registered match engines, keyed by ID.
    *
-   * @var \Drupal\crm_core_match\MatchEngineInterface[]
+   * @var \Drupal\crm_core_match\Plugin\crm_core_match\engine\MatchEngineInterface[]
    */
   protected $engines;
 
@@ -28,7 +29,7 @@ class Matcher implements MatchEngineInterface, MatcherInterface {
   /**
    * Sorted list of registered engines.
    *
-   * @var \Drupal\crm_core_match\MatchEngineInterface[]
+   * @var \Drupal\crm_core_match\Plugin\crm_core_match\engine\MatchEngineInterface[]
    */
   protected $sortedEngines;
 
@@ -45,7 +46,7 @@ class Matcher implements MatchEngineInterface, MatcherInterface {
   /**
    * {@inheritdoc}
    */
-  public function getSortedEngines() {
+  public function getEngines() {
     if (!isset($this->sortedEngines)) {
       // Sort the builders according to priority.
       krsort($this->engineOrders);
@@ -74,7 +75,7 @@ class Matcher implements MatchEngineInterface, MatcherInterface {
   public function match(Contact $contact) {
     $ids = array();
 
-    foreach ($this->getSortedEngines() as $engine) {
+    foreach ($this->getEngines() as $engine) {
       $ids = array_merge($ids, $engine->match($contact));
     }
 

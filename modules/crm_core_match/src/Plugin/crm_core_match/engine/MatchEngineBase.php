@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\crm_core_match\MatchEngineBase.
+ * Contains \Drupal\crm_core_match\Plugin\crm_core_match\engine\MatchEngineBase.
  */
 
-namespace Drupal\crm_core_match;
+namespace Drupal\crm_core_match\Plugin\crm_core_match\engine;
 
 use Drupal\crm_core_contact\Entity\Contact;
 

@@ -6,6 +6,8 @@
 
 namespace Drupal\crm_core_match;
 
+use Drupal\crm_core_match\Plugin\crm_core_match\engine\MatchEngineInterface;
+
 interface MatcherInterface {
 
   /**
@@ -13,7 +15,7 @@ interface MatcherInterface {
    *
    * @param string $engine_id
    *   Identifier of the match engine.
-   * @param \Drupal\crm_core_match\MatchEngineInterface $engine
+   * @param \Drupal\crm_core_match\Plugin\crm_core_match\engine\MatchEngineInterface $engine
    *   The engine object.
    * @param int $priority
    *   The engines priority.
@@ -23,8 +25,8 @@ interface MatcherInterface {
   /**
    * Returns the sorted array of match engines.
    *
-   * @return \Drupal\crm_core_match\MatchEngineInterface[]
+   * @return \Drupal\crm_core_match\Plugin\crm_core_match\engine\MatchEngineInterface[]
    *   An array of match engine objects.
    */
-  public function getSortedEngines();
+  public function getEngines();
 }
