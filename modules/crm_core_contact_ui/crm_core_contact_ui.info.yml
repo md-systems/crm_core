@@ -14,7 +14,8 @@ dependencies:
   - search
 
   # Contrib
-  - views_bulk_operations
+  # @todo Readd once awaillable and still needed.
+#  - views_bulk_operations
 
 stylesheets:
   all:

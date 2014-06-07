@@ -150,7 +150,8 @@ function crm_core_ui_dashboard() {
  */
 function crm_core_ui_views_pre_render($view) {
   if ($view->name == 'crm_activities_by_contact') {
-    crm_core_ui_ctools_add_dropbutton_files();
+    // @todo Add appropriate replacement or remove.
+//    crm_core_ui_ctools_add_dropbutton_files();
   }
 }
 
@@ -256,7 +257,9 @@ function crm_core_ui_get_theme() {
 
 function crm_core_ui_preprocess_page(&$variables) {
   // Replace "main-menu" links with links from "crm-core-menu".
-  if (menu_get_custom_theme() && variable_get('crm_core_theme_replace_links', FALSE)) {
-    $variables['main_menu'] = menu_navigation_links('crm-core-menu');
-  }
+  // This brakes already ported code.
+  // @todo Add appropriate replacement or remove.
+//  if (menu_get_custom_theme() && variable_get('crm_core_theme_replace_links', FALSE)) {
+//    $variables['main_menu'] = menu_navigation_links('crm-core-menu');
+//  }
 }

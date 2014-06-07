@@ -68,7 +68,7 @@ class CRMFeedsContactProcessor extends FeedsProcessor {
    * Save a contact.
    */
   public function entitySave($entity) {
-    crm_core_contact_save($entity);
+    $entity->save();
   }
 
   /**

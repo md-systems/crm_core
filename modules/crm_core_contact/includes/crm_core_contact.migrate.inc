@@ -127,7 +127,7 @@ class MigrateDestinationCRMCoreContact extends MigrateDestinationEntity {
     }
 
     migrate_instrument_start('contact_save');
-    crm_core_contact_save($contact);
+    $contact->save();
     migrate_instrument_stop('contact_save');
 
     if (isset($contact->contact_id)) {

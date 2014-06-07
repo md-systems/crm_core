@@ -11,36 +11,6 @@
 function crm_core_contact_ui_menu() {
   $items = array();
 
-  $items['crm-core/contact/%crm_core_contact'] = array(
-    'title' => 'Contact',
-    'page callback' => 'crm_core_contact_view',
-    'page arguments' => array(2),
-    'title callback' => 'crm_core_contact_title',
-    'title arguments' => array(2),
-    'access callback' => 'entity_access',
-    'access arguments' => array('view', 'crm_core_contact', 2),
-    'type' => MENU_NORMAL_ITEM,
-  );
-
-  $items['crm-core/contact/%crm_core_contact/view'] = array(
-    'title' => 'View',
-    'weight' => -10,
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
-  );
-
-  $items['crm-core/contact/%crm_core_contact/edit'] = array(
-    'title' => 'Edit',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('crm_core_contact_ui_form', 2),
-    'access callback' => 'entity_access',
-    'access arguments' => array('edit', 'crm_core_contact', 2),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => -9,
-    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
-    'file' => 'crm_core_contact_ui.pages.inc',
-  );
-
   $items['crm-core/contact/%crm_core_contact/revert/%'] = array(
     'title' => 'Contact',
     'page callback' => 'drupal_get_form',
@@ -50,40 +20,6 @@ function crm_core_contact_ui_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'crm_core_contact_ui.pages.inc',
   );
-
-  $items['crm-core/contact/%crm_core_contact/delete'] = array(
-    'title' => 'Delete',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('crm_core_contact_ui_delete_form', 2),
-    'access callback' => 'entity_access',
-    'access arguments' => array('delete', 'crm_core_contact', 2),
-    'type' => MENU_CALLBACK,
-    'file' => 'crm_core_contact_ui.pages.inc',
-  );
-
-  $items['crm-core/contact/add'] = array(
-    'title' => 'Add a contact',
-    'description' => 'Add a new contact to the CRM.',
-    'page callback' => 'crm_core_contact_ui_add_page',
-    'access callback' => 'entity_access',
-    'access arguments' => array('create_view', 'crm_core_contact'),
-    'type' => MENU_LOCAL_ACTION,
-    'context' => MENU_CONTEXT_PAGE,
-    'weight' => 0,
-    'file' => 'crm_core_contact_ui.pages.inc',
-  );
-  foreach (crm_core_contact_types() as $type => $contact_type) {
-    $items['crm-core/contact/add/' . $type] = array(
-      'title' => 'Add @type',
-      'title arguments' => array('@type' => $contact_type->name),
-      'description' => $contact_type->description,
-      'page callback' => 'crm_core_contact_entity_ui_get_form_wrapper',
-      'page arguments' => array($type),
-      'access callback' => 'entity_access',
-      'access arguments' => array('create', 'crm_core_contact', $type),
-      'file' => 'crm_core_contact_ui.pages.inc',
-    );
-  }
 
   /*
    * Contact Debug
@@ -138,46 +74,21 @@ function crm_core_contact_ui_menu_alter(&$items) {
 }
 
 /**
- * Implements hook_admin_paths().
- */
-function crm_core_contact_ui_admin_paths() {
-  $paths = array(
-    'crm-core/admin/contact-types' => TRUE,
-    'crm-core/admin/contact-types/*' => TRUE,
-  );
-
-  return $paths;
-}
-
-/**
  * Implements hook_theme().
  */
 function crm_core_contact_ui_theme() {
   $theme = array(
-    'crm_core_contact_ui_type_overview' => array(
-      'variables' => array('contact_type' => NULL),
-      'file' => 'theme/crm_core_contact_ui_type.theme.inc',
-    ),
     'crm_core_contact_ui_add_list' => array(
       'variables' => array('content' => array()),
-      'file' => 'theme/crm_core_contact_ui.theme.inc',
+      'file' => 'crm_core_contact_ui.pages.inc',
+      'template' => 'crm-core-contact-ui-add-list',
     ),
     'crm_core_contact_ui_revsions' => array(
       'variables' => array('contact_revisions' => array()),
-      'file' => 'theme/crm_core_contact_ui.theme.inc',
     ),
   );
 
   return $theme;
-}
-
-/**
- * Returns save contact button name depending on contact type.
- */
-function crm_core_contact_ui_save_contact_button_name($contact_type) {
-  return t('Save !contact_type', array(
-    '!contact_type' => crm_core_contact_type_get_name($contact_type),
-  ));
 }
 
 /**

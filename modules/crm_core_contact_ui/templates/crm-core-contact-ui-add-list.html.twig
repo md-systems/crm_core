@@ -1,0 +1,32 @@
+{#
+/**
+ * @file
+ * Default theme implementation to list contact types available for adding contacts.
+ *
+ * This list is displayed on the Add contact admin page.
+ *
+ * Available variables:
+ * - types: A list of contact types, each with the following properties:
+ *   - add_link: Link to create a contact of this type.
+ *   - description: Description of this type of contact.
+ *
+ * @see template_preprocess_crm_core_contact_add_list()
+ *
+ * @ingroup themeable
+ */
+#}
+{% if types is not empty %}
+  <dl class="crm-core-contact-type-list">
+    {% for type in types %}
+      <dt>{{ type.add_link }}</dt>
+      <dd>{{ type.description }}</dd>
+    {% endfor %}
+  </dl>
+{% else %}
+  <p>
+    {% set create_contact_types = url('admin/structure/types/add') %}
+    {% trans %}
+      You have not created any contact types yet. Go to the <a href="{{ create_contact_types }}">contact type creation page</a> to add a new contact type.
+    {% endtrans %}
+  </p>
+{% endif %}

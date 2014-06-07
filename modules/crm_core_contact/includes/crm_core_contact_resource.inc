@@ -67,7 +67,7 @@ function _crm_core_contact_resource_create($contact_data) {
   try {
     $contact = entity_create('crm_core_contact', $contact_data);
     unset($contact->is_new);
-    crm_core_contact_save($contact);
+    $contact->save();
 
     return $contact;
   }

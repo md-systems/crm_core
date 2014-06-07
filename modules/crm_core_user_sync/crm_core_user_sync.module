@@ -270,7 +270,7 @@ function crm_core_user_sync_sync($account, $contact = NULL) {
       );
     }
 
-    crm_core_contact_save($contact);
+    $contact->save();
   }
   else {
     $contact_type = $contact->type;

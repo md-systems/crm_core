@@ -13,7 +13,9 @@ dependencies:
   - entity
   - field_ui
   - views
+  - text
 
   # Field dependencies
-  - field_group
-  - name
+  # @todo Readd once awaillable and still needed.
+#  - field_group
+#  - name

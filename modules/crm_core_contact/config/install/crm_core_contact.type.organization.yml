@@ -1,0 +1,11 @@
+type: organization
+name: Organization
+description: 'A collection of individuals or other organizations that has additional contact data.'
+locked: false
+primary_fields: null
+status: true
+uuid: 843da9f8-1196-494d-8606-6df24474830b
+langcode: en
+dependencies:
+  entity:
+    - field.field.crm_core_contact.contact_name

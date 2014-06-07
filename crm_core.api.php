@@ -49,14 +49,14 @@ function crm_core_contact_CONTACT_BUNDLE_label($entity) {
 /**
  * Respond to CRM Core contacts being merged.
  *
- * @param CRMCoreContactEntity $master_contact
+ * @param \Drupal\crm_core_contact\Entity\Contact $master_contact
  *   Contact to which data being merged.
  * @param array $merged_contacts
  *   Keyed by contact ID array of contacts being merged.
  *
  * @see crm_core_contact_merge_contacts_action()
  */
-function hook_crm_core_contact_merge_contacts(CRMCoreContactEntity $master_contact, array $merged_contacts) {
+function hook_crm_core_contact_merge_contacts(Drupal\crm_core_contact\Entity\Contact $master_contact, array $merged_contacts) {
 
 }
 
