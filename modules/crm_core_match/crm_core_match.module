@@ -59,20 +59,6 @@ function crm_core_match_hook_info() {
  * Implements hook_menu().
  */
 function crm_core_match_menu() {
-  $items['admin/config/crm-core/match'] = array(
-    'title' => 'Matching Engines',
-    'description' => 'Configure the default rules for matching duplicate contacts in CRM Core.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('crm_core_match_admin_config_engines_form'),
-    'access arguments' => array('administer matching engines'),
-    'file' => 'crm_core_match.admin.inc',
-  );
-
-  $items['admin/config/crm-core/match/engines'] = array(
-    'title' => 'Engines',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-
   $items['admin/config/crm-core/match/engines/%/%'] = array(
     'title' => 'Engine status toggle callback',
     'type' => MENU_CALLBACK,
@@ -100,18 +86,6 @@ function crm_core_match_menu() {
   );
 
   return $items;
-}
-
-/**
- * Implements hook_theme().
- */
-function crm_core_match_theme() {
-  return array(
-    'crm_core_match_admin_config_engines_form' => array(
-      'render element' => 'form',
-      'file' => 'crm_core_match.admin.inc',
-    ),
-  );
 }
 
 /**

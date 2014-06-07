@@ -1,0 +1,7 @@
+crm_core_match.engines:
+  path: '/admin/config/crm-core/match'
+  defaults:
+    _form: 'Drupal\crm_core_match\Form\EnginesConfigForm'
+    _title: 'Matching Engines'
+  requirements:
+    _permission: 'administer matching engines'
