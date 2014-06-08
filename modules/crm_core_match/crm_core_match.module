@@ -59,14 +59,6 @@ function crm_core_match_hook_info() {
  * Implements hook_menu().
  */
 function crm_core_match_menu() {
-  $items['admin/config/crm-core/match/engines/%/%'] = array(
-    'title' => 'Engine status toggle callback',
-    'type' => MENU_CALLBACK,
-    'page callback' => 'crm_core_match_engine_status_toggle',
-    'page arguments' => array(5, 6),
-    'access arguments' => array('administer matching engines'),
-  );
-
   $items['crm-core/crm-core-match/check-rules/%crm_core_contact'] = array(
     'page callback' => 'crm_core_match_testing_page',
     'page arguments' => array(3),
@@ -122,34 +114,6 @@ function crm_core_match_get_engines() {
   }
 
   return $cache;
-}
-
-/**
- * Page callback to toggle matching engine status.
- */
-function crm_core_match_engine_status_toggle($engine_machine_name, $to_status) {
-  $status = NULL;
-  switch ($to_status) {
-    case 'enable':
-      $status = 1;
-      break;
-
-    case 'disable':
-      $status = 0;
-      break;
-  }
-  if (isset($status)) {
-    db_merge('crm_core_match_engines')
-      ->condition('machine_name', $engine_machine_name)
-      ->fields(array(
-        'status' => $status,
-        'machine_name' => $engine_machine_name,
-      ))
-      ->execute();
-    drupal_set_message(t('Status changed successfully.'));
-  }
-  $destination = drupal_get_destination();
-  drupal_goto($destination['destination']);
 }
 
 /**

@@ -174,6 +174,25 @@ EOF
       );
     }
 
+    $status = $this->config('crm_core_match.engines')->get($definition['id'] . '.status');
+    if (!$status) {
+      $operations['enable'] = array(
+        'title' => $this->t('Enable'),
+        'route_name' => 'crm_core_match.enable',
+        'route_parameters' => array(
+          'engine' => $definition['id'],
+        ),
+      );
+    }
+    else {
+      $operations['disable'] = array(
+        'title' => $this->t('Disable'),
+        'route_name' => 'crm_core_match.disable',
+        'route_parameters' => array(
+          'engine' => $definition['id'],
+        ),
+      );
+    }
 
     $row['operations']['data'] = array(
       '#type' => 'operations',

@@ -43,6 +43,13 @@ class MatcherTest extends UnitTestCase {
   protected $pluginManager;
 
   /**
+   * A mocked instance of the config.
+   *
+   * @var \Drupal\Core\Config\Config|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $config;
+
+  /**
    * {@inheritdoc}
    */
   public static function getInfo() {
@@ -65,7 +72,11 @@ class MatcherTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $this->matcher = new Matcher($this->pluginManager);
+    $this->config = $this->getMockBuilder('\Drupal\Core\Config\Config')
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $this->matcher = new Matcher($this->pluginManager, $this->config);
 
     $this->contact = $this->getMockBuilder('Drupal\crm_core_contact\Entity\Contact')
       ->disableOriginalConstructor()
@@ -76,6 +87,19 @@ class MatcherTest extends UnitTestCase {
    * Tests the sorting of engines.
    */
   public function testEngineSort() {
+    $engine_config = $this->getMockBuilder('\Drupal\Core\Config\Config')
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $this->config->expects($this->once())
+      ->method('get')
+      ->with('crm_core_match.engines')
+      ->will($this->returnValue($engine_config));
+
+    $engine_config->expects($this->exactly(3))
+      ->method('get')
+      ->will($this->returnValue(TRUE));
+
     $definitions = array(
       'a' => array('priority' => 5),
       'b' => array('priority' => 11),
@@ -113,6 +137,19 @@ class MatcherTest extends UnitTestCase {
    * Tests the execution of match engines.
    */
   public function testEngineExecution() {
+    $engine_config = $this->getMockBuilder('\Drupal\Core\Config\Config')
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $this->config->expects($this->once())
+      ->method('get')
+      ->with('crm_core_match.engines')
+      ->will($this->returnValue($engine_config));
+
+    $engine_config->expects($this->exactly(2))
+      ->method('get')
+      ->will($this->returnValue(TRUE));
+
     $definitions = array(
       'a' => array('priority' => 5),
       'b' => array('priority' => 11),
@@ -145,5 +182,51 @@ class MatcherTest extends UnitTestCase {
     $ids = array_values($ids);
     sort($ids);
     $this->assertEquals(array(1, 2, 3, 5, 8, 13, 21, 34), $ids);
+  }
+
+  /**
+   * Tests disabled engines are not executed.
+   */
+  public function testDisabledEngines() {
+    $engine_config = $this->getMockBuilder('\Drupal\Core\Config\Config')
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $this->config->expects($this->once())
+      ->method('get')
+      ->with('crm_core_match.engines')
+      ->will($this->returnValue($engine_config));
+
+    $engine_config->expects($this->exactly(2))
+      ->method('get')
+      ->will($this->returnValueMap(array(
+        array('a.status', TRUE),
+        array('b.status', FALSE),
+      )));
+
+    $definitions = array(
+      'a' => array('priority' => 5),
+      'b' => array('priority' => 11),
+    );
+    $this->pluginManager->expects($this->once())
+      ->method('getDefinitions')
+      ->will($this->returnValue($definitions));
+
+    $this->pluginManager->expects($this->once())
+      ->method('createInstance')
+      ->with('a', $definitions['a'])
+      ->will($this->returnValue($this->engine['a']));
+
+    $this->engine['a']->expects($this->once())
+      ->method('match')
+      ->with($this->contact)
+      ->will($this->returnValue(array()));
+
+    $this->engine['b']->expects($this->never())
+      ->method('match');
+
+    $this->assertEquals(1, count($this->matcher->getEngines()));
+
+    $this->matcher->match($this->contact);
   }
 }

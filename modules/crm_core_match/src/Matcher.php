@@ -7,8 +7,10 @@
 
 namespace Drupal\crm_core_match;
 
+use Drupal\Core\Config\Config;
 use Drupal\crm_core_contact\Entity\Contact;
 use Drupal\crm_core_match\Plugin\crm_core_match\engine\MatchEngineInterface;
+use Drupal\crm_core_match\Plugin\MatchEnginePluginManager;
 
 class Matcher implements MatchEngineInterface, MatcherInterface {
 
@@ -18,6 +20,13 @@ class Matcher implements MatchEngineInterface, MatcherInterface {
    * @var \Drupal\crm_core_match\Plugin\MatchEnginePluginManager
    */
   protected $pluginManager;
+
+  /**
+   * The configuration object.
+   *
+   * @var \Drupal\Core\Config\Config
+   */
+  protected $config;
 
   /**
    * Array of all registered match engines, keyed by ID.
@@ -45,19 +54,25 @@ class Matcher implements MatchEngineInterface, MatcherInterface {
    *
    * @param \Drupal\crm_core_match\Plugin\MatchEnginePluginManager $plugin_manager
    *   The plugin manager used to discover engines.
+   * @param \Drupal\Core\Config\Config $config
+   *   The configuration object.
    */
-  public function __construct($plugin_manager) {
+  public function __construct(MatchEnginePluginManager $plugin_manager, Config $config) {
     $this->pluginManager = $plugin_manager;
+    $this->config = $config;
   }
 
   /**
    * Discovers the engines and creates instances of the active ones.
    */
   protected function loadEngines() {
+    $engine_configs = $this->config->get('crm_core_match.engines');
     $engine_definitions = $this->pluginManager->getDefinitions();
     foreach ($engine_definitions as $id => $definition) {
-      // @todo Check if engine is enabled.
-      // Assume all engines are enabled for now.
+      // Skip disable engines.
+      if (!$engine_configs->get($id . '.status')) {
+        continue;
+      }
       $engine = $this->pluginManager->createInstance($id, $definition);
       // @todo Check if priority was overwritten.
       $this->addMatchEngine($id, $engine, $definition['priority']);
