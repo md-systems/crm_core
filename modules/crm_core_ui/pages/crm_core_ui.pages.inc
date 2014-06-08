@@ -1,26 +1,6 @@
 <?php
 
 /**
- * Page callback for CRM Administration dashboard.
- */
-function crm_core_ui_admin_dashboard() {
-  $local_tasks = menu_local_tasks();
-  $content = array();
-  foreach ($local_tasks['tabs']['output'] as $task) {
-    $content[] = $task['#link'];
-  }
-
-  if ($content) {
-    $output = theme('admin_block_content', array('content' => $content));
-  }
-  else {
-    $output = t('You do not have any CRM Core items.');
-  }
-  return $output;
-}
-
-
-/**
  * Form constructor for the CRM Core configuration form.
  */
 function crm_core_ui_admin_config_form($form, &$form_state) {

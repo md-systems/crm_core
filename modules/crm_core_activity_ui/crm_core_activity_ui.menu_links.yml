@@ -1,0 +1,11 @@
+crm_core_activity.list:
+  title: 'CRM Activites'
+  description: 'Manage CRM Activities.'
+  route_name: crm_core_activity.list
+  parent: crm_core.dashboard
+
+crm_core_activity.type_list:
+  title: 'CRM Activity Types'
+  description: 'Manage CRM Activity Types.'
+  route_name: crm_core_activity.type_list
+  parent: crm_core.manage

@@ -1,0 +1,23 @@
+crm_core.dashboard:
+  path: '/crm-core'
+  defaults:
+    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'CRM Core'
+  requirements:
+    _permission: 'view crm dashboard'
+
+crm_core.manage:
+  path: '/admin/structure/crm-core'
+  defaults:
+    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'CRM Core'
+  requirements:
+    _permission: 'access administration pages'
+
+crm_core.config:
+  path: '/admin/config/crm-core'
+  defaults:
+    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'CRM Core'
+  requirements:
+    _permission: 'access administration pages'
