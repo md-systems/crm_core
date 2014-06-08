@@ -1,0 +1,5 @@
+crm_core.manage:
+  title: 'CRM Core'
+  description: 'Manage contact types, activity types, and contact relationship types..'
+  route_name: crm_core.manage
+  parent: system.admin_structure

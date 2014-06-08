@@ -27,14 +27,6 @@ function crm_core_ui_menu() {
     );
   }
 
-  $items['admin/structure/crm-core'] = array(
-    'title' => 'CRM Core',
-    'description' => 'Manage contact types, activity types, and contact relationship types.',
-    'page callback' => 'crm_core_ui_admin_dashboard',
-    'access arguments' => array('access administration pages'),
-    'file' => 'pages/crm_core_ui.pages.inc',
-  );
-
   $items['admin/config/crm-core'] = array(
     'title' => 'CRM Core',
     'description' => 'CRM Core module and feature settings.',
