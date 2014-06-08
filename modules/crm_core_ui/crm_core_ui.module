@@ -6,17 +6,6 @@
 function crm_core_ui_menu() {
   $items = array();
 
-  /**
-   * Base CRM menu
-   */
-  $items['crm-core'] = array(
-    'title' => 'CRM Core',
-    'page callback' => 'crm_core_ui_dashboard',
-    'access arguments' => array('view crm dashboard'),
-    'type' => MENU_SUGGESTED_ITEM,
-    'theme callback' => 'crm_core_ui_get_theme',
-  );
-
   $dashboard_enabled = variable_get('crm_core_dashboard_enabled', FALSE);
   if ($dashboard_enabled) {
     $items['crm-core/dashboard'] = array(

@@ -1,3 +1,9 @@
+crm_core_contact.list:
+  title: 'CRM Contacts'
+  description: 'Manage CRM Contacts.'
+  route_name: crm_core_contact.list
+  parent: crm_core.dashboard
+
 crm_core_contact.type_list:
   title: 'CRM Contact Types'
   description: 'Manage CRM Contact Types.'

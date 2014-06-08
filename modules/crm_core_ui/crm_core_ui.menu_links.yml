@@ -1,3 +1,9 @@
+crm_core.dashboard:
+  route_name: crm_core.dashboard
+  parent: system.admin
+  description: 'CRM Core Dashboard. Manage Contacts, Activites and Relations.'
+  title: 'CRM Core'
+
 crm_core.manage:
   title: 'CRM Core'
   description: 'Manage contact types, activity types, and contact relationship types..'
