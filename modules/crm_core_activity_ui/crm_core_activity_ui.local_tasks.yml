@@ -1,0 +1,14 @@
+crm_core_activity.view:
+  title: View
+  route_name: crm_core_activity.view
+  base_route: crm_core_activity.view
+
+crm_core_activity.edit:
+  title: Edit
+  route_name: crm_core_activity.edit
+  base_route: crm_core_activity.view
+
+crm_core_activity.type_edit:
+  title: Edit
+  route_name: crm_core_activity.type_edit
+  base_route: crm_core_activity.type_edit
