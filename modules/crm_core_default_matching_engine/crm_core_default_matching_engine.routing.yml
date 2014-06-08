@@ -7,7 +7,7 @@ crm_core_default_matching_engine.config:
     _permission: 'administer default matching engine'
 
 crm_core_default_matching_engine.rule_edit:
-  path: '/admin/config/crm-core/match/default/{crm_core_default_engine_rule}'
+  path: '/admin/config/crm-core/match/default/edit/{crm_core_default_engine_rule}'
   defaults:
     _entity_form: 'crm_core_default_engine_rule.default'
     _title_callback: 'Drupal\crm_core_default_matching_engine\Controller\EngineController::editTitle'
