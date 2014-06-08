@@ -9,3 +9,9 @@ crm_core.manage:
   description: 'Manage contact types, activity types, and contact relationship types..'
   route_name: crm_core.manage
   parent: system.admin_structure
+
+crm_core.config:
+  route_name: crm_core.config
+  parent: system.admin_config
+  title: 'CRM Core'
+  description: 'CRM Core module and feature settings.'

@@ -13,3 +13,11 @@ crm_core.manage:
     _title: 'CRM Core'
   requirements:
     _permission: 'access administration pages'
+
+crm_core.config:
+  path: '/admin/config/crm-core'
+  defaults:
+    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'CRM Core'
+  requirements:
+    _permission: 'access administration pages'
