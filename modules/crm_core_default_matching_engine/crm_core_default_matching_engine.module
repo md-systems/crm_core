@@ -58,11 +58,6 @@ function crm_core_default_matching_engine_menu() {
 function crm_core_default_matching_engine_theme() {
   $theme = array();
 
-  $theme['crm_core_default_matching_engine_form'] = array(
-    'render element' => 'form',
-    'file' => 'crm_core_default_matching_engine.admin.inc',
-  );
-
   $theme['crm_core_default_matching_engine_config_page'] = array(
     'variables' => array('matching_rule_entities' => array()),
     'template' => 'crm-core-default-matching-engine-config-page',

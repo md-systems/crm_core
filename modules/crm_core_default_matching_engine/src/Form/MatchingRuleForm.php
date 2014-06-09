@@ -8,6 +8,8 @@ namespace Drupal\crm_core_default_matching_engine\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField\MatchFieldInterface;
 use Drupal\crm_core_default_matching_engine\Plugin\MatchFieldPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -18,16 +20,26 @@ class MatchingRuleForm extends EntityForm {
    *
    * @var \Drupal\crm_core_default_matching_engine\Plugin\MatchFieldPluginManager.
    */
-  protected $matchFieldManager;
+  protected $pluginManager;
+
+  /**
+   * The entity manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityManagerInterface
+   */
+  protected $entityManager;
 
   /**
    * Constructs a new form for the matching config rule entity.
    *
-   * @param MatchFieldPluginManager $match_field_manager
+   * @param MatchFieldPluginManager $plugin_manager
    *   The plugin manager for match fields.
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager service.
    */
-  public function __construct(MatchFieldPluginManager $match_field_manager) {
-    $this->matchFieldManager = $match_field_manager;
+  public function __construct(MatchFieldPluginManager $plugin_manager, EntityManagerInterface $entity_manager) {
+    $this->pluginManager = $plugin_manager;
+    $this->entityManager = $entity_manager;
   }
 
   /**
@@ -35,7 +47,8 @@ class MatchingRuleForm extends EntityForm {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.crm_core_match.match_field')
+      $container->get('plugin.manager.crm_core_match.match_field'),
+      $container->get('entity.manager')
     );
   }
 
@@ -97,25 +110,133 @@ EOF
     );
 
     $form['fields'] = array(
-      '#type' => 'container',
+      '#type' => 'table',
       '#tree' => TRUE,
+      '#header' => $this->buildHeader(),
+      '#empty' => $this->t('There are no fields available.'),
+      '#tabledrag' => array(
+        array(
+          'action' => 'order',
+          'relationship' => 'sibling',
+          'group' => 'weight',
+        ),
+      ),
     );
 
-    $instances = \Drupal::entityManager()->getFieldDefinitions('crm_core_contact', $this->entity->id());
-    foreach ($instances as $instance) {
-      $config = empty($this->entity->fields[$instance->getName()]) ? array() : $this->entity->fields[$instance->getName()];
+    $fields = $this->entityManager->getFieldDefinitions('crm_core_contact', $this->entity->id());
+    foreach ($fields as $field) {
+
+      $config = empty($this->entity->fields[$field->getName()]) ? array() : $this->entity->fields[$field->getName()];
+      $config['field'] = $field;
 
       $match_field_id = 'unsupported';
-      if ($this->matchFieldManager->hasDefinition($instance->getType())) {
-        $match_field_id = $instance->getType();
+      if ($this->pluginManager->hasDefinition($field->getType())) {
+        $match_field_id = $field->getType();
       }
 
-      /* @var \Drupal\crm_core_default_matching_engine\Plugin\MatchFieldInterface $match_field */
-      $match_field = $this->matchFieldManager->createInstance($match_field_id, $config);
-      $form['fields'] += $match_field->fieldRender($instance);
+      /* @var \Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField\MatchFieldInterface $match_field */
+      $match_field = $this->pluginManager->createInstance($match_field_id, $config);
+
+      $disabled = ($match_field_id == 'unsupported');
+
+      foreach ($match_field->getPropertyNames($field) as $name) {
+        $row = $this->buildRow($match_field, $name, $disabled);
+        $form['fields'][$field->getName() . ':' . $name] = $row;
+      }
     }
 
     return $form;
+  }
+
+  /**
+   * Builds the header row for the rule listing.
+   *
+   * @return array
+   *   A render array structure of header strings.
+   */
+  public function buildHeader() {
+    $header = array();
+
+    $header['status'] = $this->t('Enabled');
+    $header['label'] = $this->t('Name');
+    $header['field_type'] = $this->t('Field type');
+    $header['operator'] = $this->t('Operator');
+    $header['options'] = $this->t('Options');
+    $header['score'] = $this->t('Score');
+    $header['weight'] = $this->t('Weight');
+
+    return $header;
+  }
+
+
+  /**
+   * Builds a row for an rule in the rule listing.
+   *
+   * @param \Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField\MatchFieldInterface $field
+   *   The match field of this rule.
+   * @param string $name
+   *   The property name of this rule.
+   * @param bool $disabled
+   *   Disables the form elements.
+   *
+   * @return array
+   *   A render array structure of fields for this rule.
+   */
+  public function buildRow(MatchFieldInterface $field, $name, $disabled) {
+    $row = array();
+    $row['#attributes']['class'][] = 'draggable';
+    $row['#weight'] = $field->getWeight($name);
+
+    $row['status'] = array(
+      '#type' => 'checkbox',
+      '#default_value' => $field->getStatus($name),
+      '#disabled' => $disabled,
+    );
+
+    $row['label'] = array(
+      '#markup' => $field->getLabel($name),
+    );
+
+    $row['type'] = array(
+      '#markup' => $field->getType(),
+    );
+
+    $row['operator'] = array(
+      '#type' => 'select',
+      '#default_value' => $field->getOperator($name),
+      '#empty_option' => $this->t('-- Please Select --'),
+      '#empty_value' => NULL,
+      '#options' => $field->getOperators($name),
+      '#disabled' => $disabled,
+    );
+
+    $row['options'] = array(
+      '#type' => 'textfield',
+      '#maxlength' => 28,
+      '#size' => 28,
+      '#default_value' => $field->getOptions($name),
+      '#disabled' => $disabled,
+    );
+
+    $row['score'] = array(
+      '#type' => 'textfield',
+      '#maxlength' => 4,
+      '#size' => 3,
+      '#default_value' => $field->getScore($name),
+      '#disabled' => $disabled,
+    );
+
+    $row['weight'] = array(
+      '#type' => 'weight',
+      '#title' => t('Weight for @field', array(
+        '@field' => $field->getLabel(),
+      )),
+      '#title_display' => 'invisible',
+      '#default_value' => $field->getWeight($name),
+      '#attributes' => array('class' => array('weight')),
+    );
+
+    return $row;
   }
 
   /**
@@ -130,14 +251,14 @@ EOF
     }
     foreach ($fields_rules as $field_name => $config) {
       if ($config['status'] && empty($config['operator'])) {
-        $name = 'field_matching][' . $field_name . '][operator';
+        $name = 'fields][' . $field_name . '][operator';
         $message = $this->t('You must select an operator for enabled field.');
-        $this->setFormError($name, $message);
+        $this->setFormError($name, $form_state, $message);
       }
       if (!is_numeric($config['score'])) {
-        $name = 'field_matching][' . $field_name . '][score';
+        $name = 'fields][' . $field_name . '][score';
         $message = $this->t('You must enter number in "Score" column.');
-        $this->setFormError($name, $message);
+        $this->setFormError($name, $form_state, $message);
       }
     }
   }
@@ -148,5 +269,29 @@ EOF
   public function save(array $form, array &$form_state) {
     $this->entity->save();
     drupal_set_message($this->t('The configuration options have been saved.'));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function copyFormValuesToEntity(EntityInterface $entity, array $form, array &$form_state) {
+    foreach ($form_state['values'] as $key => $value) {
+      if ($key == 'fields') {
+        $fields = array();
+        foreach ($value as $name => $config) {
+          if (strpos($name, ':') !== FALSE) {
+            list($parent,$child) = explode(':', $name, 2);
+            $fields[$parent][$child] = $config;
+          }
+          else {
+            $fields[$name] = $config;
+          }
+        }
+        $entity->fields = $fields;
+      }
+      else {
+        $entity->set($key, $value);
+      }
+    }
   }
 }

@@ -7,8 +7,6 @@
 
 namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField;
 
-use Drupal\Core\Field\FieldDefinitionInterface;
-
 /**
  * Interface for defining the logical operators and query criteria used to identify duplicate contacts based on
  * different field types in DefaultMatchingEngine.
@@ -16,29 +14,109 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 interface MatchFieldInterface {
 
   /**
-   * Field Renderer.
+   * Returns the names of the field's subproperties.
    *
-   * Used for complex field types such as name.
-   * Renders them into component parts for use in applying logical operators and ordering functions.
-   *
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field
-   *   The field being rendered
-   *
-   * @return array
-   *   The form elements.
+   * @return string[]
+   *   The property names.
    */
-  public function fieldRender(FieldDefinitionInterface $field);
+  public function getPropertyNames();
 
   /**
-   * Operators.
+   * Gets the property label.
+   *
+   * @param string $property
+   *   The name of the property.
+   *
+   * @return string
+   *   The property label.
+   */
+  public function getLabel($property = 'value');
+
+
+  /**
+   * Gets the property status.
+   *
+   * @param string $property
+   *   The name of the property.
+   *
+   * @return bool
+   *   The property status.
+   */
+  public function getStatus($property = 'value');
+
+  /**
+   * Gets the field type.
+   *
+   * @return string
+   *   The name of the field type.
+   */
+  public function getType();
+
+  /**
+   * Gets the operators.
    *
    * Defines the logical operators that can be used by this field type.
-   * Provides any additional fields needed to capture information used in logical evaluations.
-   * For instance: if this was a text field, there might be 3 logical operators: EQUALS, STARTS WITH, and ENDS WITH.
-   * This function should return a select list with the operator values, and a text field to be used to enter
-   * something like 'first 3'.
+   * Provides any additional fields needed to capture information used in
+   * logical evaluations. For instance: if this was a text field, there might be
+   * 3 logical operators: EQUALS, STARTS WITH, and ENDS WITH.
+   *
+   * @param string $property
+   *   The name of the property.
+   *
+   * @return string[]
+   *   Array of operators, with the operator name as key and the translated
+   *   operator label as value.
    */
-  public function operators();
+  public function getOperators($property = 'value');
+
+  /**
+   * Gets the current selected operator.
+   *
+   * @param string $property
+   *   The name of the property.
+   *
+   * @return string
+   *   The operator name.
+   *
+   * @see MatchFieldInterface::getOperators()
+   */
+  public function getOperator($property = 'value');
+
+  /**
+   * Gets the operator options.
+   *
+   * @param string $property
+   *   The name of the property.
+   *
+   * @return string
+   *   The operator options.
+   *
+   * @see MatchFieldInterface::getOperators()
+   * @see MatchFieldInterface::getOperator()
+   */
+  public function getOptions($property = 'value');
+
+  /**
+   * Gets the score.
+   *
+   * @param string $property
+   *   The name of the property.
+   *
+   * @return int
+   *   The score.
+   */
+  public function getScore($property = 'value');
+
+  /**
+   * Gets the weight.
+   *
+   * @param string $property
+   *   The name of the property.
+   *
+   * @return int
+   *   The weight.
+   */
+  public function getWeight($property = 'value');
 
   /**
    * Query.

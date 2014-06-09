@@ -19,7 +19,7 @@ class Text extends MatchFieldBase {
   /**
    * {@inheritdoc}
    */
-  public function operators() {
+  public function getOperators($property = 'value') {
     return array(
       'equals' => t('Equals'),
       'starts' => t('Starts with'),

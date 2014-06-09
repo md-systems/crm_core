@@ -37,133 +37,90 @@ abstract class MatchFieldBase implements MatchFieldInterface, ContainerFactoryPl
   protected $configuration;
 
   /**
+   * The field.
+   *
+   * @var \Drupal\Core\Field\FieldDefinitionInterface
+   */
+  protected $field;
+
+  /**
    * Constructs an plugin instance.
    */
-  public function __construct($configuration, $id, $definition) {
-    $this->configuration = $configuration + array(
-      'weight' => self::WEIGHT_DELTA,
-      'status' => FALSE,
-      'operator' => NULL,
-      'options' => '',
-      'score' => 0,
-    );
+  public function __construct(FieldDefinitionInterface $field, array $configuration, $id, $definition) {
+    $this->configuration = $configuration;
     $this->definition = $definition;
     $this->id = $id;
+    $this->field = $field;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    $field = $configuration['field'];
+    unset($configuration['field']);
     return new static(
+      $field,
       $configuration,
       $plugin_id,
       $plugin_definition
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getPropertyNames() {
+    return array('value');
+  }
 
   /**
    * {@inheritdoc}
    */
-  public function fieldRender(FieldDefinitionInterface $field) {
-    $form = array();
+  public function getLabel($property = 'value') {
+    return $this->field->getLabel();
+  }
 
-    $field_name = $field->getName();
-    $field_label = $field->getLabel();
+  /**
+   * {@inheritdoc}
+   */
+  public function getStatus($property = 'value') {
+    return isset($this->configuration[$property]['status']) ? $this->configuration[$property]['status'] : FALSE;
+  }
 
-    if ($this->configuration['weight'] == 0) {
-      // Table row positioned incorrectly if "#weight" is 0.
-      $display_weight = 0.001;
-    }
-    else {
-      $display_weight = $this->configuration['weight'];
-    }
+  /**
+   * {@inheritdoc}
+   */
+  public function getType() {
+    return $this->field->getType();
+  }
 
-    $form[$field_name]['#weight'] = $display_weight;
+  /**
+   * {@inheritdoc}
+   */
+  public function getOperator($property = 'value') {
+    return isset($this->configuration[$property]['operator']) ? $this->configuration[$property]['operator'] : NULL;
+  }
 
-    $form[$field_name]['supported'] = array(
-      '#type' => 'value',
-      '#value' => TRUE,
-    );
+  /**
+   * {@inheritdoc}
+   */
+  public function getOptions($property = 'value') {
+    return isset($this->configuration[$property]['options']) ? $this->configuration[$property]['options'] : '';
+  }
 
-    $form[$field_name]['field_type'] = array(
-      '#type' => 'value',
-      '#value' => $field->getType(),
-    );
+  /**
+   * {@inheritdoc}
+   */
+  public function getScore($property = 'value') {
+    return isset($this->configuration[$property]['score']) ? $this->configuration[$property]['score'] : 0;
+  }
 
-    $form[$field_name]['field_name'] = array(
-      '#type' => 'value',
-      '#value' => $field_name,
-    );
-
-    $form[$field_name]['field_item'] = array(
-      '#type' => 'value',
-      '#value' => '',
-    );
-
-    $form[$field_name]['status'] = array(
-      '#type' => 'checkbox',
-      '#default_value' => $this->configuration['status'],
-    );
-
-    $form[$field_name]['name'] = array(
-      '#type' => 'item',
-      '#markup' => check_plain($field_label),
-    );
-
-    $form[$field_name]['field_type_markup'] = array(
-      '#type' => 'item',
-      '#markup' => $field->getType(),
-    );
-
-    $operator = array(
-      '#type' => 'select',
-      '#default_value' => $this->configuration['operator'],
-      '#empty_option' => t('-- Please Select --'),
-      '#empty_value' => '',
-    );
-    switch ($field->getType()) {
-      case 'date':
-      case 'datestamp':
-      case 'datetime':
-        $operator += array(
-          '#options' => $this->operators($field),
-        );
-        break;
-
-      default:
-        $operator += array(
-          '#options' => $this->operators(),
-        );
-    }
-
-    $form[$field_name]['operator'] = $operator;
-
-    $form[$field_name]['options'] = array(
-      '#type' => 'textfield',
-      '#maxlength' => 28,
-      '#size' => 28,
-      '#default_value' => $this->configuration['options'],
-    );
-
-    $form[$field_name]['score'] = array(
-      '#type' => 'textfield',
-      '#maxlength' => 4,
-      '#size' => 3,
-      '#default_value' => $this->configuration['score'],
-    );
-
-    $form[$field_name]['weight'] = array(
-      '#type' => 'weight',
-      '#default_value' => $this->configuration['weight'],
-      '#attributes' => array(
-        'class' => array('crm-core-match-engine-order-weight'),
-      ),
-      '#delta' => self::WEIGHT_DELTA,
-    );
-
-    return $form;
+  /**
+   * {@inheritdoc}
+   */
+  public function getWeight($property = 'value') {
+    return isset($this->configuration[$property]['weight']) ? $this->configuration[$property]['weight'] : 0;
   }
 
   /**
@@ -226,19 +183,5 @@ abstract class MatchFieldBase implements MatchFieldInterface, ContainerFactoryPl
     }
 
     return isset($results['crm_core_contact']) ? array_keys($results['crm_core_contact']) : $results;
-  }
-
-  /**
-   * Each field handler MUST implement this method.
-   *
-   * Must return associative array of supported operators for current field.
-   * By default now supports only this keys: 'equals', 'starts', 'ends',
-   * 'contains'. In case you need additional operators you must implement
-   * this method and MatchFieldInterface::fieldQuery.
-   *
-   * @return array
-   *   Assoc array, keys must be
-   */
-  public function operators() {
   }
 }
