@@ -7,6 +7,8 @@
 
 namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField;
 
+use Drupal\crm_core_contact\Entity\Contact;
+
 /**
  * Interface for defining the logical operators and query criteria used to identify duplicate contacts based on
  * different field types in DefaultMatchingEngine.
@@ -119,9 +121,26 @@ interface MatchFieldInterface {
   public function getWeight($property = 'value');
 
   /**
-   * Query.
+   * Executes the match query.
    *
-   * Used when generating queries to identify matches in the system
+   * @param \Drupal\crm_core_contact\Entity\Contact $contact
+   *   The contact to find matches for.
+   *
+   * @param string $property
+   *   The name of the property.
+   *
+   * @return array
+   *   An array containing the found matches.
+   *   The first level keys are the contact ids found as matches.
+   *   The second level key is the rule id responsible for the match containing
+   *   its score as value.
+   *   @code
+   *   array(
+   *     $contact_id => array(
+   *       $rule_id => $core,
+   *     ),
+   *   );
+   *   @end
    */
-  public function fieldQuery($contact, $rule);
+  public function match(Contact $contact, $property = 'value');
 }

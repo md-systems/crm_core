@@ -7,13 +7,11 @@
 
 namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\engine;
 
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\crm_core_contact\Entity\Contact;
+use Drupal\crm_core_default_matching_engine\Plugin\MatchFieldPluginManager;
 use Drupal\crm_core_match\Plugin\crm_core_match\engine\MatchEngineBase;
-
-if (!defined('MATCH_DEFAULT_CHARS')) {
-  define('MATCH_DEFAULT_CHARS', '3');
-}
-
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * DefaultMatchingEngine class
@@ -36,34 +34,74 @@ if (!defined('MATCH_DEFAULT_CHARS')) {
  */
 class DefaultMatchingEngine extends MatchEngineBase {
 
+  const MATCH_CHARS_DEFAULT = 3;
+
+  /**
+   * The match field plugin manager.
+   *
+   * @var \Drupal\crm_core_default_matching_engine\Plugin\MatchFieldPluginManager.
+   */
+  protected $pluginManager;
+
+  /**
+   * The entity manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityManagerInterface
+   */
+  protected $entityManager;
+
+  /**
+   * Constructs a default matching engine.
+   */
+  public function __construct($configuration, $id, $definition, MatchFieldPluginManager $plugin_manager, EntityManagerInterface $entity_manager) {
+    parent::__construct($configuration, $id, $definition);
+    $this->pluginManager = $plugin_manager;
+    $this->entityManager = $entity_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('plugin.manager.crm_core_match.match_field'),
+      $container->get('entity.manager')
+    );
+  }
+
   /**
    * {@inheritdoc}
    */
   public function match(Contact $contact) {
     $ids = array();
-    $base_config = crm_core_default_matching_engine_load_contact_type_config($contact->type);
+    $matching_rule = $this->entityManager->getStorage('crm_core_default_engine_rule')->load($contact->bundle());
     // Check if match is enabled for this contact type.
-    if ($base_config['status']) {
-      $matching_rules = crm_core_default_matching_engine_load_field_config($contact->type);
-      $contact_fields = field_info_instances('crm_core_contact', $contact->type);
+    if ($matching_rule->status) {
+      $fields = $contact->getFieldDefinitions();
 
       $results = array();
-      foreach ($matching_rules as $matching_rule) {
-        if (isset($contact_fields[$matching_rule->field_name])) {
-          $rule_matches = array();
-          $field_match_handler_class = $matching_rule->field_type . 'MatchField';
-          if (class_exists($field_match_handler_class)) {
-            $field_match_handler = new $field_match_handler_class();
-            $rule_matches = $field_match_handler->fieldQuery($contact, $matching_rule);
+      foreach ($matching_rule->fields as $name => $rules) {
+        if (isset($fields[$name])) {
+          $rules['field'] = $fields[$name];
+
+          if (!$this->pluginManager->hasDefinition($rules['field']->getType())) {
+            continue;
           }
-          foreach ($rule_matches as $matched_id) {
-            $results[$matched_id][$matching_rule->mrid] = $matching_rule->score;
+
+          /* @var \Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField\MatchFieldInterface $match_handler */
+          $match_handler = $this->pluginManager->createInstance($rules['field']->getType(), $rules);
+
+          foreach ($match_handler->getPropertyNames() as $name) {
+            $results += $match_handler->match($contact, $name);
           }
         }
       }
       foreach ($results as $id => $rule_matches) {
         $total_score = array_sum($rule_matches);
-        if ($total_score >= $base_config['threshold']) {
+        if ($total_score >= $matching_rule->threshold) {
           $ids[] = $id;
         }
       }

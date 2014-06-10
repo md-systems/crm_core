@@ -6,6 +6,8 @@
  */
 
 namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField;
+use Drupal\crm_core_contact\Entity\Contact;
+use Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\engine\DefaultMatchingEngine;
 
 /**
  * Class for evaluating email fields.
@@ -113,17 +115,11 @@ class EmailMatchField extends SelectMatchField {
 
 
   /**
-   * Field query to search matches.
+   * {@inheritdoc}
    *
-   * @param object $contact
-   *   CRM Core contact entity.
-   * @param object $rule
-   *   Matching rule object.
-   *
-   * @return array
-   *   Founded matches.
+   * @todo Update to new query API.
    */
-  public function fieldQuery($contact, $rule) {
+  public function match(Contact $contact, $property = 'value') {
 
     $results = array();
     $contact_wrapper = entity_metadata_wrapper('crm_core_contact', $contact);
@@ -150,12 +146,12 @@ class EmailMatchField extends SelectMatchField {
           break;
 
         case 'starts':
-          $needle = db_like(substr($needle, 0, MATCH_DEFAULT_CHARS)) . '%';
+          $needle = db_like(substr($needle, 0, DefaultMatchingEngine::MATCH_CHARS_DEFAULT)) . '%';
           $query->fieldCondition($rule->field_name, $field_item, $needle, 'LIKE');
           break;
 
         case 'ends':
-          $needle = '%' . db_like(substr($needle, -1, MATCH_DEFAULT_CHARS));
+          $needle = '%' . db_like(substr($needle, -1, DefaultMatchingEngine::MATCH_CHARS_DEFAULT));
           $query->fieldCondition($rule->field_name, $field_item, $needle, 'LIKE');
           break;
 
