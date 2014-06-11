@@ -9,8 +9,8 @@ namespace Drupal\crm_core_default_matching_engine\Form;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField\MatchFieldInterface;
-use Drupal\crm_core_default_matching_engine\Plugin\MatchFieldPluginManager;
+use Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field\FieldHandlerInterface;
+use Drupal\crm_core_default_matching_engine\Plugin\FieldHandlerPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class MatchingRuleForm extends EntityForm {
@@ -18,7 +18,7 @@ class MatchingRuleForm extends EntityForm {
   /**
    * The match field plugin manager.
    *
-   * @var \Drupal\crm_core_default_matching_engine\Plugin\MatchFieldPluginManager.
+   * @var \Drupal\crm_core_default_matching_engine\Plugin\FieldHandlerPluginManager.
    */
   protected $pluginManager;
 
@@ -32,12 +32,12 @@ class MatchingRuleForm extends EntityForm {
   /**
    * Constructs a new form for the matching config rule entity.
    *
-   * @param MatchFieldPluginManager $plugin_manager
+   * @param FieldHandlerPluginManager $plugin_manager
    *   The plugin manager for match fields.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
    */
-  public function __construct(MatchFieldPluginManager $plugin_manager, EntityManagerInterface $entity_manager) {
+  public function __construct(FieldHandlerPluginManager $plugin_manager, EntityManagerInterface $entity_manager) {
     $this->pluginManager = $plugin_manager;
     $this->entityManager = $entity_manager;
   }
@@ -134,7 +134,7 @@ EOF
         $match_field_id = $field->getType();
       }
 
-      /* @var \Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField\MatchFieldInterface $match_field */
+      /* @var \Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field\FieldHandlerInterface $match_field */
       $match_field = $this->pluginManager->createInstance($match_field_id, $config);
 
       $disabled = ($match_field_id == 'unsupported');
@@ -172,7 +172,7 @@ EOF
   /**
    * Builds a row for an rule in the rule listing.
    *
-   * @param \Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField\MatchFieldInterface $field
+   * @param \Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field\FieldHandlerInterface $field
    *   The match field of this rule.
    * @param string $name
    *   The property name of this rule.
@@ -182,7 +182,7 @@ EOF
    * @return array
    *   A render array structure of fields for this rule.
    */
-  public function buildRow(MatchFieldInterface $field, $name, $disabled) {
+  public function buildRow(FieldHandlerInterface $field, $name, $disabled) {
     $row = array();
     $row['#attributes']['class'][] = 'draggable';
     $row['#weight'] = $field->getWeight($name);

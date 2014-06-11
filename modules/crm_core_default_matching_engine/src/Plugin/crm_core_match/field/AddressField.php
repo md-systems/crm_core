@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Contains Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField\AddressFieldMatchField.
+ * Contains Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field\AddressFieldMatchField.
  */
 
-namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField;
+namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field;
 
 /**
  * Class for evaluating addressfield fields.
  *
- * Implementation of MatchFieldInterface for address field.
+ * Implementation of FieldHandlerInterface for address field.
  */
-class AddressFieldMatchField extends MatchFieldBase {
+class AddressFieldMatchField extends FieldHandlerBase {
 
   /**
    * This function is going to add all addressfield components..

@@ -2,16 +2,17 @@
 
 /**
  * @file
- * Implementation of MatchFieldInterface for date fields.
+ * Implementation of FieldHandlerInterface for date fields.
  */
 
-namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField;
+namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field;
+
 use Drupal\crm_core_contact\Entity\Contact;
 
 /**
  * Class for evaluating date fields.
  */
-class DateMatchField extends MatchFieldBase {
+class DateMatchField extends FieldHandlerBase {
 
   /**
    * Defines logical operators to use with this field.

@@ -9,7 +9,7 @@ namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\engine;
 
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\crm_core_contact\Entity\Contact;
-use Drupal\crm_core_default_matching_engine\Plugin\MatchFieldPluginManager;
+use Drupal\crm_core_default_matching_engine\Plugin\FieldHandlerPluginManager;
 use Drupal\crm_core_match\Plugin\crm_core_match\engine\MatchEngineBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -39,7 +39,7 @@ class DefaultMatchingEngine extends MatchEngineBase {
   /**
    * The match field plugin manager.
    *
-   * @var \Drupal\crm_core_default_matching_engine\Plugin\MatchFieldPluginManager.
+   * @var \Drupal\crm_core_default_matching_engine\Plugin\FieldHandlerPluginManager.
    */
   protected $pluginManager;
 
@@ -53,7 +53,7 @@ class DefaultMatchingEngine extends MatchEngineBase {
   /**
    * Constructs a default matching engine.
    */
-  public function __construct($configuration, $id, $definition, MatchFieldPluginManager $plugin_manager, EntityManagerInterface $entity_manager) {
+  public function __construct($configuration, $id, $definition, FieldHandlerPluginManager $plugin_manager, EntityManagerInterface $entity_manager) {
     parent::__construct($configuration, $id, $definition);
     $this->pluginManager = $plugin_manager;
     $this->entityManager = $entity_manager;
@@ -91,11 +91,11 @@ class DefaultMatchingEngine extends MatchEngineBase {
             continue;
           }
 
-          /* @var \Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField\MatchFieldInterface $match_handler */
-          $match_handler = $this->pluginManager->createInstance($rules['field']->getType(), $rules);
+          /* @var \Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field\FieldHandlerInterface $field_handler */
+          $field_handler = $this->pluginManager->createInstance($rules['field']->getType(), $rules);
 
-          foreach ($match_handler->getPropertyNames() as $name) {
-            $results += $match_handler->match($contact, $name);
+          foreach ($field_handler->getPropertyNames() as $name) {
+            $results += $field_handler->match($contact, $name);
           }
         }
       }

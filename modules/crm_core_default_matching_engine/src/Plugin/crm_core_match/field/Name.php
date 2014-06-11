@@ -2,15 +2,15 @@
 
 /**
  * @file
- * Implementation of MatchFieldInterface for name fields.
+ * Implementation of FieldHandlerInterface for name fields.
  */
 
-namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField;
+namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field;
 
 /**
  * Class for evaluating name fields.
  */
-class NameMatchField extends MatchFieldBase {
+class NameMatchField extends FieldHandlerBase {
 
   /**
    * This function is going to add a number of fields based on what the name field is configured to display.

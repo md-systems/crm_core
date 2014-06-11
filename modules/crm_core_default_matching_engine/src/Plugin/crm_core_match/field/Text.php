@@ -2,19 +2,19 @@
 
 /**
  * @file
- * Contains \Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField\Text.
+ * Contains \Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field\Text.
  */
 
-namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField;
+namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field;
 
 /**
  * Class for evaluating text fields.
  *
- * @MatchField (
+ * @CrmCoreMatchFieldHandler (
  *   id = "text"
  * )
  */
-class Text extends MatchFieldBase {
+class Text extends FieldHandlerBase {
 
   /**
    * {@inheritdoc}

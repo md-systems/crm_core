@@ -14,7 +14,7 @@ class DefaultEngineTest extends UnitTestCase {
   /**
    * The mocked match field plugin manager.
    *
-   * @var \Drupal\crm_core_default_matching_engine\Plugin\MatchFieldPluginManager|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\crm_core_default_matching_engine\Plugin\FieldHandlerPluginManager|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $pluginManager;
 
@@ -55,7 +55,7 @@ class DefaultEngineTest extends UnitTestCase {
   /**
    * A mocked match field handler.
    *
-   * @var \Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField\MatchFieldInterface
+   * @var \Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field\FieldHandlerInterface
    */
   protected $matchHandler;
 
@@ -74,7 +74,7 @@ class DefaultEngineTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $this->pluginManager = $this->getMockBuilder('Drupal\crm_core_default_matching_engine\Plugin\MatchFieldPluginManager')
+    $this->pluginManager = $this->getMockBuilder('Drupal\crm_core_default_matching_engine\Plugin\FieldHandlerPluginManager')
       ->disableOriginalConstructor()
       ->getMock();
 
@@ -109,7 +109,7 @@ class DefaultEngineTest extends UnitTestCase {
 
     $this->field = $this->getMock('Drupal\Core\Field\FieldDefinitionInterface');
 
-    $this->matchHandler = $this->getMock('Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField\MatchFieldInterface');
+    $this->matchHandler = $this->getMock('Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field\FieldHandlerInterface');
     $this->matchHandler->expects($this->any())
       ->method('getPropertyNames')
       ->will($this->returnValue(array('value')));

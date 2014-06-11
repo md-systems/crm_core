@@ -28,7 +28,7 @@ class FieldMatcherTest extends WebTestBase {
   /**
    * The mocked match field plugin manager.
    *
-   * @var \Drupal\crm_core_default_matching_engine\Plugin\MatchFieldPluginManager
+   * @var \Drupal\crm_core_default_matching_engine\Plugin\FieldHandlerPluginManager
    */
   protected $pluginManager;
 
@@ -65,7 +65,7 @@ class FieldMatcherTest extends WebTestBase {
     $contact_needle->save();
 
     $config['field'] = $contact_needle->getFieldDefinition('uuid');
-    /* @var \Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField\MatchFieldInterface $unsupported */
+    /* @var \Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field\FieldHandlerInterface $unsupported */
     $unsupported = $this->pluginManager->createInstance('unsupported', $config);
 
     $ids = $unsupported->match($contact_needle);
@@ -90,7 +90,7 @@ class FieldMatcherTest extends WebTestBase {
     $contact_match->save();
 
     $config['field'] = $contact_needle->getFieldDefinition('contact_name');
-    /* @var \Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField\MatchFieldInterface $text */
+    /* @var \Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field\FieldHandlerInterface $text */
     $text = $this->pluginManager->createInstance('text', $config);
 
     $ids = $text->match($contact_needle);

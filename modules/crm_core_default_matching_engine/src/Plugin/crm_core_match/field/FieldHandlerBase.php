@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField\MatchFieldBase.
+ * Contains \Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field\FieldHandlerBase.
  */
 
-namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField;
+namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field;
 
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -14,7 +14,7 @@ use Drupal\crm_core_contact\Entity\Contact;
 use Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\engine\DefaultMatchingEngine;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-abstract class MatchFieldBase implements MatchFieldInterface, ContainerFactoryPluginInterface {
+abstract class FieldHandlerBase implements FieldHandlerInterface, ContainerFactoryPluginInterface {
 
   const WEIGHT_DELTA = 25;
 

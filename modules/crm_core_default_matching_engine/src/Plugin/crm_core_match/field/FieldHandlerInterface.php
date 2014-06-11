@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField\MatchFieldInterface.
+ * Contains \Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field\FieldHandlerInterface.
  */
 
-namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField;
+namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field;
 
 use Drupal\crm_core_contact\Entity\Contact;
 
@@ -13,7 +13,7 @@ use Drupal\crm_core_contact\Entity\Contact;
  * Interface for defining the logical operators and query criteria used to identify duplicate contacts based on
  * different field types in DefaultMatchingEngine.
  */
-interface MatchFieldInterface {
+interface FieldHandlerInterface {
 
   /**
    * Returns the names of the field's subproperties.
@@ -80,7 +80,7 @@ interface MatchFieldInterface {
    * @return string
    *   The operator name.
    *
-   * @see MatchFieldInterface::getOperators()
+   * @see FieldHandlerInterface::getOperators()
    */
   public function getOperator($property = 'value');
 
@@ -93,8 +93,8 @@ interface MatchFieldInterface {
    * @return string
    *   The operator options.
    *
-   * @see MatchFieldInterface::getOperators()
-   * @see MatchFieldInterface::getOperator()
+   * @see FieldHandlerInterface::getOperators()
+   * @see FieldHandlerInterface::getOperator()
    */
   public function getOptions($property = 'value');
 

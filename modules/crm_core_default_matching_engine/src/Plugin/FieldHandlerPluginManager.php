@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\crm_core_default_matching_engine\Plugin\MatchFieldPluginManager.
+ * Contains \Drupal\crm_core_default_matching_engine\Plugin\FieldHandlerPluginManager.
  */
 
 namespace Drupal\crm_core_default_matching_engine\Plugin;
@@ -15,10 +15,10 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 /**
  * Manages Match Field plugins.
  */
-class MatchFieldPluginManager extends DefaultPluginManager {
+class FieldHandlerPluginManager extends DefaultPluginManager {
 
   /**
-   * Constructs a MatchFieldPluginManager object.
+   * Constructs a FieldHandlerPluginManager object.
    *
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
@@ -31,7 +31,7 @@ class MatchFieldPluginManager extends DefaultPluginManager {
    *   The module handler.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler) {
-    parent::__construct("Plugin/crm_core/MatchField", $namespaces, $module_handler, 'Drupal\crm_core_default_matching_engine\Annotation\MatchField');
+    parent::__construct("Plugin/crm_core_match/field", $namespaces, $module_handler, 'Drupal\crm_core_default_matching_engine\Annotation\CrmCoreMatchFieldHandler');
     $this->setCacheBackend($cache_backend, $language_manager, 'crm_core_default_matching_engine_match_field_plugins');
   }
 

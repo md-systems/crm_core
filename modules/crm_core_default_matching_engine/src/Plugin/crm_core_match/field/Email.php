@@ -2,10 +2,11 @@
 
 /**
  * @file
- * Implementation of MatchFieldInterface for email fields.
+ * Implementation of FieldHandlerInterface for email fields.
  */
 
-namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField;
+namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field;
+
 use Drupal\crm_core_contact\Entity\Contact;
 use Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\engine\DefaultMatchingEngine;
 
