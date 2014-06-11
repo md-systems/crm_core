@@ -7,9 +7,11 @@
 
 namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField;
 
+use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\crm_core_contact\Entity\Contact;
+use Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\engine\DefaultMatchingEngine;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 abstract class MatchFieldBase implements MatchFieldInterface, ContainerFactoryPluginInterface {
@@ -45,13 +47,21 @@ abstract class MatchFieldBase implements MatchFieldInterface, ContainerFactoryPl
   protected $field;
 
   /**
+   * A Contact query object.
+   *
+   * @var \Drupal\Core\Entity\Query\QueryInterface
+   */
+  protected $query;
+
+  /**
    * Constructs an plugin instance.
    */
-  public function __construct(FieldDefinitionInterface $field, array $configuration, $id, $definition) {
+  public function __construct(FieldDefinitionInterface $field, QueryInterface $query, array $configuration, $id, $definition) {
     $this->configuration = $configuration;
     $this->definition = $definition;
     $this->id = $id;
     $this->field = $field;
+    $this->query = $query;
   }
 
   /**
@@ -62,6 +72,7 @@ abstract class MatchFieldBase implements MatchFieldInterface, ContainerFactoryPl
     unset($configuration['field']);
     return new static(
       $field,
+      $container->get('entity.query')->get('crm_core_contact', 'AND'),
       $configuration,
       $plugin_id,
       $plugin_definition
@@ -126,57 +137,46 @@ abstract class MatchFieldBase implements MatchFieldInterface, ContainerFactoryPl
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Update to new query API.
    */
   public function match(Contact $contact, $property = 'value') {
 
     $results = array();
-    $contact_wrapper = entity_metadata_wrapper('crm_core_contact', $contact);
-    $needle = '';
-    $field_item = '';
 
-    if (empty($rule->field_item)) {
-      $needle = $contact_wrapper->{$rule->field_name}->value();
-      $field_item = 'value';
-    }
-    else {
-      $field_value = $contact_wrapper->{$rule->field_name}->value();
-      if (isset($field_value)) {
-        $needle = $contact_wrapper->{$rule->field_name}->{$rule->field_item}->value();
-        $field_item = $rule->field_item;
-      }
-    }
+    $needle = $contact->get($this->field->getName())->{$property};
 
     if (!empty($needle)) {
-      $query = new EntityFieldQuery();
-      $query->entityCondition('entity_type', 'crm_core_contact')
-        ->entityCondition('bundle', $contact->type);
-      $query->entityCondition('entity_id', $contact->contact_id, '<>');
+      $this->query->condition('type', $contact->bundle())
+        ->condition('contact_id', $contact->id(), '<>');
 
-      switch ($rule->operator) {
+      switch ($this->getOperator($property)) {
         case 'equals':
-          $query->fieldCondition($rule->field_name, $field_item, $needle);
+          $this->query->condition($this->field->getName(), $needle);
           break;
 
         case 'starts':
           $needle = db_like(substr($needle, 0, DefaultMatchingEngine::MATCH_CHARS_DEFAULT)) . '%';
-          $query->fieldCondition($rule->field_name, $field_item, $needle, 'LIKE');
+          $this->query->condition($this->field->getName(), $needle, 'LIKE');
           break;
 
         case 'ends':
           $needle = '%' . db_like(substr($needle, -1, DefaultMatchingEngine::MATCH_CHARS_DEFAULT));
-          $query->fieldCondition($rule->field_name, $field_item, $needle, 'LIKE');
+          $this->query->condition($this->field->getName(), $needle, 'LIKE');
           break;
 
         case 'contains':
           $needle = '%' . db_like($needle) . '%';
-          $query->fieldCondition($rule->field_name, $field_item, $needle, 'LIKE');
+          $this->query->condition($this->field->getName(), $needle, 'LIKE');
           break;
       }
-      $results = $query->execute();
+      $results = $this->query->execute();
     }
 
-    return isset($results['crm_core_contact']) ? array_keys($results['crm_core_contact']) : $results;
+    foreach ($results as &$result) {
+      $result = array(
+        $this->field->getName() . '.' . $property => $this->getScore($property),
+      );
+    }
+
+    return $results;
   }
 }

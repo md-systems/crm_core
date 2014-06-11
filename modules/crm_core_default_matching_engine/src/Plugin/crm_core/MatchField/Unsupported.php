@@ -6,7 +6,7 @@
 
 namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core\MatchField;
 
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\crm_core_contact\Entity\Contact;
 
 /**
  * Class for evaluating unsupported fields.
@@ -23,4 +23,12 @@ class Unsupported extends MatchFieldBase {
   public function getOperators($property = 'value') {
     return array();
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function match(Contact $contact, $property = 'value') {
+    return array();
+  }
+
 }
