@@ -83,7 +83,7 @@ class DefaultMatchingEngine extends MatchEngineBase {
       $fields = $contact->getFieldDefinitions();
 
       $results = array();
-      foreach ($matching_rule->fields as $name => $rules) {
+      foreach ($matching_rule->rules as $name => $rules) {
         if (isset($fields[$name])) {
           $rules['field'] = $fields[$name];
 

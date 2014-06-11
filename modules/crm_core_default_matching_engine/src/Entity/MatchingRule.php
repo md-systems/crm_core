@@ -67,7 +67,7 @@ class MatchingRule extends ConfigEntityBase {
   /**
    * @var array
    */
-  public $fields = array();
+  public $rules = array();
 
   /**
    * The entity label.

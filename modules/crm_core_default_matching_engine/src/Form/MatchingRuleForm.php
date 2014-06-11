@@ -109,7 +109,7 @@ EOF
       '#title' => $this->t('Field Matching'),
     );
 
-    $form['fields'] = array(
+    $form['rules'] = array(
       '#type' => 'table',
       '#tree' => TRUE,
       '#header' => $this->buildHeader(),
@@ -141,7 +141,7 @@ EOF
 
       foreach ($match_field->getPropertyNames($field) as $name) {
         $row = $this->buildRow($match_field, $name, $disabled);
-        $form['fields'][$field->getName() . ':' . $name] = $row;
+        $form['rules'][$field->getName() . ':' . $name] = $row;
       }
     }
 
@@ -245,18 +245,18 @@ EOF
   public function validate(array $form, array &$form_state) {
     parent::validate($form, $form_state);
 
-    $fields_rules = array();
-    if (isset($form_state['values']['fields'])) {
-      $fields_rules = $form_state['values']['fields'];
+    $rules = array();
+    if (isset($form_state['values']['rules'])) {
+      $rules = $form_state['values']['rules'];
     }
-    foreach ($fields_rules as $field_name => $config) {
+    foreach ($rules as $field_name => $config) {
       if ($config['status'] && empty($config['operator'])) {
-        $name = 'fields][' . $field_name . '][operator';
+        $name = 'rules][' . $field_name . '][operator';
         $message = $this->t('You must select an operator for enabled field.');
         $this->setFormError($name, $form_state, $message);
       }
       if (!is_numeric($config['score'])) {
-        $name = 'fields][' . $field_name . '][score';
+        $name = 'rules][' . $field_name . '][score';
         $message = $this->t('You must enter number in "Score" column.');
         $this->setFormError($name, $form_state, $message);
       }
@@ -276,18 +276,18 @@ EOF
    */
   protected function copyFormValuesToEntity(EntityInterface $entity, array $form, array &$form_state) {
     foreach ($form_state['values'] as $key => $value) {
-      if ($key == 'fields') {
-        $fields = array();
+      if ($key == 'rules') {
+        $rules = array();
         foreach ($value as $name => $config) {
           if (strpos($name, ':') !== FALSE) {
             list($parent,$child) = explode(':', $name, 2);
-            $fields[$parent][$child] = $config;
+            $rules[$parent][$child] = $config;
           }
           else {
-            $fields[$name] = $config;
+            $rules[$name] = $config;
           }
         }
-        $entity->fields = $fields;
+        $entity->fields = $rules;
       }
       else {
         $entity->set($key, $value);
