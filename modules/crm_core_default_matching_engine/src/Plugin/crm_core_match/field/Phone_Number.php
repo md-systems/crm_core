@@ -2,13 +2,15 @@
 
 /**
  * @file
- * Implementation of DefaultMatchingEngineFieldTypeInterface for phone_number field.
+ * Implementation of FieldHandlerInterface for phone_number field.
  */
+
+namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field;
 
 /**
  * Class for evaluating phone_number fields.
  */
-class Phone_NumberMatchField extends DefaultMatchingEngineFieldType {
+class Phone_NumberMatchField extends FieldHandlerBase {
 
   /**
    * @see DefaultMatchingEngineFieldType::fieldRender()

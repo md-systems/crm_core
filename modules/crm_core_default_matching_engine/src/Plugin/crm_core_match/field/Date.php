@@ -2,13 +2,17 @@
 
 /**
  * @file
- * Implementation of DefaultMatchingEngineFieldTypeInterface for date fields.
+ * Implementation of FieldHandlerInterface for date fields.
  */
+
+namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field;
+
+use Drupal\crm_core_contact\Entity\Contact;
 
 /**
  * Class for evaluating date fields.
  */
-class DateMatchField extends DefaultMatchingEngineFieldType {
+class DateMatchField extends FieldHandlerBase {
 
   /**
    * Defines logical operators to use with this field.
@@ -33,17 +37,11 @@ class DateMatchField extends DefaultMatchingEngineFieldType {
   }
 
   /**
-   * Field query to search matches.
+   * {@inheritdoc}
    *
-   * @param object $contact
-   *   CRM Core contact entity.
-   * @param object $rule
-   *   Matching rule object.
-   *
-   * @return array
-   *   Founded matches.
+   * @todo Update to new query API.
    */
-  public function fieldQuery($contact, $rule) {
+  public function match(Contact $contact, $property = 'value') {
     $results = array();
     $field_item = 'value';
     $field = field_get_items('crm_core_contact', $contact, $rule->field_name);

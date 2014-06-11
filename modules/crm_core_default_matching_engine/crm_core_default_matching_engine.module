@@ -7,6 +7,9 @@
  * defined by users through the configuration tools.
  */
 
+use Drupal\crm_core_contact\Entity\ContactType;
+use Drupal\crm_core_default_matching_engine\Entity\MatchingRule;
+
 /**
  * Implements hook_permissions().
  */
@@ -50,22 +53,42 @@ function crm_core_default_matching_engine_menu() {
 }
 
 /**
- * Implements hook_crm_core_match_engine_register().
- */
-function crm_core_default_matching_engine_crm_core_match_engine_register() {
-  return new DefaultMatchingEngine();
-}
-
-/**
  * Implements hook_theme().
  */
 function crm_core_default_matching_engine_theme() {
-  return array(
-    'crm_core_default_matching_engine_form' => array(
-      'render element' => 'form',
-      'file' => 'crm_core_default_matching_engine.admin.inc',
-    ),
+  $theme = array();
+
+  $theme['crm_core_default_matching_engine_config_page'] = array(
+    'variables' => array('matching_rule_entities' => array()),
+    'template' => 'crm-core-default-matching-engine-config-page',
   );
+
+  return $theme;
+}
+
+/**
+ * Prepares variables for list of available contact type templates.
+ *
+ * Default template: crm-core-contact-ui-add-list.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - content: An array of contact types.
+ */
+function template_preprocess_crm_core_default_matching_engine_config_page(&$variables) {
+  $variables['rules'] = array();
+  if (!empty($variables['matching_rule_entities'])) {
+    foreach ($variables['matching_rule_entities'] as $rule) {
+      $type = ContactType::load($rule->type);
+      $variables['rules'][$rule->id()] = array(
+        'type' => $rule->id(),
+        'add_link' => l($rule->label(), '/admin/config/crm-core/match/default/edit/' . $rule->id()),
+        'description' => t('Matching Rules for @type contacts.', array(
+          '@type' => $type->label(),
+        )),
+      );
+    }
+  }
 }
 
 /**
@@ -142,5 +165,31 @@ function crm_core_default_matching_engine_load_field_config($contact_type, $fiel
     }
 
     return $config;
+  }
+}
+
+/**
+ * Implements hook_entity_insert().
+ *
+ * Create a matching rule for each created contact type.
+ */
+function crm_core_default_matching_engine_entity_insert(Drupal\Core\Entity\EntityInterface $entity) {
+  if ($entity->getEntityTypeId() == 'crm_core_contact_type') {
+    MatchingRule::create(array(
+      'type' => $entity->id(),
+      'status' => FALSE,
+    ))
+    ->save();
+  }
+}
+
+/**
+ * Implements hook_entity_delete().
+ *
+ * Remove matching rule for deleted contact type.
+ */
+function crm_core_default_matching_engine_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
+  if ($entity->getEntityTypeId() == 'crm_core_contact_type') {
+    MatchingRule::load($entity->id())->delete();
   }
 }

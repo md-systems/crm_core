@@ -1,0 +1,32 @@
+{#
+/**
+ * @file
+ * Default theme implementation to list the availlable matching rules.
+ *
+ * This list is displayed on the Add contact admin page.
+ *
+ * Available variables:
+ * - rules: A list of matching rules, each with the following properties:
+ *   - add_link: Link to edit the matching rule.
+ *   - description: Description of this mathing rule.
+ *
+ * @see template_preprocess_crm_core_default_matching_engine_config_page()
+ *
+ * @ingroup themeable
+ */
+#}
+{% if rules is not empty %}
+  <dl class="crm-core-default-matching-engine-config">
+    {% for rule in rules %}
+      <dt>{{ rule.add_link }}</dt>
+      <dd>{{ rule.description }}</dd>
+    {% endfor %}
+  </dl>
+{% else %}
+  <p>
+    {% set create_contact_types = url('admin/structure/crm-core/contact-types/add') %}
+    {% trans %}
+      You have not created any contact types yet. Go to the <a href="{{ create_contact_types }}">contact type creation page</a> to add a new contact type.
+    {% endtrans %}
+  </p>
+{% endif %}

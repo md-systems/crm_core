@@ -1,0 +1,25 @@
+crm_core_match.engines:
+  path: '/admin/config/crm-core/match'
+  defaults:
+    _form: 'Drupal\crm_core_match\Form\EnginesConfigForm'
+    _title: 'Matching Engines'
+  requirements:
+    _permission: 'administer matching engines'
+
+crm_core_match.enable:
+  path: '/admin/config/crm-core/match/{engine}/enable'
+  defaults:
+    _form: 'Drupal\crm_core_match\Form\EnginesToggleForm'
+    _title: 'Enable contact type'
+    op: 'enable'
+  requirements:
+    _permission: 'administer matching engines'
+
+crm_core_match.disable:
+  path: '/admin/config/crm-core/match/{engine}/disable'
+  defaults:
+    _form: 'Drupal\crm_core_match\Form\EnginesToggleForm'
+    _title: 'Disable contact type'
+    op: 'disable'
+  requirements:
+    _permission: 'administer matching engines'
