@@ -1,0 +1,10 @@
+name: CRM Core Submission
+type: module
+description: "API to collect data from remote sites."
+package: CRM Core
+version: 8.x-1.x-dev
+core: 8.x
+
+dependencies:
+  - rest
+  - hal
