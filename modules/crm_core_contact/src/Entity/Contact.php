@@ -224,22 +224,6 @@ class Contact extends ContentEntityBase {
   }
 
   /**
-   * Constructs a new contact object, without saving it.
-   *
-   * @param array $values
-   *   (optional) An array of values to set, keyed by property name. If the
-   *   entity type has bundles, the bundle key has to be specified.
-   *
-   * @return \Drupal\crm_core_contact\Entity\Contact
-   *   The entity object.
-   *
-   * @todo Review once https://drupal.org/node/2096899 got committed.
-   */
-  public static function create(array $values = array()) {
-    return \Drupal::entityManager()->getStorage('crm_core_contact')->create($values);
-  }
-
-  /**
    * Gets the primary address.
    *
    * @return \Drupal\Core\Field\FieldItemListInterface|\Drupal\Core\TypedData\TypedDataInterface

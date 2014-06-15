@@ -137,22 +137,6 @@ class ContactType extends ConfigEntityBase {
   }
 
   /**
-   * Constructs a new contact type object, without saving it.
-   *
-   * @param array $values
-   *   (optional) An array of values to set, keyed by property name. If the
-   *   entity type has bundles, the bundle key has to be specified.
-   *
-   * @return \Drupal\crm_core_contact\Entity\ContactType
-   *   The entity object.
-   *
-   * @todo Review once https://drupal.org/node/2096899 got committed.
-   */
-  public static function create(array $values = array()) {
-    return \Drupal::entityManager()->getStorage('crm_core_contact_type')->create($values);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function preCreate(EntityStorageInterface $storage, array &$values) {
