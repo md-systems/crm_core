@@ -1,0 +1,18 @@
+# Schema for the configuration files of the crm_core_contact module.
+
+crm_core_contact.type.*:
+  type: config_entity
+  label: 'Contact type'
+  mapping:
+    name:
+      type: label
+      label: 'Name'
+    type:
+      type: string
+      label: 'Machine-readable name'
+    description:
+      type: text
+      label: 'Description'
+    locked:
+      type: boolean
+      label: 'Whether or not this type is locked.'
