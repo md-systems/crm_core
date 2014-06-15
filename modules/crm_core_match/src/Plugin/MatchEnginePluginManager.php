@@ -32,7 +32,7 @@ class MatchEnginePluginManager extends DefaultPluginManager {
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler) {
     parent::__construct("Plugin/crm_core_match/engine", $namespaces, $module_handler, 'Drupal\crm_core_match\Annotation\CrmCoreMatchEngine');
-    $this->setCacheBackend($cache_backend, $language_manager, 'crm_core_match_engine_plugins');
+    $this->setCacheBackend($cache_backend, 'crm_core_match_engine_plugins');
   }
 
 }

@@ -32,7 +32,7 @@ class FieldHandlerPluginManager extends DefaultPluginManager {
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler) {
     parent::__construct("Plugin/crm_core_match/field", $namespaces, $module_handler, 'Drupal\crm_core_default_matching_engine\Annotation\CrmCoreMatchFieldHandler');
-    $this->setCacheBackend($cache_backend, $language_manager, 'crm_core_default_matching_engine_match_field_plugins');
+    $this->setCacheBackend($cache_backend, 'crm_core_default_matching_engine_match_field_plugins');
   }
 
 }

@@ -93,7 +93,7 @@ class DefaultEngineTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
     $this->matchingRule->status = TRUE;
-    $this->matchingRule->fields = array(
+    $this->matchingRule->rules = array(
       'foo' => array(),
     );
 
