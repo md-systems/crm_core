@@ -1,0 +1,28 @@
+<?php
+/**
+ * @file
+ */
+
+use Drupal\collect\CollectContainerInterface;
+use Drupal\crm_core_collect\CollectEvent;
+
+/**
+ * Implements hook_queue_info().
+ */
+function crm_core_collect_queue_info() {
+  $queues = array();
+
+  $queues[CollectEvent::QUEUE] = array(
+    'title' => t('CRM Core Submission Processing'),
+    'worker callback' => function (CollectContainerInterface $submission) {
+      \Drupal::service('event_dispatcher')->dispatch(CollectEvent::NAME, new CollectEvent($submission));
+    },
+
+    // @todo Check execution duration. Consider making this configurable.
+    'cron' => array(
+      'time' => 60,
+    ),
+  );
+
+  return $queues;
+}

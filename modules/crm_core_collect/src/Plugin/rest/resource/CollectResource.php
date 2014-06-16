@@ -8,7 +8,10 @@ namespace Drupal\crm_core_collect\Plugin\rest\resource;
 
 use Drupal\collect\CollectContainerInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Queue\QueueInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
+use Drupal\crm_core_collect\CollectEvent;
+use Drupal\crm_core_collect\SubmissionProcessor;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -55,6 +58,13 @@ class CollectResource extends ResourceBase {
   protected $entityManager;
 
   /**
+   * The submission processing queue.
+   *
+   * @var \Drupal\Core\Queue\QueueInterface
+   */
+  protected $queue;
+
+  /**
    * Constructs a Drupal\rest\Plugin\ResourceBase object.
    *
    * @param \Symfony\Component\Serializer\Serializer $serializer
@@ -63,6 +73,8 @@ class CollectResource extends ResourceBase {
    *   The url generator service.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
+   * @param \Drupal\Core\Queue\QueueInterface $queue
+   *   The queue for processing submissions.
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
@@ -72,12 +84,13 @@ class CollectResource extends ResourceBase {
    * @param array $serializer_formats
    *   The available serialization formats.
    */
-  public function __construct(Serializer $serializer, UrlGeneratorInterface $url_generator, EntityManagerInterface $entity_manager, array $configuration, $plugin_id, $plugin_definition, array $serializer_formats) {
+  public function __construct(Serializer $serializer, UrlGeneratorInterface $url_generator, EntityManagerInterface $entity_manager, QueueInterface $queue, array $configuration, $plugin_id, $plugin_definition, array $serializer_formats) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats);
 
     $this->serializer = $serializer;
     $this->urlGenerator = $url_generator;
     $this->entityManager = $entity_manager;
+    $this->queue = $queue;
   }
 
   /**
@@ -88,6 +101,7 @@ class CollectResource extends ResourceBase {
       $container->get('serializer'),
       $container->get('url_generator'),
       $container->get('entity.manager'),
+      $container->get('queue')->get(CollectEvent::QUEUE),
       $configuration,
       $plugin_id,
       $plugin_definition,
@@ -136,13 +150,10 @@ class CollectResource extends ResourceBase {
    *
    * @return \Drupal\rest\ResourceResponse
    *   The HTTP response object.
-   *
-   * @todo Do some real stuff here.
-   * Save the submitted data an trigger queues so this data can be analyzed and
-   * linked with CRM data.
    */
   public function post(CollectContainerInterface $submission) {
     $submission->save();
+    $this->queue->createItem($submission);
     return new ResourceResponse('', Response::HTTP_CREATED, array(
       'Location' => $this->getCanonicalUrl($submission),
     ));
