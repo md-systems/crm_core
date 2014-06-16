@@ -13,6 +13,8 @@ use Drupal\crm_core_contact\Entity\Contact;
  * Interface for matching engines
  *
  * CRM Core matching engines can implement this interface.
+ *
+ * @todo extend PluginInspectionInterface, use PluginBase
  */
 interface MatchEngineInterface {
 

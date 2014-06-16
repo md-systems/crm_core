@@ -1,4 +1,5 @@
 services:
+  # @todo Remove @language_manager. Consider using abstract parent.
   plugin.manager.crm_core_match.match_field:
     class: Drupal\crm_core_default_matching_engine\Plugin\FieldHandlerPluginManager
     arguments: ['@container.namespaces', '@cache.discovery', '@language_manager', '@module_handler']

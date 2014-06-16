@@ -3,6 +3,7 @@ services:
     class: Drupal\crm_core_match\Matcher
     arcuments: ['@plugin.manager.crm_core_match.engine']
 
+  # @todo Remove @language_manager. Consider using abstract parent.
   plugin.manager.crm_core_match.engine:
     class: Drupal\crm_core_match\Plugin\MatchEnginePluginManager
     arguments: ['@container.namespaces', '@cache.discovery', '@language_manager', '@module_handler']

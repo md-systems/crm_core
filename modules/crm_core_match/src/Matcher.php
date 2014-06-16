@@ -64,6 +64,8 @@ class Matcher implements MatchEngineInterface, MatcherInterface {
 
   /**
    * Discovers the engines and creates instances of the active ones.
+   *
+   * @todo Consider to load only the enabled engines instead of skipping them.
    */
   protected function loadEngines() {
     $engine_configs = $this->config->get('crm_core_match.engines');

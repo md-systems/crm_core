@@ -14,6 +14,8 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
  * Manages Match Field plugins.
+ *
+ * @todo: Add alter hook glue code.
  */
 class FieldHandlerPluginManager extends DefaultPluginManager {
 
