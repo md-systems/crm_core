@@ -11,14 +11,13 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Queue\QueueInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\crm_core_collect\CollectEvent;
-use Drupal\crm_core_collect\SubmissionProcessor;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
  * Provides a resource for collecting crm submissions.
@@ -67,7 +66,7 @@ class CollectResource extends ResourceBase {
   /**
    * Constructs a Drupal\rest\Plugin\ResourceBase object.
    *
-   * @param \Symfony\Component\Serializer\Serializer $serializer
+   * @param \Symfony\Component\Serializer\Normalizer\NormalizerInterface $serializer
    *   The serializer service.
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The url generator service.
@@ -84,7 +83,7 @@ class CollectResource extends ResourceBase {
    * @param array $serializer_formats
    *   The available serialization formats.
    */
-  public function __construct(Serializer $serializer, UrlGeneratorInterface $url_generator, EntityManagerInterface $entity_manager, QueueInterface $queue, array $configuration, $plugin_id, $plugin_definition, array $serializer_formats) {
+  public function __construct(NormalizerInterface $serializer, UrlGeneratorInterface $url_generator, EntityManagerInterface $entity_manager, QueueInterface $queue, array $configuration, $plugin_id, $plugin_definition, array $serializer_formats) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats);
 
     $this->serializer = $serializer;
