@@ -19,3 +19,27 @@ crm_core_default_matching_engine.rule.*:
     strict:
       type: boolean
       label: 'Strict matching'
+    rules:
+      label: 'Rules'
+      type: sequence
+      sequence:
+        - type: sequence
+          label: Properties
+          sequence:
+            - type: mapping
+              mapping:
+                weight:
+                  type: integer
+                  label: 'Weight'
+                status:
+                  type: boolean
+                  label: Enabled
+                operator:
+                  type: string
+                  label: Operator
+                options:
+                  type: string
+                  label: Options
+                score:
+                  type: integer
+                  label: Score

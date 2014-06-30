@@ -68,11 +68,11 @@ class Matcher implements MatchEngineInterface, MatcherInterface {
    * @todo Consider to load only the enabled engines instead of skipping them.
    */
   protected function loadEngines() {
-    $engine_configs = $this->config->get('crm_core_match.engines');
+    $engine_configs = $this->config->get('engines');
     $engine_definitions = $this->pluginManager->getDefinitions();
     foreach ($engine_definitions as $id => $definition) {
       // Skip disable engines.
-      if (!$engine_configs->get($id . '.status')) {
+      if ($engine_configs && !$engine_configs->get($id . '.status')) {
         continue;
       }
       $engine = $this->pluginManager->createInstance($id, $definition);

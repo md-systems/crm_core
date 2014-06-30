@@ -93,7 +93,7 @@ class MatcherTest extends UnitTestCase {
 
     $this->config->expects($this->once())
       ->method('get')
-      ->with('crm_core_match.engines')
+      ->with('engines')
       ->will($this->returnValue($engine_config));
 
     $engine_config->expects($this->exactly(3))
@@ -143,7 +143,7 @@ class MatcherTest extends UnitTestCase {
 
     $this->config->expects($this->once())
       ->method('get')
-      ->with('crm_core_match.engines')
+      ->with('engines')
       ->will($this->returnValue($engine_config));
 
     $engine_config->expects($this->exactly(2))
@@ -194,7 +194,7 @@ class MatcherTest extends UnitTestCase {
 
     $this->config->expects($this->once())
       ->method('get')
-      ->with('crm_core_match.engines')
+      ->with('engines')
       ->will($this->returnValue($engine_config));
 
     $engine_config->expects($this->exactly(2))
