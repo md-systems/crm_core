@@ -145,12 +145,14 @@ abstract class FieldHandlerBase implements FieldHandlerInterface, ContainerFacto
     $needle = $contact->get($this->field->getName())->{$property};
 
     if (!empty($needle)) {
-      $this->query->condition('type', $contact->bundle())
-        ->condition('contact_id', $contact->id(), '<>');
+      $this->query->condition('type', $contact->bundle());
+      if ($contact->id()) {
+        $this->query->condition('contact_id', $contact->id(), '<>');
+      }
 
       switch ($this->getOperator($property)) {
         case 'equals':
-          $this->query->condition($this->field->getName(), $needle);
+          $this->query->condition($this->field->getName() . '.' . $property, $needle);
           break;
 
         case 'starts':
