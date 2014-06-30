@@ -1,0 +1,12 @@
+type: contact
+name: 'Contact form submission'
+description: 'Submission of a contact form.'
+activity_string: null
+status: true
+langcode: en
+dependencies:
+  entity:
+    - field.field.crm_core_activity.activity_date
+    - field.field.crm_core_activity.activity_notes
+    - field.field.crm_core_activity.activity_participants
+    - field.field.crm_core_activity.activity_submission

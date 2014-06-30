@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  entity:
+    - crm_core_activity.type.contact
+    - field.field.crm_core_activity.activity_date
+id: crm_core_activity.contact.activity_date
+label: Date
+field_name: activity_date
+entity_type: crm_core_activity
+bundle: contact
+description: ''
+required: false
+default_value:
+  default_date: now
+default_value_function: ''
+settings: {  }
+field_type: datetime

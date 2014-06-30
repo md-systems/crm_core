@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  entity:
+    - crm_core_activity.type.contact
+    - field.field.crm_core_activity.activity_notes
+id: crm_core_activity.contact.activity_notes
+label: Notes
+field_name: activity_notes
+entity_type: crm_core_activity
+bundle: contact
+description: ''
+required: false
+default_value: {  }
+default_value_function: ''
+settings:
+  text_processing: '0'
+field_type: text_long

@@ -1,0 +1,15 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - crm_core_contact
+id: crm_core_contact.contact_mail
+name: contact_mail
+entity_type: crm_core_contact
+type: email
+settings: {  }
+module: Core
+locked: false
+cardinality: -1
+translatable: false
+indexes: {  }

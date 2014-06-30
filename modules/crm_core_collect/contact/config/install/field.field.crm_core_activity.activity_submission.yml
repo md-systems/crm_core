@@ -1,0 +1,17 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - crm_core_activity
+    - entity_reference
+id: crm_core_activity.activity_submission
+name: activity_submission
+entity_type: crm_core_activity
+type: entity_reference
+settings:
+  target_type: collect_container
+module: entity_reference
+locked: true
+cardinality: 1
+translatable: false
+indexes: {  }

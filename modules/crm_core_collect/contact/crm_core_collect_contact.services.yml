@@ -1,0 +1,15 @@
+services:
+  crm_core_collect.subscriber.contact:
+    class: Drupal\crm_core_collect_contact\EventSubscriber
+    arguments:
+      - "@entity.manager"
+      - "@logger.channel.crm_core.collect.contact"
+      - "@crm_core_match.matcher"
+    tags:
+      - { name: event_subscriber }
+
+  logger.channel.crm_core.collect.contact:
+    class: Drupal\Core\Logger\LoggerChannel
+    factory_method: get
+    factory_service: logger.factory
+    arguments: ['crm_core.collect.client']

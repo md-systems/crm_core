@@ -1,0 +1,61 @@
+langcode: en
+status: true
+dependencies:
+  entity:
+    - crm_core_activity.type.contact
+    - field.instance.crm_core_activity.contact.activity_date
+    - field.instance.crm_core_activity.contact.activity_notes
+    - field.instance.crm_core_activity.contact.activity_participants
+    - field.instance.crm_core_activity.contact.activity_submission
+  module:
+    - datetime
+    - entity_reference
+    - text
+id: crm_core_activity.contact.default
+targetEntityType: crm_core_activity
+bundle: contact
+mode: default
+content:
+  created:
+    type: integer
+    weight: -5
+    settings: {  }
+    third_party_settings: {  }
+  title:
+    type: string
+    weight: -5
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  activity_participants:
+    type: entity_reference_autocomplete
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      autocomplete_type: tags
+      placeholder: ''
+    weight: -4
+    third_party_settings: {  }
+  activity_date:
+    type: datetime_default
+    weight: 2
+    settings: {  }
+    third_party_settings: {  }
+  activity_notes:
+    type: text_textarea
+    weight: 3
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  activity_submission:
+    type: entity_reference_autocomplete
+    weight: 4
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      autocomplete_type: tags
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

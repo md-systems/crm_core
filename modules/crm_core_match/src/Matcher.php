@@ -12,7 +12,7 @@ use Drupal\crm_core_contact\Entity\Contact;
 use Drupal\crm_core_match\Plugin\crm_core_match\engine\MatchEngineInterface;
 use Drupal\crm_core_match\Plugin\MatchEnginePluginManager;
 
-class Matcher implements MatchEngineInterface, MatcherInterface {
+class Matcher implements MatcherInterface {
 
   /**
    * The engine plugin manager.

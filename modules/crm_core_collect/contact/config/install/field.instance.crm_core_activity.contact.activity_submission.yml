@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  entity:
+    - crm_core_activity.type.contact
+    - field.field.crm_core_activity.activity_submission
+id: crm_core_activity.contact.activity_submission
+label: Submission
+field_name: activity_submission
+entity_type: crm_core_activity
+bundle: contact
+description: 'The data record containing the raw data of the received contact form submission.'
+required: true
+default_value: {  }
+default_value_function: ''
+settings:
+  handler: default
+  handler_settings:
+    target_bundles: {  }
+    sort:
+      field: date
+      direction: DESC
+activity_type: entity_reference

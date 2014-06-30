@@ -1,0 +1,17 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - crm_core_contact
+    - text
+id: crm_core_contact.contact_remote_id
+name: contact_remote_id
+entity_type: crm_core_contact
+type: text
+settings:
+  max_length: 255
+module: text
+locked: false
+cardinality: -1
+translatable: false
+indexes: {  }
