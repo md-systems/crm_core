@@ -30,6 +30,7 @@ use Drupal\field\Entity\FieldInstanceConfig;
  *     },
  *     "list_builder" = "Drupal\crm_core_contact\ContactTypeListBuilder",
  *   },
+ *   admin_permission = "administer contact types",
  *   entity_keys = {
  *     "id" = "type",
  *     "label" = "name",

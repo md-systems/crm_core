@@ -18,8 +18,8 @@ class ContactTypeAccessController extends EntityAccessController {
    */
   protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
 
-    // First check drupal permission.
-    if (!$account->hasPermission('administer contact types')) {
+    // First check permission.
+    if (!parent::checkAccess($entity, $operation, $langcode, $account)) {
       return FALSE;
     }
 
@@ -48,16 +48,8 @@ class ContactTypeAccessController extends EntityAccessController {
         return empty($results);
 
       case 'edit':
-      default:
         // If the contact type is locked, you can't edit it.
         return !$entity->locked;
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return $account->hasPermission('administer contact types');
   }
 }

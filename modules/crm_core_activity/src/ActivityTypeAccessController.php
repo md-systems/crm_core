@@ -19,7 +19,7 @@ class ActivityTypeAccessController extends EntityAccessController {
   protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
 
     // First check drupal permission.
-    if (!$account->hasPermission('administer activity types')) {
+    if (!parent::checkAccess($entity, $operation, $langcode, $account)) {
       return FALSE;
     }
 
@@ -33,22 +33,15 @@ class ActivityTypeAccessController extends EntityAccessController {
 
       case 'delete':
         // If activity instance of this activity type exist, you can't delete it.
-        $results = \Drupal::entityQuery('crm_core_activity')
+        $count = \Drupal::entityQuery('crm_core_activity')
           ->condition('type', $entity->id())
+          ->count()
           ->execute();
 
-        return empty($results);
+        return $count == 0;
 
-      case 'edit':
-      default:
+      case 'update':
         return TRUE;
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return $account->hasPermission('administer activity types');
   }
 }

@@ -37,7 +37,7 @@ crm_core_activity.edit:
   defaults:
     _entity_form: 'crm_core_activity.default'
   requirements:
-    _entity_access: 'crm_core_activity.edit'
+    _entity_access: 'crm_core_activity.update'
 
 crm_core_activity.delete_confirm:
   path: '/crm-core/activity/{crm_core_activity}/delete'
@@ -60,7 +60,7 @@ crm_core_activity.type_edit:
   defaults:
     _entity_form: 'crm_core_activity_type.default'
   requirements:
-    _entity_access: 'crm_core_activity_type.edit'
+    _entity_access: 'crm_core_activity_type.update'
 
 crm_core_activity.type_delete:
   path: '/admin/structure/crm-core/activity-types/{crm_core_activity_type}/delete'

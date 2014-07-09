@@ -28,7 +28,7 @@ class ContactAccessController extends EntityAccessController {
 
         return ($administer_contact || $view_any_contact || $view_type_contact);
 
-      case 'edit':
+      case 'update':
         $edit_any_contact = $account->hasPermission('edit any crm_core_contact entity');
         $edit_type_contact = $account->hasPermission('edit any crm_core_contact entity of bundle ' . $entity->bundle());
 
@@ -51,10 +51,6 @@ class ContactAccessController extends EntityAccessController {
         // Any of the create permissions.
         $create_any_contact = $account->hasPermission('create crm_core_contact entities');
         return ($administer_contact || $create_any_contact);
-
-      case 'create':
-      default:
-        return $this->createAccess($entity->bundle(), $account);
     }
   }
 

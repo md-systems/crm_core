@@ -28,6 +28,7 @@ use Drupal\field\Entity\FieldInstanceConfig;
  *     },
  *     "list_builder" = "Drupal\crm_core_activity\ActivityTypeListBuilder",
  *   },
+ *   admin_permission = "administer activity types",
  *   entity_keys = {
  *     "id" = "type",
  *     "label" = "name",

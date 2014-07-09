@@ -18,7 +18,6 @@ class ActivityAccessController extends EntityAccessController {
    * {@inheritdoc}
    */
   protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
-    return true;
 
     $administer_activity = $account->hasPermission('administer crm_core_activity entities');
 
@@ -29,7 +28,7 @@ class ActivityAccessController extends EntityAccessController {
 
         return ($administer_activity || $view_any_activity || $view_type_activity);
 
-      case 'edit':
+      case 'update':
         $edit_any_activity = $account->hasPermission('edit any crm_core_activity entity');
         $edit_type_activity = $account->hasPermission('edit any crm_core_activity entity of bundle ' . $entity->bundle());
 
@@ -45,10 +44,6 @@ class ActivityAccessController extends EntityAccessController {
         // Any of the create permissions.
         $create_any_activity = $account->hasPermission('create crm_core_activity entities');
         return ($administer_activity || $create_any_activity);
-
-      case 'create':
-      default:
-        return $this->createAccess($entity->bundle(), $account);
     }
   }
 
@@ -56,7 +51,6 @@ class ActivityAccessController extends EntityAccessController {
    * {@inheritdoc}
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return true;
     $administer_activity = $account->hasPermission('administer crm_core_activity entities');
     $create_any_activity = $account->hasPermission('create crm_core_activity entities');
     $create_type_activity = $account->hasPermission('create crm_core_activity entities of bundle ' . $entity_bundle);
