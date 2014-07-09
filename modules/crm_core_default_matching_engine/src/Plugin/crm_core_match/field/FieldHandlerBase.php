@@ -154,12 +154,13 @@ abstract class FieldHandlerBase implements FieldHandlerInterface, ContainerFacto
       $results = $this->query->execute();
     }
 
-    foreach ($results as &$result) {
-      $result = array(
-        $this->field->getName() . '.' . $property => $this->getScore($property),
-      );
-    }
-
-    return $results;
+    // Get the ids of the identified matches.
+    $ids = array_keys($results);
+    // Get the score for this field/propery.
+    $score = array(
+      $this->field->getName() . '.' . $property => $this->getScore($property),
+    );
+    // Returning an array holding the score as value and the contact id as key.
+    return array_fill_keys($ids, $score);
   }
 }
