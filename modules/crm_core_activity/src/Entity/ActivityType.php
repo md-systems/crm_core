@@ -114,7 +114,7 @@ class ActivityType extends ConfigEntityBundleBase {
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
 
-    if (!$update) {
+    if (!$update && !$this->isSyncing()) {
       $this->ensureParticipantField();
       $this->ensureDateField();
       $this->ensureNotesField();

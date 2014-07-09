@@ -147,10 +147,10 @@ class ContactType extends ConfigEntityBundleBase {
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
 
-    if (!$update) {
-      // Create a name field if the create_body property is true and we're not
-      // in the syncing process.
-      if ($this->get('create_name_field') && !$this->isSyncing()) {
+    if (!$update && !$this->isSyncing()) {
+      // Create a name field if the create_name_field property is true and we're
+      // not in the syncing process.
+      if ($this->get('create_name_field')) {
         $label = $this->get('create_name_field_label');
         $this->addContactNameField($label);
       }
