@@ -28,9 +28,9 @@ class ContactUiTest extends WebTestBase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Contact UI'),
-      'description' => t('Test create/edit/delete contacts.'),
-      'group' => t('CRM Core'),
+      'name' => 'Contact UI',
+      'description' => 'Test create/edit/delete contacts.',
+      'group' => 'CRM Core',
     );
   }
 
@@ -52,7 +52,7 @@ class ContactUiTest extends WebTestBase {
     // There should be no contacts available after fresh installation and
     // there is link to create new contacts.
     $this->drupalGet('crm-core/contact');
-    $this->assertText(t('There are no contacts available. Add one now.'), t('No contacts available after fresh installation.'));
+    $this->assertText(t('There are no contacts available. Add one now.'), 'No contacts available after fresh installation.');
     $this->assertLink(t('Add a contact'));
 
     // Open page crm-core/contact/add and assert standard contact types available.
@@ -70,8 +70,8 @@ class ContactUiTest extends WebTestBase {
     // Assert we were redirected back to the list of contacts.
     $this->assertUrl('crm-core/contact');
 
-    $this->assertLink($household_node['contact_name[0][value]'], 0, t('Newly created contact title listed.'));
-    $this->assertText(t('Household'), t('Newly created contact type listed.'));
+    $this->assertLink($household_node['contact_name[0][value]'], 0, 'Newly created contact title listed.');
+    $this->assertText(t('Household'), 'Newly created contact type listed.');
 
     // Create individual contact.
     $individual_node = array(
@@ -89,44 +89,44 @@ class ContactUiTest extends WebTestBase {
     $this->assertUrl('crm-core/contact');
 
     $link_label = $this->getIndividualContactTitle($individual_node);
-    $this->assertLink($link_label, 0, t('Newly created contact title listed.'));
-    $this->assertText(t('Individual'), t('Newly created contact type listed.'));
+    $this->assertLink($link_label, 0, 'Newly created contact title listed.');
+    $this->assertText(t('Individual'), 'Newly created contact type listed.');
 
     // Create Organization contact.
     $organization_node = array(
       'contact_name[0][value]' => $this->randomName(),
     );
-    $this->drupalPostForm('crm-core/contact/add/organization', $organization_node, t('Save Organization'));
+    $this->drupalPostForm('crm-core/contact/add/organization', $organization_node, 'Save Organization');
 
     // Assert we were redirected back to the list of contacts.
     $this->assertUrl('crm-core/contact');
 
-    $this->assertLink($organization_node['contact_name[0][value]'], 0, t('Newly created contact title listed.'));
-    $this->assertText(t('Organization'), t('Newly created contact type listed.'));
+    $this->assertLink($organization_node['contact_name[0][value]'], 0, 'Newly created contact title listed.');
+    $this->assertText(t('Organization'), 'Newly created contact type listed.');
 
     // Edit operations.
     // We know that created nodes household is id 1, individual is no 2,
     // organization is no 3. But we should have better API to find contact by
     // name.
     $household_node = $this->householdContactValues();
-    $this->drupalPostForm('crm-core/contact/1/edit', $household_node, t('Save Household'));
+    $this->drupalPostForm('crm-core/contact/1/edit', $household_node, 'Save Household');
 
     // Assert we were redirected back to the list of contacts.
     $this->assertUrl('crm-core/contact/1');
-    $this->assertText($household_node['contact_name[0][value]'], 0, t('Contact updated.'));
+    $this->assertText($household_node['contact_name[0][value]'], 0, 'Contact updated.');
 
     // Check listing page.
     $this->drupalGet('crm-core/contact');
-    $this->assertLink($household_node['contact_name[0][value]'], 0, t('Updated contact title listed.'));
+    $this->assertLink($household_node['contact_name[0][value]'], 0, 'Updated contact title listed.');
 
     // Delete household contact.
-    $this->drupalPostForm('crm-core/contact/1/delete', array(), t('Yes'));
+    $this->drupalPostForm('crm-core/contact/1/delete', array(), 'Yes');
     $this->assertUrl('crm-core/contact');
-    $this->assertNoLink($household_node['contact_name[0][value]'], 0, t('Deleted contact title no more listed.'));
+    $this->assertNoLink($household_node['contact_name[0][value]'], 0, 'Deleted contact title no more listed.');
 
     // Edit individual contact.
     $individual_node = $this->individualContactValues();
-    $this->drupalPostForm('crm-core/contact/2/edit', $individual_node, t('Save Individual'));
+    $this->drupalPostForm('crm-core/contact/2/edit', $individual_node, 'Save Individual');
 
     // Assert we were redirected back to the list of contacts.
     $this->assertUrl('crm-core/contact/2');
@@ -134,32 +134,32 @@ class ContactUiTest extends WebTestBase {
     // Check listing page.
     $this->drupalGet('crm-core/contact');
     $link_label = $this->getIndividualContactTitle($individual_node);
-    $this->assertLink($link_label, 0, t('Updated individual contact title listed.'));
+    $this->assertLink($link_label, 0, 'Updated individual contact title listed.');
 
     // Delete individual contact.
-    $this->drupalPostForm('crm-core/contact/2/delete', array(), t('Yes'));
+    $this->drupalPostForm('crm-core/contact/2/delete', array(), 'Yes');
     $this->assertUrl('crm-core/contact');
-    $this->assertNoLink($link_label, 0, t('Deleted individual contact title no more listed.'));
+    $this->assertNoLink($link_label, 0, 'Deleted individual contact title no more listed.');
 
     // Edit organization contact.
     $organization_node = $this->organizationContactValues();
-    $this->drupalPostForm('crm-core/contact/3/edit', $organization_node, t('Save Organization'));
+    $this->drupalPostForm('crm-core/contact/3/edit', $organization_node, 'Save Organization');
 
     // Assert we were redirected back to the list of contacts.
     $this->assertUrl('crm-core/contact/3');
-    $this->assertText($organization_node['contact_name[0][value]'], 0, t('Contact updated.'));
+    $this->assertText($organization_node['contact_name[0][value]'], 0, 'Contact updated.');
 
     // Check listing page.
     $this->drupalGet('crm-core/contact');
-    $this->assertLink($organization_node['contact_name[0][value]'], 0, t('Updated contact title listed.'));
+    $this->assertLink($organization_node['contact_name[0][value]'], 0, 'Updated contact title listed.');
 
     // Delete organization contact.
-    $this->drupalPostForm('crm-core/contact/3/delete', array(), t('Yes'));
+    $this->drupalPostForm('crm-core/contact/3/delete', array(), 'Yes');
     $this->assertUrl('crm-core/contact');
-    $this->assertNoLink($organization_node['contact_name[0][value]'], 0, t('Deleted contact title no more listed.'));
+    $this->assertNoLink($organization_node['contact_name[0][value]'], 0, 'Deleted contact title no more listed.');
 
     // Assert that there are no contacts left.
-    $this->assertText(t('There are no contacts available. Add one now.'), t('No contacts available after fresh installation.'));
+    $this->assertText(t('There are no contacts available. Add one now.'), 'No contacts available after fresh installation.');
   }
 
   /**
@@ -178,37 +178,37 @@ class ContactUiTest extends WebTestBase {
 
     // Then I should see edit, enable, delete but no enable links for existing
     // contacts.
-    $this->assertContactTypeLink('household', t('Edit link for household.'));
-    $this->assertContactTypeLink('household/disable', t('Disable link for household.'));
-    $this->assertNoContactTypeLink('household/enable', t('No enable link for household.'));
-    $this->assertContactTypeLink('household/delete', t('Delete link for household.'));
+    $this->assertContactTypeLink('household', 'Edit link for household.');
+    $this->assertContactTypeLink('household/disable', 'Disable link for household.');
+    $this->assertNoContactTypeLink('household/enable', 'No enable link for household.');
+    $this->assertContactTypeLink('household/delete', 'Delete link for household.');
 
-    $this->assertcontacttypelink('individual', t('Edit link for individual.'));
-    $this->assertcontacttypelink('individual/disable', t('Disable link for individual.'));
-    $this->assertNoContacttypelink('individual/enable', t('No enable link for individual.'));
-    $this->assertcontacttypelink('individual/delete', t('Delete link for individual.'));
+    $this->assertcontacttypelink('individual', 'Edit link for individual.');
+    $this->assertcontacttypelink('individual/disable', 'Disable link for individual.');
+    $this->assertNoContacttypelink('individual/enable', 'No enable link for individual.');
+    $this->assertcontacttypelink('individual/delete', 'Delete link for individual.');
 
-    $this->assertcontacttypelink('organization', t('Edit link for organization.'));
-    $this->assertcontacttypelink('organization/disable', t('Disable link for organization.'));
-    $this->assertNoContacttypelink('organization/enable', t('No enable link for organization.'));
-    $this->assertcontacttypelink('organization/delete', t('Delete link for organization.'));
+    $this->assertcontacttypelink('organization', 'Edit link for organization.');
+    $this->assertcontacttypelink('organization/disable', 'Disable link for organization.');
+    $this->assertNoContacttypelink('organization/enable', 'No enable link for organization.');
+    $this->assertcontacttypelink('organization/delete', 'Delete link for organization.');
 
     // Given the 'household' contact type is disabled.
-    $this->drupalPostForm('admin/structure/crm-core/contact-types/household/disable', array(), t('Disable'));
+    $this->drupalPostForm('admin/structure/crm-core/contact-types/household/disable', array(), 'Disable');
 
     // When I visit the contact type admin page.
     $this->drupalGet('admin/structure/crm-core/contact-types');
 
     // Then I should see an enable link.
-    $this->assertContactTypeLink('household/enable', t('Enable link for household.'));
+    $this->assertContactTypeLink('household/enable', 'Enable link for household.');
     // And I should not see a disable link.
-    $this->assertNoContactTypeLink('household/disable', t('No disable link for household.'));
+    $this->assertNoContactTypeLink('household/disable', 'No disable link for household.');
 
     // When I enable 'household'
-    $this->drupalPostForm('admin/structure/crm-core/contact-types/household/enable', array(), t('Enable'));
+    $this->drupalPostForm('admin/structure/crm-core/contact-types/household/enable', array(), 'Enable');
 
     // Then I should see a disable link.
-    $this->assertContactTypeLink('household/disable', t('Disable link for household.'));
+    $this->assertContactTypeLink('household/disable', 'Disable link for household.');
 
     // Given there is a contact of type 'individual.'.
     Contact::create(array('type' => 'individual'))->save();
@@ -217,19 +217,20 @@ class ContactUiTest extends WebTestBase {
     $this->drupalGet('admin/structure/crm-core/contact-types');
 
     // Then I should not see a delete link.
-    $this->assertNoContactTypeLink('individual/delete', t('No delete link for individual.'));
+    $this->assertNoContactTypeLink('individual/delete', 'No delete link for individual.');
 
     // When I edit the organization type.
     $this->drupalGet('admin/structure/crm-core/contact-types/organization');
 
     // Then I should see a delete link.
-    $this->assertContactTypeLink('organization/delete', t('Delete link on organization type form.'));
+    $this->assertContactTypeLink('organization/delete', 'Delete link on organization type form.');
 
     // When I edit the individual type.
-    $this->drupalGet('admin/structure/crm-core/contact-types/organization');
+    $this->drupalGet('admin/structure/crm-core/contact-types/individual');
 
+    // @todo Assert for a positive fact to ensure being on the correct page.
     // Then I should not see a delete link.
-    $this->assertNoContactTypeLink('individual/delete', t('No delete link on individual type form.'));
+    $this->assertNoContactTypeLink('individual/delete', 'No delete link on individual type form.');
   }
 
   /**

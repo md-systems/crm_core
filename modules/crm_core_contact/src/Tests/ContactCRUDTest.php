@@ -58,28 +58,25 @@ class ContactCRUDTest extends KernelTestBase {
 
     // Create.
     $contact_type = ContactType::create(array('type' => $type));
-    $this->assertTrue(isset($contact_type->type) && $contact_type->type == $type, t('New contact type type exists.'));
+    $this->assertTrue(isset($contact_type->type) && $contact_type->type == $type, 'New contact type type exists.');
     // @todo Check if this still must be the case.
 //    $this->assertTrue($contact_type->locked, t('New contact type has locked set to TRUE.'));
-
-    // crm_core_contact_type_save().
     $contact_type->name = $this->randomName();
     $contact_type->description = $this->randomString();
-    $this->assertTrue($contact_type->save(), t('Contact type saved.'));
+    $this->assertEqual(SAVED_NEW, $contact_type->save(), 'Contact type saved.');
 
     // Load.
     $contact_type_load = ContactType::load($type);
-    $this->assertEqual($contact_type->type, $contact_type_load->type, t('Loaded contact type has same type.'));
-    $this->assertEqual($contact_type->name, $contact_type_load->name, t('Loaded contact type has same name.'));
-    $this->assertEqual($contact_type->description, $contact_type_load->description, t('Loaded contact type has same description.'));
+    $this->assertEqual($contact_type->type, $contact_type_load->type, 'Loaded contact type has same type.');
+    $this->assertEqual($contact_type->name, $contact_type_load->name, 'Loaded contact type has same name.');
+    $this->assertEqual($contact_type->description, $contact_type_load->description, 'Loaded contact type has same description.');
     $uuid = $contact_type_load->uuid();
     $this->assertTrue(!empty($uuid), 'Loaded contact type has uuid.');
 
     // Delete.
     $contact_type_load->delete();
-    // Avoid static cache.
     $contact_type_load = ContactType::load($type);
-    $this->assertTrue(empty($contact_type_load), t('Contact type deleted.'));
+    $this->assertNull($contact_type_load, 'Contact type deleted.');
   }
 
   /**
@@ -95,7 +92,7 @@ class ContactCRUDTest extends KernelTestBase {
 
     // Create.
     $contact = Contact::create(array('type' => $type->type));
-    $this->assertTrue($contact->save(), t('Contact saved.'));
+    $this->assertEqual(SAVED_NEW, $contact->save(), 'Contact saved.');
 
     // Load.
     $contact_load = Contact::load($contact->id());
@@ -104,8 +101,7 @@ class ContactCRUDTest extends KernelTestBase {
 
     // Delete.
     $contact->delete();
-    // Avoid static cache.
     $contact_load = Contact::load($contact->id());
-    $this->assertTrue(empty($contact_load), t('Contact deleted.'));
+    $this->assertNull($contact_load, 'Contact deleted.');
   }
 }
