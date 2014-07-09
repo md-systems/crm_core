@@ -7,10 +7,9 @@
 namespace Drupal\crm_core_contact\Entity;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldInstanceConfig;
 
 /**
@@ -46,7 +45,7 @@ use Drupal\field\Entity\FieldInstanceConfig;
  *   }
  * )
  */
-class ContactType extends ConfigEntityBase {
+class ContactType extends ConfigEntityBundleBase {
 
   /**
    * The machine-readable name of this type.
@@ -110,13 +109,6 @@ class ContactType extends ConfigEntityBase {
    * @var string
    */
   protected $create_name_field_label = 'Name';
-
-  /**
-   * Overrides Entity::__construct().
-   */
-  public function __construct($values = array()) {
-    parent::__construct($values, 'crm_core_contact_type');
-  }
 
   /**
    * Overrides Entity::id().

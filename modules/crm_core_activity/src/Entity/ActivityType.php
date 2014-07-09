@@ -6,7 +6,7 @@
 
 namespace Drupal\crm_core_activity\Entity;
 
-use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\field\Entity\FieldInstanceConfig;
@@ -43,7 +43,7 @@ use Drupal\field\Entity\FieldInstanceConfig;
  *   }
  * )
  */
-class ActivityType extends ConfigEntityBase {
+class ActivityType extends ConfigEntityBundleBase {
 
   /**
    * The machine-readable name of this type.
@@ -72,13 +72,6 @@ class ActivityType extends ConfigEntityBase {
    * @var string
    */
   public $activity_string;
-
-  /**
-   * Overrides Entity::__construct().
-   */
-  public function __construct($values = array()) {
-    parent::__construct($values, 'crm_core_activity_type');
-  }
 
   /**
    * Overrides Entity::id().
