@@ -22,7 +22,7 @@ class ContactForm extends ContentEntityForm {
     $t_args = array('%name' => $contact->label());
 
     if ($status == SAVED_UPDATED) {
-      drupal_set_message(t('The contact %name has been updated.', $t_args));
+      drupal_set_message($this->t('The contact %name has been updated.', $t_args));
       if ($contact->access('view')) {
         $form_state['redirect_route'] = array(
           'route_name' => 'crm_core_contact.view',
@@ -36,8 +36,8 @@ class ContactForm extends ContentEntityForm {
       }
     }
     elseif ($status == SAVED_NEW) {
-      drupal_set_message(t('The contact %name has been added.', $t_args));
-      watchdog('crm_core_contact', 'Added contact %name.', $t_args, WATCHDOG_NOTICE, l(t('View'), $contact->url()));
+      drupal_set_message($this->t('The contact %name has been added.', $t_args));
+      watchdog('crm_core_contact', 'Added contact %name.', $t_args, WATCHDOG_NOTICE, l($this->t('View'), $contact->url()));
       $form_state['redirect_route']['route_name'] = 'crm_core_contact.list';
     }
   }

@@ -44,7 +44,7 @@ class ActivityDeleteForm extends EntityConfirmFormBase {
       '%title' => $this->entity->label(),
       '@type' => $this->entity->get('type')->entity->label(),
     );
-    drupal_set_message(t('@type %title has been deleted.', $t_args));
+    drupal_set_message($this->t('@type %title has been deleted.', $t_args));
     watchdog('crm_core_activity', 'Deleted @type %title (%id).', $t_args, WATCHDOG_NOTICE);
 
     $form_state['redirect_route']['route_name'] = 'crm_core_activity.list';

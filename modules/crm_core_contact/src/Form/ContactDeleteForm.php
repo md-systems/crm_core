@@ -44,7 +44,7 @@ class ContactDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return t('Are you sure you want to delete the contact type %type?', array('%type' => $this->entity->label()));
+    return $this->t('Are you sure you want to delete the contact type %type?', array('%type' => $this->entity->label()));
   }
 
   /**
@@ -58,7 +58,7 @@ class ContactDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getConfirmText() {
-    return t('Yes');
+    return $this->t('Yes');
   }
 
   /**
@@ -70,7 +70,7 @@ class ContactDeleteForm extends EntityConfirmFormBase {
       '%id' => $this->entity->id(),
       '%name' => $this->entity->label(),
     );
-    drupal_set_message(t('The contact %name (%id) has been deleted.', $t_args));
+    drupal_set_message($this->t('The contact %name (%id) has been deleted.', $t_args));
     watchdog('node', 'Deleted contact %name (%id).', $t_args, WATCHDOG_NOTICE);
 
     $form_state['redirect_route']['route_name'] = 'crm_core_contact.list';

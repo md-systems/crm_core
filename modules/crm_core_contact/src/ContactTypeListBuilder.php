@@ -27,10 +27,10 @@ class ContactTypeListBuilder extends ConfigEntityListBuilder {
   public function buildHeader() {
     $header = array();
 
-    $header['title'] = t('Name');
+    $header['title'] = $this->t('Name');
 
     $header['description'] = array(
-      'data' => t('Description'),
+      'data' => $this->t('Description'),
       'class' => array(RESPONSIVE_PRIORITY_MEDIUM),
     );
 

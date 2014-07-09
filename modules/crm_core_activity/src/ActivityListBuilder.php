@@ -56,9 +56,9 @@ class ActivityListBuilder extends EntityListBuilder {
   public function buildHeader() {
     $header = array();
 
-    $header['date'] = t('Activity Date');
-    $header['title'] = t('Title');
-    $header['type'] = t('Activity type');
+    $header['date'] = $this->t('Activity Date');
+    $header['title'] = $this->t('Title');
+    $header['type'] = $this->t('Activity type');
 
     return $header + parent::buildHeader();
   }

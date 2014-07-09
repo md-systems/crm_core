@@ -137,7 +137,7 @@ class EnginesToggleForm extends ConfirmFormBase {
       '%name' => $this->engine['title'],
       '%toggle' => $action,
     );
-    drupal_set_message(t('The contact type %name has been %toggle.', $t_args));
+    drupal_set_message($this->t('The contact type %name has been %toggle.', $t_args));
 
     $form_state['redirect_route']['route_name'] = 'crm_core_match.engines';
   }

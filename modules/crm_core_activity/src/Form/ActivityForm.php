@@ -51,8 +51,8 @@ class ActivityForm  extends ContentEntityForm {
       }
     }
     elseif ($status == SAVED_NEW) {
-      drupal_set_message(t('Activity %title created.', $t_args));
-      watchdog('crm_core_contact', 'Activity %title created.', $t_args, WATCHDOG_NOTICE, l(t('View'), $activity->url()));
+      drupal_set_message($this->t('Activity %title created.', $t_args));
+      watchdog('crm_core_contact', 'Activity %title created.', $t_args, WATCHDOG_NOTICE, l($this->t('View'), $activity->url()));
       $form_state['redirect_route']['route_name'] = 'crm_core_contact.list';
     }
 

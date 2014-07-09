@@ -29,10 +29,10 @@ class ActivityTypeForm extends EntityForm {
     $type = $this->entity;
 
     $form['name'] = array(
-      '#title' => t('Name'),
+      '#title' => $this->t('Name'),
       '#type' => 'textfield',
       '#default_value' => $type->name,
-      '#description' => t('The human-readable name of this activity type. It is recommended that this name begin with a capital letter and contain only letters, numbers, and spaces. This name must be unique.'),
+      '#description' => $this->t('The human-readable name of this activity type. It is recommended that this name begin with a capital letter and contain only letters, numbers, and spaces. This name must be unique.'),
       '#required' => TRUE,
       '#size' => 32,
     );
@@ -46,26 +46,26 @@ class ActivityTypeForm extends EntityForm {
         'exists' => 'Drupal\crm_core_activity\Entity\ActivityType::load',
         'source' => array('name'),
       ),
-      '#description' => t('A unique machine-readable name for this activity type. It must only contain lowercase letters, numbers, and underscores.'),
+      '#description' => $this->t('A unique machine-readable name for this activity type. It must only contain lowercase letters, numbers, and underscores.'),
     );
 
     $form['description'] = array(
-      '#title' => t('Description'),
+      '#title' => $this->t('Description'),
       '#type' => 'textarea',
       '#default_value' => $type->description,
-      '#description' => t('Describe this activity type.'),
+      '#description' => $this->t('Describe this activity type.'),
     );
 
     // Primary fields section.
     $form['activity_string_container'] = array(
       '#type' => 'fieldset',
-      '#title' => t('Display settings'),
+      '#title' => $this->t('Display settings'),
     );
 
     $form['activity_string_container']['activity_string'] = array(
       '#type' => 'textfield',
-      '#title' => t('Activity string'),
-      '#description' => t('Enter text describing the relationship between the contact and this activity. For example: Someone Somewhere registered for this activity.'),
+      '#title' => $this->t('Activity string'),
+      '#description' => $this->t('Enter text describing the relationship between the contact and this activity. For example: Someone Somewhere registered for this activity.'),
       '#default_value' => empty($type->activity_string) ? '' : $type->activity_string,
     );
 
@@ -77,8 +77,8 @@ class ActivityTypeForm extends EntityForm {
    */
   protected function actions(array $form, array &$form_state) {
     $actions = parent::actions($form, $form_state);
-    $actions['submit']['#value'] = t('Save activity type');
-    $actions['delete']['#title'] = t('Delete activity type');
+    $actions['submit']['#value'] = $this->t('Save activity type');
+    $actions['delete']['#title'] = $this->t('Delete activity type');
     return $actions;
   }
 
@@ -93,11 +93,11 @@ class ActivityTypeForm extends EntityForm {
     $t_args = array('%name' => $type->label());
 
     if ($status == SAVED_UPDATED) {
-      drupal_set_message(t('The activity type %name has been updated.', $t_args));
+      drupal_set_message($this->t('The activity type %name has been updated.', $t_args));
     }
     elseif ($status == SAVED_NEW) {
-      drupal_set_message(t('The activity type %name has been added.', $t_args));
-      watchdog('crm_core_activity', 'Added activity type %name.', $t_args, WATCHDOG_NOTICE, l(t('View'), 'admin/structure/crm-core/activity-types'));
+      drupal_set_message($this->t('The activity type %name has been added.', $t_args));
+      watchdog('crm_core_activity', 'Added activity type %name.', $t_args, WATCHDOG_NOTICE, l($this->t('View'), 'admin/structure/crm-core/activity-types'));
     }
 
     $form_state['redirect_route']['route_name'] = 'crm_core_activity.type_list';

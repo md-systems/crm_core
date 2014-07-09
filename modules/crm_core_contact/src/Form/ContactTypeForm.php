@@ -30,10 +30,10 @@ class ContactTypeForm extends EntityForm {
     $type = $this->entity;
 
     $form['name'] = array(
-      '#title' => t('Name'),
+      '#title' => $this->t('Name'),
       '#type' => 'textfield',
       '#default_value' => $type->name,
-      '#description' => t('The human-readable name of this contact type. It is recommended that this name begin with a capital letter and contain only letters, numbers, and spaces. This name must be unique.'),
+      '#description' => $this->t('The human-readable name of this contact type. It is recommended that this name begin with a capital letter and contain only letters, numbers, and spaces. This name must be unique.'),
       '#required' => TRUE,
       '#size' => 32,
     );
@@ -47,21 +47,21 @@ class ContactTypeForm extends EntityForm {
         'exists' => 'Drupal\crm_core_contact\Entity\ContactType::load',
         'source' => array('name'),
       ),
-      '#description' => t('A unique machine-readable name for this contact type. It must only contain lowercase letters, numbers, and underscores.'),
+      '#description' => $this->t('A unique machine-readable name for this contact type. It must only contain lowercase letters, numbers, and underscores.'),
     );
 
     $form['description'] = array(
-      '#title' => t('Description'),
+      '#title' => $this->t('Description'),
       '#type' => 'textarea',
       '#default_value' => $type->description,
-      '#description' => t('Describe this contact type.'),
+      '#description' => $this->t('Describe this contact type.'),
     );
 
     // Primary fields section.
     $form['primary_fields_container'] = array(
       '#type' => 'fieldset',
-      '#title' => t('Primary Fields'),
-      '#description' => t('Primary fields are used to tell other modules what fields to use for common communications tasks such as sending an email, addressing an envelope, etc. Use the fields below to indicate the primary fields for this contact type.'),
+      '#title' => $this->t('Primary Fields'),
+      '#description' => $this->t('Primary fields are used to tell other modules what fields to use for common communications tasks such as sending an email, addressing an envelope, etc. Use the fields below to indicate the primary fields for this contact type.'),
     );
 
     // @todo Move primary fields array to some hook. This Would allow extend this
@@ -81,10 +81,10 @@ class ContactTypeForm extends EntityForm {
     foreach ($primary_fields as $primary_field) {
       $form['primary_fields_container'][$primary_field] = array(
         '#type' => 'select',
-        '#title' => t('Primary @field field', array('@field' => $primary_field)),
+        '#title' => $this->t('Primary @field field', array('@field' => $primary_field)),
         '#default_value' => empty($type->primary_fields[$primary_field]) ? '' : $type->primary_fields[$primary_field],
         '#empty_value' => '',
-        '#empty_option' => t('--Please Select--'),
+        '#empty_option' => $this->t('--Please Select--'),
         '#options' => $options,
       );
     }
@@ -97,8 +97,8 @@ class ContactTypeForm extends EntityForm {
    */
   protected function actions(array $form, array &$form_state) {
     $actions = parent::actions($form, $form_state);
-    $actions['submit']['#value'] = t('Save contact type');
-    $actions['delete']['#title'] = t('Delete contact type');
+    $actions['submit']['#value'] = $this->t('Save contact type');
+    $actions['delete']['#title'] = $this->t('Delete contact type');
     return $actions;
   }
 
@@ -126,11 +126,11 @@ class ContactTypeForm extends EntityForm {
     $t_args = array('%name' => $type->label());
 
     if ($status == SAVED_UPDATED) {
-      drupal_set_message(t('The contact type %name has been updated.', $t_args));
+      drupal_set_message($this->t('The contact type %name has been updated.', $t_args));
     }
     elseif ($status == SAVED_NEW) {
-      drupal_set_message(t('The contact type %name has been added.', $t_args));
-      watchdog('crm_core_contact', 'Added contact type %name.', $t_args, WATCHDOG_NOTICE, l(t('View'), 'admin/structure/crm-core/contact-types'));
+      drupal_set_message($this->t('The contact type %name has been added.', $t_args));
+      watchdog('crm_core_contact', 'Added contact type %name.', $t_args, WATCHDOG_NOTICE, l($this->t('View'), 'admin/structure/crm-core/contact-types'));
     }
 
     $form_state['redirect_route']['route_name'] = 'crm_core_contact.type_list';

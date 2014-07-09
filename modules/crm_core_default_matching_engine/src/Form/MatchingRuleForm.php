@@ -228,7 +228,7 @@ EOF
 
     $row['weight'] = array(
       '#type' => 'weight',
-      '#title' => t('Weight for @field', array(
+      '#title' => $this->t('Weight for @field', array(
         '@field' => $field->getLabel(),
       )),
       '#title_display' => 'invisible',

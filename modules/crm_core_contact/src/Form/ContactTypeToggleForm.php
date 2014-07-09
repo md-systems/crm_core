@@ -75,8 +75,8 @@ class ContactTypeToggleForm extends EntityConfirmFormBase {
       '%name' => $this->entity->label(),
       '%toggle' => $action,
     );
-    drupal_set_message(t('The contact type %name has been %toggle.', $t_args));
+    drupal_set_message($this->t('The contact type %name has been %toggle.', $t_args));
 
-    $form_state['redirect_route']['route_name'] = 'crm_core_contact.type_list';
+    $form_state['redirect_route'] = new Url('crm_core_contact.type_list');
   }
 }

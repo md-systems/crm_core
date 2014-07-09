@@ -92,7 +92,7 @@ EOF
     $form['actions']['#type'] = 'actions';
     $form['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Save order'),
+      '#value' => $this->t('Save order'),
       '#button_type' => 'primary',
     );
 
@@ -159,7 +159,7 @@ EOF
 
     $row['weight'] = array(
       '#type' => 'weight',
-      '#title' => t('Weight for @title', array('@title' => $definition['title'])),
+      '#title' => $this->t('Weight for @title', array('@title' => $definition['title'])),
       '#title_display' => 'invisible',
       '#default_value' => $definition['priority'],
       '#attributes' => array('class' => array('weight')),
