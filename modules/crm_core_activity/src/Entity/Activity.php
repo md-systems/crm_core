@@ -85,7 +85,7 @@ class Activity extends ContentEntityBase {
     // @todo Update once https://drupal.org/node/1979260 is done.
     $fields['uid'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Owner'))
-      ->setDescription(t('The user that created teh activity.'))
+      ->setDescription(t('The user that created the activity.'))
       ->setRevisionable(TRUE)
       ->setSettings(array(
         'target_type' => 'user',

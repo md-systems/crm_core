@@ -111,7 +111,7 @@ class ContactType extends ConfigEntityBundleBase {
   protected $create_name_field_label = 'Name';
 
   /**
-   * Overrides Entity::id().
+   * {@inheritdoc}
    */
   public function id() {
     return $this->type;
@@ -136,9 +136,9 @@ class ContactType extends ConfigEntityBundleBase {
     parent::preCreate($storage, $values);
 
     // Ensure default values are set.
-    $values = NestedArray::mergeDeep(array(
+    $values += array(
       'locked' => FALSE,
-    ), $values);
+    );
   }
 
   /**
@@ -206,6 +206,8 @@ class ContactType extends ConfigEntityBundleBase {
    *
    * @return \Drupal\Core\Entity\EntityInterface
    *   Name field instance.
+   *
+   * @todo Make this a base field.
    */
   protected function addContactNameField($label = 'Name') {
     $field_name = 'contact_name';

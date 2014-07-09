@@ -184,6 +184,7 @@ class Contact extends ContentEntityBase {
         'default_value' => 0,
       ));
 
+    // @todo Follow core and rename to revision_log.
     $fields['log'] = FieldDefinition::create('string_long')
       ->setLabel(t('Log'))
       ->setDescription(t('The log entry explaining the changes in this revision.'))
@@ -267,7 +268,7 @@ class Contact extends ContentEntityBase {
    *   If the configured primary field does not exist.
    */
   public function getPrimaryField($field) {
-    $type = ContactType::load($this->bundle());
+    $type = $this->get('type')->entity;
     $name = empty($type->primary_fields[$field]) ? '' : $type->primary_fields[$field];
     return $this->get($name);
   }

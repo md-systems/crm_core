@@ -74,7 +74,7 @@ class ActivityType extends ConfigEntityBundleBase {
   public $activity_string;
 
   /**
-   * Overrides Entity::id().
+   * {@inheritdoc}
    */
   public function id() {
     return $this->type;
