@@ -16,10 +16,24 @@ class ContactTypeToggleForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to %toggle the contact type %type?', array(
+    $args = array(
       '%toggle' => $this->getRequest()->get('op'),
       '%type' => $this->getEntity()->label(),
-    ));
+    );
+
+    $question = '';
+
+    switch ($this->getRequest()->get('op')) {
+      case 'enable':
+        $question = $this->t('Are you sure you want to enable the contact type %type?', $args);
+        break;
+
+      case 'disable':
+        $question = $this->t('Are you sure you want to disable the contact type %type?', $args);
+        break;
+    }
+
+    return $question;
   }
 
   /**
