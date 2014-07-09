@@ -58,7 +58,7 @@ class FieldMatcherTest extends WebTestBase {
   public function testUnsupported() {
     $config = array(
       'value' => array(
-        'operator' => 'equals',
+        'operator' => '=',
       ),
     );
     $contact_needle = Contact::create(array('type' => 'individual'));
@@ -78,7 +78,7 @@ class FieldMatcherTest extends WebTestBase {
   public function testText() {
     $config = array(
       'value' => array(
-        'operator' => 'equals',
+        'operator' => '=',
         'score' => 42,
       ),
     );

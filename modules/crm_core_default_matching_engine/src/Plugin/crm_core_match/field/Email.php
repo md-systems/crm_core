@@ -21,7 +21,7 @@ class Email extends FieldHandlerBase {
    */
   public function getOperators($property = 'value') {
     return array(
-      'equals' => t('Equals'),
+      '=' => t('Equals'),
     );
   }
 }

@@ -59,8 +59,11 @@ interface FieldHandlerInterface {
    *
    * Defines the logical operators that can be used by this field type.
    * Provides any additional fields needed to capture information used in
-   * logical evaluations. For instance: if this was a text field, there might be
-   * 3 logical operators: EQUALS, STARTS WITH, and ENDS WITH.
+   * logical evaluations. See {@code QueryInterface::condition} for valid
+   * operators.
+   *
+   * For instance: if this was a text field, there might be 4 logical operators:
+   * =, STARTS_WITH, ENDS_WITH and CONTAINS.
    *
    * @param string $property
    *   The name of the property.

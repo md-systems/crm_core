@@ -21,10 +21,10 @@ class Text extends FieldHandlerBase {
    */
   public function getOperators($property = 'value') {
     return array(
-      'equals' => t('Equals'),
-      'starts' => t('Starts with'),
-      'ends' => t('Ends with'),
-      'contains' => t('Contains'),
+      '=' => t('Equals'),
+      'STARTS_WITH' => t('Starts with'),
+      'ENDS_WITH' => t('Ends with'),
+      'CONTAINS' => t('Contains'),
     );
   }
 }

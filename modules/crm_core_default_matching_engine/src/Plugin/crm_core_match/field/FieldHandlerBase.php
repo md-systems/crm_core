@@ -150,26 +150,7 @@ abstract class FieldHandlerBase implements FieldHandlerInterface, ContainerFacto
         $this->query->condition('contact_id', $contact->id(), '<>');
       }
 
-      switch ($this->getOperator($property)) {
-        case 'equals':
-          $this->query->condition($this->field->getName() . '.' . $property, $needle);
-          break;
-
-        case 'starts':
-          $needle = db_like(substr($needle, 0, DefaultMatchingEngine::MATCH_CHARS_DEFAULT)) . '%';
-          $this->query->condition($this->field->getName(), $needle, 'LIKE');
-          break;
-
-        case 'ends':
-          $needle = '%' . db_like(substr($needle, -1, DefaultMatchingEngine::MATCH_CHARS_DEFAULT));
-          $this->query->condition($this->field->getName(), $needle, 'LIKE');
-          break;
-
-        case 'contains':
-          $needle = '%' . db_like($needle) . '%';
-          $this->query->condition($this->field->getName(), $needle, 'LIKE');
-          break;
-      }
+      $this->query->condition($this->field->getName() . '.' . $property, $needle, $this->getOperator($property));
       $results = $this->query->execute();
     }
 

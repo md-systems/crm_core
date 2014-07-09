@@ -94,7 +94,7 @@ class EventProcessingTest extends KernelTestBase {
       'contact_remote_id' => array(
         'value' => array(
           'status' => '1',
-          'operator' => 'equals',
+          'operator' => '=',
           'options' => '',
           'score' => '10',
           'weight' => '0',
@@ -103,7 +103,7 @@ class EventProcessingTest extends KernelTestBase {
       'contact_mail' => array(
         'value' => array(
           'status' => '1',
-          'operator' => 'equals',
+          'operator' => '=',
           'options' => '',
           'score' => '9',
           'weight' => '0',
