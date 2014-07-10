@@ -124,7 +124,7 @@ class EventSubscriberTest extends UnitTestCase {
   /**
    * Tests the announced event subscription..
    */
-  public function xtestGetSubscribedEvents() {
+  public function testGetSubscribedEvents() {
     $expected_subscription = array(
       'crm_core_collect.process' => 'process',
     );
@@ -155,7 +155,7 @@ class EventSubscriberTest extends UnitTestCase {
   /**
    * Tests the processing with a user present in the received data.
    */
-  public function xtestProcessWithUser() {
+  public function testProcessWithUser() {
     $event = new CollectEvent($this->submission);
     $contact = $this->getMockBuilder('Drupal\crm_core_contact\Entity\Contact')
       ->disableOriginalConstructor()
@@ -195,7 +195,7 @@ class EventSubscriberTest extends UnitTestCase {
       ))
       ->will($this->returnValue($activity));
 
-    $$activity->expects($this->once())
+    $activity->expects($this->once())
       ->method('save');
 
     $this->subscriber->process($event);
