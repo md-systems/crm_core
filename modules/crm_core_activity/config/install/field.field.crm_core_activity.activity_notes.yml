@@ -6,17 +6,7 @@ name: activity_notes
 entity_type: crm_core_activity
 type: text_long
 settings:
-  repeat: '0'
-  granularity:
-    month: month
-    day: day
-    hour: hour
-    minute: minute
-    year: year
-    second: 0
-  tz_handling: site
-  timezone_db: UTC
-  todate: ''
+  datetime_type: datetime
 locked: true
 cardinality: 1
 translatable: false
