@@ -89,28 +89,6 @@ class ContactType extends ConfigEntityBundleBase {
   public $primary_fields;
 
   /**
-   * Indicates whether a name field should be created for this contact type.
-   *
-   * This property affects entity creation only. It allows default configuration
-   * of modules and installation profiles to specify whether a name field should
-   * be created for this bundle.
-   *
-   * @var bool
-   *
-   * @see \Drupal\crm_core_contact\Entity\ContactType::$create_body_label
-   */
-  protected $create_name_field = TRUE;
-
-  /**
-   * The label to use for the name field upon entity creation.
-   *
-   * @see \Drupal\crm_core_contact\Entity\create_name_field::$create_body
-   *
-   * @var string
-   */
-  protected $create_name_field_label = 'Name';
-
-  /**
    * {@inheritdoc}
    */
   public function id() {
@@ -139,22 +117,6 @@ class ContactType extends ConfigEntityBundleBase {
     $values += array(
       'locked' => FALSE,
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
-    parent::postSave($storage, $update);
-
-    if (!$update && !$this->isSyncing()) {
-      // Create a name field if the create_name_field property is true and we're
-      // not in the syncing process.
-      if ($this->get('create_name_field')) {
-        $label = $this->get('create_name_field_label');
-        $this->addContactNameField($label);
-      }
-    }
   }
 
   /**
@@ -196,52 +158,5 @@ class ContactType extends ConfigEntityBundleBase {
       ->execute();
 
     return ContactType::loadMultiple($ids);
-  }
-
-  /**
-   * Adds the default name field to a contact type.
-   *
-   * @param string $label
-   *   (optional) The label for the name instance.
-   *
-   * @return \Drupal\Core\Entity\EntityInterface
-   *   Name field instance.
-   *
-   * @todo Make this a base field.
-   */
-  protected function addContactNameField($label = 'Name') {
-    $field_name = 'contact_name';
-    // Add or remove the body field, as needed.
-    $instance = FieldInstanceConfig::loadByName('crm_core_contact', $this->id(), $field_name);
-
-    if (empty($instance)) {
-      $instance = entity_create('field_instance_config', array(
-        'field_name' => $field_name,
-        'entity_type' => 'crm_core_contact',
-        'bundle' => $this->id(),
-        'label' => $label,
-        'settings' => array('display_summary' => TRUE),
-      ));
-      $instance->save();
-
-      // Assign widget settings for the 'default' form mode.
-      entity_get_form_display('crm_core_contact', $this->id(), 'default')
-        ->setComponent($field_name, array(
-          'type' => 'text_textfield',
-          'weight' => 0,
-        ))
-        ->save();
-
-      // Assign display settings for the 'default' and 'teaser' view modes.
-      entity_get_display('crm_core_contact', $this->id(), 'default')
-        ->setComponent($field_name, array(
-          'label' => 'hidden',
-          'type' => 'text_default',
-          'weight' => 0,
-        ))
-        ->save();
-    }
-
-    return $instance;
   }
 }

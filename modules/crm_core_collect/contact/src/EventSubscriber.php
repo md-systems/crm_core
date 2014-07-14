@@ -120,12 +120,12 @@ class EventSubscriber implements EventSubscriberInterface {
 
     if (empty($data['user'])) {
       $contact['contact_mail'][] = $data['values']['mail'][0]['value'];
-      $contact['contact_name'] = $data['values']['name'][0]['value'];
+      $contact['name'] = $data['values']['name'][0]['value'];
     }
     else {
       $contact['contact_mail'][] = $data['user']['mail'][0]['value'];
       $contact['contact_mail'][] = $data['user']['init'][0]['value'];
-      $contact['contact_name'] = $data['user']['name'][0]['value'];
+      $contact['name'] = $data['user']['name'][0]['value'];
       $contact['contact_remote_id'] = $data['user']['_links']['self']['href'];
     }
 

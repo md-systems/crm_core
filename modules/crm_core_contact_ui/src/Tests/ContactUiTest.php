@@ -63,69 +63,78 @@ class ContactUiTest extends WebTestBase {
 
     // Create Household contact.
     $household_node = array(
-      'contact_name[0][value]' => $this->randomName(),
+      'name[0][value]' => 'Fam. Smith',
     );
     $this->drupalPostForm('crm-core/contact/add/household', $household_node, 'Save Household');
 
     // Assert we were redirected back to the list of contacts.
     $this->assertUrl('crm-core/contact');
 
-    $this->assertLink($household_node['contact_name[0][value]'], 0, 'Newly created contact title listed.');
+    $this->assertLink('Fam. Smith', 0, 'Newly created contact title listed.');
     $this->assertText(t('Household'), 'Newly created contact type listed.');
 
     // Create individual contact.
     $individual_node = array(
-      'contact_name[0][value]' => $this->randomName(),
-//      'contact_name[und][0][title]' => 'Mr.',
-//      'contact_name[und][0][given]' => $this->randomName(),
-//      'contact_name[und][0][middle]' => $this->randomName(),
-//      'contact_name[und][0][family]' => $this->randomName(),
-//      'contact_name[und][0][generational]' => 'IV',
-//      'contact_name[und][0][credentials]' => $this->randomName(),
+      'name[0][value]' => 'Smith',
+//      'name[und][0][title]' => 'Mr.',
+//      'name[und][0][given]' => 'John',
+//      'name[und][0][middle]' => 'Emanuel',
+//      'name[und][0][family]' => 'Smith,
+//      'name[und][0][generational]' => 'IV',
+//      'name[und][0][credentials]' => '',
     );
     $this->drupalPostForm('crm-core/contact/add/individual', $individual_node, 'Save Individual');
 
     // Assert we were redirected back to the list of contacts.
     $this->assertUrl('crm-core/contact');
 
-    $link_label = $this->getIndividualContactTitle($individual_node);
-    $this->assertLink($link_label, 0, 'Newly created contact title listed.');
+    $this->assertLink('Smith', 0, 'Newly created contact title listed.');
     $this->assertText(t('Individual'), 'Newly created contact type listed.');
 
     // Create Organization contact.
     $organization_node = array(
-      'contact_name[0][value]' => $this->randomName(),
+      'name[0][value]' => 'Example ltd',
     );
     $this->drupalPostForm('crm-core/contact/add/organization', $organization_node, 'Save Organization');
 
     // Assert we were redirected back to the list of contacts.
     $this->assertUrl('crm-core/contact');
 
-    $this->assertLink($organization_node['contact_name[0][value]'], 0, 'Newly created contact title listed.');
+    $this->assertLink('Example ltd', 0, 'Newly created contact title listed.');
     $this->assertText(t('Organization'), 'Newly created contact type listed.');
 
     // Edit operations.
     // We know that created nodes household is id 1, individual is no 2,
     // organization is no 3. But we should have better API to find contact by
     // name.
-    $household_node = $this->householdContactValues();
+    $household_node = array(
+      'name[0][value]' => 'Fam. Johnson',
+    );
     $this->drupalPostForm('crm-core/contact/1/edit', $household_node, 'Save Household');
 
     // Assert we were redirected back to the list of contacts.
     $this->assertUrl('crm-core/contact/1');
-    $this->assertText($household_node['contact_name[0][value]'], 0, 'Contact updated.');
+    $this->assertText('Fam. Johnson', 0, 'Contact updated.');
 
     // Check listing page.
     $this->drupalGet('crm-core/contact');
-    $this->assertLink($household_node['contact_name[0][value]'], 0, 'Updated contact title listed.');
+    $this->assertLink('Fam. Johnson', 0, 'Updated contact title listed.');
 
     // Delete household contact.
     $this->drupalPostForm('crm-core/contact/1/delete', array(), 'Yes');
     $this->assertUrl('crm-core/contact');
-    $this->assertNoLink($household_node['contact_name[0][value]'], 0, 'Deleted contact title no more listed.');
+    $this->assertNoLink('Fam. Johnson', 0, 'Deleted contact title no more listed.');
 
     // Edit individual contact.
-    $individual_node = $this->individualContactValues();
+    $individual_node = array(
+      'name[0][value]' => 'Johnson',
+//      'name[und][0][title]' => 'Mr.',
+//      'name[und][0][given]' => 'John',
+//      'name[und][0][middle]' => 'Emanuel',
+//      'name[und][0][family]' => 'Smith,
+//      'name[und][0][generational]' => 'IV',
+//      'name[und][0][credentials]' => '',
+    );
     $this->drupalPostForm('crm-core/contact/2/edit', $individual_node, 'Save Individual');
 
     // Assert we were redirected back to the list of contacts.
@@ -133,30 +142,31 @@ class ContactUiTest extends WebTestBase {
 
     // Check listing page.
     $this->drupalGet('crm-core/contact');
-    $link_label = $this->getIndividualContactTitle($individual_node);
-    $this->assertLink($link_label, 0, 'Updated individual contact title listed.');
+    $this->assertLink('Johnson', 0, 'Updated individual contact title listed.');
 
     // Delete individual contact.
     $this->drupalPostForm('crm-core/contact/2/delete', array(), 'Yes');
     $this->assertUrl('crm-core/contact');
-    $this->assertNoLink($link_label, 0, 'Deleted individual contact title no more listed.');
+    $this->assertNoLink('Johnson', 0, 'Deleted individual contact title no more listed.');
 
     // Edit organization contact.
-    $organization_node = $this->organizationContactValues();
+    $organization_node = array(
+      'name[0][value]' => 'Another Example ltd',
+    );
     $this->drupalPostForm('crm-core/contact/3/edit', $organization_node, 'Save Organization');
 
     // Assert we were redirected back to the list of contacts.
     $this->assertUrl('crm-core/contact/3');
-    $this->assertText($organization_node['contact_name[0][value]'], 0, 'Contact updated.');
+    $this->assertText('Another Example ltd', 0, 'Contact updated.');
 
     // Check listing page.
     $this->drupalGet('crm-core/contact');
-    $this->assertLink($organization_node['contact_name[0][value]'], 0, 'Updated contact title listed.');
+    $this->assertLink('Another Example ltd', 0, 'Updated contact title listed.');
 
     // Delete organization contact.
     $this->drupalPostForm('crm-core/contact/3/delete', array(), 'Yes');
     $this->assertUrl('crm-core/contact');
-    $this->assertNoLink($organization_node['contact_name[0][value]'], 0, 'Deleted contact title no more listed.');
+    $this->assertNoLink('Another Example ltd', 0, 'Deleted contact title no more listed.');
 
     // Assert that there are no contacts left.
     $this->assertText(t('There are no contacts available. Add one now.'), 'No contacts available after fresh installation.');
@@ -231,60 +241,6 @@ class ContactUiTest extends WebTestBase {
     // @todo Assert for a positive fact to ensure being on the correct page.
     // Then I should not see a delete link.
     $this->assertNoContactTypeLink('individual/delete', 'No delete link on individual type form.');
-  }
-
-  /**
-   * Returns the title of an individual contact.
-   */
-  public static function getIndividualContactTitle($post_array) {
-    return $post_array['contact_name[0][value]'];
-//    return $post_array['contact_name[und][0][title]'] . ' ' . $post_array['contact_name[und][0][given]'] . ' '
-//         . $post_array['contact_name[und][0][middle]'] . ' ' . $post_array['contact_name[und][0][family]'] . ' '
-//         . $post_array['contact_name[und][0][generational]'] . ', ' . $post_array['contact_name[und][0][credentials]'];
-  }
-
-  /**
-   * Returns random post form data for an individual contact.
-   */
-  public function individualContactValues() {
-    return array(
-      'contact_name[0][value]' => $this->randomName(),
-//      'contact_name[und][0][title]' => 'Ms.',
-//      'contact_name[und][0][given]' => DrupalTestCase::randomName(),
-//      'contact_name[und][0][middle]' => DrupalTestCase::randomName(),
-//      'contact_name[und][0][family]' => DrupalTestCase::randomName(),
-//      'contact_name[und][0][generational]' => 'Jr.',
-//      'contact_name[und][0][credentials]' => DrupalTestCase::randomName(),
-    );
-  }
-
-  /**
-   * Returns random post form data for a household contact.
-   */
-  public function householdContactValues() {
-    return array(
-      'contact_name[0][value]' => $this->randomName(),
-//      'contact_name[und][0][given]' => $this->randomName(),
-    );
-  }
-
-  /**
-   * Returns the title of an organization contact.
-   */
-  public function getOrganizationContactTitle($organization_values) {
-    return $organization_values['contact_name[0][value]'];
-//    return $organization_values['contact_name[und][0][given]'];
-  }
-
-
-  /**
-   * Returns random post form data for an organization contact.
-   */
-  public function organizationContactValues() {
-    return array(
-      'contact_name[0][value]' => $this->randomName(),
-//      'contact_name[und][0][given]' => $this->randomName(),
-    );
   }
 
   /**

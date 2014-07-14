@@ -173,7 +173,7 @@ class EventSubscriberTest extends UnitTestCase {
       ->with(array(
         'type' => 'individual',
         'contact_remote_id' => 'http://example.com/user/1',
-        'contact_name' => 'dapibus',
+        'name' => 'dapibus',
         'contact_mail' => array(
           'dapibus@example.com',
           'dapibus@example.com',
@@ -224,7 +224,7 @@ class EventSubscriberTest extends UnitTestCase {
       ->method('create')
       ->with(array(
         'type' => 'individual',
-        'contact_name' => 'Ullamcorper Fermentum',
+        'name' => 'Ullamcorper Fermentum',
         'contact_mail' => array(
           'ullamcorper@example.com',
         ),
@@ -268,7 +268,7 @@ class EventSubscriberTest extends UnitTestCase {
       ->with(array(
         'type' => 'individual',
         'contact_remote_id' => 'http://example.com/user/1',
-        'contact_name' => 'dapibus',
+        'name' => 'dapibus',
         'contact_mail' => array(
           'dapibus@example.com',
           'dapibus@example.com',
@@ -290,7 +290,7 @@ class EventSubscriberTest extends UnitTestCase {
       ->method('get')
       ->will($this->returnValueMap(array(
         array('contact_remote_id', (object) array('value' => 'http://example.com/user/42')),
-        array('contact_name', (object) array('value' => 'Amet Dolor')),
+        array('name', (object) array('value' => 'Amet Dolor')),
         array('contact_mail', (object) array('value' => 'amet@example.com')),
       )));
     $contact_match->expects($this->never())
@@ -350,7 +350,7 @@ class EventSubscriberTest extends UnitTestCase {
       ->method('create')
       ->with(array(
         'type' => 'individual',
-        'contact_name' => 'Ullamcorper Fermentum',
+        'name' => 'Ullamcorper Fermentum',
         'contact_mail' => array(
           'ullamcorper@example.com',
         ),
@@ -371,7 +371,7 @@ class EventSubscriberTest extends UnitTestCase {
       ->method('get')
       ->will($this->returnValueMap(array(
         array('contact_remote_id', (object) array('value' => NULL)),
-        array('contact_name', (object) array('value' => 'Amet Dolor')),
+        array('name', (object) array('value' => 'Amet Dolor')),
         array('contact_mail', (object) array('value' => 'amet@example.com')),
       )));
 

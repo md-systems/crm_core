@@ -126,7 +126,7 @@ class EventProcessingTest extends KernelTestBase {
 
     $this->contact = Contact::create(array(
       'type' => 'individual',
-      'contact_name' => 'Aenean Risus',
+      'name' => 'Aenean Risus',
       'contact_mail' => 'anean@example.com',
     ));
     $this->contact->save();
@@ -234,7 +234,7 @@ class EventProcessingTest extends KernelTestBase {
   protected function assertNewUserContact(Contact $contact = NULL) {
     $this->assertNotNull($contact, 'New contact was created.');
     if ($contact) {
-      $this->assertEqual('dapibus', $contact->get('contact_name')->value, 'Contact is named \'dapibus\'');
+      $this->assertEqual('dapibus', $contact->get('name')->value, 'Contact is named \'dapibus\'');
       $this->assertEqual('dapibus@example.com', $contact->get('contact_mail')->value, 'Contact mail is \'dapibus@example.com\'');
       $this->assertEqual('http://example.com/user/1', $contact->get('contact_remote_id')->value, 'Remote identifier is \'http://example.com/user/1\'');
     }
@@ -252,7 +252,7 @@ class EventProcessingTest extends KernelTestBase {
   protected function assertNewMessageContact(Contact $contact = NULL) {
     $this->assertNotNull($contact, 'New contact was created.');
     if ($contact) {
-      $this->assertEqual('Ullamcorper Fermentum', $contact->get('contact_name')->value, 'Contact is named \'Ullamcorper Fermentum\'');
+      $this->assertEqual('Ullamcorper Fermentum', $contact->get('name')->value, 'Contact is named \'Ullamcorper Fermentum\'');
       $this->assertEqual('ullamcorper@example.com', $contact->get('contact_mail')->value, 'Contact mail is \'ullamcorper@example.com\'');
       $this->assertNull($contact->get('contact_remote_id')->value, 'Remote identifier is undefined');
     }
@@ -267,7 +267,7 @@ class EventProcessingTest extends KernelTestBase {
    *   The contact to assert.
    */
   protected function assertMatchContact(Contact $contact) {
-    $this->assertEqual('Aenean Risus', $contact->get('contact_name')->value, 'Contact is named \'Aenean Risus\'');
+    $this->assertEqual('Aenean Risus', $contact->get('name')->value, 'Contact is named \'Aenean Risus\'');
     $this->assertEqual('anean@example.com', $contact->get('contact_mail')->value, 'Contact mail is \'anean@example.com\'');
   }
 
