@@ -12,6 +12,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\crm_core_contact\Entity\Contact;
 use Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\engine\DefaultMatchingEngine;
+use Drupal\field\FieldConfigInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 abstract class FieldHandlerBase implements FieldHandlerInterface, ContainerFactoryPluginInterface {
@@ -142,7 +143,8 @@ abstract class FieldHandlerBase implements FieldHandlerInterface, ContainerFacto
 
     $results = array();
 
-    $needle = $contact->get($this->field->getName())->{$property};
+    $field = $this->field->getName();
+    $needle = $contact->get($field)->{$property};
 
     if (!empty($needle)) {
       $this->query->condition('type', $contact->bundle());
@@ -150,7 +152,10 @@ abstract class FieldHandlerBase implements FieldHandlerInterface, ContainerFacto
         $this->query->condition('contact_id', $contact->id(), '<>');
       }
 
-      $this->query->condition($this->field->getName() . '.' . $property, $needle, $this->getOperator($property));
+      if ($field instanceof FieldConfigInterface) {
+        $field .= '.' . $property;
+      }
+      $this->query->condition($field, $needle, $this->getOperator($property));
       $results = $this->query->execute();
     }
 
