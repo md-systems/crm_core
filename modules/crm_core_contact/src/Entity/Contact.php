@@ -36,6 +36,7 @@ use Drupal\Core\Field\FieldDefinition;
  *     "bundle" = "type",
  *     "uuid" = "uuid",
  *     "user" = "uid",
+ *     "label" = "name",
  *   },
  *   bundle_entity_type = "crm_core_contact_type",
  *   permission_granularity = "bundle",
@@ -56,38 +57,6 @@ use Drupal\Core\Field\FieldDefinition;
  * @todo Replace list builder with a view.
  */
 class Contact extends ContentEntityBase {
-
-  /**
-   * Label callback.
-   *
-   * @param \Drupal\crm_core_contact\Entity\Contact $contact
-   *   The contact entity object.
-   *
-   * @return string
-   *   Raw formatted string. This should be run through check_plain().
-   */
-  public function defaultLabel(Contact $contact) {
-    return $contact->label();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function label() {
-    // Check whether bundle type label function exists.
-    // This is needed if we want to have different labels per contact type.
-    // For example Individual contact's label is person's Name.
-    // But for Organization -- organization's name.
-    $function = 'crm_core_contact_' . $this->bundle() . '_label';
-    if (function_exists($function)) {
-      return $function($this);
-    }
-
-    // @todo Use rendered field
-    // The Drupal 7 version of CRM Core returns the rendered value of the name
-    // field. Restore that behaviour once the name field module is used again.
-    return $this->get('contact_name')->value;
-  }
 
   /**
    * Method for de-duplicating contacts.
@@ -182,6 +151,19 @@ class Contact extends ContentEntityBase {
       ->setSettings(array(
         'target_type' => 'user',
         'default_value' => 0,
+      ));
+
+    // @todo Make this a name field once it gets available.
+    $fields['name'] = FieldDefinition::create('string')
+      ->setLabel(t('Name'))
+      ->setDisplayOptions('form', array(
+        'type' => 'string',
+        'weight' => 0,
+      ))
+      ->setDisplayOptions('view', array(
+        'label' => 'hidden',
+        'type' => 'string',
+        'weight' => 0,
       ));
 
     // @todo Follow core and rename to revision_log.
