@@ -10,7 +10,9 @@ use Drupal\crm_core_contact\Entity\Contact;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Class ContactUiTest
+ * Tests the UI for Contact CRUD operations
+ *
+ * @group crm_core
  */
 class ContactUiTest extends WebTestBase {
 
@@ -25,14 +27,6 @@ class ContactUiTest extends WebTestBase {
     'crm_core_contact',
     'crm_core_contact_ui',
   );
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Contact UI',
-      'description' => 'Test create/edit/delete contacts.',
-      'group' => 'CRM Core',
-    );
-  }
 
   /**
    * Tests the contact operations.

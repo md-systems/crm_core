@@ -11,7 +11,9 @@ use Drupal\crm_core_match\Matcher;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the matcher.
+ * Tests the matcher service.
+ *
+ * @group crm_core
  */
 class MatcherTest extends UnitTestCase {
 

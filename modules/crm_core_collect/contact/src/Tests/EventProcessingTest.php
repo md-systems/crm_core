@@ -14,6 +14,11 @@ use Drupal\crm_core_contact\Entity\Contact;
 use Drupal\crm_core_default_matching_engine\Entity\MatchingRule;
 use Drupal\simpletest\KernelTestBase;
 
+/**
+ * Tests the processing of contact form submission on integration level.
+ *
+ * @group crm_core
+ */
 class EventProcessingTest extends KernelTestBase {
 
   /**
@@ -57,17 +62,6 @@ class EventProcessingTest extends KernelTestBase {
    * @var \Drupal\crm_core_contact\Entity\Contact
    */
   protected $contact;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Event Processing',
-      'description' => 'Integration test for the processing contact form submissions.',
-      'group' => 'CRM Core',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -11,7 +11,9 @@ use Drupal\crm_core_contact\Entity\ContactType;
 use Drupal\simpletest\KernelTestBase;
 
 /**
- * Tests CRUD of the entities in crm_core_contact.
+ * Tests CRUD operations for the CRM Core Contact entity.
+ *
+ * @group crm_core
  */
 class ContactCRUDTest extends KernelTestBase {
 
@@ -28,17 +30,6 @@ class ContactCRUDTest extends KernelTestBase {
     'crm_core',
     'crm_core_contact',
   );
-
-  /**
-   * Gets the test information.
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Contact CRUD',
-      'description' => 'Tests create, read, update and delete of contacts and contact types.',
-      'group' => 'CRM Core',
-    );
-  }
 
   /**
    * {@inheritdoc}

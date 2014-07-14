@@ -11,6 +11,11 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
+/**
+ * Tests the CRM Core Collect REST resource.
+ *
+ * @group crm_core
+ */
 class CollectResourceTest extends UnitTestCase {
 
   /**
@@ -47,17 +52,6 @@ class CollectResourceTest extends UnitTestCase {
    * @var \Drupal\Core\Queue\QueueInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $queue;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Collect resource',
-      'description' => 'Tests the resource that collects submissions form remote sites.',
-      'group' => 'CRM Core',
-    );
-  }
 
   /**
    * {@inheritdoc}

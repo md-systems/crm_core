@@ -10,6 +10,11 @@ use Drupal\crm_core_collect\CollectEvent;
 use Drupal\crm_core_collect_contact\EventSubscriber;
 use Drupal\Tests\UnitTestCase;
 
+/**
+ * Tests the processing of contact form submissions.
+ *
+ * @group crm_core
+ */
 class EventSubscriberTest extends UnitTestCase {
 
   /**
@@ -78,17 +83,6 @@ class EventSubscriberTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public static function getInfo() {
-    return array(
-      'name' => 'Event Subscriber',
-      'description' => 'Tests the event subscriber responsible for processing contact form submissions.',
-      'group' => 'CRM Core',
-    );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setUp() {
     parent::setUp();
 
@@ -136,7 +130,7 @@ class EventSubscriberTest extends UnitTestCase {
   /**
    * Tests the processing of an unknown mime type.
    */
-  public function xtestProcessUnknownType() {
+  public function testProcessUnknownType() {
     $event = new CollectEvent($this->submission);
 
     $this->submission->expects($this->any())

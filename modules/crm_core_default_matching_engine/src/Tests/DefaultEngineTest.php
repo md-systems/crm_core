@@ -9,6 +9,11 @@ namespace Drupal\crm_core_default_matching_engine\Tests;
 use Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\engine\DefaultMatchingEngine;
 use Drupal\Tests\UnitTestCase;
 
+/**
+ * Tests the default matching engine.
+ *
+ * @group crm_core
+ */
 class DefaultEngineTest extends UnitTestCase {
 
   /**
@@ -58,17 +63,6 @@ class DefaultEngineTest extends UnitTestCase {
    * @var \Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field\FieldHandlerInterface
    */
   protected $matchHandler;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Default Engine',
-      'description' => 'Tests the default matching engine.',
-      'group' => 'CRM Core',
-    );
-  }
 
   /**
    * {@inheritdoc}

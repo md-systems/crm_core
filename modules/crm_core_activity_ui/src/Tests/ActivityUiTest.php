@@ -11,7 +11,9 @@ use Drupal\crm_core_contact\Entity\Contact;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Activity UI test case.
+ * Tests the UI for Activity CRUD operations.
+ *
+ * @group crm_core
  */
 class ActivityUiTest extends WebTestBase {
 
@@ -23,14 +25,6 @@ class ActivityUiTest extends WebTestBase {
   public static $modules = array(
     'crm_core_activity_ui',
   );
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Activity UI',
-      'description' => 'Test create/edit/delete activities.',
-      'group' => 'CRM Core',
-    );
-  }
 
   /**
    * Test basic UI operations with Activities.

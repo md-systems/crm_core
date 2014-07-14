@@ -13,6 +13,11 @@ use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\simpletest\KernelTestBase;
 use Drupal\simpletest\WebTestBase;
 
+/**
+ * Tests the field matchers of the default matching engine.
+ *
+ * @group crm_core
+ */
 class FieldMatcherTest extends WebTestBase {
 
   /**
@@ -33,17 +38,6 @@ class FieldMatcherTest extends WebTestBase {
    * @var \Drupal\crm_core_default_matching_engine\Plugin\FieldHandlerPluginManager
    */
   protected $pluginManager;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Default Engine field matcher',
-      'description' => 'Tests the field matcher of the default matching engine.',
-      'group' => 'CRM Core',
-    );
-  }
 
   /**
    * {@inheritdoc}
