@@ -53,7 +53,7 @@ class ActivityUiTest extends WebTestBase {
 
     // Create Household contact.
     $household = Contact::create(array(
-      'contact_name[0][name]' => $this->randomName(),
+      'name' => 'Fam. Smith',
       'type' => 'household',
     ));
     $household->save();
