@@ -109,9 +109,6 @@ class EventSubscriberTest extends UnitTestCase {
       ->method('getSchemaUri')
       ->will($this->returnValue('https://drupal.org/project/collect_client/contact'));
 
-    $this->submission->expects($this->any())
-      ->method('getType')
-      ->will($this->returnValue('application/json'));
 
   }
 
@@ -158,6 +155,9 @@ class EventSubscriberTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
+    $this->submission->expects($this->any())
+      ->method('getType')
+      ->will($this->returnValue('application/json'));
     $this->submission->expects($this->any())
       ->method('getData')
       ->will($this->returnValue($this->json));
@@ -211,6 +211,9 @@ class EventSubscriberTest extends UnitTestCase {
       ->getMock();
 
     $this->submission->expects($this->any())
+      ->method('getType')
+      ->will($this->returnValue('application/json'));
+    $this->submission->expects($this->any())
       ->method('getData')
       ->will($this->returnValue(json_encode($data)));
 
@@ -253,6 +256,9 @@ class EventSubscriberTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
+    $this->submission->expects($this->any())
+      ->method('getType')
+      ->will($this->returnValue('application/json'));
     $this->submission->expects($this->any())
       ->method('getData')
       ->will($this->returnValue($this->json));
@@ -329,9 +335,8 @@ class EventSubscriberTest extends UnitTestCase {
       ->getMock();
 
     $this->submission->expects($this->any())
-      ->method('getSchemaUri')
-      ->will($this->returnValue('https://drupal.org/project/collect_client/contact'));
-
+      ->method('getType')
+      ->will($this->returnValue('application/json'));
     $this->submission->expects($this->any())
       ->method('getType')
       ->will($this->returnValue('application/json'));
