@@ -107,7 +107,7 @@ class EventProcessingTest extends KernelTestBase {
     );
     $rule->save();
 
-    $this->json = file_get_contents(__DIR__ . '/fixture.json');
+    $this->json = file_get_contents(__DIR__ . '/../../tests/src/fixture.json');
     $this->submission = Container::create(array(
       'origin_uri' => 'http://localhost/entity/message/feedback/2494b3ba-158b-4066-9833-510bd72c82eb',
       'schema_uri' => 'https://drupal.org/project/collect_client/contact',
