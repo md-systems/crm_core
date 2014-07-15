@@ -81,8 +81,9 @@ class EventProcessingTest extends KernelTestBase {
     ));
 
     \Drupal::config('crm_core_match.engines')->set('default', array('status' => TRUE));
+    /* @var \Drupal\crm_core_default_matching_engine\Entity\MatchingRule $rule */
     $rule = MatchingRule::load('individual');
-    $rule->status = TRUE;
+    $rule->setStatus(TRUE);
     $rule->threshold = 8;
     $rule->rules = array(
       'contact_remote_id' => array(

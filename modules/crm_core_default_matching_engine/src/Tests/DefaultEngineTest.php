@@ -86,7 +86,9 @@ class DefaultEngineTest extends UnitTestCase {
     $this->matchingRule = $this->getMockBuilder('Drupal\crm_core_default_matching_engine\Entity\MatchingRule')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->matchingRule->status = TRUE;
+    $this->matchingRule->expects($this->any())
+      ->method('status')
+      ->will($this->returnValue(TRUE));
     $this->matchingRule->rules = array(
       'foo' => array(),
     );

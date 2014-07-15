@@ -77,9 +77,10 @@ class DefaultMatchingEngine extends MatchEngineBase {
    */
   public function match(Contact $contact) {
     $ids = array();
+    /* @var \Drupal\crm_core_default_matching_engine\Entity\MatchingRule $matching_rule */
     $matching_rule = $this->entityManager->getStorage('crm_core_default_engine_rule')->load($contact->bundle());
     // Check if match is enabled for this contact type.
-    if ($matching_rule->status) {
+    if ($matching_rule->status()) {
       $fields = $contact->getFieldDefinitions();
 
       $results = array();
