@@ -62,7 +62,7 @@ class MatchingRuleForm extends EntityForm {
       '#type' => 'checkbox',
       '#title' => $this->t('Enable matching for this contact type'),
       '#description' => $this->t('Check this box to allow CRM Core to check for duplicate contact records for this contact type.'),
-      '#default_value' => $this->entity->status,
+      '#default_value' => $this->entity->status(),
     );
 
     $form['threshold'] = array(
@@ -126,7 +126,7 @@ EOF
     $fields = $this->entityManager->getFieldDefinitions('crm_core_contact', $this->entity->id());
     foreach ($fields as $field) {
 
-      $config = empty($this->entity->fields[$field->getName()]) ? array() : $this->entity->fields[$field->getName()];
+      $config = empty($this->entity->rules[$field->getName()]) ? array() : $this->entity->rules[$field->getName()];
       $config['field'] = $field;
 
       $match_field_id = 'unsupported';
@@ -276,21 +276,27 @@ EOF
    */
   protected function copyFormValuesToEntity(EntityInterface $entity, array $form, array &$form_state) {
     foreach ($form_state['values'] as $key => $value) {
-      if ($key == 'rules') {
-        $rules = array();
-        foreach ($value as $name => $config) {
-          if (strpos($name, ':') !== FALSE) {
-            list($parent,$child) = explode(':', $name, 2);
-            $rules[$parent][$child] = $config;
+      switch ($key) {
+        case 'rules':
+          $rules = array();
+          foreach ($value as $name => $config) {
+            if (strpos($name, ':') !== FALSE) {
+              list($parent,$child) = explode(':', $name, 2);
+              $rules[$parent][$child] = $config;
+            }
+            else {
+              $rules[$name] = $config;
+            }
           }
-          else {
-            $rules[$name] = $config;
-          }
-        }
-        $entity->fields = $rules;
-      }
-      else {
-        $entity->set($key, $value);
+          $entity->rules = $rules;
+          break;
+
+        case 'status':
+          $entity->setStatus($value);
+          break;
+
+        default:
+          $entity->set($key, $value);
       }
     }
   }
