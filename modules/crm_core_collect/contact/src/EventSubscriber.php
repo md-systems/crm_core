@@ -6,6 +6,7 @@
 
 namespace Drupal\crm_core_collect_contact;
 
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\crm_core_collect\CollectEvent;
@@ -82,12 +83,16 @@ class EventSubscriber implements EventSubscriberInterface {
             // @todo Queue multiple matches for manual moderation.
           }
 
+          $date = new DrupalDateTime();
+          $date->setTimezone(new \DateTimeZone(DATETIME_STORAGE_TIMEZONE));
+          $date->setTimestamp($submission->getDate());
           $activity = $this->entityManager->getStorage('crm_core_activity')->create(array(
             'type' => 'contact',
             'title' => $data['values']['subject'][0]['value'],
             'activity_notes' => $data['values']['message'][0]['value'],
             'activity_participants' => $contact,
             'activity_submission' => $submission,
+            'activity_date' => $date->format(DATETIME_DATETIME_STORAGE_FORMAT),
           ));
           $activity->save();
 

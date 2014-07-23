@@ -214,6 +214,7 @@ class EventProcessingTest extends KernelTestBase {
         $this->assertEqual($contact->id(), $activity->get('activity_participants')->target_id, 'Activity was assigned to the expected contact');
       }
       $this->assertEqual($this->submission->id(), $activity->get('activity_submission')->target_id, 'Activity was linked to the container record');
+      $this->assertNotNull($activity->get('activity_date')->value, 'Activity has date set');
     }
   }
 

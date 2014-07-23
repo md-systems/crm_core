@@ -69,8 +69,9 @@ class ActivityListBuilder extends EntityListBuilder {
   public function buildRow(EntityInterface $entity) {
     $row = array();
 
-    $timestamp = $entity->get('activity_date')->date->getTimestamp();
-    $row['date'] = $this->dateService->format($timestamp, 'short');
+    $row['date']['data'] = $entity->get('activity_date')->view(array(
+      'label' => 'hidden',
+    ));
 
     $row['title']['data'] = array(
       '#type' => 'link',
