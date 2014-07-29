@@ -35,7 +35,7 @@ class FieldMatcherTest extends WebTestBase {
   /**
    * The mocked match field plugin manager.
    *
-   * @var \Drupal\crm_core_default_matching_engine\Plugin\FieldHandlerPluginManager
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
    */
   protected $pluginManager;
 

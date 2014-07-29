@@ -10,7 +10,6 @@ use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field\FieldHandlerInterface;
-use Drupal\crm_core_default_matching_engine\Plugin\FieldHandlerPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class MatchingRuleForm extends EntityForm {
@@ -18,7 +17,7 @@ class MatchingRuleForm extends EntityForm {
   /**
    * The match field plugin manager.
    *
-   * @var \Drupal\crm_core_default_matching_engine\Plugin\FieldHandlerPluginManager.
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
    */
   protected $pluginManager;
 
@@ -32,12 +31,12 @@ class MatchingRuleForm extends EntityForm {
   /**
    * Constructs a new form for the matching config rule entity.
    *
-   * @param FieldHandlerPluginManager $plugin_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $plugin_manager
    *   The plugin manager for match fields.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
    */
-  public function __construct(FieldHandlerPluginManager $plugin_manager, EntityManagerInterface $entity_manager) {
+  public function __construct(EntityManagerInterface $plugin_manager, EntityManagerInterface $entity_manager) {
     $this->pluginManager = $plugin_manager;
     $this->entityManager = $entity_manager;
   }

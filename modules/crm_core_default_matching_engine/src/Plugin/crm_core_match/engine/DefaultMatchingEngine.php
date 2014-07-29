@@ -7,9 +7,9 @@
 
 namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\engine;
 
+use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\crm_core_contact\Entity\Contact;
-use Drupal\crm_core_default_matching_engine\Plugin\FieldHandlerPluginManager;
 use Drupal\crm_core_match\Plugin\crm_core_match\engine\MatchEngineBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -39,7 +39,7 @@ class DefaultMatchingEngine extends MatchEngineBase {
   /**
    * The match field plugin manager.
    *
-   * @var \Drupal\crm_core_default_matching_engine\Plugin\FieldHandlerPluginManager.
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
    */
   protected $pluginManager;
 
@@ -53,7 +53,7 @@ class DefaultMatchingEngine extends MatchEngineBase {
   /**
    * Constructs a default matching engine.
    */
-  public function __construct($configuration, $id, $definition, FieldHandlerPluginManager $plugin_manager, EntityManagerInterface $entity_manager) {
+  public function __construct($configuration, $id, $definition, PluginManagerInterface $plugin_manager, EntityManagerInterface $entity_manager) {
     parent::__construct($configuration, $id, $definition);
     $this->pluginManager = $plugin_manager;
     $this->entityManager = $entity_manager;

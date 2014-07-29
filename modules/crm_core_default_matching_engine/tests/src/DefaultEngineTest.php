@@ -19,7 +19,7 @@ class DefaultEngineTest extends UnitTestCase {
   /**
    * The mocked match field plugin manager.
    *
-   * @var \Drupal\crm_core_default_matching_engine\Plugin\FieldHandlerPluginManager|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $pluginManager;
 
@@ -68,9 +68,7 @@ class DefaultEngineTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $this->pluginManager = $this->getMockBuilder('Drupal\crm_core_default_matching_engine\Plugin\FieldHandlerPluginManager')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $this->pluginManager = $this->getMock('\Drupal\Core\Entity\EntityManagerInterface');
 
     $this->entityManager = $this->getMockBuilder('\Drupal\Core\Entity\EntityManagerInterface')
       ->disableOriginalConstructor()
