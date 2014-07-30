@@ -23,7 +23,7 @@ class ActivityDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return $this->entity->urlInfo();
   }
 

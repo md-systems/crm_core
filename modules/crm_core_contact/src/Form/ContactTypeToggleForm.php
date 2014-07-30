@@ -64,7 +64,7 @@ class ContactTypeToggleForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url('crm_core_contact.type_list');
   }
 
