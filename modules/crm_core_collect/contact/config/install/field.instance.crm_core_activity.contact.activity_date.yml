@@ -3,7 +3,7 @@ status: true
 dependencies:
   entity:
     - crm_core_activity.type.contact
-    - field.field.crm_core_activity.activity_date
+    - field.storage.crm_core_activity.activity_date
 id: crm_core_activity.contact.activity_date
 label: Date
 field_name: activity_date

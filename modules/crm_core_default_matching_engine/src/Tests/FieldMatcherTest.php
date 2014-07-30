@@ -8,8 +8,8 @@ namespace Drupal\crm_core_default_matching_engine\Tests;
 
 use Drupal\crm_core_contact\Entity\Contact;
 use Drupal\crm_core_contact\Entity\ContactType;
-use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\simpletest\KernelTestBase;
 use Drupal\simpletest\WebTestBase;
 
@@ -98,7 +98,7 @@ class FieldMatcherTest extends WebTestBase {
    * Test the unsupported field.
    */
   public function testEmail() {
-    FieldConfig::create(array(
+    FieldStorageConfig::create(array(
       'entity_type' => 'crm_core_contact',
       'type' => 'email',
       'name' => 'contact_mail',

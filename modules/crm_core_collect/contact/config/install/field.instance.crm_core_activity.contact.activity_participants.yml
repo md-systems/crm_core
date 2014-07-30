@@ -3,7 +3,7 @@ status: true
 dependencies:
   entity:
     - crm_core_activity.type.contact
-    - field.field.crm_core_activity.activity_participants
+    - field.storage.crm_core_activity.activity_participants
 id: crm_core_activity.contact.activity_participants
 label: Participants
 field_name: activity_participants

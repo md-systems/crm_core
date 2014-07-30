@@ -3,7 +3,7 @@ status: true
 dependencies:
   entity:
     - crm_core_activity.type.contact
-    - field.field.crm_core_activity.activity_notes
+    - field.storage.crm_core_activity.activity_notes
 id: crm_core_activity.contact.activity_notes
 label: Notes
 field_name: activity_notes
