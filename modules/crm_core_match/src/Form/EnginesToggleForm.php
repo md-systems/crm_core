@@ -7,6 +7,7 @@
 
 namespace Drupal\crm_core_match\Form;
 
+use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -16,7 +17,7 @@ class EnginesToggleForm extends ConfirmFormBase {
   /**
    * The engine plugin manager.
    *
-   * @var \Drupal\crm_core_match\Plugin\MatchEnginePluginManager.
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
    */
   protected $pluginManager;
 
@@ -39,10 +40,10 @@ class EnginesToggleForm extends ConfirmFormBase {
   /**
    * Constructs an engine toggle form.
    *
-   * @param \Drupal\crm_core_match\Plugin\MatchEnginePluginManager $plugin_manager
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $plugin_manager
    *   The engine plugin manager.
    */
-  public function __construct($plugin_manager) {
+  public function __construct(PluginManagerInterface $plugin_manager) {
     $this->pluginManager = $plugin_manager;
   }
 

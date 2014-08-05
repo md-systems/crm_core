@@ -6,6 +6,7 @@
 
 namespace Drupal\crm_core_match\Form;
 
+use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -14,7 +15,7 @@ class EnginesConfigForm extends FormBase {
   /**
    * The engine plugin manager.
    *
-   * @var \Drupal\crm_core_match\Plugin\MatchEnginePluginManager
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
    */
   protected $pluginManager;
 
@@ -28,10 +29,10 @@ class EnginesConfigForm extends FormBase {
   /**
    * Constructs an engine config form.
    *
-   * @param \Drupal\crm_core_match\Plugin\MatchEnginePluginManager $plugin_manager
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $plugin_manager
    *   An instance of an engine plugin manager.
    */
-  public function __construct($plugin_manager) {
+  public function __construct(PluginManagerInterface $plugin_manager) {
     $this->pluginManager = $plugin_manager;
   }
 

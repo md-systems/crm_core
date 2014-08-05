@@ -40,7 +40,7 @@ class MatcherTest extends UnitTestCase {
   /**
    * A mocked instance of the engine plugin manager.
    *
-   * @var \Drupal\crm_core_match\Plugin\MatchEnginePluginManager|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Component\Plugin\PluginManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $pluginManager;
 
@@ -70,9 +70,7 @@ class MatcherTest extends UnitTestCase {
     $this->engine['b'] = $this->getMock('Drupal\crm_core_match\Plugin\crm_core_match\engine\MatchEngineInterface');
     $this->engine['c'] = $this->getMock('Drupal\crm_core_match\Plugin\crm_core_match\engine\MatchEngineInterface');
 
-    $this->pluginManager = $this->getMockBuilder('Drupal\crm_core_match\Plugin\MatchEnginePluginManager')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $this->pluginManager = $this->getMock('Drupal\Component\Plugin\PluginManagerInterface');
 
     $this->config = $this->getMockBuilder('\Drupal\Core\Config\Config')
       ->disableOriginalConstructor()

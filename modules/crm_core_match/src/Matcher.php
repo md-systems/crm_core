@@ -7,17 +7,17 @@
 
 namespace Drupal\crm_core_match;
 
+use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Config\Config;
 use Drupal\crm_core_contact\Entity\Contact;
 use Drupal\crm_core_match\Plugin\crm_core_match\engine\MatchEngineInterface;
-use Drupal\crm_core_match\Plugin\MatchEnginePluginManager;
 
 class Matcher implements MatcherInterface {
 
   /**
    * The engine plugin manager.
    *
-   * @var \Drupal\crm_core_match\Plugin\MatchEnginePluginManager
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
    */
   protected $pluginManager;
 
@@ -52,12 +52,12 @@ class Matcher implements MatcherInterface {
   /**
    * Constructs a matcher instance.
    *
-   * @param \Drupal\crm_core_match\Plugin\MatchEnginePluginManager $plugin_manager
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $plugin_manager
    *   The plugin manager used to discover engines.
    * @param \Drupal\Core\Config\Config $config
    *   The configuration object.
    */
-  public function __construct(MatchEnginePluginManager $plugin_manager, Config $config) {
+  public function __construct(PluginManagerInterface $plugin_manager, Config $config) {
     $this->pluginManager = $plugin_manager;
     $this->config = $config;
   }

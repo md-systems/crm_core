@@ -5,10 +5,15 @@ services:
       - "@plugin.manager.crm_core_match.engine"
       - "@config.crm_core_match.settings"
 
-  # @todo Remove @language_manager. Consider using abstract parent.
   plugin.manager.crm_core_match.engine:
-    class: Drupal\crm_core_match\Plugin\MatchEnginePluginManager
-    arguments: ['@container.namespaces', '@cache.discovery', '@language_manager', '@module_handler']
+    class: Drupal\Core\Plugin\DefaultPluginManager
+    arguments:
+      - 'Plugin/crm_core_match/engine'
+      - '@container.namespaces'
+      - '@module_handler'
+      - 'Drupal\crm_core_match\Annotation\CrmCoreMatchEngine'
+    calls:
+      - [setCacheBackend, ['@cache.discovery', 'crm_core_match_engine_plugins']]
 
   config.crm_core_match.settings:
     class: Drupal\Core\Config\Config
