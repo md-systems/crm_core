@@ -10,7 +10,6 @@ dependencies:
   - crm_core
 
   # Contrib dependencies
-  - entity
   - field_ui
   - views
   - text
