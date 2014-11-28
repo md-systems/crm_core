@@ -9,7 +9,7 @@ namespace Drupal\crm_core_contact\Entity;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\BaseFieldDefinition;
 
 /**
  * CRM Contact Entity Class.
@@ -64,30 +64,30 @@ class Contact extends ContentEntityBase {
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = array();
 
-    $fields['contact_id'] = FieldDefinition::create('integer')
+    $fields['contact_id'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Contact ID'))
       ->setDescription(t('The contact ID.'))
       ->setReadOnly(TRUE)
       ->setSetting('unsigned', TRUE);
 
-    $fields['uuid'] = FieldDefinition::create('uuid')
+    $fields['uuid'] = BaseFieldDefinition::create('uuid')
       ->setLabel(t('UUID'))
-      ->setDescription(t('The node UUID.'))
+      ->setDescription(t('The contact UUID.'))
       ->setReadOnly(TRUE);
 
-    $fields['vid'] = FieldDefinition::create('integer')
+    $fields['vid'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Revision ID'))
       ->setDescription(t('The contact revision ID.'))
       ->setReadOnly(TRUE)
       ->setSetting('unsigned', TRUE);
 
-    $fields['type'] = FieldDefinition::create('entity_reference')
+    $fields['type'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Type'))
       ->setDescription(t('The contact type.'))
       ->setSetting('target_type', 'crm_core_contact_type')
       ->setReadOnly(TRUE);
 
-    $fields['created'] = FieldDefinition::create('created')
+    $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Created'))
       ->setDescription(t('The time that the contact was created.'))
       ->setRevisionable(TRUE)
@@ -97,13 +97,13 @@ class Contact extends ContentEntityBase {
       ))
       ->setDisplayConfigurable('form', TRUE);;
 
-    $fields['changed'] = FieldDefinition::create('changed')
+    $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))
       ->setDescription(t('The time that the contact was last edited.'))
       ->setRevisionable(TRUE);
 
     // @todo Update once https://drupal.org/node/1979260 is done.
-    $fields['uid'] = FieldDefinition::create('entity_reference')
+    $fields['uid'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Owner'))
       ->setDescription(t('The user that is the contact owner.'))
       ->setRevisionable(TRUE)
@@ -113,7 +113,7 @@ class Contact extends ContentEntityBase {
       ));
 
     // @todo Make this a name field once it gets available.
-    $fields['name'] = FieldDefinition::create('string')
+    $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
       ->setDisplayOptions('form', array(
         'type' => 'string',
@@ -125,12 +125,18 @@ class Contact extends ContentEntityBase {
         'weight' => 0,
       ));
 
-    // @todo Follow core and rename to revision_log.
-    $fields['log'] = FieldDefinition::create('string_long')
-      ->setLabel(t('Log'))
+    $fields['revision_log'] = BaseFieldDefinition::create('string_long')
+      ->setLabel(t('Revision log message'))
       ->setDescription(t('The log entry explaining the changes in this revision.'))
       ->setRevisionable(TRUE)
-      ->setTranslatable(TRUE);
+      ->setTranslatable(TRUE)
+      ->setDisplayOptions('form', array(
+          'type' => 'string_textarea',
+          'weight' => 25,
+          'settings' => array(
+            'rows' => 4,
+          ),
+        ));
 
     return $fields;
   }
@@ -157,8 +163,8 @@ class Contact extends ContentEntityBase {
   public function preSaveRevision(EntityStorageInterface $storage, \stdClass $record) {
     parent::preSaveRevision($storage, $record);
 
-    if (!isset($record->log)) {
-      $record->log = '';
+    if (!isset($record->revision_log)) {
+      $record->revision_log = '';
     }
 
     $account = \Drupal::currentUser();

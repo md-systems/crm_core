@@ -407,14 +407,14 @@ function crm_core_contact_title($contact) {
  *   An associative array of revision information for a given contact.
  *   Includes the following keys:
  *     - vid
- *     - log
+ *     - revision_log
  *     - created
  *     - changed
  *     - uid
  */
 function crm_core_contact_revision_list($contact) {
   return db_select('crm_core_contact_revision', 'rev')
-    ->fields('rev', array('vid', 'log', 'created', 'changed', 'uid'))
+    ->fields('rev', array('vid', 'revision_log', 'created', 'changed', 'uid'))
     ->condition('contact_id', $contact->contact_id)
     ->execute()
     ->fetchAllAssoc('vid');

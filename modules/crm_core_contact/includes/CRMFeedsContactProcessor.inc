@@ -34,7 +34,7 @@ class CRMFeedsContactProcessor extends FeedsProcessor {
     $contact->changed = REQUEST_TIME;
     $contact->created = REQUEST_TIME;
     $contact->language = LANGUAGE_NONE;
-    $contact->log = t('Imported by feeds.');
+    $contact->revision_log = t('Imported by feeds.');
     $contact->uid = $this->config['author'];
     return $contact;
   }
@@ -56,10 +56,10 @@ class CRMFeedsContactProcessor extends FeedsProcessor {
     }
     // Populate properties that are set by contact_object_prepare().
     if ($this->config['update_existing'] == FEEDS_UPDATE_EXISTING) {
-      $contact->log = 'Updated by CRMFeedsContactProcessor';
+      $contact->revision_log = 'Updated by CRMFeedsContactProcessor';
     }
     else {
-      $contact->log = 'Replaced by CRMFeedsContactProcessor';
+      $contact->revision_log = 'Replaced by CRMFeedsContactProcessor';
     }
     return $contact;
   }
