@@ -62,7 +62,7 @@ class EventSubscriberTest extends UnitTestCase {
   /**
    * The mocked data container.
    *
-   * @var \Drupal\collect\CollectContainerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\crm_core_collect\CollectContainerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $submission;
 
