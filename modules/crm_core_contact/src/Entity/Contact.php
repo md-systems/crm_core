@@ -18,8 +18,8 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   id = "crm_core_contact",
  *   label = @Translation("CRM Core Contact"),
  *   bundle_label = @Translation("Contact type"),
- *   label_callback = "Drupal\crm_core_contact\Entity\Contact::defaultLabel",
- *   controllers = {
+ *   label_callback = "Drupal\crm_core_contact\Entity\Contact::labelCallback",
+ *   handlers = {
  *     "access" = "Drupal\crm_core_contact\ContactAccessController",
  *     "form" = {
  *       "default" = "Drupal\crm_core_contact\Form\ContactForm",
@@ -35,7 +35,6 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "bundle" = "type",
  *     "uuid" = "uuid",
  *     "user" = "uid",
- *     "label" = "name",
  *   },
  *   bundle_entity_type = "crm_core_contact_type",
  *   permission_granularity = "bundle",
@@ -210,4 +209,19 @@ class Contact extends ContentEntityBase {
     $name = empty($type->primary_fields[$field]) ? '' : $type->primary_fields[$field];
     return $this->get($name);
   }
+
+  /**
+   * Returns the label of the contact.
+   *
+   * @return string
+   *   Contact label.
+   */
+  public function labelCallback() {
+    // @todo Replace with the value of the contact_name field, when name module will be available.
+    $label = $this->get('name')->value;
+    \Drupal::moduleHandler()->alter('crm_core_contact_label', $label, $this);
+
+    return $label;
+  }
+
 }
