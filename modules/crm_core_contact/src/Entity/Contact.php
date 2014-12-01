@@ -20,7 +20,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   bundle_label = @Translation("Contact type"),
  *   label_callback = "Drupal\crm_core_contact\Entity\Contact::labelCallback",
  *   handlers = {
- *     "access" = "Drupal\crm_core_contact\ContactAccessController",
+ *     "access" = "Drupal\crm_core_contact\ContactAccessControlHandler",
  *     "form" = {
  *       "default" = "Drupal\crm_core_contact\Form\ContactForm",
  *       "delete" = "Drupal\crm_core_contact\Form\ContactDeleteForm",

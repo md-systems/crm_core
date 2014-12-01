@@ -2,17 +2,20 @@
 
 /**
  * @file
- * Contains \Drupal\crm_core_contact\ContactAccessController.
+ * Contains \Drupal\crm_core_contact\ContactAccessControlHandler.
  */
 
 namespace Drupal\crm_core_contact;
 
-use Drupal\Core\Entity\EntityAccessController;
+use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\crm_core_contact\Entity\ContactType;
 
-class ContactAccessController extends EntityAccessController {
+/**
+ * Class ContactAccessController.
+ */
+class ContactAccessControlHandler extends EntityAccessControlHandler {
 
   /**
    * {@inheritdoc}

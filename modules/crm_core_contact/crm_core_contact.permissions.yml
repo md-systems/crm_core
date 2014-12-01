@@ -1,0 +1,12 @@
+administer contact types:
+  title: 'Administer contact types'
+  description: 'Allows the user to edit the types of contact such as Individual, Organization, etc.'
+view disabled contact types:
+  title: 'View disabled contact types'
+  description: 'Allows the user to view disabled contact types'
+revert contact record:
+  title: 'Revert contact record'
+  description: 'Allows the user to have ability to revert contacts'
+
+permission_callbacks:
+  - \Drupal\crm_core_contact\ContactPermissions::permissions
