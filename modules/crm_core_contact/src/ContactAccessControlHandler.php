@@ -50,6 +50,7 @@ class ContactAccessControlHandler extends EntityAccessControlHandler {
 
         return ($administer_contact || $revert_any_contact);
 
+      // @todo This operation should be renamed or even deleted(because we have ContactAccessControlHandler::checkCreateAccess()).
       case 'create_view':
         // Any of the create permissions.
         $create_any_contact = $account->hasPermission('create crm_core_contact entities');

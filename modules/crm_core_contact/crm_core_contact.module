@@ -64,30 +64,6 @@ function crm_core_contact_entity_property_info() {
 }
 
 /**
- * Implements hook_permission().
- */
-function crm_core_contact_permission() {
-  $permissions = array(
-    'administer contact types' => array(
-      'title' => t('Administer contact types'),
-      'description' => t('Allows the user to edit the types of contact such as Individual, Organization, etc.'),
-    ),
-    'view disabled contact types' => array(
-      'title' => t('View disabled contact types'),
-      'description' => t('Allows the user to view disabled contact types'),
-    ),
-    'revert contact record' => array(
-      'title' => ('Revert contact record'),
-      'description' => t('Allows the user to have ability to revert contacts'),
-    ),
-  );
-
-  $permissions += crm_core_entity_access_permissions('crm_core_contact');
-
-  return $permissions;
-}
-
-/**
  * Implements hook_views_api().
  */
 function crm_core_contact_views_api() {
@@ -111,7 +87,8 @@ function crm_core_contact_search_info() {
  * Implements hook_search_access().
  */
 function crm_core_contact_search_access() {
-  return user_access('administer crm_core_contact entities') || user_access('view any crm_core_contact entity');
+  // @todo Review this when it comes to search integration.
+  return TRUE;
 }
 
 /**
@@ -482,15 +459,6 @@ function crm_core_contact_feeds_plugins() {
   );
 
   return $info;
-}
-
-/**
- * Implements hook_file_download_access().
- */
-function crm_core_contact_file_download_access($field, Drupal\Core\Entity\EntityInterface $entity, Drupal\file\FileInterface $file) {
-  if ($entity->getEntityTypeId() == 'crm_core_contact') {
-    return $entity->access('view');
-  }
 }
 
 /**
