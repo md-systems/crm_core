@@ -52,7 +52,7 @@ class ContactCRUDTest extends KernelTestBase {
     $this->assertTrue(isset($contact_type->type) && $contact_type->type == $type, 'New contact type type exists.');
     // @todo Check if this still must be the case.
 //    $this->assertTrue($contact_type->locked, t('New contact type has locked set to TRUE.'));
-    $contact_type->name = $this->randomName();
+    $contact_type->name = $this->randomMachineName();
     $contact_type->description = $this->randomString();
     $this->assertEqual(SAVED_NEW, $contact_type->save(), 'Contact type saved.');
 
