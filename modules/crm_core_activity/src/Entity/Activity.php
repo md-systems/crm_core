@@ -9,7 +9,7 @@ namespace Drupal\crm_core_activity\Entity;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\BaseFieldDefinition;
 
 /**
  * CRM Activity Entity Class.
@@ -65,25 +65,25 @@ class Activity extends ContentEntityBase {
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = array();
 
-    $fields['activity_id'] = FieldDefinition::create('integer')
+    $fields['activity_id'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Activity ID'))
       ->setDescription(t('The activity ID.'))
       ->setReadOnly(TRUE)
       ->setSetting('unsigned', TRUE);
 
-    $fields['uuid'] = FieldDefinition::create('uuid')
+    $fields['uuid'] = BaseFieldDefinition::create('uuid')
       ->setLabel(t('UUID'))
       ->setDescription(t('The node UUID.'))
       ->setReadOnly(TRUE);
 
-    $fields['revision_id'] = FieldDefinition::create('integer')
+    $fields['revision_id'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Revision ID'))
       ->setDescription(t('The activity revision ID.'))
       ->setReadOnly(TRUE)
       ->setSetting('unsigned', TRUE);
 
     // @todo Update once https://drupal.org/node/1979260 is done.
-    $fields['uid'] = FieldDefinition::create('entity_reference')
+    $fields['uid'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Owner'))
       ->setDescription(t('The user that created the activity.'))
       ->setRevisionable(TRUE)
@@ -92,13 +92,13 @@ class Activity extends ContentEntityBase {
         'default_value' => 0,
       ));
 
-    $fields['type'] = FieldDefinition::create('entity_reference')
+    $fields['type'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Type'))
       ->setDescription(t('The activity type.'))
       ->setSetting('target_type', 'crm_core_activity_type')
       ->setReadOnly(TRUE);
 
-    $fields['title'] = FieldDefinition::create('string')
+    $fields['title'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Title'))
       ->setDescription(t('The title of this activity.'))
       ->setRequired(TRUE)
@@ -116,7 +116,7 @@ class Activity extends ContentEntityBase {
       ))
       ->setDisplayConfigurable('form', TRUE);
 
-    $fields['created'] = FieldDefinition::create('created')
+    $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Created'))
       ->setDescription(t('The time that the activity was created.'))
       ->setRevisionable(TRUE)
@@ -126,7 +126,7 @@ class Activity extends ContentEntityBase {
       ))
       ->setDisplayConfigurable('form', TRUE);;
 
-    $fields['changed'] = FieldDefinition::create('changed')
+    $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))
       ->setDescription(t('The time that the activity was last edited.'))
       ->setRevisionable(TRUE);
