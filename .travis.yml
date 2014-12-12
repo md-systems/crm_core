@@ -42,14 +42,14 @@ before_script:
 
   # Create new site, stubbing sendmail path with true to prevent delivery errors
   # and manually resolving drush path.
-  - mysql -e 'create database crm-core'
+  - mysql -e 'create database `crm-core`'
   # Download Drupal 8 core.
   - wget -q -O - http://ftp.drupal.org/files/projects/drupal-8.0.x-dev.tar.gz | tar xz
   - cd drupal-8.0.x-dev
   # Install Drupal.
   - php -d sendmail_path=`which true` ~/.composer/vendor/bin/drush.php --yes site-install --db-url=mysql://root:@127.0.0.1/crm-core testing
 
-  # Reference and enable crm-core in build site.
+  # Reference and enable crm_core in build site.
   - ln -s $TESTDIR modules/crm_core
   - drush --yes pm-enable simpletest crm_core
 
