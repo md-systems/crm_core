@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 /**
  * Tests the CRM Core Collect REST resource.
  *
- * @group crm_core
+ * @group crm_core_collect
  */
 class CollectResourceTest extends UnitTestCase {
 

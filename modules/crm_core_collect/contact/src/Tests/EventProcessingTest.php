@@ -17,7 +17,7 @@ use Drupal\simpletest\KernelTestBase;
 /**
  * Tests the processing of contact form submission on integration level.
  *
- * @group crm_core
+ * @group crm_core_collect
  */
 class EventProcessingTest extends KernelTestBase {
 

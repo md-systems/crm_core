@@ -63,7 +63,7 @@ script:
   # Run the Simpletests for CRM Core.
   - php ./core/scripts/run-tests.sh --php `which php` --concurrency 12 --url http://127.0.0.1:8080 --verbose --color "crm_core"
   # Run the PHPUnit tests.
-  - ./core/vendor/phpunit/phpunit/phpunit -c ./core/phpunit.xml.dist ./modules/crm_core
+  - ./core/vendor/phpunit/phpunit/phpunit -c ./core/phpunit.xml.dist --exclude-group crm_core_collect ./modules/crm_core
 
-notifications:
-  irc: "irc.freenode.org#crm-core"
+#notifications:
+#  irc: "irc.freenode.org#crm-core"

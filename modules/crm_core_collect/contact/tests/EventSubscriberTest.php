@@ -13,7 +13,7 @@ use Drupal\Tests\UnitTestCase;
 /**
  * Tests the processing of contact form submissions.
  *
- * @group crm_core
+ * @group crm_core_collect
  */
 class EventSubscriberTest extends UnitTestCase {
 
