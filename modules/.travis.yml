@@ -1,0 +1,69 @@
+language: php
+
+php:
+  - 5.3
+  - 5.4
+  - 5.5
+  - 5.6
+
+mysql:
+  database: crm-core
+  username: root
+  encoding: utf8
+
+before_install:
+  - sudo apt-get update > /dev/null
+  # Always update Composer to the recent version, otherwise the drush
+  # installation fails.
+  - composer selfupdate
+
+install:
+  # Install php packages required for running a web server from drush.
+  - sudo apt-get install -y --force-yes php5-cgi php5-mysql
+
+  # Add composer's global bin directory to the path.
+  # @see: https://github.com/drush-ops/drush#install---composer
+  - export PATH="$HOME/.composer/vendor/bin:$PATH"
+
+  # install drush globally
+  - composer global require drush/drush:dev-master
+  - composer global require youngj/httpserver:dev-master
+
+before_script:
+  # Remove Xdebug as we don't need it and it causes
+  # PHP Fatal error:  Maximum function nesting level of '256' reached
+  - phpenv config-rm xdebug.ini
+
+  # Remember the current test directory for later use in the Drupal installation.
+  - TESTDIR=$(pwd)
+  # Navigate out of module directory to prevent blown stack by recursive module
+  # lookup.
+  - cd ..
+
+  # Create new site, stubbing sendmail path with true to prevent delivery errors
+  # and manually resolving drush path.
+  - mysql -e 'create database crm-core'
+  # Download Drupal 8 core.
+  - wget -q -O - http://ftp.drupal.org/files/projects/drupal-8.0.x-dev.tar.gz | tar xz
+  - cd drupal-8.0.x-dev
+  # Install Drupal.
+  - php -d sendmail_path=`which true` ~/.composer/vendor/bin/drush.php --yes site-install --db-url=mysql://root:@127.0.0.1/crm-core testing
+
+  # Reference and enable crm-core in build site.
+  - ln -s $TESTDIR modules/crm_core
+  - drush --yes pm-enable simpletest crm_core
+
+  # Start a web server on port 8080, run in the background; wait for
+  # initialization. This is temporarly disabled since there are no web tests
+  # yet.
+  #- drush runserver 127.0.0.1:8080 &
+  #- until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do true; done
+
+script:
+  # Run the Simpletests for CRM Core.
+  - php ./core/scripts/run-tests.sh --php `which php` --concurrency 12 --url http://127.0.0.1:8080 --verbose --color "crm_core"
+  # Run the PHPUnit tests.
+  - ./core/vendor/phpunit/phpunit/phpunit -c ./core/phpunit.xml.dist ./modules/crm_core
+
+notifications:
+  irc: "irc.freenode.org#crm-core"
