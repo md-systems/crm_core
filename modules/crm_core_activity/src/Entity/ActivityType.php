@@ -9,7 +9,7 @@ namespace Drupal\crm_core_activity\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * CRM Activity Type Entity Class.
@@ -129,10 +129,10 @@ class ActivityType extends ConfigEntityBundleBase {
   protected function ensureParticipantField() {
     $field_name = 'activity_participants';
 
-    $instance = FieldInstanceConfig::loadByName('crm_core_activity', $this->id(), $field_name);
+    $instance = FieldConfig::loadByName('crm_core_activity', $this->id(), $field_name);
 
     if (empty($instance)) {
-      entity_create('field_instance_config', array(
+      FieldConfig::create(array(
         'field_name' => $field_name,
         'entity_type' => 'crm_core_activity',
         'bundle' => $this->id(),
@@ -175,10 +175,10 @@ class ActivityType extends ConfigEntityBundleBase {
   protected function ensureDateField() {
     $field_name = 'activity_date';
 
-    $instance = FieldInstanceConfig::loadByName('crm_core_activity', $this->id(), $field_name);
+    $instance = FieldConfig::loadByName('crm_core_activity', $this->id(), $field_name);
 
     if (empty($instance)) {
-      $instance = entity_create('field_instance_config', array(
+      FieldConfig::create(array(
         'field_name' => $field_name,
         'entity_type' => 'crm_core_activity',
         'bundle' => $this->id(),
@@ -220,10 +220,10 @@ class ActivityType extends ConfigEntityBundleBase {
   protected function ensureNotesField() {
     $field_name = 'activity_notes';
 
-    $instance = FieldInstanceConfig::loadByName('crm_core_activity', $this->id(), $field_name);
+    $instance = FieldConfig::loadByName('crm_core_activity', $this->id(), $field_name);
 
     if (empty($instance)) {
-      $instance = entity_create('field_instance_config', array(
+      FieldConfig::create(array(
         'field_name' => $field_name,
         'entity_type' => 'crm_core_activity',
         'bundle' => $this->id(),

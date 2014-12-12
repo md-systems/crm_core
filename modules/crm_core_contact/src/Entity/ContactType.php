@@ -6,11 +6,9 @@
 
 namespace Drupal\crm_core_contact\Entity;
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\field\Entity\FieldInstanceConfig;
 
 /**
  * CRM Contact Type Entity Class.

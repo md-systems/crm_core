@@ -7,10 +7,8 @@
 namespace Drupal\crm_core_default_matching_engine\Tests;
 
 use Drupal\crm_core_contact\Entity\Contact;
-use Drupal\crm_core_contact\Entity\ContactType;
-use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\simpletest\KernelTestBase;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -103,7 +101,7 @@ class FieldMatcherTest extends WebTestBase {
       'type' => 'email',
       'name' => 'contact_mail',
     ))->save();
-    FieldInstanceConfig::create(array(
+    FieldConfig::create(array(
       'field_name' => 'contact_mail',
       'entity_type' => 'crm_core_contact',
       'bundle' => 'individual',
