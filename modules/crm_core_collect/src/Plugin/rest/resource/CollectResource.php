@@ -13,6 +13,7 @@ use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\crm_core_collect\CollectEvent;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
+use Psr\Log\LoggerInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -83,8 +84,8 @@ class CollectResource extends ResourceBase {
    * @param array $serializer_formats
    *   The available serialization formats.
    */
-  public function __construct(NormalizerInterface $serializer, UrlGeneratorInterface $url_generator, EntityManagerInterface $entity_manager, QueueInterface $queue, array $configuration, $plugin_id, $plugin_definition, array $serializer_formats) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats);
+  public function __construct(NormalizerInterface $serializer, UrlGeneratorInterface $url_generator, EntityManagerInterface $entity_manager, QueueInterface $queue, array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
 
     $this->serializer = $serializer;
     $this->urlGenerator = $url_generator;
@@ -104,7 +105,8 @@ class CollectResource extends ResourceBase {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->getParameter('serializer.formats')
+      $container->getParameter('serializer.formats'),
+      $container->get('logger.factory')->get('rest')
     );
   }
 
