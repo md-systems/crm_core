@@ -9,6 +9,7 @@ namespace Drupal\crm_core_match\Form;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class EnginesConfigForm extends FormBase {
@@ -172,7 +173,7 @@ EOF
     foreach ($definition['settings'] as $key => $data) {
       $operations[$key] = array(
         'title' => $data['label'],
-        'route_name' => $data['route'],
+        'url' => new Url($data['route']),
       );
     }
 
@@ -180,19 +181,13 @@ EOF
     if (!$status) {
       $operations['enable'] = array(
         'title' => $this->t('Enable'),
-        'route_name' => 'crm_core_match.enable',
-        'route_parameters' => array(
-          'engine' => $definition['id'],
-        ),
+        'url' => new Url('crm_core_match.enable', ['engine' => $definition['id']]),
       );
     }
     else {
       $operations['disable'] = array(
         'title' => $this->t('Disable'),
-        'route_name' => 'crm_core_match.disable',
-        'route_parameters' => array(
-          'engine' => $definition['id'],
-        ),
+        'url' => new Url('crm_core_match.disable', ['engine' => $definition['id']]),
       );
     }
 

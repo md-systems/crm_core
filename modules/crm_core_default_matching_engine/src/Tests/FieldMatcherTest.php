@@ -22,7 +22,6 @@ class FieldMatcherTest extends WebTestBase {
    * {@inheritdoc}
    */
   public static $modules = array(
-    'entity',
     'user',
     'field',
     'text',
@@ -99,7 +98,7 @@ class FieldMatcherTest extends WebTestBase {
     FieldStorageConfig::create(array(
       'entity_type' => 'crm_core_contact',
       'type' => 'email',
-      'name' => 'contact_mail',
+      'field_name' => 'contact_mail',
     ))->save();
     FieldConfig::create(array(
       'field_name' => 'contact_mail',
@@ -107,9 +106,6 @@ class FieldMatcherTest extends WebTestBase {
       'bundle' => 'individual',
       'label' => t('Email'),
       'required' => FALSE,
-      'default_value' => array(
-        'default_date' => 'now',
-      ),
     ))->save();
 
     $config = array(

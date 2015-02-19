@@ -7,6 +7,7 @@
  * defined by users through the configuration tools.
  */
 
+use Drupal\Core\Url;
 use Drupal\crm_core_contact\Entity\ContactType;
 use Drupal\crm_core_default_matching_engine\Entity\MatchingRule;
 
@@ -82,7 +83,7 @@ function template_preprocess_crm_core_default_matching_engine_config_page(&$vari
       $type = ContactType::load($rule->type);
       $variables['rules'][$rule->id()] = array(
         'type' => $rule->id(),
-        'add_link' => l($rule->label(), '/admin/config/crm-core/match/default/edit/' . $rule->id()),
+        'add_link' => \Drupal::l($rule->label(), new Url('crm_core_default_matching_engine.rule_edit', ['crm_core_default_engine_rule' => $rule->id()])),
         'description' => t('Matching Rules for @type contacts.', array(
           '@type' => $type->label(),
         )),

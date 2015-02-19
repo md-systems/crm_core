@@ -11,6 +11,7 @@ services:
       - 'Plugin/crm_core_match/engine'
       - '@container.namespaces'
       - '@module_handler'
+      - 'Drupal\crm_core_match\Plugin\crm_core_match\engine\MatchEngineInterface'
       - 'Drupal\crm_core_match\Annotation\CrmCoreMatchEngine'
     calls:
       - [setCacheBackend, ['@cache.discovery', 'crm_core_match_engine_plugins']]
