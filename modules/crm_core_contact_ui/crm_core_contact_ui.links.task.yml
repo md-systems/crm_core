@@ -1,14 +1,14 @@
-crm_core_contact.view:
+entity.crm_core_contact.canonical:
   title: View
-  route_name: crm_core_contact.view
-  base_route: crm_core_contact.view
+  route_name: entity.crm_core_contact.canonical
+  base_route: entity.crm_core_contact.canonical
 
-crm_core_contact.edit:
+entity.crm_core_contact.edit_form:
   title: Edit
-  route_name: crm_core_contact.edit
-  base_route: crm_core_contact.view
+  route_name: entity.crm_core_contact.edit_form
+  base_route: entity.crm_core_contact.canonical
 
-crm_core_contact.type_edit:
+entity.crm_core_contact_type.edit_form:
   title: Edit
-  route_name: crm_core_contact.type_edit
-  base_route: crm_core_contact.type_edit
+  route_name: entity.crm_core_contact_type.edit_form
+  base_route: entity.crm_core_contact_type.edit_form

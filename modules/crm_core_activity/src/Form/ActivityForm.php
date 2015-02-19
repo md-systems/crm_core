@@ -48,13 +48,13 @@ class ActivityForm  extends ContentEntityForm {
         $form_state->setRedirect('entity.crm_core_activity.canonical', ['crm_core_activity' => $activity->id()]);
       }
       else {
-        $form_state->setRedirect('crm_core_contact.list');
+        $form_state->setRedirect('entity.crm_core_contact.collection');
       }
     }
     elseif ($status == SAVED_NEW) {
       drupal_set_message($this->t('Activity %title created.', $t_args));
       \Drupal::logger('crm_core_contact')->notice('Activity %title created.', $t_args);
-      $form_state->setRedirect('crm_core_contact.list');
+      $form_state->setRedirect('entity.crm_core_contact.collection');
     }
 
     if ($activity->access('view')) {

@@ -27,7 +27,7 @@ class ActivityTypeAccessControlHandler extends EntityAccessControlHandler {
     switch ($operation) {
       case 'enable':
         // Only disabled activity type can be enabled.
-        return AccessResult::forbiddenIf($entity->status());
+        return AccessResult::allowedIf(!$entity->status());
 
       case 'disable':
         return AccessResult::allowedIf($entity->status());

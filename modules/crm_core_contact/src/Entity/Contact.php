@@ -25,6 +25,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *       "default" = "Drupal\crm_core_contact\Form\ContactForm",
  *       "delete" = "Drupal\crm_core_contact\Form\ContactDeleteForm",
  *     },
+ *     "list_builder" = "Drupal\crm_core_contact\ContactListBuilder",
  *   },
  *   base_table = "crm_core_contact",
  *   revision_table = "crm_core_contact_revision",
@@ -42,6 +43,12 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "singular" = @Translation("Contact"),
  *     "plural" = @Translation("Contacts"),
  *   },
+ *   links = {
+ *     "canonical" = "crm-core/contact/{crm_core_contact}",
+ *     "collection" = "crm-core/contact",
+ *     "edit_form" = "crm-core/contact/{crm_core_contact}/edit",
+ *     "delete_form" = "crm-core/contact/{crm_core_contact}/delete"
+ *   }
  * )
  *
  * @todo Add Views support.

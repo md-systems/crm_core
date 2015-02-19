@@ -4,8 +4,8 @@ entity.crm_core_activity.collection:
   route_name: entity.crm_core_activity.collection
   parent: crm_core.dashboard
 
-crm_core_activity.type_list:
+entity.crm_core_activity_type.collection:
   title: 'CRM Activity Types'
   description: 'Manage CRM Activity Types.'
-  route_name: crm_core_activity.type_list
+  route_name: entity.crm_core_activity_type.collection
   parent: crm_core.manage

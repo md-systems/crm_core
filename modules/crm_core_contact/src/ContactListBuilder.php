@@ -9,6 +9,7 @@ namespace Drupal\crm_core_contact;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Datetime\Date;
+use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -19,11 +20,11 @@ class ContactListBuilder extends EntityListBuilder {
 
 
   /**
-   * The date service.
+   * The date formatter service.
    *
-   * @var \Drupal\Core\Datetime\Date
+   * @var \Drupal\Core\Datetime\DateFormatter
    */
-  protected $dateService;
+  protected $dateFormatter;
 
   /**
    * Constructs a new NodeListBuilder object.
@@ -32,13 +33,13 @@ class ContactListBuilder extends EntityListBuilder {
    *   The entity type definition.
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The entity storage class.
-   * @param \Drupal\Core\Datetime\Date $date_service
-   *   The date service.
+   * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
+   *   The date formatter service.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, Date $date_service) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, DateFormatter $date_formatter) {
     parent::__construct($entity_type, $storage);
 
-    $this->dateService = $date_service;
+    $this->dateFormatter = $date_formatter;
   }
 
   /**
@@ -48,7 +49,7 @@ class ContactListBuilder extends EntityListBuilder {
     return new static(
       $entity_type,
       $container->get('entity.manager')->getStorage($entity_type->id()),
-      $container->get('date')
+      $container->get('date.formatter')
     );
   }
 
@@ -86,7 +87,7 @@ class ContactListBuilder extends EntityListBuilder {
 
     $row['type'] = String::checkPlain($entity->get('type')->entity->label());
 
-    $row['changed'] = $this->dateService->format($entity->get('changed')->value, 'short');
+    $row['changed'] = $this->dateFormatter->format($entity->get('changed')->value, 'short');
 
     return $row + parent::buildRow($entity);
   }
@@ -97,7 +98,7 @@ class ContactListBuilder extends EntityListBuilder {
   public function render() {
     $build = parent::render();
 
-    $build['#empty'] = $this->t('There are no contacts available. Add one now.');
+    $build['table']['#empty'] = $this->t('There are no contacts available. Add one now.');
 
     return $build;
   }

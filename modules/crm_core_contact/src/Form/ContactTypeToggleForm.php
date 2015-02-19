@@ -66,13 +66,13 @@ class ContactTypeToggleForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('crm_core_contact.type_list');
+    return new Url('entity.crm_core_contact_type.collection');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     switch ($this->getRequest()->get('op')) {
 
       case 'disable':
@@ -92,6 +92,6 @@ class ContactTypeToggleForm extends EntityConfirmFormBase {
     );
     drupal_set_message($this->t('The contact type %name has been %toggle.', $t_args));
 
-    $form_state->setRedirect('crm_core_contact.type_list');
+    $form_state->setRedirect('entity.crm_core_contact_type.collection');
   }
 }

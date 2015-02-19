@@ -66,9 +66,10 @@ function template_preprocess_crm_core_contact_ui_add_list(&$variables) {
   $variables['types'] = array();
   if (!empty($variables['content'])) {
     foreach ($variables['content'] as $type) {
+      /** @var \Drupal\crm_core_contact\Entity\ContactType $type */
       $variables['types'][$type->id()] = array(
         'type' => $type->id(),
-        'add_link' => l(t('Add @type', array('@type' => $type->label())), 'crm-core/contact/add/' . $type->id()),
+        'add_link' => \Drupal::l(t('Add @type', array('@type' => $type->label())), Url::fromRoute('crm_core_contact.add', ['crm_core_contact_type' => $type->id()])),
         'description' => Xss::filterAdmin($type->description),
       );
     }

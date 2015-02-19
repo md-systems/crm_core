@@ -91,7 +91,7 @@ class ActivityTypeForm extends EntityForm {
 
     $status = $type->save();
 
-    $t_args = array('%name' => $type->label(), 'link' => \Drupal::url('crm_core_activity.type_list'));
+    $t_args = array('%name' => $type->label(), 'link' => \Drupal::url('entity.crm_core_activity_type.collection'));
 
     if ($status == SAVED_UPDATED) {
       drupal_set_message($this->t('The activity type %name has been updated.', $t_args));
@@ -101,6 +101,6 @@ class ActivityTypeForm extends EntityForm {
       \Drupal::logger('crm_core_activity')->notice('Added activity type %name.', $t_args);
     }
 
-    $form_state->setRedirect('crm_core_activity.type_list');
+    $form_state->setRedirect('entity.crm_core_activity_type.collection');
   }
 }

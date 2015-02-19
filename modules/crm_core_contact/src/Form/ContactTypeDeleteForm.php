@@ -51,8 +51,8 @@ class ContactTypeDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
-    return new Url('crm_core_contact.type_list');
+  public function getCancelUrl() {
+    return new Url('entity.crm_core_contact_type.collection');
   }
 
   /**
@@ -84,13 +84,13 @@ class ContactTypeDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->delete();
     $t_args = array('%name' => $this->entity->label());
     drupal_set_message($this->t('The contact type %name has been deleted.', $t_args));
     \Drupal::logger('node')->notice('Deleted contact type %name.', $t_args);
 
-    $form_state->setRedirect('crm_core_contact.type_list');
+    $form_state->setRedirect('entity.crm_core_contact_type.collection');
   }
 
 }

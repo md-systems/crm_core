@@ -52,7 +52,7 @@ class ContactDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('crm_core_contact.type_list');
+    return new Url('entity.crm_core_contact_type.collection');
   }
 
   /**
@@ -65,7 +65,7 @@ class ContactDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->delete();
     $t_args = array(
       '%id' => $this->entity->id(),
@@ -74,7 +74,7 @@ class ContactDeleteForm extends EntityConfirmFormBase {
     drupal_set_message($this->t('The contact %name (%id) has been deleted.', $t_args));
     \Drupal::logger('node')->notice('Deleted contact %name (%id).', $t_args);
 
-    $form_state->setRedirect('crm_core_contact.list');
+    $form_state->setRedirect('entity.crm_core_contact.collection');
   }
 
 }

@@ -34,12 +34,11 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *     "status" = "disabled",
  *   },
  *   links = {
- *     "canonical" = "crm_core_contact.type_edit",
- *     "add-form" = "crm_core_contact.type_add",
- *     "edit-form" = "crm_core_contact.type_edit",
- *     "delete-form" = "crm_core_contact.type_delete",
- *     "enable" = "crm_core_contact.type_enable",
- *     "disable" = "crm_core_contact.type_disable",
+ *     "add-form" = "admin/structure/crm-core/contact-types/add",
+ *     "edit-form" = "admin/structure/crm-core/contact-types/{crm_core_contact_type}",
+ *     "delete-form" = "admin/structure/crm-core/contact-types/{crm_core_contact_type}/delete",
+ *     "enable" = "admin/structure/crm-core/contact-types/{crm_core_contact_type}/enable",
+ *     "disable" = "admin/structure/crm-core/contact-types/{crm_core_contact_type}/disable",
  *   }
  * )
  */
@@ -91,18 +90,6 @@ class ContactType extends ConfigEntityBundleBase {
    */
   public function id() {
     return $this->type;
-  }
-
-  /**
-   * Gets the lock status.
-   *
-   * The entity is considered locked if the entity is enabled an not new.
-   *
-   * @return bool
-   *   TRUE if locked, FALSE otherwise.
-   */
-  public function isLocked() {
-    return isset($this->status) && !$this->isNew();
   }
 
   /**

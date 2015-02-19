@@ -42,7 +42,6 @@ class ContactTypeForm extends EntityForm {
       '#type' => 'machine_name',
       '#default_value' => $type->id(),
       '#maxlength' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
-      '#disabled' => $type->isLocked(),
       '#machine_name' => array(
         'exists' => 'Drupal\crm_core_contact\Entity\ContactType::load',
         'source' => array('name'),
@@ -108,7 +107,7 @@ class ContactTypeForm extends EntityForm {
   public function validate(array $form, FormStateInterface $form_state) {
     parent::validate($form, $form_state);
 
-    $id = trim($form_state->getValues('type');
+    $id = trim($form_state->getValue('type'));
     // '0' is invalid, since elsewhere we check it using empty().
     if ($id == '0') {
       $form_state->setErrorByName('type', $this->t("Invalid machine-readable name. Enter a name other than %invalid.", array('%invalid' => $id)));
@@ -123,7 +122,7 @@ class ContactTypeForm extends EntityForm {
 
     $status = $type->save();
 
-    $t_args = array('%name' => $type->label(), 'link' => \Drupal::url('crm_core_activity.type_list'));
+    $t_args = array('%name' => $type->label(), 'link' => \Drupal::url('entity.crm_core_contact_type.collection'));
 
     if ($status == SAVED_UPDATED) {
       drupal_set_message($this->t('The contact type %name has been updated.', $t_args));
@@ -133,6 +132,6 @@ class ContactTypeForm extends EntityForm {
       \Drupal::logger('crm_core_contact')->notice('Added contact type %name.', $t_args);
     }
 
-    $form_state->setRedirect('crm_core_contact.type_list');
+    $form_state->setRedirect('entity.crm_core_contact_type.collection');
   }
 }

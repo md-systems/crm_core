@@ -2,10 +2,10 @@ crm_core_contact.add:
   route_name: crm_core_contact.add_page
   title: 'Add a contact'
   appears_on:
-    - crm_core_contact.list
+    - entity.crm_core_contact.collection
 
-crm_core_contact.type_add:
-  route_name: crm_core_contact.type_add
+entity.crm_core_contact_type.add_form:
+  route_name: entity.crm_core_contact_type.add_form
   title: 'Add contact type'
   appears_on:
-    - crm_core_contact.type_list
+    - entity.crm_core_contact_type.collection

@@ -1,11 +1,11 @@
-crm_core_contact.list:
+entity.crm_core_contact.collection:
   title: 'CRM Contacts'
   description: 'Manage CRM Contacts.'
-  route_name: crm_core_contact.list
+  route_name: entity.crm_core_contact.collection
   parent: crm_core.dashboard
 
-crm_core_contact.type_list:
+entity.crm_core_contact_type.collection:
   title: 'CRM Contact Types'
   description: 'Manage CRM Contact Types.'
-  route_name: crm_core_contact.type_list
+  route_name: entity.crm_core_contact_type.collection
   parent: crm_core.manage
