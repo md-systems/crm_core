@@ -131,6 +131,59 @@ class Activity extends ContentEntityBase {
       ->setDescription(t('The time that the activity was last edited.'))
       ->setRevisionable(TRUE);
 
+    // @todo Check settings.
+    $fields['activity_participants'] = BaseFieldDefinition::create('entity_reference')
+      ->setSetting('target_type', 'user')
+      ->setRequired(TRUE)
+      ->setDisplayOptions('view', [
+        'label' => 'above',
+        'settings' => [
+          'link' => TRUE,
+        ],
+        'type' => 'entity_reference_label',
+        'weight' => 0,
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'entity_reference_autocomplete',
+        'settings' => [
+          'match_operator' => 'CONTAINS',
+        ],
+        'weight' => 0,
+      ]);
+
+    // @todo Check settings.
+    $fields['activity_date'] = BaseFieldDefinition::create('datetime')
+      ->setLabel(t('Date'))
+      ->setDefaultValue(['default_date' => 'now'])
+      ->setDisplayOptions('view', [
+        'label' => 'above',
+        'settings' => [
+          'format_type' => 'long',
+        ],
+        'type' => 'datetime_default',
+        'weight' => 1,
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'datetime_default',
+        'weight' => 2,
+      ]);
+
+    // @todo Check settings.
+    $fields['activity_notes'] = BaseFieldDefinition::create('text_long')
+      ->setLabel(t('Notes'))
+      ->setDisplayOptions('view', [
+        'label' => 'above',
+        'type' => 'text_default',
+        'weight' => 2,
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'text_textarea',
+        'weight' => 3,
+        'settings' => [
+          'rows' => 5,
+        ],
+      ]);
+
     return $fields;
   }
 
