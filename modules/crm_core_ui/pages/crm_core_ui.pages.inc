@@ -1,9 +1,10 @@
 <?php
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form constructor for the CRM Core configuration form.
  */
-function crm_core_ui_admin_config_form($form, &$form_state) {
+function crm_core_ui_admin_config_form($form, FormStateInterface $form_state) {
   $form = array();
   $form['dashboard'] = array(
     '#type' => 'fieldset',
@@ -103,18 +104,18 @@ function crm_core_ui_admin_config_form($form, &$form_state) {
 /**
  * Validate CRM Core settings.
  */
-function crm_core_ui_admin_config_form_validate($form, &$form_state) {
+function crm_core_ui_admin_config_form_validate($form, FormStateInterface $form_state) {
   // Dashboard path validation.
-  $dashboard_enabled = $form_state['values']['crm_core_dashboard_enabled'];
+  $dashboard_enabled = $form_state->getValue('crm_core_dashboard_enabled');
   if ($dashboard_enabled) {
-    $menu_item = menu_get_item($form_state['values']['crm_core_dashboard_path']);
+    $menu_item = menu_get_item($form_state->getValue('crm_core_dashboard_path'));
     if (!$menu_item) {
       form_set_error('crm_core_dashboard_path', t('You must enter VALID path(it must exist already).'));
     }
   }
   // Theme settings validation.
-  $theme_enabled = $form_state['values']['crm_core_theme_enabled'];
-  $theme = $form_state['values']['crm_core_theme'];
+  $theme_enabled = $form_state->getValue('crm_core_theme_enabled');
+  $theme = $form_state->getValue('crm_core_theme');
   if ($theme_enabled && empty($theme)) {
     form_set_error('crm_core_theme', t('You must select a theme to use.'));
   }
@@ -123,8 +124,8 @@ function crm_core_ui_admin_config_form_validate($form, &$form_state) {
 /**
  * Submit handler for CRM Core settings form.
  */
-function crm_core_ui_admin_config_form_submit($form, &$form_state) {
-  $dashboard_enabled_current = $form_state['values']['crm_core_dashboard_enabled'];
+function crm_core_ui_admin_config_form_submit($form, FormStateInterface $form_state) {
+  $dashboard_enabled_current = $form_state->getValue('crm_core_dashboard_enabled');
   $dashboard_enabled_saved = variable_get('crm_core_dashboard_enabled', FALSE);
   if ($dashboard_enabled_current && !$dashboard_enabled_saved) {
     $item = array(

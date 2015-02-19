@@ -1,0 +1,7 @@
+administer activity types:
+  title: 'Administer activity types'
+  description: 'Allows users to configure activity types and their fields.'
+  restrict access: true
+
+permission_callbacks:
+  - Drupal\crm_core_activity\ActivityPermissions::permissions

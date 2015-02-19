@@ -8,6 +8,7 @@
 namespace Drupal\crm_core_contact\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 class ContactTypeToggleForm extends EntityConfirmFormBase {
@@ -71,7 +72,7 @@ class ContactTypeToggleForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, array &$form_state) {
+  public function submit(array $form, FormStateInterface $form_state) {
     switch ($this->getRequest()->get('op')) {
 
       case 'disable':
@@ -91,6 +92,6 @@ class ContactTypeToggleForm extends EntityConfirmFormBase {
     );
     drupal_set_message($this->t('The contact type %name has been %toggle.', $t_args));
 
-    $form_state['redirect_route'] = new Url('crm_core_contact.type_list');
+    $form_state->setRedirect('crm_core_contact.type_list');
   }
 }

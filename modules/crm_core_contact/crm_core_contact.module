@@ -5,6 +5,7 @@
  * Provides default CRM Core Contact entities and the ability to create more.
  */
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\crm_core_contact\Entity\Contact;
 use Drupal\crm_core_contact\Entity\ContactType;
 
@@ -683,8 +684,8 @@ function crm_core_contact_merge_contacts_action_form($context, &$form_state) {
 /**
  * Validate handler for action configuration form.
  */
-function crm_core_contact_merge_contacts_action_validate($form, $form_state) {
-  $table = $form_state['values']['table'];
+function crm_core_contact_merge_contacts_action_validate($form, FormStateInterface $form_state) {
+  $table = $form_state->getValue('table');
   $primary_contact = array_filter($table['contact_id']);
   if (empty($primary_contact)) {
     form_set_error('table][contact_id', t('You must select primary contact in table header!'));
@@ -697,8 +698,8 @@ function crm_core_contact_merge_contacts_action_validate($form, $form_state) {
 /**
  * Submit handler for action configuration form.
  */
-function crm_core_contact_merge_contacts_action_submit($form, $form_state) {
-  $table = $form_state['values']['table'];
+function crm_core_contact_merge_contacts_action_submit($form, FormStateInterface $form_state) {
+  $table = $form_state->getValue('table');
   $tmp = array_keys(array_filter($table['contact_id']));
   $data = array('contact_id' => array_shift($tmp));
   unset($table['contact_id']);
@@ -1043,21 +1044,21 @@ function _crm_core_contact_contact_name_instance($type, $label) {
 /**
  * Form builder for 'crm_core_contact_send_email_action' action.
  */
-function crm_core_contact_send_email_action_form($context, &$form_state) {
+function crm_core_contact_send_email_action_form($context, FormStateInterface $form_state) {
 
   $form = array();
   $form['subject'] = array(
     '#type' => 'textfield',
     '#title' => t('Subject'),
     '#description' => t('The subject of the message.'),
-    '#default_value' => isset($form_state['values']['subject']) ? $form_state['values']['subject'] : '',
+    '#default_value' => $form_state->getValue('subject', ''),
   );
 
   $form['message'] = array(
     '#type' => 'textarea',
     '#title' => t('Message'),
     '#description' => t('The message that should be sent.'),
-    '#default_value' => isset($form_state['values']['message']) ? $form_state['values']['message'] : '',
+    '#default_value' => $form_state->getValue('message', ''),
   );
 
   // Display a list of tokens that can be used in the message.
@@ -1086,9 +1087,9 @@ function crm_core_contact_send_email_action_form($context, &$form_state) {
 /**
  * Submit handler for 'crm_core_contact_send_email_action' action.
  */
-function crm_core_contact_send_email_action_submit($form, $form_state) {
-  $subject = $form_state['values']['subject'];
-  $message = $form_state['values']['message'];
+function crm_core_contact_send_email_action_submit($form, FormStateInterface $form_state) {
+  $subject = $form_state->getValue('subject');
+  $message = $form_state->getValue('message');
 
   return array('subject' => $subject, 'message' => $message);
 }

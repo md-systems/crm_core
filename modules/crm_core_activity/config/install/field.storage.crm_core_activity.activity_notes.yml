@@ -2,7 +2,7 @@ id: crm_core_activity.activity_notes
 uuid: ac689abd-cee8-456c-9000-e4bb6c021453
 status: true
 langcode: en
-name: activity_notes
+field_name: activity_notes
 entity_type: crm_core_activity
 type: text_long
 settings:

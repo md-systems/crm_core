@@ -82,7 +82,7 @@ class Contact extends ContentEntityBase {
       ->setDescription(t('The time that the contact was created.'))
       ->setRevisionable(TRUE)
       ->setDisplayOptions('form', array(
-        'type' => 'integer',
+        'type' => 'number',
         'weight' => -5,
       ))
       ->setDisplayConfigurable('form', TRUE);;
@@ -106,7 +106,7 @@ class Contact extends ContentEntityBase {
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
       ->setDisplayOptions('form', array(
-        'type' => 'string',
+        'type' => 'text_textfield',
         'weight' => 0,
       ))
       ->setDisplayOptions('view', array(
@@ -121,7 +121,7 @@ class Contact extends ContentEntityBase {
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE)
       ->setDisplayOptions('form', array(
-          'type' => 'string_textarea',
+          'type' => 'text_textarea',
           'weight' => 25,
           'settings' => array(
             'rows' => 4,
@@ -213,13 +213,16 @@ class Contact extends ContentEntityBase {
   /**
    * Returns the label of the contact.
    *
+   * @param \Drupal\crm_core_contact\Entity\Contact $entity
+   *   The Contact entity.
+   *
    * @return string
    *   Contact label.
    */
-  public function labelCallback() {
+  public static function labelCallback(Contact $entity) {
     // @todo Replace with the value of the contact_name field, when name module will be available.
-    $label = $this->get('name')->value;
-    \Drupal::moduleHandler()->alter('crm_core_contact_label', $label, $this);
+    $label = $entity->get('name')->value;
+    \Drupal::moduleHandler()->alter('crm_core_contact_label', $label, $entity);
 
     return $label;
   }

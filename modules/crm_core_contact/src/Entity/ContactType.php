@@ -18,8 +18,8 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *   label = @Translation("CRM Core Contact type"),
  *   bundle_of = "crm_core_contact",
  *   config_prefix = "type",
- *   controllers = {
- *     "access" = "Drupal\crm_core_contact\ContactTypeAccessController",
+ *   handlers = {
+ *     "access" = "Drupal\crm_core_contact\ContactTypeAccessControlHandler",
  *     "form" = {
  *       "default" = "Drupal\crm_core_contact\Form\ContactTypeForm",
  *       "delete" = "Drupal\crm_core_contact\Form\ContactTypeDeleteForm",

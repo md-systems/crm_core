@@ -30,7 +30,7 @@ class ContactController extends ControllerBase {
 
     // Only use node types the user has access to.
     foreach ($this->entityManager()->getStorage('crm_core_contact_type')->loadMultiple() as $type) {
-      if ($this->entityManager()->getAccessController('crm_core_contact')->createAccess($type->type)) {
+      if ($this->entityManager()->getAccessControlHandler('crm_core_contact')->createAccess($type->type)) {
         $content[$type->type] = $type;
       }
     }

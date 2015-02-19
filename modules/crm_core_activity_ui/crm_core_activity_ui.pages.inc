@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Url;
 
 /**
  * Prepares variables for list of available activity type templates.
@@ -31,7 +32,8 @@ function template_preprocess_crm_core_activity_ui_add_list(&$variables) {
       }
       $variables['types'][$type->id()] = array(
         'type' => $type->id(),
-        'add_link' => l(t('Add @type', array('@type' => $type->label())), $path),
+        // @todo Replace path with route.
+        'add_link' => \Drupal::l(t('Add @type', array('@type' => $type->label())), Url::fromUri("base:$path")),
         'description' => Xss::filterAdmin($type->description),
       );
     }

@@ -14,5 +14,5 @@ crm_core_activity.type.*:
       type: text
       label: 'Description'
     primary_fields:
-      type: tring
+      type: string
       label: 'Text describing the relationship between the contact and this activity.'

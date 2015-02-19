@@ -1,7 +1,7 @@
-crm_core_activity.list:
+entity.crm_core_activity.collection:
   title: 'CRM Activites'
   description: 'Manage CRM Activities.'
-  route_name: crm_core_activity.list
+  route_name: entity.crm_core_activity.collection
   parent: crm_core.dashboard
 
 crm_core_activity.type_list:

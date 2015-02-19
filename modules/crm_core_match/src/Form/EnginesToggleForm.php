@@ -9,6 +9,7 @@ namespace Drupal\crm_core_match\Form;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -59,7 +60,7 @@ class EnginesToggleForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $engine = NULL, $op = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $engine = NULL, $op = NULL) {
     // @todo Consider writing a converter.
     // The converter will ensure that the engine id will be converted to the
     // definition before it gets passed to this method.
@@ -114,7 +115,7 @@ class EnginesToggleForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->config('crm_core_match.engines');
     $config_key = $this->engine['id'] . '.status';
 
@@ -140,7 +141,7 @@ class EnginesToggleForm extends ConfirmFormBase {
     );
     drupal_set_message($this->t('The contact type %name has been %toggle.', $t_args));
 
-    $form_state['redirect_route']['route_name'] = 'crm_core_match.engines';
+    $form_state->setRedirect('crm_core_match.engines');
   }
 
   /**

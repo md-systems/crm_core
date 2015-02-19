@@ -1,7 +1,7 @@
 crm_core_contact.list:
   path: '/crm-core/contact'
   defaults:
-    _content: '\Drupal\Core\Entity\Controller\EntityListController::listing'
+    _controller: '\Drupal\Core\Entity\Controller\EntityListController::listing'
     entity_type: 'crm_core_contact'
     _title: 'Contacts'
   requirements:
@@ -33,14 +33,14 @@ crm_core_contact.add_page:
   path: '/crm-core/contact/add'
   defaults:
     _title: 'Add contact'
-    _content: '\Drupal\crm_core_contact_ui\Controller\ContactController::addPage'
+    _controller: '\Drupal\crm_core_contact_ui\Controller\ContactController::addPage'
   requirements:
     _entity_create_access: 'crm_core_contact'
 
 crm_core_contact.add:
   path: '/crm-core/contact/add/{crm_core_contact_type}'
   defaults:
-    _content: '\Drupal\crm_core_contact_ui\Controller\ContactController::add'
+    _controller: '\Drupal\crm_core_contact_ui\Controller\ContactController::add'
     _title_callback: '\Drupal\crm_core_contact_ui\Controller\ContactController::addPageTitle'
   requirements:
     _entity_create_access: 'crm_core_contact:{crm_core_contact_type}'
@@ -48,7 +48,7 @@ crm_core_contact.add:
 crm_core_contact.type_list:
   path: '/admin/structure/crm-core/contact-types'
   defaults:
-    _content: '\Drupal\Core\Entity\Controller\EntityListController::listing'
+    _controller: '\Drupal\Core\Entity\Controller\EntityListController::listing'
     entity_type: 'crm_core_contact_type'
     _title: 'Contact types'
   requirements:

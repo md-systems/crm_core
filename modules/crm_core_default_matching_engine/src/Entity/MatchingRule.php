@@ -16,7 +16,7 @@ use Drupal\crm_core_contact\Entity\ContactType;
  *   id = "crm_core_default_engine_rule",
  *   label = @Translation("Matching Rule"),
  *   config_prefix = "rule",
- *   controllers = {
+ *   handlers = {
  *     "form" = {
  *       "default" = "Drupal\crm_core_default_matching_engine\Form\MatchingRuleForm",
  *     },

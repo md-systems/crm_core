@@ -2,16 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\crm_core_activity\ActivityTypeAccessController.
+ * Contains \Drupal\crm_core_activity\ActivityTypeAccessControlHandler.
  */
 
 namespace Drupal\crm_core_activity;
 
-use Drupal\Core\Entity\EntityAccessController;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 
-class ActivityTypeAccessController extends EntityAccessController {
+class ActivityTypeAccessControlHandler extends EntityAccessControlHandler {
 
   /**
    * {@inheritdoc}
@@ -19,17 +20,17 @@ class ActivityTypeAccessController extends EntityAccessController {
   protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
 
     // First check drupal permission.
-    if (!parent::checkAccess($entity, $operation, $langcode, $account)) {
-      return FALSE;
+    if (parent::checkAccess($entity, $operation, $langcode, $account)->isForbidden()) {
+      return AccessResult::forbidden();
     }
 
     switch ($operation) {
       case 'enable':
         // Only disabled activity type can be enabled.
-        return !$entity->status();
+        return AccessResult::forbiddenIf($entity->status());
 
       case 'disable':
-        return $entity->status();
+        return AccessResult::allowedIf($entity->status());
 
       case 'delete':
         // If activity instance of this activity type exist, you can't delete it.
@@ -38,10 +39,10 @@ class ActivityTypeAccessController extends EntityAccessController {
           ->count()
           ->execute();
 
-        return $count == 0;
+        return AccessResult::allowedIf($count == 0);
 
       case 'update':
-        return TRUE;
+        return AccessResult::allowed();
     }
   }
 }

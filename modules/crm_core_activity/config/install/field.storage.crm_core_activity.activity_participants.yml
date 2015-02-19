@@ -1,16 +1,11 @@
 id: crm_core_activity.activity_participants
-uuid: 91903294-6d9b-490a-9327-396a62f87f9a
 status: true
 langcode: en
-name: activity_participants
+field_name: activity_participants
 entity_type: crm_core_activity
 type: entity_reference
 settings:
   target_type: crm_core_contact
-  handler: base
-  handler_submit: 'Change handler'
-  handler_settings:
-    target_bundles: {  }
 locked: true
 cardinality: -1
 translatable: false

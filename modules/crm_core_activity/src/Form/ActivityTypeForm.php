@@ -9,6 +9,7 @@ namespace Drupal\crm_core_activity\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Class ActivityTypeForm
@@ -22,7 +23,7 @@ class ActivityTypeForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
     /* @var \Drupal\crm_core_activity\Entity\ActivityType $type */
@@ -75,7 +76,7 @@ class ActivityTypeForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  protected function actions(array $form, array &$form_state) {
+  protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
     $actions['submit']['#value'] = $this->t('Save activity type');
     $actions['delete']['#title'] = $this->t('Delete activity type');
@@ -85,21 +86,21 @@ class ActivityTypeForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, array &$form_state) {
+  public function save(array $form, FormStateInterface $form_state) {
     $type = $this->entity;
 
     $status = $type->save();
 
-    $t_args = array('%name' => $type->label());
+    $t_args = array('%name' => $type->label(), 'link' => \Drupal::url('crm_core_activity.type_list'));
 
     if ($status == SAVED_UPDATED) {
       drupal_set_message($this->t('The activity type %name has been updated.', $t_args));
     }
     elseif ($status == SAVED_NEW) {
       drupal_set_message($this->t('The activity type %name has been added.', $t_args));
-      watchdog('crm_core_activity', 'Added activity type %name.', $t_args, WATCHDOG_NOTICE, l($this->t('View'), 'admin/structure/crm-core/activity-types'));
+      \Drupal::logger('crm_core_activity')->notice('Added activity type %name.', $t_args);
     }
 
-    $form_state['redirect_route']['route_name'] = 'crm_core_activity.type_list';
+    $form_state->setRedirect('crm_core_activity.type_list');
   }
 }

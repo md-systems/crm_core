@@ -8,23 +8,6 @@
 use Drupal\crm_core_activity\Entity\Activity;
 use Drupal\crm_core_activity\Entity\ActivityType;
 
-/**
- * Implements hook_permission().
- */
-function crm_core_activity_permission() {
-  $permissions = array(
-    'administer activity types' => array(
-      'title' => t('Administer activity types'),
-      'description' => t('Allows users to configure activity types and their fields.'),
-      'restrict access' => TRUE,
-    ),
-  );
-
-  $permissions += crm_core_entity_access_permissions('crm_core_activity');
-
-  return $permissions;
-}
-
 /* ***************************************************************************
  * ***  CRM Activity helpers  ************************************************
  * ************************************************************************* */

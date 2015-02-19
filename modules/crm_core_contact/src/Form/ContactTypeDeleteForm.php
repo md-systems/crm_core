@@ -9,6 +9,7 @@ namespace Drupal\crm_core_contact\Form;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityConfirmFormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -64,7 +65,7 @@ class ContactTypeDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $num_nodes = $this->database->query("SELECT COUNT(*) FROM {crm_core_contact} WHERE type = :type", array(':type' => $this->entity->id()))->fetchField();
     if ($num_nodes) {
       $caption = \Drupal::translation()->formatPlural(
@@ -83,13 +84,13 @@ class ContactTypeDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, array &$form_state) {
+  public function submit(array $form, FormStateInterface $form_state) {
     $this->entity->delete();
     $t_args = array('%name' => $this->entity->label());
     drupal_set_message($this->t('The contact type %name has been deleted.', $t_args));
-    watchdog('node', 'Deleted contact type %name.', $t_args, WATCHDOG_NOTICE);
+    \Drupal::logger('node')->notice('Deleted contact type %name.', $t_args);
 
-    $form_state['redirect_route']['route_name'] = 'crm_core_contact.type_list';
+    $form_state->setRedirect('crm_core_contact.type_list');
   }
 
 }

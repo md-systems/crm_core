@@ -8,6 +8,8 @@
 namespace Drupal\crm_core_activity\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Logger\RfcLogLevel;
 
 class ActivityDeleteForm extends EntityConfirmFormBase {
 
@@ -37,7 +39,7 @@ class ActivityDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->delete();
     $t_args = array(
       '%id' => $this->entity->id(),
@@ -45,8 +47,8 @@ class ActivityDeleteForm extends EntityConfirmFormBase {
       '@type' => $this->entity->get('type')->entity->label(),
     );
     drupal_set_message($this->t('@type %title has been deleted.', $t_args));
-    watchdog('crm_core_activity', 'Deleted @type %title (%id).', $t_args, WATCHDOG_NOTICE);
+    \Drupal::logger('crm_core_activity')->notice('Deleted @type %title (%id).', $t_args);
 
-    $form_state['redirect_route']['route_name'] = 'crm_core_activity.list';
+    $form_state->setRedirect('entity.crm_core_activity.collection');
   }
 }

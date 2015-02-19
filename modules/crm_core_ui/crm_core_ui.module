@@ -1,4 +1,5 @@
 <?php
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_menu().
@@ -129,8 +130,8 @@ function crm_core_ui_dashboard() {
 /**
  * Implements hook_views_pre_render()
  */
-function crm_core_ui_views_pre_render($view) {
-  if ($view->name == 'crm_activities_by_contact') {
+function crm_core_ui_views_pre_render(ViewExecutable $view) {
+  if ($view->storage->id() == 'crm_activities_by_contact') {
     // @todo Add appropriate replacement or remove.
 //    crm_core_ui_ctools_add_dropbutton_files();
   }

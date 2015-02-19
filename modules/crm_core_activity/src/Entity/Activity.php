@@ -19,8 +19,8 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   label = @Translation("CRM Core Activity"),
  *   bundle_label = @Translation("Activity type"),
  *   label_callback = "Drupal\crm_core_activity\Entity\Activity::defaultLabel",
- *   controllers = {
- *     "access" = "Drupal\crm_core_activity\ActivityAccessController",
+ *   handlers = {
+ *     "access" = "Drupal\crm_core_activity\ActivityAccessControlHandler",
  *     "form" = {
  *       "default" = "Drupal\crm_core_activity\Form\ActivityForm",
  *       "delete" = "Drupal\crm_core_activity\Form\ActivityDeleteForm",
@@ -46,9 +46,9 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "plural" = @Translation("Activities"),
  *   },
  *   links = {
- *     "canonical" = "crm_core_activity.view",
- *     "delete-form" = "crm_core_activity.delete_confirm",
- *     "edit-form" = "crm_core_activity.edit",
+ *     "canonical" = "crm-core/activity/{crm_core_activity}",
+ *     "delete-form" = "crm-core/activity/{crm_core_activity}/delete",
+ *     "edit-form" = "crm-core/activity/{crm_core_activity}/edit",
  *     "version-history" = "crm_core_activity.revision_list",
  *     "admin-form" = "crm_core_activity.type_edit"
  *   }
@@ -111,7 +111,7 @@ class Activity extends ContentEntityBase {
         'weight' => -5,
       ))
       ->setDisplayOptions('form', array(
-        'type' => 'string',
+        'type' => 'text_textfield',
         'weight' => -5,
       ))
       ->setDisplayConfigurable('form', TRUE);
@@ -121,7 +121,7 @@ class Activity extends ContentEntityBase {
       ->setDescription(t('The time that the activity was created.'))
       ->setRevisionable(TRUE)
       ->setDisplayOptions('form', array(
-        'type' => 'integer',
+        'type' => 'number',
         'weight' => -5,
       ))
       ->setDisplayConfigurable('form', TRUE);;

@@ -2,7 +2,7 @@ id: crm_core_activity.activity_date
 uuid: 7ea452d8-4bfa-49f4-a100-ca5186796729
 status: true
 langcode: en
-name: activity_date
+field_name: activity_date
 entity_type: crm_core_activity
 type: datetime
 settings:

@@ -4,6 +4,7 @@
  * @file
  * Provides the UI for viewing activities.
  */
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_theme().
@@ -54,8 +55,8 @@ function crm_core_activity_ui_views_api() {
 /**
  * Implements hook_views_pre_render().
  */
-function crm_core_activity_ui_views_pre_render(&$view) {
-  if ($view->name == 'crm_activities_by_contact' && $view->current_display == 'page') {
+function crm_core_activity_ui_views_pre_render(ViewExecutable $view) {
+  if ($view->storage->id() == 'crm_activities_by_contact' && $view->current_display == 'page') {
     // Grabbing 1st view argument to avoid preview problems.
     $contact_id = $view->args[0];
     $contact = crm_core_contact_load($contact_id);

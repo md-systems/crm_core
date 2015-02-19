@@ -9,6 +9,7 @@ namespace Drupal\crm_core_contact\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Class ContactTypeForm
@@ -22,7 +23,7 @@ class ContactTypeForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
     /* @var \Drupal\crm_core_contact\Entity\ContactType $type */
@@ -94,7 +95,7 @@ class ContactTypeForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  protected function actions(array $form, array &$form_state) {
+  protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
     $actions['submit']['#value'] = $this->t('Save contact type');
     $actions['delete']['#title'] = $this->t('Delete contact type');
@@ -104,34 +105,34 @@ class ContactTypeForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, array &$form_state) {
+  public function validate(array $form, FormStateInterface $form_state) {
     parent::validate($form, $form_state);
 
-    $id = trim($form_state['values']['type']);
+    $id = trim($form_state->getValues('type');
     // '0' is invalid, since elsewhere we check it using empty().
     if ($id == '0') {
-      $this->setFormError('type', $form_state, $this->t("Invalid machine-readable name. Enter a name other than %invalid.", array('%invalid' => $id)));
+      $form_state->setErrorByName('type', $this->t("Invalid machine-readable name. Enter a name other than %invalid.", array('%invalid' => $id)));
     }
   }
 
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, array &$form_state) {
+  public function save(array $form, FormStateInterface $form_state) {
     $type = $this->entity;
 
     $status = $type->save();
 
-    $t_args = array('%name' => $type->label());
+    $t_args = array('%name' => $type->label(), 'link' => \Drupal::url('crm_core_activity.type_list'));
 
     if ($status == SAVED_UPDATED) {
       drupal_set_message($this->t('The contact type %name has been updated.', $t_args));
     }
     elseif ($status == SAVED_NEW) {
       drupal_set_message($this->t('The contact type %name has been added.', $t_args));
-      watchdog('crm_core_contact', 'Added contact type %name.', $t_args, WATCHDOG_NOTICE, l($this->t('View'), 'admin/structure/crm-core/contact-types'));
+      \Drupal::logger('crm_core_contact')->notice('Added contact type %name.', $t_args);
     }
 
-    $form_state['redirect_route']['route_name'] = 'crm_core_contact.type_list';
+    $form_state->setRedirect('crm_core_contact.type_list');
   }
 }

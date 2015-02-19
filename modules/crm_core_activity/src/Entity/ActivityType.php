@@ -19,8 +19,8 @@ use Drupal\field\Entity\FieldConfig;
  *   label = @Translation("CRM Core Activity type"),
  *   bundle_of = "crm_core_activity",
  *   config_prefix = "type",
- *   controllers = {
- *     "access" = "Drupal\crm_core_activity\ActivityTypeAccessController",
+ *   handlers = {
+ *     "access" = "Drupal\crm_core_activity\ActivityTypeAccessControlHandler",
  *     "form" = {
  *       "default" = "Drupal\crm_core_activity\Form\ActivityTypeForm",
  *       "delete" = "Drupal\crm_core_activity\Form\ActivityTypeDeleteForm",
@@ -34,10 +34,10 @@ use Drupal\field\Entity\FieldConfig;
  *     "label" = "name",
  *   },
  *   links = {
- *     "canonical" = "crm_core_activity.type_edit",
+ *     "canonical" = "admin/structure/crm-core/activity-types/{crm_core_activity_type}",
  *     "add-form" = "crm_core_activity.type_add",
- *     "edit-form" = "crm_core_activity.type_edit",
- *     "delete-form" = "crm_core_activity.type_delete",
+ *     "edit-form" = "admin/structure/crm-core/activity-types/{crm_core_activity_type}",
+ *     "delete-form" = "admin/structure/crm-core/activity-types/{crm_core_activity_type}/delete",
  *     "enable" = "crm_core_activity.type_enable",
  *     "disable" = "crm_core_activity.type_disable",
  *   }
@@ -132,16 +132,16 @@ class ActivityType extends ConfigEntityBundleBase {
     $instance = FieldConfig::loadByName('crm_core_activity', $this->id(), $field_name);
 
     if (empty($instance)) {
-      FieldConfig::create(array(
-        'field_name' => $field_name,
-        'entity_type' => 'crm_core_activity',
-        'bundle' => $this->id(),
-        'label' => t('Participants'),
-        'required' => TRUE,
-        'settings' => array(
-          'handler' => 'default',
-        ),
-      ))->save();
+//      FieldConfig::create(array(
+//        'field_name' => $field_name,
+//        'entity_type' => 'crm_core_activity',
+//        'bundle' => $this->id(),
+//        'label' => t('Participants'),
+//        'required' => TRUE,
+//        'settings' => array(
+//          'handler' => 'default',
+//        ),
+//      ))->save();
 
       // Assign widget settings for the 'default' form mode.
       entity_get_form_display('crm_core_activity', $this->id(), 'default')
@@ -178,17 +178,17 @@ class ActivityType extends ConfigEntityBundleBase {
     $instance = FieldConfig::loadByName('crm_core_activity', $this->id(), $field_name);
 
     if (empty($instance)) {
-      FieldConfig::create(array(
-        'field_name' => $field_name,
-        'entity_type' => 'crm_core_activity',
-        'bundle' => $this->id(),
-        'label' => t('Date'),
-        'required' => FALSE,
-        'default_value' => array(
-          'default_date' => 'now',
-        ),
-      ));
-      $instance->save();
+//      FieldConfig::create(array(
+//        'field_name' => $field_name,
+//        'entity_type' => 'crm_core_activity',
+//        'bundle' => $this->id(),
+//        'label' => t('Date'),
+//        'required' => FALSE,
+//        'default_value' => array(
+//          'default_date' => 'now',
+//        ),
+//      ));
+//      $instance->save();
 
       // Assign widget settings for the 'default' form mode.
       entity_get_form_display('crm_core_activity', $this->id(), 'default')
@@ -223,14 +223,14 @@ class ActivityType extends ConfigEntityBundleBase {
     $instance = FieldConfig::loadByName('crm_core_activity', $this->id(), $field_name);
 
     if (empty($instance)) {
-      FieldConfig::create(array(
-        'field_name' => $field_name,
-        'entity_type' => 'crm_core_activity',
-        'bundle' => $this->id(),
-        'label' => t('Notes'),
-        'required' => FALSE,
-      ));
-      $instance->save();
+//      FieldConfig::create(array(
+//        'field_name' => $field_name,
+//        'entity_type' => 'crm_core_activity',
+//        'bundle' => $this->id(),
+//        'label' => t('Notes'),
+//        'required' => FALSE,
+//      ));
+//      $instance->save();
 
       // Assign widget settings for the 'default' form mode.
       entity_get_form_display('crm_core_activity', $this->id(), 'default')

@@ -2,4 +2,4 @@ crm_core_activity.add:
   route_name: crm_core_activity.add_page
   title: 'Add an activity'
   appears_on:
-    - crm_core_activity.list
+    - entity.crm_core_activity.collection

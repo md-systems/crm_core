@@ -1,0 +1,14 @@
+field_name: activity_date
+field_type: datetime
+entity_type: crm_core_activity
+bundle: meeting
+label: 'Date'
+required: FALSE
+settings: {  }
+default_value:
+  - default_date: now
+dependencies:
+  config:
+    - field.storage.crm_core_activity.activity_date
+  module:
+    - datetime

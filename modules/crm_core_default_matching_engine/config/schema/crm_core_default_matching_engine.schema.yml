@@ -14,7 +14,7 @@ crm_core_default_matching_engine.rule.*:
       type: integer
       label: 'Match score threshold'
     return_order:
-      type: tring
+      type: string
       label: 'Return order'
     strict:
       type: boolean

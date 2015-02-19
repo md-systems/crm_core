@@ -9,6 +9,7 @@ namespace Drupal\crm_core_default_matching_engine\Form;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field\FieldHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -54,7 +55,7 @@ class MatchingRuleForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
     $form['status'] = array(
@@ -241,23 +242,23 @@ EOF
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, array &$form_state) {
+  public function validate(array $form, FormStateInterface $form_state) {
     parent::validate($form, $form_state);
 
     $rules = array();
-    if (isset($form_state['values']['rules'])) {
-      $rules = $form_state['values']['rules'];
+    if (isset($form_state->getValue('rules'))) {
+      $rules = $form_state->getValue('rules');
     }
     foreach ($rules as $field_name => $config) {
       if ($config['status'] && empty($config['operator'])) {
         $name = 'rules][' . $field_name . '][operator';
         $message = $this->t('You must select an operator for enabled field.');
-        $this->setFormError($name, $form_state, $message);
+        $form_state->setErrorByName($name, $message);
       }
       if (!is_numeric($config['score'])) {
         $name = 'rules][' . $field_name . '][score';
         $message = $this->t('You must enter number in "Score" column.');
-        $this->setFormError($name, $form_state, $message);
+        $form_state->setErrorByName($name, $message);
       }
     }
   }
@@ -265,7 +266,7 @@ EOF
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, array &$form_state) {
+  public function save(array $form, FormStateInterface $form_state) {
     $this->entity->save();
     drupal_set_message($this->t('The configuration options have been saved.'));
   }
@@ -273,8 +274,8 @@ EOF
   /**
    * {@inheritdoc}
    */
-  protected function copyFormValuesToEntity(EntityInterface $entity, array $form, array &$form_state) {
-    foreach ($form_state['values'] as $key => $value) {
+  protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state) {
+    foreach ($form_state->getValues() as $key => $value) {
       switch ($key) {
         case 'rules':
           $rules = array();

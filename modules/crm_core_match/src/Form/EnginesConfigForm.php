@@ -8,6 +8,7 @@ namespace Drupal\crm_core_match\Form;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class EnginesConfigForm extends FormBase {
@@ -56,7 +57,7 @@ class EnginesConfigForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $description = $this->t(<<<EOF
 Configure matching engines for contacts. Matching engines are used when new
 contacts are created, allowing CRM Core to identify potential duplicates and
@@ -103,8 +104,8 @@ EOF
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
-    $weights = $form_state['values'][$this->getFormId()];
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    $weights = $form_state->getValue($this->getFormId());
     // @todo Save engine priorities.
   }
 

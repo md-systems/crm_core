@@ -29,7 +29,7 @@ class ActivityController extends ControllerBase {
 
     // Only use activity types the user has access to.
     foreach (ActivityType::loadMultiple() as $type) {
-      if ($this->entityManager()->getAccessController('crm_core_activity')->createAccess($type->type)) {
+      if ($this->entityManager()->getAccessControlHandler('crm_core_activity')->createAccess($type->type)) {
         $activities[$type->type] = $type;
       }
     }

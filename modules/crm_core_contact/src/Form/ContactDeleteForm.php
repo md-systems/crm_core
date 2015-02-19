@@ -9,6 +9,7 @@ namespace Drupal\crm_core_contact\Form;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityConfirmFormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -64,16 +65,16 @@ class ContactDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, array &$form_state) {
+  public function submit(array $form, FormStateInterface $form_state) {
     $this->entity->delete();
     $t_args = array(
       '%id' => $this->entity->id(),
       '%name' => $this->entity->label(),
     );
     drupal_set_message($this->t('The contact %name (%id) has been deleted.', $t_args));
-    watchdog('node', 'Deleted contact %name (%id).', $t_args, WATCHDOG_NOTICE);
+    \Drupal::logger('node')->notice('Deleted contact %name (%id).', $t_args);
 
-    $form_state['redirect_route']['route_name'] = 'crm_core_contact.list';
+    $form_state->setRedirect('crm_core_contact.list');
   }
 
 }
