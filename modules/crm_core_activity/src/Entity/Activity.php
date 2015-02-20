@@ -133,7 +133,8 @@ class Activity extends ContentEntityBase {
 
     // @todo Check settings.
     $fields['activity_participants'] = BaseFieldDefinition::create('entity_reference')
-      ->setSetting('target_type', 'user')
+      ->setSetting('target_type', 'crm_core_contact')
+      ->setCardinality(-1)
       ->setRequired(TRUE)
       ->setDisplayOptions('view', [
         'label' => 'above',
