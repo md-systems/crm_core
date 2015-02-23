@@ -2,16 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\crm_core_match\Tests\MatcherTest.
+ * Contains \Drupal\Tests\crm_core_match\Unit\MatcherTest.
  */
 
-namespace Drupal\crm_core_match\Tests;
+namespace Drupal\Tests\crm_core_match\Unit;
 
 use Drupal\crm_core_match\Matcher;
 use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests the matcher service.
+ *
+ * @covers \Drupal\crm_core_match\Matcher
  *
  * @group crm_core
  */
@@ -23,10 +25,11 @@ class MatcherTest extends UnitTestCase {
    * @var \Drupal\crm_core_match\Matcher
    */
   protected $matcher;
+
   /**
    * A set mocked match engines keyed by id.
    *
-   * @var \Drupal\crm_core_match\MatchEngineInterface[]|\PHPUnit_Framework_MockObject_MockObject[]
+   * @var \Drupal\crm_core_match\MatcherInterface[]|\PHPUnit_Framework_MockObject_MockObject[]
    */
   protected $engine = array();
 

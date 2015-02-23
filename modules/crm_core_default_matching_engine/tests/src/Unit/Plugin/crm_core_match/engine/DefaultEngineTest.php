@@ -1,16 +1,18 @@
 <?php
 /**
  * @file
- * Contains \Drupal\crm_core_default_matching_engine\Tests\DefaultEngineTest.
+ * Contains \Drupal\Tests\crm_core_default_matching_engine\Unit\Plugin\crm_core_match\engine\DefaultEngineTest.
  */
 
-namespace Drupal\crm_core_default_matching_engine\Tests;
+namespace Drupal\Tests\crm_core_default_matching_engine\Unit\Plugin\crm_core_match\engine;
 
 use Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\engine\DefaultMatchingEngine;
 use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests the default matching engine.
+ *
+ * @coversDefaultClass \Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\engine\DefaultMatchingEngine
  *
  * @group crm_core
  */
@@ -34,11 +36,13 @@ class DefaultEngineTest extends UnitTestCase {
   /**
    * A mocked contact entity used to get matches.
    *
-   * @var \Drupal\crm_core_contact\ContactInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\crm_core_contact\Entity\Contact|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $contact;
 
   /**
+   * A mocked matching rule.
+   *
    * @var \Drupal\crm_core_default_matching_engine\Entity\MatchingRule|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $matchingRule;
@@ -53,14 +57,14 @@ class DefaultEngineTest extends UnitTestCase {
   /**
    * A mocked field definition.
    *
-   * @var \Drupal\Core\Field\FieldDefinitionInterface
+   * @var \Drupal\Core\Field\FieldDefinitionInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $field;
 
   /**
    * A mocked match field handler.
    *
-   * @var \Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field\FieldHandlerInterface
+   * @var \Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field\FieldHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $matchHandler;
 
