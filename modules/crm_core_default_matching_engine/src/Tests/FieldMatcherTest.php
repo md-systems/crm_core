@@ -9,14 +9,14 @@ namespace Drupal\crm_core_default_matching_engine\Tests;
 use Drupal\crm_core_contact\Entity\Contact;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests the field matchers of the default matching engine.
  *
  * @group crm_core
  */
-class FieldMatcherTest extends WebTestBase {
+class FieldMatcherTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
@@ -42,6 +42,9 @@ class FieldMatcherTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
+    $this->installConfig(['crm_core_contact']);
+    $this->installEntitySchema('crm_core_contact');
+
     $this->pluginManager = $this->container->get('plugin.manager.crm_core_match.match_field');
   }
 
@@ -66,7 +69,7 @@ class FieldMatcherTest extends WebTestBase {
   }
 
   /**
-   * Test the unsupported field.
+   * Test the text field.
    */
   public function testText() {
     $config = array(
@@ -92,7 +95,7 @@ class FieldMatcherTest extends WebTestBase {
   }
 
   /**
-   * Test the unsupported field.
+   * Test the email field.
    */
   public function testEmail() {
     FieldStorageConfig::create(array(
