@@ -9,9 +9,9 @@ entity.crm_core_contact.collection:
 entity.crm_core_contact.canonical:
   path: '/crm-core/contact/{crm_core_contact}'
   defaults:
-    _entity_form: 'crm_core_contact.default'
+    _entity_view: 'crm_core_contact'
   requirements:
-    _entity_access: 'crm_core_contact.create'
+    _entity_access: 'crm_core_contact.view'
 
 entity.crm_core_contact.edit_form:
   path: '/crm-core/contact/{crm_core_contact}/edit'

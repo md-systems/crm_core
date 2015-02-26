@@ -80,10 +80,11 @@ class ContactListBuilder extends EntityListBuilder {
   public function buildRow(EntityInterface $entity) {
     $row = array();
 
-    $row['title']['data'] = array(
+    $row['label']['data'] = array(
       '#type' => 'link',
       '#title' => $entity->label(),
-    ) + $entity->urlInfo()->toRenderArray();
+      '#url' => $entity->urlInfo(),
+    );
 
     $row['type'] = String::checkPlain($entity->get('type')->entity->label());
 

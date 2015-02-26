@@ -13,6 +13,9 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\crm_core_activity\Entity\ActivityType;
 
+/**
+ * Access control handler for CRM Core Activity entities.
+ */
 class ActivityAccessControlHandler extends EntityAccessControlHandler {
 
   /**
@@ -22,23 +25,25 @@ class ActivityAccessControlHandler extends EntityAccessControlHandler {
 
     switch ($operation) {
       case 'view':
-        return AccessResult::allowedIfHasPermission($account, 'administer crm_core_activity entities')
-          ->orIf(AccessResult::allowedIfHasPermission($account, 'view any crm_core_activity entity'))
-          ->orIf(AccessResult::allowedIfHasPermission($account, 'view any crm_core_activity entity of bundle ' . $entity->bundle()));
+        return AccessResult::allowedIfHasPermissions($account, [
+          'administer crm_core_activity entities',
+          'view any crm_core_activity entity',
+          'view any crm_core_activity entity of bundle ' . $entity->bundle(),
+        ], 'OR');
 
       case 'update':
-        return AccessResult::allowedIfHasPermission($account, 'administer crm_core_activity entities')
-          ->orIf(AccessResult::allowedIfHasPermission($account, 'edit any crm_core_activity entity'))
-          ->orIf(AccessResult::allowedIfHasPermission($account, 'edit any crm_core_activity entity of bundle ' . $entity->bundle()));
+        return AccessResult::allowedIfHasPermissions($account, [
+          'administer crm_core_activity entities',
+          'edit any crm_core_activity entity',
+          'edit any crm_core_activity entity of bundle ' . $entity->bundle(),
+        ], 'OR');
 
       case 'delete':
-        return AccessResult::allowedIfHasPermission($account, 'administer crm_core_activity entities')
-          ->orIf(AccessResult::allowedIfHasPermission($account, 'delete any crm_core_activity entity'))
-          ->orIf(AccessResult::allowedIfHasPermission($account, 'delete any crm_core_activity entity of bundle ' . $entity->bundle()));
-
-      case 'create_view':
-        return AccessResult::allowedIfHasPermission($account, 'administer crm_core_activity entities')
-          ->orIf(AccessResult::allowedIfHasPermission($account, 'create crm_core_activity entities'));
+        return AccessResult::allowedIfHasPermissions($account, [
+          'administer crm_core_activity entities',
+          'delete any crm_core_activity entity',
+          'delete any crm_core_activity entity of bundle ' . $entity->bundle(),
+        ], 'OR');
     }
   }
 
@@ -56,9 +61,10 @@ class ActivityAccessControlHandler extends EntityAccessControlHandler {
     }
 
     return AccessResult::allowedIf($activity_type_is_active)
-      ->andIf(AccessResult::allowedIfHasPermission($account, 'administer crm_core_activity entities')
-        ->orIf(AccessResult::allowedIfHasPermission($account, 'create crm_core_activity entities'))
-        ->orIf(AccessResult::allowedIfHasPermission($account, 'create crm_core_activity entities of bundle ' . $entity_bundle))
-      );
+      ->andIf(AccessResult::allowedIfHasPermissions($account, [
+        'administer crm_core_activity entities',
+        'create crm_core_activity entities',
+        'create crm_core_activity entities of bundle ' . $entity_bundle,
+      ], 'OR'));
   }
 }

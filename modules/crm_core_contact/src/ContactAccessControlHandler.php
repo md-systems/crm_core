@@ -14,7 +14,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\crm_core_contact\Entity\ContactType;
 
 /**
- * Class ContactAccessController.
+ * Access control handler for CRM Core Contact entities.
  */
 class ContactAccessControlHandler extends EntityAccessControlHandler {
 
@@ -23,27 +23,35 @@ class ContactAccessControlHandler extends EntityAccessControlHandler {
    */
   protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
 
-    $allowed_if_admin = AccessResult::allowedIfHasPermission($account, 'administer crm_core_contact entities');
-
     switch ($operation) {
       case 'view':
-        return $allowed_if_admin->orIf(AccessResult::allowedIfHasPermissions($account, ['view any crm_core_contact entity', 'view any crm_core_contact entity of bundle ' . $entity->bundle()]));
+        return AccessResult::allowedIfHasPermissions($account, [
+          'administer crm_core_contact entities',
+          'view any crm_core_contact entity',
+          'view any crm_core_contact entity of bundle ' . $entity->bundle(),
+        ], 'OR');
 
       case 'update':
-        return $allowed_if_admin->orIf(AccessResult::allowedIfHasPermissions($account, ['edit any crm_core_contact entity', 'edit any crm_core_contact entity of bundle ' . $entity->bundle()]));
+        return AccessResult::allowedIfHasPermissions($account, [
+          'administer crm_core_contact entities',
+          'edit any crm_core_contact entity',
+          'edit any crm_core_contact entity of bundle ' . $entity->bundle(),
+        ], 'OR');
 
       case 'delete':
-        return $allowed_if_admin->orIf(AccessResult::allowedIfHasPermissions($account, ['delete any crm_core_contact entity', 'delete any crm_core_contact entity of bundle ' . $entity->bundle()]));
+        return AccessResult::allowedIfHasPermissions($account, [
+          'administer crm_core_contact entities',
+          'delete any crm_core_contact entity',
+          'delete any crm_core_contact entity of bundle ' . $entity->bundle(),
+        ], 'OR');
 
       case 'revert':
         // @todo: more fine grained will be adjusting dynamic permission
         // generation for reverting bundles of contact.
-        return $allowed_if_admin->orIf(AccessResult::allowedIfHasPermission($account, 'revert contact record'));
-
-      // @todo This operation should be renamed or even deleted(because we have ContactAccessControlHandler::checkCreateAccess()).
-      case 'create_view':
-        // Any of the create permissions.
-        return $allowed_if_admin->orIf(AccessResult::allowedIfHasPermission($account, 'create crm_core_contact entities'));
+        return AccessResult::allowedIfHasPermissions($account, [
+          'administer crm_core_contact entities',
+          'revert contact record',
+        ], 'OR');
     }
   }
 

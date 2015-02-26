@@ -25,6 +25,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *       "default" = "Drupal\crm_core_contact\Form\ContactForm",
  *       "delete" = "Drupal\crm_core_contact\Form\ContactDeleteForm",
  *     },
+ *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
  *     "list_builder" = "Drupal\crm_core_contact\ContactListBuilder",
  *   },
  *   base_table = "crm_core_contact",
