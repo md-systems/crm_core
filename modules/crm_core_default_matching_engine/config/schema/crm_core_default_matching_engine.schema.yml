@@ -24,21 +24,25 @@ crm_core_default_matching_engine.rule.*:
       type: sequence
       sequence:
         # This sequence is keyed by field names.
-        - type: mapping
+        - type: sequence
           label: Field
-          mapping:
-            weight:
-              type: integer
-              label: 'Weight'
-            status:
-              type: boolean
-              label: Enabled
-            operator:
-              type: string
-              label: Operator
-            options:
-              type: string
-              label: Options
-            score:
-              type: integer
-              label: Score
+          sequence:
+          # This sequence is keyed by field property names.
+          - type: mapping
+            label: Field property
+            mapping:
+              weight:
+                type: integer
+                label: 'Weight'
+              status:
+                type: boolean
+                label: Enabled
+              operator:
+                type: string
+                label: Operator
+              options:
+                type: string
+                label: Options
+              score:
+                type: integer
+                label: Score

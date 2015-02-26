@@ -12,18 +12,6 @@ use Drupal\crm_core_contact\Entity\ContactType;
 use Drupal\crm_core_default_matching_engine\Entity\MatchingRule;
 
 /**
- * Implements hook_permissions().
- */
-function crm_core_default_matching_engine_permission() {
-  return array(
-    'administer default matching engine' => array(
-      'title' => t('Administer default matching engine'),
-      'description' => t('Allow users to modify the rules associated with the CRM Core Match default matching engine.'),
-    ),
-  );
-}
-
-/**
  * Implements hook_menu().
  */
 function crm_core_default_matching_engine_menu() {

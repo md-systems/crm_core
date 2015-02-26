@@ -1,0 +1,8 @@
+administer matching engines:
+  title: 'Administer matching engines'
+
+view matching engine rules configuration:
+  title: 'View matching engine rules configuration'
+
+view match information:
+  title: 'View match information'
