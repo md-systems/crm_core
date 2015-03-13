@@ -6,7 +6,7 @@ crm_core_default_matching_engine.config:
   requirements:
     _permission: 'administer default matching engine'
 
-crm_core_default_matching_engine.rule_edit:
+entity.crm_core_default_engine_rule.edit_form:
   path: '/admin/config/crm-core/match/default/edit/{crm_core_default_engine_rule}'
   defaults:
     _entity_form: 'crm_core_default_engine_rule.default'

@@ -28,7 +28,7 @@ use Drupal\crm_core_contact\Entity\ContactType;
  *   links = {
  *     "canonical" = "crm_core_default_matching_engine.rule_edit",
  *     "add-form" = "crm_core_default_matching_engine.rule_add",
- *     "edit-form" = "crm_core_default_matching_engine.rule_edit",
+ *     "edit-form" = "admin/config/crm-core/match/default/edit/{crm_core_default_engine_rule}",
  *   }
  * )
  */
