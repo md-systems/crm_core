@@ -82,7 +82,7 @@ class ContactListBuilder extends EntityListBuilder {
 
     $row['label']['data'] = array(
       '#type' => 'link',
-      '#title' => $entity->label(),
+      '#title' => String::checkPlain($entity->label()) ?: $this->t('(no name)'),
       '#url' => $entity->urlInfo(),
     );
 
