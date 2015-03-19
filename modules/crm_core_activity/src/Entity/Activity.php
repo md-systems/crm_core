@@ -10,6 +10,8 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\crm_core_activity\ActivityInterface;
+use Drupal\crm_core_contact\ContactInterface;
 
 /**
  * CRM Activity Entity Class.
@@ -57,7 +59,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  * @todo Add Views support.
  * @todo Replace list builder with a view.
  */
-class Activity extends ContentEntityBase {
+class Activity extends ContentEntityBase implements ActivityInterface {
 
   /**
    * {@inheritdoc}
@@ -212,5 +214,19 @@ class Activity extends ContentEntityBase {
 
     $account = \Drupal::currentUser();
     $record->uid = $account->id();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addParticipant(ContactInterface $contact) {
+    $this->get('activity_participants')->appendItem($contact);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getChangedTime() {
+    return $this->changed;
   }
 }

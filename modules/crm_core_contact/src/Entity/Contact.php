@@ -10,6 +10,7 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\crm_core_contact\ContactInterface;
 
 /**
  * CRM Contact Entity Class.
@@ -54,7 +55,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *
  * @todo Add Views support.
  */
-class Contact extends ContentEntityBase {
+class Contact extends ContentEntityBase implements ContactInterface {
 
   /**
    * {@inheritdoc}
@@ -233,6 +234,13 @@ class Contact extends ContentEntityBase {
     \Drupal::moduleHandler()->alter('crm_core_contact_label', $label, $entity);
 
     return $label;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getChangedTime() {
+    return $this->changed;
   }
 
 }
