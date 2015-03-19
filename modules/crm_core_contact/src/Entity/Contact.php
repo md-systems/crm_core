@@ -243,4 +243,15 @@ class Contact extends ContentEntityBase implements ContactInterface {
     return $this->changed;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function label() {
+    $label = parent::label();
+    if (empty($label)) {
+      $label = t('Nameless #@id', ['@id' => $this->id()]);
+    }
+    return $label;
+  }
+
 }

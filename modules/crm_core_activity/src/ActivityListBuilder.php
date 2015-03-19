@@ -7,6 +7,7 @@
 
 namespace Drupal\crm_core_activity;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Datetime\Date;
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Entity\EntityInterface;
@@ -64,8 +65,9 @@ class ActivityListBuilder extends EntityListBuilder {
 
     $row['title']['data'] = array(
       '#type' => 'link',
-      '#title' => $entity->label(),
-    ) + $entity->urlInfo()->toRenderArray();
+      '#title' => String::checkPlain($entity->label()),
+      '#url' => $entity->urlInfo(),
+    );
 
     $row['type'] = $entity->get('type')->entity->label();
 
