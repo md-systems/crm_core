@@ -3,3 +3,9 @@ crm_core_activity.add:
   title: 'Add an activity'
   appears_on:
     - entity.crm_core_activity.collection
+
+entity.crm_core_activity_type.add_form:
+  route_name: entity.crm_core_activity_type.add_form
+  title: 'Add activity type'
+  appears_on:
+    - entity.crm_core_activity_type.collection

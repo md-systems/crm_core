@@ -55,6 +55,14 @@ entity.crm_core_activity_type.collection:
   requirements:
     _permission: 'administer activity types'
 
+entity.crm_core_activity_type.add_form:
+  path: '/admin/structure/crm-core/activity-types/add'
+  title: 'Add activity type'
+  defaults:
+    _entity_form: 'crm_core_activity_type.default'
+  requirements:
+    _entity_create_access: 'crm_core_activity_type'
+
 entity.crm_core_activity_type.edit_form:
   path: '/admin/structure/crm-core/activity-types/{crm_core_activity_type}'
   defaults:

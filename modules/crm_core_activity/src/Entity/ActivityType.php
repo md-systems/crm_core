@@ -35,7 +35,7 @@ use Drupal\field\Entity\FieldConfig;
  *   },
  *   links = {
  *     "canonical" = "admin/structure/crm-core/activity-types/{crm_core_activity_type}",
- *     "add-form" = "crm_core_activity.type_add",
+ *     "add-form" = "admin/structure/crm-core/activity-types/add",
  *     "edit-form" = "admin/structure/crm-core/activity-types/{crm_core_activity_type}",
  *     "delete-form" = "admin/structure/crm-core/activity-types/{crm_core_activity_type}/delete",
  *     "enable" = "crm_core_activity.type_enable",
