@@ -3,10 +3,6 @@ name: Meeting
 description: 'A meeting between 2 or more contacts.'
 activity_string: null
 status: true
-uuid: ed38d13c-ded1-4ef1-811b-ec52010823ad
 langcode: en
 dependencies:
-  config:
-    - field.storage.crm_core_activity.activity_date
-    - field.storage.crm_core_activity.activity_notes
-    - field.storage.crm_core_activity.activity_participants
+  config: { }
