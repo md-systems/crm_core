@@ -33,6 +33,12 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *     "label" = "name",
  *     "status" = "disabled",
  *   },
+ *   config_export = {
+ *     "name",
+ *     "type",
+ *     "description",
+ *     "locked",
+ *   },
  *   links = {
  *     "add-form" = "admin/structure/crm-core/contact-types/add",
  *     "edit-form" = "admin/structure/crm-core/contact-types/{crm_core_contact_type}",
