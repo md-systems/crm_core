@@ -37,7 +37,7 @@ use Drupal\field\Entity\FieldConfig;
  *     "name",
  *     "type",
  *     "description",
- *     "primary_fields",
+ *     "activity_string",
  *   },
  *   links = {
  *     "canonical" = "admin/structure/crm-core/activity-types/{crm_core_activity_type}",

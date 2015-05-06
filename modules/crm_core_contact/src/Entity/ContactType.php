@@ -38,6 +38,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *     "type",
  *     "description",
  *     "locked",
+ *     "primary_fields",
  *   },
  *   links = {
  *     "add-form" = "admin/structure/crm-core/contact-types/add",

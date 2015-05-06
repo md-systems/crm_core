@@ -16,3 +16,10 @@ crm_core_contact.type.*:
     locked:
       type: boolean
       label: 'Whether or not this type is locked.'
+    primary_fields:
+      type: sequence
+      label: 'The fields the contact uses primarily'
+      sequence:
+        type: string
+        label: 'Field'
+
