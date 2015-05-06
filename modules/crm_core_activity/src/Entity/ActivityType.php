@@ -33,6 +33,12 @@ use Drupal\field\Entity\FieldConfig;
  *     "id" = "type",
  *     "label" = "name",
  *   },
+ *   config_export = {
+ *     "name",
+ *     "type",
+ *     "description",
+ *     "primary_fields",
+ *   },
  *   links = {
  *     "canonical" = "admin/structure/crm-core/activity-types/{crm_core_activity_type}",
  *     "add-form" = "admin/structure/crm-core/activity-types/add",
