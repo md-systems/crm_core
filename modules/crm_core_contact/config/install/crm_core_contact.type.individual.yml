@@ -2,7 +2,7 @@ type: individual
 name: Individual
 description: 'A single individual.'
 locked: false
-primary_fields: null
+primary_fields: { }
 status: true
 uuid: 28191553-fbfc-45ce-8701-1cb7dbaab715
 langcode: en
