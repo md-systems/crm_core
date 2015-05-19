@@ -7,6 +7,7 @@
 namespace Drupal\crm_core_contact\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -56,6 +57,8 @@ use Drupal\crm_core_contact\ContactInterface;
  * @todo Add Views support.
  */
 class Contact extends ContentEntityBase implements ContactInterface {
+
+  use EntityChangedTrait;
 
   /**
    * {@inheritdoc}

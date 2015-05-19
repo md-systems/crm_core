@@ -7,6 +7,7 @@
 namespace Drupal\crm_core_activity\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -60,6 +61,8 @@ use Drupal\crm_core_contact\ContactInterface;
  * @todo Replace list builder with a view.
  */
 class Activity extends ContentEntityBase implements ActivityInterface {
+
+  use EntityChangedTrait;
 
   /**
    * {@inheritdoc}
@@ -135,6 +138,7 @@ class Activity extends ContentEntityBase implements ActivityInterface {
 
     // @todo Check settings.
     $fields['activity_participants'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Participants'))
       ->setSetting('target_type', 'crm_core_contact')
       ->setCardinality(-1)
       ->setRequired(TRUE)
