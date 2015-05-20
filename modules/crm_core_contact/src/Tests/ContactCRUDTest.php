@@ -23,7 +23,6 @@ class ContactCRUDTest extends KernelTestBase {
    * @var array
    */
   public static $modules = array(
-    'entity',
     'field',
     'text',
     'user',

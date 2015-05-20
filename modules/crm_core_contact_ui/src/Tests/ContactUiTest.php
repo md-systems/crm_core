@@ -114,7 +114,7 @@ class ContactUiTest extends WebTestBase {
     $this->assertLink('Fam. Johnson', 0, 'Updated contact title listed.');
 
     // Delete household contact.
-    $this->drupalPostForm('crm-core/contact/1/delete', array(), 'Yes');
+    $this->drupalPostForm('crm-core/contact/1/delete', array(), t('Delete'));
     $this->assertUrl('crm-core/contact');
     $this->assertNoLink('Fam. Johnson', 0, 'Deleted contact title no more listed.');
 
@@ -138,7 +138,7 @@ class ContactUiTest extends WebTestBase {
     $this->assertLink('Johnson', 0, 'Updated individual contact title listed.');
 
     // Delete individual contact.
-    $this->drupalPostForm('crm-core/contact/2/delete', array(), 'Yes');
+    $this->drupalPostForm('crm-core/contact/2/delete', array(), t('Delete'));
     $this->assertUrl('crm-core/contact');
     $this->assertNoLink('Johnson', 0, 'Deleted individual contact title no more listed.');
 
@@ -157,7 +157,7 @@ class ContactUiTest extends WebTestBase {
     $this->assertLink('Another Example ltd', 0, 'Updated contact title listed.');
 
     // Delete organization contact.
-    $this->drupalPostForm('crm-core/contact/3/delete', array(), 'Yes');
+    $this->drupalPostForm('crm-core/contact/3/delete', array(), t('Delete'));
     $this->assertUrl('crm-core/contact');
     $this->assertNoLink('Another Example ltd', 0, 'Deleted contact title no more listed.');
 
