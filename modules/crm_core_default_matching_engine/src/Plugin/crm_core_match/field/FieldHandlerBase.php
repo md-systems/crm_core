@@ -141,7 +141,7 @@ abstract class FieldHandlerBase implements FieldHandlerInterface, ContainerFacto
    */
   public function match(Contact $contact, $property = 'value') {
 
-    $results = array();
+    $ids = array();
 
     $field = $this->field->getName();
     $needle = $contact->get($field)->{$property};
@@ -156,11 +156,9 @@ abstract class FieldHandlerBase implements FieldHandlerInterface, ContainerFacto
         $field .= '.' . $property;
       }
       $this->query->condition($field, $needle, $this->getOperator($property));
-      $results = $this->query->execute();
+      $ids = $this->query->execute();
     }
 
-    // Get the ids of the identified matches.
-    $ids = array_keys($results);
     // Get the score for this field/propery.
     $score = array(
       $this->field->getName() . '.' . $property => $this->getScore($property),
