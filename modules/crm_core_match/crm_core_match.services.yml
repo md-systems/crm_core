@@ -18,6 +18,5 @@ services:
 
   config.crm_core_match.settings:
     class: Drupal\Core\Config\Config
-    factory_method: get
-    factory_service: config.factory
+    factory: config.factory:get
     arguments: ['crm_core_match.settings']
