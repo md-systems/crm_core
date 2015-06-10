@@ -53,6 +53,7 @@ class ContactCRUDTest extends KernelTestBase {
 //    $this->assertTrue($contact_type->locked, t('New contact type has locked set to TRUE.'));
     $contact_type->name = $this->randomMachineName();
     $contact_type->description = $this->randomString();
+    $contact_type->primary_fields = [];
     $this->assertEqual(SAVED_NEW, $contact_type->save(), 'Contact type saved.');
 
     // Load.
@@ -78,6 +79,7 @@ class ContactCRUDTest extends KernelTestBase {
     $this->installEntitySchema('user');
 
     $type = ContactType::create(array('type' => 'test'));
+    $type->primary_fields = [];
     $type->save();
 
     // Create.
