@@ -2,7 +2,7 @@
 
 crm_core_activity.type.*:
   type: config_entity
-  label: 'Contact type'
+  label: 'Activtiy type'
   mapping:
     name:
       type: label
@@ -13,6 +13,6 @@ crm_core_activity.type.*:
     description:
       type: text
       label: 'Description'
-    primary_fields:
+    activity_string:
       type: string
       label: 'Text describing the relationship between the contact and this activity.'

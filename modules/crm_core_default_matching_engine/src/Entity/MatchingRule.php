@@ -25,6 +25,14 @@ use Drupal\crm_core_contact\Entity\ContactType;
  *     "id" = "type",
  *     "label" = "label",
  *   },
+ *   config_export = {
+ *     "label",
+ *     "type",
+ *     "threshold",
+ *     "return_order",
+ *     "strict",
+ *     "rules",
+ *   },
  *   links = {
  *     "canonical" = "crm_core_default_matching_engine.rule_edit",
  *     "add-form" = "crm_core_default_matching_engine.rule_add",
