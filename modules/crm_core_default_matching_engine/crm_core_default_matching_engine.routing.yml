@@ -1,5 +1,5 @@
 crm_core_default_matching_engine.config:
-  path: admin/config/crm-core/match/default
+  path: '/admin/config/crm-core/match/default'
   defaults:
     _controller: 'Drupal\crm_core_default_matching_engine\Controller\EngineController::configPage'
     _title: 'Default matching engine configuration'
