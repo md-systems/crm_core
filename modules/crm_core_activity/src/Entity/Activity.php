@@ -49,11 +49,11 @@ use Drupal\crm_core_contact\ContactInterface;
  *     "plural" = @Translation("Activities"),
  *   },
  *   links = {
- *     "canonical" = "crm-core/activity/{crm_core_activity}",
- *     "delete-form" = "crm-core/activity/{crm_core_activity}/delete",
- *     "edit-form" = "crm-core/activity/{crm_core_activity}/edit",
- *     "version-history" = "crm_core_activity.revision_list",
- *     "admin-form" = "crm_core_activity.type_edit"
+ *     "canonical" = "/crm-core/activity/{crm_core_activity}",
+ *     "delete-form" = "/crm-core/activity/{crm_core_activity}/delete",
+ *     "edit-form" = "/crm-core/activity/{crm_core_activity}/edit",
+ *     "version-history" = "/crm_core_activity.revision_list",
+ *     "admin-form" = "/crm_core_activity.type_edit"
  *   }
  * )
  *

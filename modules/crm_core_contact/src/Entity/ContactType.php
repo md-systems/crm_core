@@ -41,11 +41,11 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *     "primary_fields",
  *   },
  *   links = {
- *     "add-form" = "admin/structure/crm-core/contact-types/add",
- *     "edit-form" = "admin/structure/crm-core/contact-types/{crm_core_contact_type}",
- *     "delete-form" = "admin/structure/crm-core/contact-types/{crm_core_contact_type}/delete",
- *     "enable" = "admin/structure/crm-core/contact-types/{crm_core_contact_type}/enable",
- *     "disable" = "admin/structure/crm-core/contact-types/{crm_core_contact_type}/disable",
+ *     "add-form" = "/admin/structure/crm-core/contact-types/add",
+ *     "edit-form" = "/admin/structure/crm-core/contact-types/{crm_core_contact_type}",
+ *     "delete-form" = "/admin/structure/crm-core/contact-types/{crm_core_contact_type}/delete",
+ *     "enable" = "/admin/structure/crm-core/contact-types/{crm_core_contact_type}/enable",
+ *     "disable" = "/admin/structure/crm-core/contact-types/{crm_core_contact_type}/disable",
  *   }
  * )
  */

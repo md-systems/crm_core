@@ -47,10 +47,10 @@ use Drupal\crm_core_contact\ContactInterface;
  *     "plural" = @Translation("Contacts"),
  *   },
  *   links = {
- *     "canonical" = "crm-core/contact/{crm_core_contact}",
- *     "collection" = "crm-core/contact",
- *     "edit_form" = "crm-core/contact/{crm_core_contact}/edit",
- *     "delete_form" = "crm-core/contact/{crm_core_contact}/delete"
+ *     "canonical" = "/crm-core/contact/{crm_core_contact}",
+ *     "collection" = "/crm-core/contact",
+ *     "edit_form" = "/crm-core/contact/{crm_core_contact}/edit",
+ *     "delete_form" = "/crm-core/contact/{crm_core_contact}/delete"
  *   }
  * )
  *

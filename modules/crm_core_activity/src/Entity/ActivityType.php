@@ -40,12 +40,12 @@ use Drupal\field\Entity\FieldConfig;
  *     "activity_string",
  *   },
  *   links = {
- *     "canonical" = "admin/structure/crm-core/activity-types/{crm_core_activity_type}",
- *     "add-form" = "admin/structure/crm-core/activity-types/add",
- *     "edit-form" = "admin/structure/crm-core/activity-types/{crm_core_activity_type}",
- *     "delete-form" = "admin/structure/crm-core/activity-types/{crm_core_activity_type}/delete",
- *     "enable" = "crm_core_activity.type_enable",
- *     "disable" = "crm_core_activity.type_disable",
+ *     "canonical" = "/admin/structure/crm-core/activity-types/{crm_core_activity_type}",
+ *     "add-form" = "/admin/structure/crm-core/activity-types/add",
+ *     "edit-form" = "/admin/structure/crm-core/activity-types/{crm_core_activity_type}",
+ *     "delete-form" = "/admin/structure/crm-core/activity-types/{crm_core_activity_type}/delete",
+ *     "enable" = "/crm_core_activity.type_enable",
+ *     "disable" = "/crm_core_activity.type_disable",
  *   }
  * )
  */
