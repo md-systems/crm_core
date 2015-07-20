@@ -39,7 +39,7 @@ class crm_core_activity_handler_field_link extends views_handler_field {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('view');
     $activity_id = $this->get_value($values, 'activity_id');
 
-    return l($text, 'crm-core/activity/' . $activity_id);
+    return l($text, '/crm-core/activity/' . $activity_id);
   }
 }
 
@@ -68,10 +68,10 @@ class crm_core_activity_handler_field_link_edit extends crm_core_activity_handle
     $activity_id = $this->get_value($values, 'activity_id');
 
     if ($this->options['redirect']) {
-      return l($text, 'crm-core/activity/' . $activity_id . '/edit', array('query' => array('destination' => $_GET['q'])));
+      return l($text, '/crm-core/activity/' . $activity_id . '/edit', array('query' => array('destination' => $_GET['q'])));
     }
     else {
-      return l($text, 'crm-core/activity/' . $activity_id . '/edit');
+      return l($text, '/crm-core/activity/' . $activity_id . '/edit');
     }
   }
 }
@@ -82,10 +82,10 @@ class crm_core_activity_handler_field_link_delete extends crm_core_activity_hand
     $activity_id = $this->get_value($values, 'activity_id');
 
     if ($this->options['redirect']) {
-      return l($text, 'crm-core/activity/' . $activity_id . '/delete', array('query' => array('destination' => $_GET['q'])));
+      return l($text, '/crm-core/activity/' . $activity_id . '/delete', array('query' => array('destination' => $_GET['q'])));
     }
     else {
-      return l($text, 'crm-core/activity/' . $activity_id . '/delete');
+      return l($text, '/crm-core/activity/' . $activity_id . '/delete');
     }
   }
 }

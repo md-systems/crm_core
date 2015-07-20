@@ -52,11 +52,11 @@ class ActivityUiTest extends WebTestBase {
     ));
     $household->save();
 
-    $this->drupalGet('/crm-core/activity');
+    $this->drupalGet('crm-core/activity');
     $this->assertText(t('There are no activities available.'), 'No activities available.');
     $this->assertLink(t('Add an activity'));
 
-    $this->drupalGet('/crm-core/activity/add');
+    $this->drupalGet('crm-core/activity/add');
     $this->assertLink(t('Add Meeting'));
     $this->assertLink(t('Add Phone call'));
 
@@ -68,7 +68,7 @@ class ActivityUiTest extends WebTestBase {
       'activity_notes[0][value]' => $this->randomString(),
       'activity_participants[0][target_id]' => $household->label() . ' (' . $household->id() . ')',
     );
-    $this->drupalPostForm('/crm-core/activity/add/meeting', $meeting_activity, 'Save Activity');
+    $this->drupalPostForm('crm-core/activity/add/meeting', $meeting_activity, 'Save Activity');
     $this->assertText('Activity Pellentesque created.', 'No errors after adding new activity.');
 
     // Create Meeting activity. Ensure it it listed.
@@ -79,14 +79,14 @@ class ActivityUiTest extends WebTestBase {
       'activity_notes[0][value]' => $this->randomString(),
       'activity_participants[0][target_id]' => $household->label() . ' (' . $household->id() . ')',
     );
-    $this->drupalPostForm('/crm-core/activity/add/phone_call', $phonecall_activity, 'Save Activity');
+    $this->drupalPostForm('crm-core/activity/add/phone_call', $phonecall_activity, 'Save Activity');
     $this->assertText('Activity Mollis created.', 'No errors after adding new activity.');
 
     // Update activity and assert its title changed on the list.
     $meeting_activity = array(
       'title[0][value]' => 'Vestibulum',
     );
-    $this->drupalPostForm('/crm-core/activity/1/edit', $meeting_activity, 'Save Activity');
+    $this->drupalPostForm('crm-core/activity/1/edit', $meeting_activity, 'Save Activity');
     $this->assertText('Vestibulum', 'Activity updated.');
     $this->drupalGet('crm-core/activity');
     $this->assertLink('Vestibulum', 0, 'Updated activity listed properly.');
@@ -95,19 +95,19 @@ class ActivityUiTest extends WebTestBase {
     $phonecall_activity = array(
       'title[0][value]' => 'Commodo',
     );
-    $this->drupalPostForm('/crm-core/activity/2/edit', $phonecall_activity, 'Save Activity');
+    $this->drupalPostForm('crm-core/activity/2/edit', $phonecall_activity, 'Save Activity');
     $this->assertText('Commodo', 'Activity updated.');
     $this->drupalGet('crm-core/activity');
     $this->assertLink('Commodo', 0, 'Updated activity listed properly.');
 
     // Delete Meeting activity.
-    $this->drupalPostForm('/crm-core/activity/1/delete', array(), 'Delete');
+    $this->drupalPostForm('crm-core/activity/1/delete', array(), 'Delete');
     $this->assertText('Meeting Vestibulum has been deleted.', 'No errors after deleting activity.');
     $this->drupalGet('crm-core/activity');
     $this->assertNoLink('Vestibulum', 'Deleted activity is no more listed.');
 
     // Delete Phone call activity.
-    $this->drupalPostForm('/crm-core/activity/2/delete', array(), 'Delete');
+    $this->drupalPostForm('crm-core/activity/2/delete', array(), 'Delete');
     $this->assertText('Phone call Commodo has been deleted.', 'No errors after deleting activity.');
     $this->drupalGet('crm-core/activity');
     $this->assertNoLink('Commodo', 'Deleted activity is no more listed.');
