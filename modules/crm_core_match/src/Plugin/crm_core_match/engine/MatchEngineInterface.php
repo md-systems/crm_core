@@ -7,6 +7,7 @@
 
 namespace Drupal\crm_core_match\Plugin\crm_core_match\engine;
 
+use Drupal\crm_core_contact\ContactInterface;
 use Drupal\crm_core_contact\Entity\Contact;
 
 /**
@@ -27,5 +28,5 @@ interface MatchEngineInterface {
    * @return int[]
    *   An array of entity ids for potential matches.
    */
-  public function match(Contact $contact);
+  public function match(ContactInterface $contact);
 }

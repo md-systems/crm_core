@@ -7,6 +7,7 @@
 
 namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field;
 
+use Drupal\crm_core_contact\ContactInterface;
 use Drupal\crm_core_contact\Entity\Contact;
 
 /**
@@ -145,5 +146,5 @@ interface FieldHandlerInterface {
    *   );
    *   @end
    */
-  public function match(Contact $contact, $property = 'value');
+  public function match(ContactInterface $contact, $property = 'value');
 }

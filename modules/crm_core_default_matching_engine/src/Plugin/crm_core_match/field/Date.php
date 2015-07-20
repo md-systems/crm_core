@@ -7,6 +7,7 @@
 
 namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field;
 
+use Drupal\crm_core_contact\ContactInterface;
 use Drupal\crm_core_contact\Entity\Contact;
 
 /**
@@ -41,7 +42,7 @@ class DateMatchField extends FieldHandlerBase {
    *
    * @todo Update to new query API.
    */
-  public function match(Contact $contact, $property = 'value') {
+  public function match(ContactInterface $contact, $property = 'value') {
     $results = array();
     $field_item = 'value';
     $field = field_get_items('crm_core_contact', $contact, $rule->field_name);

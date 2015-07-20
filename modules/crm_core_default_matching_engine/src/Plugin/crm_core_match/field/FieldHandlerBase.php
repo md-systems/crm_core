@@ -10,6 +10,7 @@ namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\crm_core_contact\ContactInterface;
 use Drupal\crm_core_contact\Entity\Contact;
 use Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\engine\DefaultMatchingEngine;
 use Drupal\field\FieldConfigInterface;
@@ -139,7 +140,7 @@ abstract class FieldHandlerBase implements FieldHandlerInterface, ContainerFacto
   /**
    * {@inheritdoc}
    */
-  public function match(Contact $contact, $property = 'value') {
+  public function match(ContactInterface $contact, $property = 'value') {
 
     $ids = array();
 
