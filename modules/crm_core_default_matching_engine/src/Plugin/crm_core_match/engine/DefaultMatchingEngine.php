@@ -9,6 +9,7 @@ namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\engine;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\crm_core_contact\ContactInterface;
 use Drupal\crm_core_contact\Entity\Contact;
 use Drupal\crm_core_match\Plugin\crm_core_match\engine\MatchEngineBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -75,7 +76,7 @@ class DefaultMatchingEngine extends MatchEngineBase {
   /**
    * {@inheritdoc}
    */
-  public function match(Contact $contact) {
+  public function match(ContactInterface $contact) {
     $ids = array();
     /* @var \Drupal\crm_core_default_matching_engine\Entity\MatchingRule $matching_rule */
     $matching_rule = $this->entityManager->getStorage('crm_core_default_engine_rule')->load($contact->bundle());

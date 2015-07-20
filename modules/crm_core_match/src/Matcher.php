@@ -9,6 +9,7 @@ namespace Drupal\crm_core_match;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Config\Config;
+use Drupal\crm_core_contact\ContactInterface;
 use Drupal\crm_core_contact\Entity\Contact;
 use Drupal\crm_core_match\Plugin\crm_core_match\engine\MatchEngineInterface;
 
@@ -128,7 +129,7 @@ class Matcher implements MatcherInterface {
    *
    * @todo Check engine status. Skip disabled engines.
    */
-  public function match(Contact $contact) {
+  public function match(ContactInterface $contact) {
     $ids = array();
 
     foreach ($this->getEngines() as $engine) {
