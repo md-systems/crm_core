@@ -113,7 +113,7 @@ class ActivityUiTest extends WebTestBase {
     $this->assertNoLink('Commodo', 'Deleted activity is no more listed.');
 
     // Assert there is no activities left.
-    $this->drupalGet('/crm-core/activity');
+    $this->drupalGet('crm-core/activity');
     $this->assertText(t('There are no activities available.'), 'No activities listed.');
   }
 
