@@ -128,7 +128,7 @@ interface FieldHandlerInterface {
   /**
    * Executes the match query.
    *
-   * @param \Drupal\crm_core_contact\Entity\ContactInterface $contact
+   * @param \Drupal\crm_core_contact\ContactInterface $contact
    *   The contact interface to find matches for.
    *
    * @param string $property
