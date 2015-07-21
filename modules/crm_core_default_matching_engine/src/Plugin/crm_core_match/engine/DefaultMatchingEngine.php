@@ -10,7 +10,6 @@ namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\engine;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\crm_core_contact\ContactInterface;
-use Drupal\crm_core_contact\Entity\Contact;
 use Drupal\crm_core_match\Plugin\crm_core_match\engine\MatchEngineBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
