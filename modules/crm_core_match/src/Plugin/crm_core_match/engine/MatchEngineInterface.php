@@ -22,8 +22,8 @@ interface MatchEngineInterface extends PluginInspectionInterface, PluginFormInte
   /**
    * Finds matches for given contact.
    *
-   * @param \Drupal\crm_core_contact\ContactInterface $contact
-   *   A contact entity used to pass data for identifying a match.
+   * @param \Drupal\crm_core_contact\Entity\ContactInterface $contact
+   *   A contact interface entity used to pass data for identifying a match.
    *
    * @return int[]
    *   An array of entity ids for potential matches.
