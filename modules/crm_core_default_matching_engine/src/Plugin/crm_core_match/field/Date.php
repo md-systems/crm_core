@@ -8,7 +8,6 @@
 namespace Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field;
 
 use Drupal\crm_core_contact\ContactInterface;
-use Drupal\crm_core_contact\Entity\Contact;
 
 /**
  * Class for evaluating date fields.

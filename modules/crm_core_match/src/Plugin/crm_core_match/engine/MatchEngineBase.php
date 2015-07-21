@@ -9,7 +9,6 @@ namespace Drupal\crm_core_match\Plugin\crm_core_match\engine;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\crm_core_contact\ContactInterface;
-use Drupal\crm_core_contact\Entity\Contact;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
