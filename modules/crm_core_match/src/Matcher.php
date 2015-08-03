@@ -9,6 +9,7 @@ namespace Drupal\crm_core_match;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Config\Config;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\crm_core_contact\ContactInterface;
 use Drupal\crm_core_contact\Entity\Contact;
 use Drupal\crm_core_match\Plugin\crm_core_match\engine\MatchEngineInterface;
@@ -137,5 +138,78 @@ class Matcher implements MatcherInterface {
     }
 
     return array_unique($ids);
+  }
+
+  /**
+   * Form constructor.
+   *
+   * Plugin forms are embedded in other forms. In order to know where the plugin
+   * form is located in the parent form, #parents and #array_parents must be
+   * known, but these are not available during the initial build phase. In order
+   * to have these properties available when building the plugin form's
+   * elements, let this method return a form element that has a #process
+   * callback and build the rest of the form in the callback. By the time the
+   * callback is executed, the element's #parents and #array_parents properties
+   * will have been set by the form API. For more documentation on #parents and
+   * #array_parents, see
+   * https://api.drupal.org/api/drupal/developer!topics!forms_api_reference.html/8.
+   *
+   * @param array $form
+   *   An associative array containing the initial structure of the plugin form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the complete form.
+   *
+   * @return array
+   *   The form structure.
+   */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    // TODO: Implement buildConfigurationForm() method.
+  }
+
+  /**
+   * Form validation handler.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the plugin form as built
+   *   by static::buildConfigurationForm().
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the complete form.
+   */
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+    // TODO: Implement validateConfigurationForm() method.
+  }
+
+  /**
+   * Form submission handler.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the plugin form as built
+   *   by static::buildConfigurationForm().
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the complete form.
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+    // TODO: Implement submitConfigurationForm() method.
+  }
+
+  /**
+   * Gets the plugin_id of the plugin instance.
+   *
+   * @return string
+   *   The plugin_id of the plugin instance.
+   */
+  public function getPluginId() {
+    // TODO: Implement getPluginId() method.
+  }
+
+  /**
+   * Gets the definition of the plugin implementation.
+   *
+   * @return array
+   *   The plugin definition, as returned by the discovery object used by the
+   *   plugin manager.
+   */
+  public function getPluginDefinition() {
+    // TODO: Implement getPluginDefinition() method.
   }
 }

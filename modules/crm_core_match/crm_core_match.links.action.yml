@@ -1,0 +1,6 @@
+entity.crm_core_match.add_form:
+  route_name: entity.crm_core_match.add_form
+  title: 'Add Matcher'
+  weight: 1
+  appears_on:
+    - entity.crm_core_match.collection

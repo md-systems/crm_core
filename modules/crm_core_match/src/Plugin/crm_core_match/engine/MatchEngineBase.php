@@ -7,31 +7,19 @@
 
 namespace Drupal\crm_core_match\Plugin\crm_core_match\engine;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Plugin\PluginBase;
 use Drupal\crm_core_contact\ContactInterface;
-use Drupal\crm_core_contact\Entity\Contact;
+use Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field\FieldHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Default implementation of MatchEngineInterface
+ * Default implementation of MatchEngineInterface.
  *
  * Safe for use by most matching engines.
  */
-abstract class MatchEngineBase implements MatchEngineInterface, ContainerFactoryPluginInterface {
-
-  /**
-   * The engine id.
-   *
-   * @var string
-   */
-  protected $id;
-
-  /**
-   * The engine definition.
-   *
-   * @var array
-   */
-  protected $definition;
+abstract class MatchEngineBase extends PluginBase implements MatchEngineInterface, ContainerFactoryPluginInterface {
 
   /**
    * The engine configuration.
@@ -41,12 +29,26 @@ abstract class MatchEngineBase implements MatchEngineInterface, ContainerFactory
   protected $configuration;
 
   /**
+   * The plugin_id.
+   *
+   * @var string
+   */
+  protected $pluginId;
+
+  /**
+   * The plugin implementation definition.
+   *
+   * @var array
+   */
+  protected $pluginDefinition;
+
+  /**
    * Constructs an plugin instance.
    */
-  public function __construct($configuration, $id, $definition) {
+  public function __construct($configuration, $plugin_id, $plugin_definition) {
     $this->configuration = $configuration;
-    $this->definition = $definition;
-    $this->id = $id;
+    $this->pluginDefinition = $plugin_definition;
+    $this->pluginId = $plugin_id;
   }
 
   /**
@@ -61,6 +63,64 @@ abstract class MatchEngineBase implements MatchEngineInterface, ContainerFactory
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getPluginId() {
+    return $this->pluginId;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPluginDefinition() {
+    return $this->pluginDefinition;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+    // Do nothing.
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+    // Do nothing.
+  }
+
+  /**
+   * Builds the header row for the rule listing.
+   *
+   * @return array
+   *   A render array structure of header strings.
+   */
+  abstract public function buildHeader();
+
+  /**
+   * Builds a row for an rule in the rule listing.
+   *
+   * @param \Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field\FieldHandlerInterface $field
+   *   The match field of this rule.
+   * @param string $name
+   *   The property name of this rule.
+   * @param bool $disabled
+   *   Disables the form elements.
+   *
+   * @return array
+   *   A render array structure of fields for this rule.
+   */
+  abstract public function buildRow(FieldHandlerInterface $field, $name, $disabled);
+
+  /**
    * Applies logical rules for identifying matches in the database.
    *
    * Any matching engine should implement this to apply it's unique matching
@@ -68,5 +128,6 @@ abstract class MatchEngineBase implements MatchEngineInterface, ContainerFactory
    *
    * @see MatchEngineInterface::match()
    */
-  public abstract function match(ContactInterface $contact);
+  abstract public function match(ContactInterface $contact);
+
 }

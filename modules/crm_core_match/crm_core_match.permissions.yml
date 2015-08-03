@@ -1,5 +1,5 @@
-administer matching engines:
-  title: 'Administer matching engines'
+administer matchers:
+  title: 'Administer matchers'
 
 view matching engine rules configuration:
   title: 'View matching engine rules configuration'

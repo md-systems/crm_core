@@ -1,15 +1,8 @@
-# Schema for the configuration files of the crm_core_activity module.
+# Schema for the configuration files of the crm_core_default_matching_engine module.
 
-crm_core_default_matching_engine.rule.*:
-  type: config_entity
-  label: 'Matching rule'
+crm_core_match.configuration.default:
+  type: mapping
   mapping:
-    label:
-      type: label
-      label: 'Entity label'
-    type:
-      type: string
-      label: 'Identifier'
     threshold:
       type: integer
       label: 'Match score threshold'

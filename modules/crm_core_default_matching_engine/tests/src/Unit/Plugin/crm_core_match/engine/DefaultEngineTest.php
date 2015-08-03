@@ -43,7 +43,7 @@ class DefaultEngineTest extends UnitTestCase {
   /**
    * A mocked matching rule.
    *
-   * @var \Drupal\crm_core_default_matching_engine\Entity\MatchingRule|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\crm_core_default_matching_engine\Entity\Matcher|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $matchingRule;
 

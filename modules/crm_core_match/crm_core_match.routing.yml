@@ -1,25 +1,30 @@
-crm_core_match.engines:
+entity.crm_core_match.collection:
   path: '/admin/config/crm-core/match'
   defaults:
-    _form: 'Drupal\crm_core_match\Form\EnginesConfigForm'
-    _title: 'Matching Engines'
+    _entity_list: 'crm_core_match'
+    _title: 'Matchers'
   requirements:
-    _permission: 'administer matching engines'
+    _permission: 'administer matchers'
 
-crm_core_match.enable:
-  path: '/admin/config/crm-core/match/{engine}/enable'
+entity.crm_core_match.add_form:
+  path: '/admin/config/crm-core/match/add'
   defaults:
-    _form: 'Drupal\crm_core_match\Form\EnginesToggleForm'
-    _title: 'Enable contact type'
-    op: 'enable'
+    _entity_form: 'crm_core_match.add'
+    _title: 'Add Matcher'
   requirements:
-    _permission: 'administer matching engines'
+    _entity_create_access: crm_core_match
 
-crm_core_match.disable:
-  path: '/admin/config/crm-core/match/{engine}/disable'
+entity.crm_core_match.edit_form:
+  path: '/admin/config/crm-core/match/{crm_core_match}'
   defaults:
-    _form: 'Drupal\crm_core_match\Form\EnginesToggleForm'
-    _title: 'Disable contact type'
-    op: 'disable'
+    _entity_form: 'crm_core_match.edit'
+    _title_callback: 'Drupal\crm_core_match\Controller\MatcherController::editTitle'
   requirements:
-    _permission: 'administer matching engines'
+    _entity_access: crm_core_match.update
+
+entity.crm_core_match.delete_form:
+  path: '/admin/config/crm-core/match/{crm_core_match}/delete'
+  defaults:
+    _entity_form: 'crm_core_match.delete'
+  requirements:
+    _entity_access: crm_core_match.delete

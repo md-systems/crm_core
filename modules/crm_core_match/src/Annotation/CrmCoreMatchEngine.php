@@ -44,7 +44,8 @@ class CrmCoreMatchEngine extends Plugin {
   /**
    * An array listing settings pages for the matching engine.
    *
-   * The keys
+   * The keys.
+   *
    * @var array
    *
    * Example structure:
@@ -58,4 +59,5 @@ class CrmCoreMatchEngine extends Plugin {
    * @endcode
    */
   public $settings;
+
 }

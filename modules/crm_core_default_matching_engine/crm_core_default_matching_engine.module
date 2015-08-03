@@ -9,7 +9,7 @@
 
 use Drupal\Core\Url;
 use Drupal\crm_core_contact\Entity\ContactType;
-use Drupal\crm_core_default_matching_engine\Entity\MatchingRule;
+use Drupal\crm_core_match\Entity\Matcher;
 
 /**
  * Implements hook_menu().
@@ -158,27 +158,12 @@ function crm_core_default_matching_engine_load_field_config($contact_type, $fiel
 }
 
 /**
- * Implements hook_entity_insert().
- *
- * Create a matching rule for each created contact type.
- */
-function crm_core_default_matching_engine_entity_insert(Drupal\Core\Entity\EntityInterface $entity) {
-  if ($entity->getEntityTypeId() == 'crm_core_contact_type') {
-    MatchingRule::create(array(
-      'type' => $entity->id(),
-      'status' => FALSE,
-    ))
-    ->save();
-  }
-}
-
-/**
  * Implements hook_entity_delete().
  *
  * Remove matching rule for deleted contact type.
  */
 function crm_core_default_matching_engine_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
   if ($entity->getEntityTypeId() == 'crm_core_contact_type') {
-    MatchingRule::load($entity->id())->delete();
+    Matcher::load($entity->id())->delete();
   }
 }

@@ -1,0 +1,18 @@
+# Config schema for matcher config entity.
+crm_core_match.matcher.*:
+  type: config_entity
+  label: 'Matcher'
+  mapping:
+    id:
+      type: string
+      label: 'Identifier'
+    label:
+      type: label
+      label: 'Entity label'
+    plugin_id:
+      type: string
+      label: 'Plugin ID'
+    configuration:
+      type: crm_core_match.configuration.[%parent.plugin_id]
+      label: 'Plugin configuration'
+
