@@ -29,8 +29,8 @@ env:
     - PATH="$PATH:$HOME/.composer/vendor/bin"
 
     # Configuration variables.
-    - DRUPAL_TI_MODULE_NAME="ultimate_cron"
-    - DRUPAL_TI_SIMPLETEST_GROUP="ultimate_cron"
+    - DRUPAL_TI_MODULE_NAME="crm_core"
+    - DRUPAL_TI_SIMPLETEST_GROUP="crm_core"
 
     # Define runners and environment vars to include before and after the
     # main runners / environment vars.
