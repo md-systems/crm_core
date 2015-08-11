@@ -7,6 +7,7 @@
 namespace Drupal\crm_core_match\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\crm_core_contact\ContactInterface;
 use Drupal\crm_core_match\Matcher\MatcherConfigInterface;
 
@@ -20,7 +21,6 @@ use Drupal\crm_core_match\Matcher\MatcherConfigInterface;
  *   handlers = {
  *     "list_builder" = "Drupal\crm_core_match\Matcher\MatcherListBuilder",
  *     "form" = {
- *       "default" = "Drupal\crm_core_match\Form\MatcherForm",
  *       "add" = "Drupal\crm_core_match\Form\MatcherForm",
  *       "edit" = "Drupal\crm_core_match\Form\MatcherForm",
  *       "delete" = "\Drupal\Core\Entity\EntityDeleteForm"
@@ -34,6 +34,7 @@ use Drupal\crm_core_match\Matcher\MatcherConfigInterface;
  *   config_export = {
  *     "id",
  *     "label",
+ *     "description",
  *     "plugin_id",
  *     "configuration",
  *   },
@@ -55,35 +56,36 @@ class Matcher extends ConfigEntityBase implements MatcherConfigInterface {
    *
    * @var string
    */
-  public $id;
+  protected $id;
+
+  /**
+   * A brief description of this matcher.
+   *
+   * @var string
+   */
+  protected $description;
+
 
   /**
    * The plugin id.
    *
    * @var string
    */
-  public $plugin_id;
+  protected $plugin_id;
 
   /**
-   * The entity label.
+   * The plugin instance.
    *
-   * @var string
+   * @var \Drupal\crm_core_match\Plugin\crm_core_match\engine\MatchEngineInterface
    */
-  protected $label;
+  protected $plugin;
 
   /**
    * The matcher plugin configuration.
    *
    * @var array
    */
-  public $configuration = array();
-
-  /**
-   * {@inheritdoc}
-   */
-  public function label() {
-    return parent::label();
-  }
+  protected $configuration = array();
 
   /**
    * {@inheritdoc}
@@ -95,39 +97,26 @@ class Matcher extends ConfigEntityBase implements MatcherConfigInterface {
   /**
    * {@inheritdoc}
    */
-  public function getSetting($key, $default = NULL) {
-    return isset($this->configuration[$key]) ? $this->configuration[$key] : $default;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getLabel() {
-    return $this->label;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getDescription() {
-    return $this->getPlugin()->getPluginDefinition()['description'];
+    return $this->description;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getPluginTitle() {
-    return $this->getPlugin()->getPluginDefinition()['title'];
+    return $this->getPlugin()->getPluginDefinition()['label'];
   }
 
   /**
    * {@inheritdoc}
    */
   public function getPlugin() {
-    $configuration = array('plugin_config' => $this);
-    $plugin = crm_core_match_matcher_manager()->createInstance($this->plugin_id, $configuration);
+    if (empty($this->plugin)) {
+      $this->plugin = crm_core_match_matcher_manager()->createInstance($this->plugin_id, $this->configuration);
+    }
 
-    return $plugin;
+    return $this->plugin;
   }
 
   /**
@@ -141,6 +130,16 @@ class Matcher extends ConfigEntityBase implements MatcherConfigInterface {
    */
   public function match(ContactInterface $contact) {
     return $this->getPlugin()->match($contact);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preSave(EntityStorageInterface $storage) {
+    parent::preSave($storage);
+
+    // @todo: Remove after implementing EntityWithPluginCollectionInterface.
+    $this->set('configuration', $this->getPlugin()->getConfiguration());
   }
 
 }

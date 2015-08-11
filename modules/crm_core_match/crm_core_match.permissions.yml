@@ -1,8 +1,8 @@
 administer matchers:
   title: 'Administer matchers'
 
-view matching engine rules configuration:
-  title: 'View matching engine rules configuration'
+view matching engine rules settings:
+  title: 'View matching engine rules settings'
 
 view match information:
   title: 'View match information'

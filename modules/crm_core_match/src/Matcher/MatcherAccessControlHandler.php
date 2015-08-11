@@ -6,7 +6,6 @@
 
 namespace Drupal\crm_core_match\Matcher;
 
-use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;

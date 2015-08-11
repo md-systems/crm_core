@@ -24,7 +24,7 @@ class MatcherListBuilder extends ConfigEntityListBuilder {
     // Overrides the original Header completely.
     $header['label'] = $this->t('Label');
     $header['description'] = $this->t('Description');
-    $header['plugin'] = $this->t('Matching engine (plugin)');
+    $header['plugin'] = $this->t('Match engine');
 
     return $header + parent::buildHeader();
   }
@@ -34,7 +34,7 @@ class MatcherListBuilder extends ConfigEntityListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     /** @var \Drupal\crm_core_match\Entity\Matcher $entity */
-    $row['label'] = $entity->getLabel();
+    $row['label'] = $entity->label();
     $row['description'] = $entity->getDescription();
     $row['plugin'] = $entity->getPluginTitle();
 

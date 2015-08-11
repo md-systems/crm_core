@@ -75,7 +75,7 @@ function crm_core_match_menu() {
   $items['crm-core/crm-core-match/info'] = array(
     'page callback' => 'crm_core_match_info_page',
     'title' => 'CRM Core Match info',
-    'access arguments' => array('view matching engine rules configuration'),
+    'access arguments' => array('view matching engine rules settings'),
     'type' => MENU_SUGGESTED_ITEM,
     'file' => 'crm_core_match.test.inc',
   );

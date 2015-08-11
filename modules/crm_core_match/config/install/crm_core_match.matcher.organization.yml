@@ -1,0 +1,10 @@
+langcode: en
+dependencies: {  }
+id: organization
+label: Organization
+description: Organization matcher
+plugin_id: default
+configuration:
+  threshold: 0
+  return_order: created
+  rules: {  }

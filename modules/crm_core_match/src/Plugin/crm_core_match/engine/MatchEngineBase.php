@@ -7,11 +7,10 @@
 
 namespace Drupal\crm_core_match\Plugin\crm_core_match\engine;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
-use Drupal\crm_core_contact\ContactInterface;
-use Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field\FieldHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -29,7 +28,7 @@ abstract class MatchEngineBase extends PluginBase implements MatchEngineInterfac
   protected $configuration;
 
   /**
-   * The plugin_id.
+   * The plugin id.
    *
    * @var string
    */
@@ -65,15 +64,23 @@ abstract class MatchEngineBase extends PluginBase implements MatchEngineInterfac
   /**
    * {@inheritdoc}
    */
-  public function getPluginId() {
-    return $this->pluginId;
+  public function getConfiguration() {
+    return $this->configuration;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getPluginDefinition() {
-    return $this->pluginDefinition;
+  public function setConfiguration(array $configuration) {
+    $this->configuration = $configuration;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfigurationItem($key) {
+    $configuration = $this->getConfiguration();
+    return NestedArray::getValue($configuration, (array) $key);
   }
 
   /**
@@ -96,38 +103,5 @@ abstract class MatchEngineBase extends PluginBase implements MatchEngineInterfac
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     // Do nothing.
   }
-
-  /**
-   * Builds the header row for the rule listing.
-   *
-   * @return array
-   *   A render array structure of header strings.
-   */
-  abstract public function buildHeader();
-
-  /**
-   * Builds a row for an rule in the rule listing.
-   *
-   * @param \Drupal\crm_core_default_matching_engine\Plugin\crm_core_match\field\FieldHandlerInterface $field
-   *   The match field of this rule.
-   * @param string $name
-   *   The property name of this rule.
-   * @param bool $disabled
-   *   Disables the form elements.
-   *
-   * @return array
-   *   A render array structure of fields for this rule.
-   */
-  abstract public function buildRow(FieldHandlerInterface $field, $name, $disabled);
-
-  /**
-   * Applies logical rules for identifying matches in the database.
-   *
-   * Any matching engine should implement this to apply it's unique matching
-   * logic.
-   *
-   * @see MatchEngineInterface::match()
-   */
-  abstract public function match(ContactInterface $contact);
 
 }

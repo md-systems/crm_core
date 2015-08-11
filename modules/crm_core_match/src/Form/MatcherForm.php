@@ -6,11 +6,8 @@
 
 namespace Drupal\crm_core_match\Form;
 
-use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Entity\EntityForm;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a form elements for Matcher.
@@ -53,11 +50,19 @@ class MatcherForm extends EntityForm {
       '#disabled' => !$matcher->isNew(),
     );
 
+    $form['description'] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('Description'),
+      '#default_value' => $matcher->getDescription(),
+      '#maxlength' => 255,
+      '#description' => $this->t('Description of the matcher.')
+    );
+
     // Get all plugins.
     if ($matcher->isNew()) {
       $plugin_types = array();
       foreach (crm_core_match_matcher_manager()->getDefinitions() as $plugin_id => $definition) {
-        $plugin_types[$plugin_id] = $definition['title'];
+        $plugin_types[$plugin_id] = $definition['label'];
       }
 
       // If there is only one plugin (matching engine) available, set it as
@@ -97,8 +102,8 @@ class MatcherForm extends EntityForm {
     else {
       $form['current_plugin_id'] = array(
         '#type' => 'item',
-        '#title' => $this->t('Matcher Plugin'),
-        '#markup' => (string) crm_core_match_matcher_manager()->getDefinition($matcher->plugin_id)['title'],
+        '#title' => $this->t('Match engine'),
+        '#markup' => $matcher->getPlugin()->getPluginDefinition()['label'],
       );
     }
 
@@ -108,7 +113,7 @@ class MatcherForm extends EntityForm {
       '#suffix' => '</div>',
     );
 
-    if (isset($matcher->plugin_id) && $plugin = $matcher->getPlugin()) {
+    if ($plugin = $matcher->getPlugin()) {
       $form['plugin_container']['configuration'] = array(
         '#type' => 'details',
         '#open' => TRUE,
@@ -130,7 +135,7 @@ class MatcherForm extends EntityForm {
   }
 
   /**
-   * Handles switching the configuration type selector.
+   * Handles switching the settings type selector.
    */
   public function ajaxReplacePluginSpecificForm($form, FormStateInterface $form_state) {
     return $form['plugin_container'];
@@ -147,7 +152,7 @@ class MatcherForm extends EntityForm {
     /** @var \Drupal\crm_core_match\Plugin\crm_core_match\engine\MatchEngineInterface $plugin */
     if ($matcher->isNew()) {
       $plugin_id = $form_state->getValue('plugin_id');
-      $plugin = crm_core_match_matcher_manager()->createInstance($plugin_id, array('plugin_config' => $matcher));
+      $plugin = crm_core_match_matcher_manager()->createInstance($plugin_id, $matcher->getConfiguration());
     }
     else {
       $plugin = $matcher->getPlugin();
@@ -165,41 +170,9 @@ class MatcherForm extends EntityForm {
     /** @var \Drupal\crm_core_match\Entity\Matcher $matcher */
     $matcher = $this->entity;
     $plugin = $matcher->getPlugin();
-
     $plugin->submitConfigurationForm($form, $form_state);
-  }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function save(array $form, FormStateInterface $form_state) {
-    $this->entity->save();
-    drupal_set_message($this->t('The configuration options have been saved.'));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state) {
-    parent::copyFormValuesToEntity($entity, $form, $form_state);
-
-    foreach ($form_state->getValue('configuration') as $key => $value) {
-      switch ($key) {
-        case 'rules':
-          $rules = array();
-          foreach ($value as $name => $config) {
-            if (strpos($name, ':') !== FALSE) {
-              list($parent, $child) = explode(':', $name, 2);
-              $rules[$parent][$child] = $config;
-            }
-            else {
-              $rules[$name] = $config;
-            }
-          }
-          $entity->configuration['rules'] = $rules;
-          break;
-      }
-    }
+    drupal_set_message($this->t('The configuration has been saved.'));
   }
 
 }

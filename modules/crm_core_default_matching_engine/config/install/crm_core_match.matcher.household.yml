@@ -1,9 +1,0 @@
-langcode: en
-dependencies: {  }
-id: household
-label: Household
-plugin_id: default
-configuration:
-  threshold: 0
-  return_order: created
-  rules: {  }

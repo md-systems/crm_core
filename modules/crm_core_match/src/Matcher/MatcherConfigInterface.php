@@ -23,18 +23,10 @@ interface MatcherConfigInterface extends ConfigEntityInterface {
   public function getPlugin();
 
   /**
-   * Gets matcher label.
+   * Gets the description.
    *
    * @return string
-   *   Matcher label.
-   */
-  public function getLabel();
-
-  /**
-   * Gets plugin description.
-   *
-   * @return string
-   *   Plugin description.
+   *   The description of this matcher.
    */
   public function getDescription();
 
@@ -64,18 +56,5 @@ interface MatcherConfigInterface extends ConfigEntityInterface {
    *   Configuration as an array.
    */
   public function getConfiguration();
-
-  /**
-   * Gets the setting of a key.
-   *
-   * @param string $key
-   *   Setting key.
-   * @param mixed $default
-   *   Default value if the setting does not exist.
-   *
-   * @return mixed
-   *   Setting value.
-   */
-  public function getSetting($key, $default = NULL);
 
 }
