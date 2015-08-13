@@ -1,0 +1,10 @@
+langcode: en
+dependencies: {  }
+id: individual
+label: Individual
+description: Individual matcher
+plugin_id: default
+configuration:
+  threshold: 0
+  return_order: created
+  rules: {  }

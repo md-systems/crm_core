@@ -1,0 +1,62 @@
+# Config schema for matcher config entity.
+crm_core_match.matcher.*:
+  type: config_entity
+  label: 'Matcher'
+  mapping:
+    id:
+      type: string
+      label: 'Identifier'
+    label:
+      type: label
+      label: 'Matcher label'
+    description:
+      type: string
+      label: 'Matcher description'
+    plugin_id:
+      type: string
+      label: 'Plugin ID'
+    configuration:
+      type: crm_core_match.configuration.[%parent.plugin_id]
+      label: 'Plugin configuration'
+
+# Schema for the plugin configuration.
+
+crm_core_match.configuration.default:
+  type: mapping
+  mapping:
+    threshold:
+      type: integer
+      label: 'Match score threshold'
+    return_order:
+      type: string
+      label: 'Return order'
+    strict:
+      type: boolean
+      label: 'Strict matching'
+    rules:
+      label: 'Rules'
+      type: sequence
+      sequence:
+        # This sequence is keyed by field names.
+        type: sequence
+        label: Field
+        sequence:
+        # This sequence is keyed by field property names.
+          type: mapping
+          label: Field property
+          mapping:
+            weight:
+              type: integer
+              label: 'Weight'
+            status:
+              type: boolean
+              label: Enabled
+            operator:
+              type: string
+              label: Operator
+            options:
+              type: string
+              label: Options
+            score:
+              type: integer
+              label: Score

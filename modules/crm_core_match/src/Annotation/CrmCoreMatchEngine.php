@@ -21,41 +21,23 @@ class CrmCoreMatchEngine extends Plugin {
    *
    * @var string
    */
-  public $name;
+  protected $id;
 
   /**
    * The engines label.
    *
-   * @var string
+   * @var \Drupal\Core\StringTranslation\TranslationWrapper
    *
    * @ingroup plugin_translatable
    */
-  public $label;
+  protected $label;
 
   /**
-   * The default priority for this engined.
+   * The match engine summary.
    *
-   * This can be overridden.
-   *
-   * @var int
+   * @var \Drupal\Core\StringTranslation\TranslationWrapper
    */
-  public $priority;
+  protected $summary;
 
-  /**
-   * An array listing settings pages for the matching engine.
-   *
-   * The keys
-   * @var array
-   *
-   * Example structure:
-   * @code
-   * $settings = array(
-   *   'settings' => array(
-   *     'route' => 'crm_core_match.example', // The route identifier.
-   *     'label' => t('Settings page'), // Translated label for link.
-   *   ),
-   * );
-   * @endcode
-   */
-  public $settings;
+
 }

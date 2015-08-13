@@ -1,11 +1,5 @@
 services:
-  crm_core_match.matcher:
-    class: Drupal\crm_core_match\Matcher
-    arguments:
-      - "@plugin.manager.crm_core_match.engine"
-      - "@config.crm_core_match.settings"
-
-  plugin.manager.crm_core_match.engine:
+  plugin.manager.crm_core_match.matchers:
     class: Drupal\Core\Plugin\DefaultPluginManager
     arguments:
       - 'Plugin/crm_core_match/engine'
@@ -16,7 +10,13 @@ services:
     calls:
       - [setCacheBackend, ['@cache.discovery', 'crm_core_match_engine_plugins']]
 
-  config.crm_core_match.settings:
-    class: Drupal\Core\Config\Config
-    factory: config.factory:get
-    arguments: ['crm_core_match.settings']
+  plugin.manager.crm_core_match.match_field:
+    class: Drupal\Core\Plugin\DefaultPluginManager
+    arguments:
+      - 'Plugin/crm_core_match/field'
+      - '@container.namespaces'
+      - '@module_handler'
+      - 'Drupal\crm_core_match\Plugin\crm_core_match\field\FieldHandlerInterface'
+      - 'Drupal\crm_core_match\Annotation\CrmCoreMatchFieldHandler'
+    calls:
+      - [setCacheBackend, ['@cache.discovery', 'crm_core_match_field_plugins']]
