@@ -314,26 +314,19 @@ EOF
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     // @todo: Build the same form and configuration structure.
+    $rules = [];
 
-    // Unset the rules from configuration and provide different structure.
-    unset($this->configuration['rules']);
-
-    foreach ($form_state->getValue('configuration') as $name => $config) {
-      switch ($name) {
-        case 'rules':
-          if (strpos($name, ':') !== FALSE) {
-            list($parent, $child) = explode(':', $name, 2);
-            $this->configuration[$parent][$child] = $config;
-          }
-          else {
-            $this->configuration[$name] = $config;
-          }
-          break;
-
-        default:
-          $this->configuration[$name] = $config;
+    $this->configuration = $form_state->getValue('configuration');
+    foreach ($form_state->getValue(['configuration', 'rules']) as $name => $config) {
+      if (strpos($name, ':') !== FALSE) {
+        list($parent, $child) = explode(':', $name, 2);
+        $rules[$parent][$child] = $config;
+      }
+      else {
+        $rules[$name] = $config;
       }
     }
+    $this->configuration['rules'] = $rules;
   }
 
   /**

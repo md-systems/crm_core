@@ -173,7 +173,7 @@ class MatcherForm extends EntityForm {
     $plugin->submitConfigurationForm($form, $form_state);
 
     drupal_set_message($this->t('The configuration has been saved.'));
-    $form_state->setRedirect('entity.crm_core_match.collection');
+    $form_state->setRedirect('entity.crm_core_match.edit_form', ['crm_core_match' => $matcher->id()]);
   }
 
 }

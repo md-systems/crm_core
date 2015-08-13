@@ -91,6 +91,8 @@ interface FieldHandlerInterface {
   /**
    * Gets the operator options.
    *
+   * @todo: Consider using options when matching or drop.
+   *
    * @param string $property
    *   The name of the property.
    *
