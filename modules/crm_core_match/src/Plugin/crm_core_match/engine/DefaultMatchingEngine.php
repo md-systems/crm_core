@@ -344,4 +344,37 @@ EOF
     return [];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getRules() {
+    $rules = [];
+    foreach ($this->getConfigurationItem('rules') as $field_name => $field_settings) {
+      // Skip fields that are disabled on the matcher.
+      if (empty($field_settings['value']['status'])) {
+        continue;
+      }
+
+      $contact_types = $this->entityManager->getStorage('crm_core_contact_type')->loadMultiple();
+      $field_definitions = [];
+      foreach ($contact_types as $contact_type_id => $value) {
+        $field_definitions += $this->entityManager->getFieldDefinitions('crm_core_contact', $contact_type_id);
+      }
+
+      // Skip fields that got dropped.
+      if (!isset($field_definitions[$field_name])) {
+        continue;
+      }
+      /** @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
+      $field_definition = $field_definitions[$field_name];
+
+      $rules[$field_name] = array(
+        'label' => $field_definition->getLabel(),
+        'definition' => $field_definition,
+      );
+    }
+
+    return $rules;
+  }
+
 }

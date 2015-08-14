@@ -33,6 +33,9 @@ crm_core_match.configuration.default:
     strict:
       type: boolean
       label: 'Strict matching'
+    field_matching:
+      type: string
+      label: 'Field matching'
     rules:
       label: 'Rules'
       type: sequence

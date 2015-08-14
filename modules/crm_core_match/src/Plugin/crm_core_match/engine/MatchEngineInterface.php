@@ -41,4 +41,24 @@ interface MatchEngineInterface extends PluginInspectionInterface, PluginFormInte
    */
   public function getConfigurationItem($key);
 
+  /**
+   * Gets the rules that are matched.
+   *
+   * By default those are the contact type fields.
+   *
+   * @todo Extend with typed data definition to limit selections.
+   *
+   * Example data:
+   * @code
+   * (
+   *   field_name => array(
+   *     label,
+   *     definition,
+   * ),
+   * @endcode
+   *
+   * @return mixed
+   */
+  public function getRules();
+
 }
