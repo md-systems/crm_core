@@ -104,4 +104,11 @@ abstract class MatchEngineBase extends PluginBase implements MatchEngineInterfac
     // Do nothing.
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getRules() {
+    return array();
+  }
+
 }
