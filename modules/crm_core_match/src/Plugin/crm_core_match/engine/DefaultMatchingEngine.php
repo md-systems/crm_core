@@ -349,16 +349,19 @@ EOF
    */
   public function getRules() {
     $rules = [];
+
+    // Collect all fields of all contact types.
+    $contact_types = $this->entityManager->getStorage('crm_core_contact_type')->loadMultiple();
+    $field_definitions = [];
+    foreach ($contact_types as $contact_type_id => $value) {
+      $field_definitions += $this->entityManager->getFieldDefinitions('crm_core_contact', $contact_type_id);
+    }
+
     foreach ($this->getConfigurationItem('rules') as $field_name => $field_settings) {
+
       // Skip fields that are disabled on the matcher.
       if (empty($field_settings['value']['status'])) {
         continue;
-      }
-
-      $contact_types = $this->entityManager->getStorage('crm_core_contact_type')->loadMultiple();
-      $field_definitions = [];
-      foreach ($contact_types as $contact_type_id => $value) {
-        $field_definitions += $this->entityManager->getFieldDefinitions('crm_core_contact', $contact_type_id);
       }
 
       // Skip fields that got dropped.
