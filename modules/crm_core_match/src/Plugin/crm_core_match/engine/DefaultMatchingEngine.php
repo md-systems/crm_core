@@ -146,12 +146,8 @@ EOF
       '#default_value' => $this->getConfigurationItem('strict'),
     );
 
-    $form['field_matching'] = array(
-      '#type' => 'item',
-      '#title' => $this->t('Field Matching'),
-    );
-
     $form['rules'] = array(
+      '#title' => $this->t('Field Matching'),
       '#type' => 'table',
       '#tree' => TRUE,
       '#header' => $this->buildHeader(),
@@ -163,6 +159,7 @@ EOF
           'group' => 'weight',
         ),
       ),
+      '#theme_wrappers' => array('form_element'),
     );
 
     // @todo: Display fields per bundle.
