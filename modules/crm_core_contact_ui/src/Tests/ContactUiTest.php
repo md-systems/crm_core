@@ -28,6 +28,16 @@ class ContactUiTest extends WebTestBase {
   );
 
   /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+
+    // Place local actions blocks.
+    $this->drupalPlaceBlock('local_actions_block');
+  }
+
+  /**
    * Tests the contact operations.
    *
    * User with permissions 'administer crm_core_contact entities'
@@ -259,4 +269,5 @@ class ContactUiTest extends WebTestBase {
   public function assertNoContactTypeLink($href, $message = '') {
     $this->assertNoLinkByHref('admin/structure/crm-core/contact-types/' . $href, $message);
   }
+
 }

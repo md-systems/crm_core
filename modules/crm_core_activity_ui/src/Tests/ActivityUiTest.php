@@ -27,6 +27,16 @@ class ActivityUiTest extends WebTestBase {
   );
 
   /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+
+    // Place local actions blocks.
+    $this->drupalPlaceBlock('local_actions_block');
+  }
+
+  /**
    * Test basic UI operations with Activities.
    *
    * Create a contact.
@@ -120,14 +130,15 @@ class ActivityUiTest extends WebTestBase {
   /**
    * Generate random Date for form element input.
    */
-  function randomDate() {
+  protected function randomDate() {
     return format_date(REQUEST_TIME + rand(0, 100000), 'custom', 'Y-m-d');
   }
 
   /**
    * Generate random Time for form element input.
    */
-  function randomTime() {
+  protected function randomTime() {
     return format_date(REQUEST_TIME + rand(0, 100000), 'custom', 'H:m:s');
   }
+
 }
