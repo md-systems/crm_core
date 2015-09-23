@@ -129,7 +129,7 @@ interface FieldHandlerInterface {
    * Executes the match query.
    *
    * @param \Drupal\crm_core_contact\ContactInterface $contact
-   *   The contact interface to find matches for.
+   *   The contact entity to find matches for.
    *
    * @param string $property
    *   The name of the property.
