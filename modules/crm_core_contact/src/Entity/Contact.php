@@ -94,10 +94,10 @@ class Contact extends ContentEntityBase implements ContactInterface {
       ->setDescription(t('The time that the contact was created.'))
       ->setRevisionable(TRUE)
       ->setDisplayOptions('form', array(
-        'type' => 'number',
+        'type' => 'datetime_timestamp',
         'weight' => -5,
       ))
-      ->setDisplayConfigurable('form', TRUE);;
+      ->setDisplayConfigurable('form', TRUE);
 
     $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))
