@@ -17,11 +17,11 @@ class ContactTypeAccessControlHandler extends EntityAccessControlHandler {
   /**
    * {@inheritdoc}
    */
-  protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
+  protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     /** @var \Drupal\crm_core_contact\Entity\ContactType $entity */
 
     // First check permission.
-    if (parent::checkAccess($entity, $operation, $langcode, $account)->isForbidden()) {
+    if (parent::checkAccess($entity, $operation, $account)->isForbidden()) {
       return AccessResult::forbidden();
     }
 

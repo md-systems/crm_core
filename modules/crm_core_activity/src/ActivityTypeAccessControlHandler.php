@@ -17,7 +17,7 @@ class ActivityTypeAccessControlHandler extends EntityAccessControlHandler {
   /**
    * {@inheritdoc}
    */
-  protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
+  protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
 
     // First check drupal permission.
     if (parent::checkAccess($entity, $operation, $langcode, $account)->isForbidden()) {

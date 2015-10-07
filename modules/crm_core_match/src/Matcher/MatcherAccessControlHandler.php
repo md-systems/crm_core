@@ -18,9 +18,9 @@ class MatcherAccessControlHandler extends EntityAccessControlHandler {
   /**
    * {@inheritdoc}
    */
-  protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
+  protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     /** @var \Drupal\crm_core_match\Matcher\MatcherConfigInterface $entity */
-    return parent::checkAccess($entity, $operation, $langcode, $account);
+    return parent::checkAccess($entity, $operation, $account);
     // Deny delete access.
     // ->andIf(AccessResult::allowedIf($operation != 'delete'));
   }
