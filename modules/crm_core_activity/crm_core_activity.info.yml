@@ -9,7 +9,6 @@ dependencies:
   # Core dependencies
   - crm_core_contact
   - text
-  - entity_reference
   - datetime
 
   # @todo: Readd if needed and availlable.
