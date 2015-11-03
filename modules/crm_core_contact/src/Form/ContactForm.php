@@ -43,8 +43,8 @@ class ContactForm extends ContentEntityForm {
    */
   protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
-    $actions['submit']['#value'] = $this->t('Save !contact_type', array(
-      '!contact_type' => $this->entity->get('type')->entity->label(),
+    $actions['submit']['#value'] = $this->t('Save @contact_type', array(
+      '@contact_type' => $this->entity->get('type')->entity->label(),
     ));
     return $actions;
   }
