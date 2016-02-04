@@ -113,3 +113,12 @@ function crm_core_contact_ui_admin_menu_map() {
 
   return $map;
 }
+
+/**
+ * Implements hook_entity_type_build().
+ *
+ * Add field_ui_base_route.
+ */
+function crm_core_contact_ui_entity_type_build(&$entity_types) {
+  $entity_types['crm_core_contact']->set('field_ui_base_route','entity.crm_core_contact_type.edit_form');
+}
