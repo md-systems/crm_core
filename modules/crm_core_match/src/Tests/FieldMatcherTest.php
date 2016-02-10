@@ -98,8 +98,8 @@ class FieldMatcherTest extends KernelTestBase {
     $ids = $text->match($contact_needle);
     $this->assertTrue(array_key_exists($contact_match->id(), $ids), 'Text match returns expected match');
     $this->assertTrue(array_key_exists($contact_match2->id(), $ids), 'Text match returns expected match');
-    $this->assertEqual(2, $ids[$contact_match->id()], 'Got expected match score');
-    $this->assertEqual(1, $ids[$contact_match2->id()], 'Got expected match score');
+    $this->assertEqual(42, $ids[$contact_match->id()]['name.value'], 'Got expected match score');
+    $this->assertEqual(21, $ids[$contact_match2->id()]['name.value'], 'Got expected match score');
   }
 
   /**

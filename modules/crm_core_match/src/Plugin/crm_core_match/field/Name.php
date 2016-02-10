@@ -56,6 +56,7 @@ class Name extends FieldHandlerBase {
    * {@inheritdoc}
    */
   public function match(ContactInterface $contact, $property = 'value') {
+    // Get the name parts.
     $field = $this->field->getName();
     $name = $contact->get($field)->{$property};
     $parts = preg_split('/[\ \,]+/', $name);
@@ -65,7 +66,9 @@ class Name extends FieldHandlerBase {
         $valid_parts[] = $part;
       }
     }
-    $result = [];
+
+    // Get the matches.
+    $matches = [];
     if (!empty($valid_parts)) {
       foreach ($valid_parts as $part) {
         $this->query = $this->queryFactory->get('crm_core_contact', 'AND');
@@ -81,16 +84,27 @@ class Name extends FieldHandlerBase {
         $this->query->condition($field, $part, 'CONTAINS');
         $ids = $this->query->execute();
         foreach ($ids as $id) {
-          if (isset($result[$id])) {
-            $result[$id] += 1;
+          if (isset($matches[$id])) {
+            $matches[$id] += 1;
           }
           else {
-            $result[$id] = 1;
+            $matches[$id] = 1;
           }
         }
       }
     }
-    arsort($result);
+
+    // Calculate the score.
+    arsort($matches);
+    $max_score = $this->getScore($property);
+    $decrement = $max_score / count($matches);
+    $result = [];
+    foreach ($matches as $id => $match) {
+      $result[$id] = [
+        $this->field->getName() . '.' . $property => $max_score,
+      ];
+      $max_score -= $decrement;
+    }
     return $result;
   }
 
