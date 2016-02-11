@@ -6,9 +6,9 @@
  */
 
 namespace Drupal\crm_core_match\Plugin\crm_core_match\field;
+
 use Drupal\crm_core_contact\ContactInterface;
 use Drupal\field\FieldConfigInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class for evaluating name fields.
@@ -18,30 +18,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class Name extends FieldHandlerBase {
-
-  /**
-   * A query factory.
-   *
-   * @var \Drupal\Core\Entity\Query\QueryFactory
-   */
-  protected $queryFactory;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    $field = $configuration['field'];
-    unset($configuration['field']);
-    $name = new static(
-      $field,
-      $container->get('entity.query')->get('crm_core_contact', 'AND'),
-      $configuration,
-      $plugin_id,
-      $plugin_definition
-    );
-    $name->queryFactory = $container->get('entity.query');
-    return $name;
-  }
 
   /**
    * {@inheritdoc}
@@ -71,18 +47,18 @@ class Name extends FieldHandlerBase {
     $matches = [];
     if (!empty($valid_parts)) {
       foreach ($valid_parts as $part) {
-        $this->query = $this->queryFactory->get('crm_core_contact', 'AND');
-        $this->query->condition('type', $contact->bundle());
+        $query = $this->queryFactory->get('crm_core_contact', 'AND');
+        $query->condition('type', $contact->bundle());
         if ($contact->id()) {
-          $this->query->condition('contact_id', $contact->id(), '<>');
+          $query->condition('contact_id', $contact->id(), '<>');
         }
 
         if ($field instanceof FieldConfigInterface) {
           $field .= '.' . $property;
         }
 
-        $this->query->condition($field, $part, 'CONTAINS');
-        $ids = $this->query->execute();
+        $query->condition($field, $part, 'CONTAINS');
+        $ids = $query->execute();
         foreach ($ids as $id) {
           if (isset($matches[$id])) {
             $matches[$id] += 1;

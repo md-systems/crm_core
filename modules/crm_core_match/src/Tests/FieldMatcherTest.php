@@ -57,6 +57,7 @@ class FieldMatcherTest extends KernelTestBase {
         'operator' => '',
       ),
     );
+    /** @var Contact $contact_needle */
     $contact_needle = Contact::create(array('type' => 'individual'));
     $contact_needle->save();
 
@@ -112,9 +113,11 @@ class FieldMatcherTest extends KernelTestBase {
         'score' => 42,
       ),
     );
+    /** @var Contact $contact_needle */
     $contact_needle = Contact::create(array('type' => 'individual'));
     $contact_needle->set('name', 'Boomer');
     $contact_needle->save();
+    /** @var Contact $contact_match */
     $contact_match = Contact::create(array('type' => 'individual'));
     $contact_match->set('name', 'Boomer');
     $contact_match->save();
@@ -151,9 +154,11 @@ class FieldMatcherTest extends KernelTestBase {
         'score' => 42,
       ),
     );
+    /** @var Contact $contact_needle */
     $contact_needle = Contact::create(array('type' => 'individual'));
     $contact_needle->set('contact_mail', 'boomer@example.com');
     $contact_needle->save();
+    /** @var Contact $contact_match */
     $contact_match = Contact::create(array('type' => 'individual'));
     $contact_match->set('contact_mail', 'boomer@example.com');
     $contact_match->save();
@@ -166,4 +171,5 @@ class FieldMatcherTest extends KernelTestBase {
     $this->assertTrue(array_key_exists($contact_match->id(), $ids), 'Text match returns expected match');
     $this->assertEqual(42, $ids[$contact_match->id()]['contact_mail.value'], 'Got expected match score');
   }
+
 }
