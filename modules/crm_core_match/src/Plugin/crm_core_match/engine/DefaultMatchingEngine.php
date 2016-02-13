@@ -87,7 +87,20 @@ class DefaultMatchingEngine extends MatchEngineBase {
         $field_handler = $this->pluginManager->createInstance($rules['field']->getType(), $rules);
 
         foreach ($field_handler->getPropertyNames() as $name) {
-          $results += $field_handler->match($contact, $name);
+          $result = $field_handler->match($contact, $name);
+          $keys = array_keys($result);
+          $key = reset($keys);
+          if (isset($results[$key])) {
+            if (isset($results[$key][$name])) {
+              $results[$key][$name] += $result[$key][$name];
+            }
+            else {
+              $results[$key] += $result[$key];
+            }
+          }
+          else {
+            $results += $result;
+          }
         }
       }
     }

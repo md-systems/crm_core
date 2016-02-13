@@ -91,12 +91,6 @@ class DefaultEngineTest extends UnitTestCase {
     $this->matcher->expects($this->any())
       ->method('status')
       ->will($this->returnValue(TRUE));
-    $this->matcher->set('configuration', array(
-        'rules' => array(
-          'foo' => array(),
-        )
-      )
-    );
 
     $storage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
     $storage->expects($this->any())
@@ -115,7 +109,10 @@ class DefaultEngineTest extends UnitTestCase {
       ->method('getPropertyNames')
       ->will($this->returnValue(array('value')));
 
-    $this->engine = new DefaultMatchingEngine(array(), 'default', array(), $this->pluginManager, $this->entityManager);
+    $this->engine = new DefaultMatchingEngine([
+      'rules' => ['foo' => [], 'bar' => []],
+      'threshold' => 50,
+    ], 'default', array(), $this->pluginManager, $this->entityManager);
   }
 
   /**
@@ -144,11 +141,55 @@ class DefaultEngineTest extends UnitTestCase {
         ),
       )));
 
-//    $this->pluginManager->expects($this->once())
-//      ->method('createInstance')
-//      ->will($this->returnValue($this->matchHandler));
+    $this->pluginManager->expects($this->once())
+      ->method('createInstance')
+      ->will($this->returnValue($this->matchHandler));
 
-//    $ids = $this->engine->match($this->contact);
-//    $this->assertEquals([], $ids);
+    $ids = $this->engine->match($this->contact);
+    $this->assertEquals([42], $ids);
   }
+
+  /**
+   * Tests the match method with multiple fields.
+   */
+  public function testMultipleMatch() {
+    $this->field->expects($this->any())
+      ->method('getType')
+      ->will($this->returnValue('crap'));
+
+    $this->contact->expects($this->any())
+      ->method('getFieldDefinitions')
+      ->will($this->returnValue(array(
+        'foo' => $this->field,
+        'bar' => $this->field,
+      )));
+
+    $this->pluginManager->expects($this->any())
+      ->method('hasDefinition')
+      ->will($this->returnValue(TRUE));
+
+    $this->matchHandler->expects($this->any())
+      ->method('match')
+      ->will($this->returnValue(array(
+        '42' => array(
+          'value' => 40,
+        ),
+      )))
+      ->will($this->returnValue(array(
+        '42' => array(
+          'value' => 40,
+        ),
+        '30' => array(
+          'value' => 40,
+        ),
+      )));
+
+    $this->pluginManager->expects($this->any())
+      ->method('createInstance')
+      ->will($this->returnValue($this->matchHandler));
+
+    $ids = $this->engine->match($this->contact);
+    $this->assertEquals([42], $ids);
+  }
+
 }

@@ -7,17 +7,25 @@
 
 namespace Drupal\crm_core_match\Plugin\crm_core_match\field;
 
-use Drupal\Core\Entity\Query\QueryInterface;
+use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\crm_core_contact\ContactInterface;
-use Drupal\crm_core_contact\Entity\Contact;
-use Drupal\crm_core_match\Plugin\crm_core_match\engine\DefaultMatchingEngine;
 use Drupal\field\FieldConfigInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Class FieldHandlerBase.
+ *
+ * @package Drupal\crm_core_match\Plugin\crm_core_match\field
+ */
 abstract class FieldHandlerBase implements FieldHandlerInterface, ContainerFactoryPluginInterface {
 
+  /**
+   * The weight.
+   *
+   * @var integer
+   */
   const WEIGHT_DELTA = 25;
 
   /**
@@ -51,19 +59,19 @@ abstract class FieldHandlerBase implements FieldHandlerInterface, ContainerFacto
   /**
    * A Contact query object.
    *
-   * @var \Drupal\Core\Entity\Query\QueryInterface
+   * @var \Drupal\Core\Entity\Query\QueryFactory
    */
-  protected $query;
+  protected $queryFactory;
 
   /**
    * Constructs an plugin instance.
    */
-  public function __construct(FieldDefinitionInterface $field, QueryInterface $query, array $configuration, $id, $definition) {
+  public function __construct(FieldDefinitionInterface $field, QueryFactory $query_factory, array $configuration, $id, $definition) {
     $this->configuration = $configuration;
     $this->definition = $definition;
     $this->id = $id;
     $this->field = $field;
-    $this->query = $query;
+    $this->queryFactory = $query_factory;
   }
 
   /**
@@ -74,7 +82,7 @@ abstract class FieldHandlerBase implements FieldHandlerInterface, ContainerFacto
     unset($configuration['field']);
     return new static(
       $field,
-      $container->get('entity.query')->get('crm_core_contact', 'AND'),
+      $container->get('entity.query'),
       $configuration,
       $plugin_id,
       $plugin_definition
@@ -146,18 +154,19 @@ abstract class FieldHandlerBase implements FieldHandlerInterface, ContainerFacto
 
     $field = $this->field->getName();
     $needle = $contact->get($field)->{$property};
+    $query = $this->queryFactory->get('crm_core_contact', 'AND');
 
     if (!empty($needle)) {
-      $this->query->condition('type', $contact->bundle());
+      $query->condition('type', $contact->bundle());
       if ($contact->id()) {
-        $this->query->condition('contact_id', $contact->id(), '<>');
+        $query->condition('contact_id', $contact->id(), '<>');
       }
 
       if ($field instanceof FieldConfigInterface) {
         $field .= '.' . $property;
       }
-      $this->query->condition($field, $needle, $this->getOperator($property));
-      $ids = $this->query->execute();
+      $query->condition($field, $needle, $this->getOperator($property));
+      $ids = $query->execute();
     }
 
     // Get the score for this field/propery.
@@ -167,4 +176,5 @@ abstract class FieldHandlerBase implements FieldHandlerInterface, ContainerFacto
     // Returning an array holding the score as value and the contact id as key.
     return array_fill_keys($ids, $score);
   }
+
 }

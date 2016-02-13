@@ -57,6 +57,7 @@ class FieldMatcherTest extends KernelTestBase {
         'operator' => '',
       ),
     );
+    /** @var Contact $contact_needle */
     $contact_needle = Contact::create(array('type' => 'individual'));
     $contact_needle->save();
 
@@ -71,6 +72,40 @@ class FieldMatcherTest extends KernelTestBase {
   /**
    * Test the text field.
    */
+  public function testName() {
+    $config = array(
+      'value' => array(
+        'operator' => '=',
+        'score' => 42,
+      ),
+    );
+    /** @var Contact $contact_needle */
+    $contact_needle = Contact::create(array('type' => 'individual'));
+    $contact_needle->set('name', 'Mr Gimeno Boomer');
+    $contact_needle->save();
+    /** @var Contact $contact_match */
+    $contact_match = Contact::create(array('type' => 'individual'));
+    $contact_match->set('name', 'Gimeno Boomer, Mr');
+    $contact_match->save();
+    /** @var Contact $contact_match2 */
+    $contact_match2 = Contact::create(array('type' => 'individual'));
+    $contact_match2->set('name', 'Rodrigo Boomer, Mr');
+    $contact_match2->save();
+
+    $config['field'] = $contact_needle->getFieldDefinition('name');
+    /* @var \Drupal\crm_core_match\Plugin\crm_core_match\field\FieldHandlerInterface $text */
+    $text = $this->pluginManager->createInstance('name', $config);
+
+    $ids = $text->match($contact_needle);
+    $this->assertTrue(array_key_exists($contact_match->id(), $ids), 'Text match returns expected match');
+    $this->assertTrue(array_key_exists($contact_match2->id(), $ids), 'Text match returns expected match');
+    $this->assertEqual(42, $ids[$contact_match->id()]['name.value'], 'Got expected match score');
+    $this->assertEqual(21, $ids[$contact_match2->id()]['name.value'], 'Got expected match score');
+  }
+
+  /**
+   * Test the text field.
+   */
   public function testText() {
     $config = array(
       'value' => array(
@@ -78,9 +113,11 @@ class FieldMatcherTest extends KernelTestBase {
         'score' => 42,
       ),
     );
+    /** @var Contact $contact_needle */
     $contact_needle = Contact::create(array('type' => 'individual'));
     $contact_needle->set('name', 'Boomer');
     $contact_needle->save();
+    /** @var Contact $contact_match */
     $contact_match = Contact::create(array('type' => 'individual'));
     $contact_match->set('name', 'Boomer');
     $contact_match->save();
@@ -117,9 +154,11 @@ class FieldMatcherTest extends KernelTestBase {
         'score' => 42,
       ),
     );
+    /** @var Contact $contact_needle */
     $contact_needle = Contact::create(array('type' => 'individual'));
     $contact_needle->set('contact_mail', 'boomer@example.com');
     $contact_needle->save();
+    /** @var Contact $contact_match */
     $contact_match = Contact::create(array('type' => 'individual'));
     $contact_match->set('contact_mail', 'boomer@example.com');
     $contact_match->save();
@@ -132,4 +171,5 @@ class FieldMatcherTest extends KernelTestBase {
     $this->assertTrue(array_key_exists($contact_match->id(), $ids), 'Text match returns expected match');
     $this->assertEqual(42, $ids[$contact_match->id()]['contact_mail.value'], 'Got expected match score');
   }
+
 }
