@@ -1,0 +1,4 @@
+admin:
+  css:
+    theme:
+      css/crm_core_ui.admin.css: { }

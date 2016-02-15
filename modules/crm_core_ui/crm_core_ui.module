@@ -1,4 +1,5 @@
 <?php
+use Drupal\Core\Url;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -150,7 +151,6 @@ function crm_core_ui_ctools_add_dropbutton_files() {
   views_add_css('views-admin');
   views_add_css('views-admin.ctools');
   views_add_css('views-admin.seven');
-  drupal_add_css(drupal_get_path('module', 'crm_core_ui') . '/css/crm_core_ui.admin.css');
 }
 
 /**
@@ -204,6 +204,15 @@ function crm_core_ui_get_menus() {
       'description' => $t('Provides access to various settings and configuration within CRM Core.'),
     )
   );
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function crm_core_ui_page_attachments(array &$attachments) {
+  if (Url::fromRoute('crm_core.dashboard')->access() && \Drupal::currentUser()->hasPermission('access toolbar')) {
+    $attachments['#attached']['library'][] = 'crm_core_ui/admin';
+  }
 }
 
 /**

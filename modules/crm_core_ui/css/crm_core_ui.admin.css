@@ -1,8 +1,10 @@
-/* @group Tables */
-
-table td,
-table th {
-  vertical-align: top !important;
+/**
+ * Main menu icons.
+ */
+.toolbar-icon-crm-core-dashboard:before {
+  background-image: url(../icons/787878-hexabox.svg);
 }
-
-/* @end */
+.toolbar-icon-crm-core-dashboard:active:before,
+.toolbar-icon-crm-core-dashboard.is-active:before {
+  background-image: url(../icons/000000-hexabox.svg);
+}
