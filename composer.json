@@ -1,0 +1,7 @@
+{
+  "name": "btesterltda/crm_core",
+  "type": "drupal-module",
+  "description": "CRM Core",
+  "homepage": "https://github.com/btesterltda/crm_core",
+  "license": "GPL-2.0+"
+}
