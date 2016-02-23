@@ -20,7 +20,7 @@ class ActivityTypeAccessControlHandler extends EntityAccessControlHandler {
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
 
     // First check drupal permission.
-    if (parent::checkAccess($entity, $operation, $langcode, $account)->isForbidden()) {
+    if (parent::checkAccess($entity, $operation, $account)->isForbidden()) {
       return AccessResult::forbidden();
     }
 
