@@ -8,7 +8,6 @@
 namespace Drupal\crm_core_match\Plugin\crm_core_match\field;
 
 use Drupal\crm_core_contact\ContactInterface;
-use Drupal\crm_core_contact\Entity\Contact;
 
 /**
  * Interface for defining the logical operators and query criteria used to identify duplicate contacts based on
@@ -129,8 +128,8 @@ interface FieldHandlerInterface {
   /**
    * Executes the match query.
    *
-   * @param \Drupal\crm_core_contact\Entity\Contact $contact
-   *   The contact to find matches for.
+   * @param \Drupal\crm_core_contact\ContactInterface $contact
+   *   The contact entity to find matches for.
    *
    * @param string $property
    *   The name of the property.
