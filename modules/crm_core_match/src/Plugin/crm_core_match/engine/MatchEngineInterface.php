@@ -26,7 +26,8 @@ interface MatchEngineInterface extends PluginInspectionInterface, PluginFormInte
    *   A contact entity used to pass data for identifying a match.
    *
    * @return int[]
-   *   An array of entity ids for potential matches.
+   *   An array of entity ids for potential matches. With the id as the key,
+   *   the score as the value and sorted descendant by score.
    */
   public function match(ContactInterface $contact);
 

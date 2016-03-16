@@ -107,9 +107,10 @@ class DefaultMatchingEngine extends MatchEngineBase {
     foreach ($results as $id => $rule_matches) {
       $total_score = array_sum($rule_matches);
       if ($total_score >= $this->getConfigurationItem('threshold')) {
-        $ids[] = $id;
+        $ids[$id] = $total_score;
       }
     }
+    arsort($ids);
 
     return $ids;
   }
